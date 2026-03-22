@@ -14,7 +14,7 @@ DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "      MENGINSTAL DIGITAL FIKY STORE (WEB + AUTH LOGIN)    "
+echo "      MENGINSTAL DIGITAL FIKY STORE (WEB UI CUSTOM)       "
 echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Dependensi..."
@@ -48,9 +48,9 @@ cat << 'EOF' > package.json
 EOF
 
 # ==========================================
-# MEMBUAT TAMPILAN WEB (SISTEM AUTENTIKASI)
+# MEMBUAT TAMPILAN WEB (UI CUSTOM MOBILE APP)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (UI) dengan Sistem Login..."
+echo "[3/5] Membangun Antarmuka Website (UI Oxford Blue & Maize)..."
 
 # 1. Halaman Login
 cat << 'EOF' > public/index.html
@@ -60,32 +60,56 @@ cat << 'EOF' > public/index.html
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - DIGITAL FIKY STORE</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { oxford: '#0A174E', maize: '#F5D042' } } }
+        }
+    </script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 class="text-2xl font-bold text-center text-blue-600 mb-6">FIKY STORE</h2>
-        <form id="loginForm">
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Email / No. HP</label>
-                <input type="text" id="identifier" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
-            </div>
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                <input type="password" id="password" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
-            </div>
-            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">Masuk</button>
-        </form>
-        <div class="mt-4 text-center text-sm">
-            <a href="/register.html" class="text-blue-500 hover:underline">Daftar Akun Baru</a> | 
-            <a href="/forgot.html" class="text-blue-500 hover:underline">Lupa Password?</a>
+<body class="bg-gray-100 flex justify-center min-h-screen">
+    <div class="w-full max-w-md bg-white min-h-screen relative shadow-2xl overflow-x-hidden flex flex-col">
+        <div class="bg-maize h-48 w-[150%] absolute -top-10 -left-[25%] rounded-b-[50%] z-0"></div>
+        
+        <div class="relative z-10 px-8 pt-24 flex-grow flex flex-col">
+            <h1 class="text-4xl font-extrabold text-oxford mb-2">Login</h1>
+            <p class="text-gray-600 mb-8">Silahkan masukkan email/no HP dan password kamu!</p>
+
+            <form id="loginForm" class="flex flex-col flex-grow">
+                <div class="mb-5">
+                    <label class="block text-oxford font-bold mb-2">Email / No. HP</label>
+                    <div class="flex items-center border border-gray-300 rounded-2xl px-4 py-3 bg-white focus-within:border-oxford focus-within:ring-1 focus-within:ring-oxford transition-all">
+                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <input type="text" id="identifier" class="w-full bg-transparent outline-none ml-3 text-oxford placeholder-gray-400" placeholder="Ketik disini" required>
+                    </div>
+                </div>
+
+                <div class="mb-2">
+                    <label class="block text-oxford font-bold mb-2">Password</label>
+                    <div class="flex items-center border border-gray-300 rounded-2xl px-4 py-3 bg-white focus-within:border-oxford focus-within:ring-1 focus-within:ring-oxford transition-all">
+                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
+                        <input type="password" id="password" class="w-full bg-transparent outline-none ml-3 text-oxford placeholder-gray-400" placeholder="Ketik disini" required>
+                    </div>
+                </div>
+
+                <div class="flex justify-end mb-8">
+                    <a href="/forgot.html" class="text-oxford font-semibold text-sm hover:text-maize transition-colors">Lupa password?</a>
+                </div>
+
+                <div class="flex-grow"></div>
+
+                <div class="pb-8">
+                    <p class="text-center text-sm text-gray-500 mb-4">Belum punya akun? <a href="/register.html" class="text-oxford font-bold hover:underline">Daftar disini</a></p>
+                    <button type="submit" class="w-full bg-oxford text-maize text-lg font-bold py-4 rounded-full shadow-lg hover:bg-opacity-90 transition-all active:scale-95">Login</button>
+                </div>
+            </form>
         </div>
     </div>
+
     <script>
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const identifier = document.getElementById('identifier').value;
             const password = document.getElementById('password').value;
-
             try {
                 const res = await fetch('/api/auth/login', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -95,9 +119,7 @@ cat << 'EOF' > public/index.html
                 if (res.ok) {
                     localStorage.setItem('user', JSON.stringify(data.user));
                     window.location.href = '/dashboard.html';
-                } else {
-                    alert(data.error);
-                }
+                } else { alert(data.error); }
             } catch (err) { alert('Terjadi kesalahan sistem.'); }
         });
     </script>
@@ -113,49 +135,85 @@ cat << 'EOF' > public/register.html
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar - DIGITAL FIKY STORE</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { oxford: '#0A174E', maize: '#F5D042' } } }
+        }
+    </script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-md w-96" id="box-register">
-        <h2 class="text-2xl font-bold text-center text-blue-600 mb-6">Daftar Akun</h2>
-        <form id="registerForm">
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Nama Lengkap</label>
-                <input type="text" id="name" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
-            </div>
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Nomor WA Aktif</label>
-                <input type="number" id="phone" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required placeholder="08123...">
-            </div>
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-                <input type="email" id="email" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
-            </div>
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                <input type="password" id="password" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
-            </div>
-            <button type="submit" class="w-full bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700">Daftar Sekarang</button>
-        </form>
-        <div class="mt-4 text-center text-sm">
-            <a href="/" class="text-blue-500 hover:underline">Sudah punya akun? Masuk</a>
-        </div>
-    </div>
+<body class="bg-gray-100 flex justify-center min-h-screen">
+    <div class="w-full max-w-md bg-white min-h-screen relative shadow-2xl overflow-x-hidden flex flex-col">
+        <div class="bg-maize h-40 w-[150%] absolute -top-10 -left-[25%] rounded-b-[50%] z-0"></div>
+        
+        <div class="relative z-10 px-8 pt-20 flex-grow flex flex-col pb-8">
+            <div id="box-register" class="flex flex-col flex-grow">
+                <h1 class="text-3xl font-extrabold text-oxford mb-2">Daftar</h1>
+                <p class="text-gray-600 mb-6 text-sm">Silahkan lengkapi data dibawah ini untuk mulai menggunakan aplikasi.</p>
 
-    <div class="bg-white p-8 rounded-lg shadow-md w-96 hidden" id="box-otp">
-        <h2 class="text-2xl font-bold text-center text-blue-600 mb-6">Verifikasi WA</h2>
-        <p class="text-sm text-gray-600 mb-4 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda. <br><span class="text-red-500 font-bold">Berlaku 5 Menit.</span></p>
-        <form id="otpForm">
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Kode OTP</label>
-                <input type="number" id="otpCode" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required placeholder="XXXX">
+                <form id="registerForm" class="flex flex-col flex-grow">
+                    <div class="mb-4">
+                        <label class="block text-oxford font-bold mb-2">Nama Lengkap</label>
+                        <div class="flex items-center border border-gray-300 rounded-2xl px-4 py-3 bg-white focus-within:border-oxford focus-within:ring-1 focus-within:ring-oxford">
+                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            <input type="text" id="name" class="w-full bg-transparent outline-none ml-3 text-oxford" placeholder="Ketik disini" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-oxford font-bold mb-2">Nomor HP / WhatsApp</label>
+                        <div class="flex items-center border border-gray-300 rounded-2xl px-4 py-3 bg-white focus-within:border-oxford focus-within:ring-1 focus-within:ring-oxford">
+                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                            <input type="number" id="phone" class="w-full bg-transparent outline-none ml-3 text-oxford" placeholder="08123..." required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-oxford font-bold mb-1">Email</label>
+                        <p class="text-xs text-gray-400 mb-2">Pastikan alamat email masih aktif</p>
+                        <div class="flex items-center border border-gray-300 rounded-2xl px-4 py-3 bg-white focus-within:border-oxford focus-within:ring-1 focus-within:ring-oxford">
+                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            <input type="email" id="email" class="w-full bg-transparent outline-none ml-3 text-oxford" placeholder="Ketik disini" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-8">
+                        <label class="block text-oxford font-bold mb-2">Password</label>
+                        <div class="flex items-center border border-gray-300 rounded-2xl px-4 py-3 bg-white focus-within:border-oxford focus-within:ring-1 focus-within:ring-oxford">
+                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
+                            <input type="password" id="password" class="w-full bg-transparent outline-none ml-3 text-oxford" placeholder="Ketik disini" required>
+                        </div>
+                    </div>
+
+                    <div class="flex-grow"></div>
+
+                    <div class="mt-auto">
+                        <p class="text-center text-sm text-gray-500 mb-4">Sudah punya akun? <a href="/" class="text-oxford font-bold hover:underline">Login disini</a></p>
+                        <button type="submit" class="w-full bg-oxford text-maize text-lg font-bold py-4 rounded-full shadow-lg active:scale-95 transition-transform">Daftar</button>
+                    </div>
+                </form>
             </div>
-            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">Verifikasi OTP</button>
-        </form>
+
+            <div id="box-otp" class="hidden flex-col flex-grow">
+                <h1 class="text-3xl font-extrabold text-oxford mb-2">Verifikasi WA</h1>
+                <p class="text-gray-600 mb-2">Masukkan 4 digit kode OTP yang kami kirimkan ke WhatsApp Anda.</p>
+                <p class="text-sm font-bold text-red-500 mb-8">Berlaku 5 Menit.</p>
+
+                <form id="otpForm" class="flex flex-col flex-grow">
+                    <div class="mb-4">
+                        <label class="block text-oxford font-bold mb-2">Kode OTP</label>
+                        <div class="flex items-center border border-gray-300 rounded-2xl px-4 py-3 bg-white focus-within:border-oxford focus-within:ring-1 focus-within:ring-oxford">
+                            <input type="number" id="otpCode" class="w-full bg-transparent outline-none text-oxford text-center text-2xl tracking-widest font-bold" placeholder="XXXX" required>
+                        </div>
+                    </div>
+                    <div class="flex-grow"></div>
+                    <button type="submit" class="w-full bg-maize text-oxford text-lg font-bold py-4 rounded-full shadow-lg active:scale-95 transition-transform">Verifikasi</button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <script>
         let registeredPhone = '';
-
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('name').value;
@@ -173,7 +231,7 @@ cat << 'EOF' > public/register.html
                     registeredPhone = data.phone;
                     document.getElementById('box-register').classList.add('hidden');
                     document.getElementById('box-otp').classList.remove('hidden');
-                    alert('OTP Terkirim! Silakan cek WhatsApp Anda (Berlaku 5 menit).');
+                    document.getElementById('box-otp').classList.add('flex');
                 } else { alert(data.error); }
             } catch (err) { alert('Gagal memproses pendaftaran.'); }
         });
@@ -206,40 +264,57 @@ cat << 'EOF' > public/forgot.html
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lupa Password - DIGITAL FIKY STORE</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { oxford: '#0A174E', maize: '#F5D042' } } }
+        }
+    </script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 class="text-2xl font-bold text-center text-blue-600 mb-6">Reset Password</h2>
+<body class="bg-gray-100 flex justify-center min-h-screen">
+    <div class="w-full max-w-md bg-white min-h-screen relative shadow-2xl overflow-x-hidden flex flex-col">
+        <div class="bg-oxford h-40 w-[150%] absolute -top-10 -left-[25%] rounded-b-[50%] z-0"></div>
         
-        <form id="requestOtpForm">
-            <p class="text-sm text-gray-600 mb-4 text-center">Masukkan Nomor WA Anda untuk reset password.</p>
-            <div class="mb-4">
-                <input type="number" id="phone" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required placeholder="08123...">
-            </div>
-            <button type="submit" class="w-full bg-yellow-500 text-white font-bold py-2 px-4 rounded hover:bg-yellow-600">Kirim OTP Reset</button>
-        </form>
+        <div class="relative z-10 px-8 pt-20 flex-grow flex flex-col pb-8">
+            <h1 class="text-3xl font-extrabold text-maize mb-2 text-center">Reset Password</h1>
+            
+            <form id="requestOtpForm" class="flex flex-col flex-grow mt-8">
+                <p class="text-gray-600 mb-6 text-sm text-center">Masukkan Nomor WA terdaftar Anda untuk menerima OTP Reset.</p>
+                <div class="mb-4">
+                    <label class="block text-oxford font-bold mb-2">Nomor WA Aktif</label>
+                    <div class="flex items-center border border-gray-300 rounded-2xl px-4 py-3 bg-white">
+                        <input type="number" id="phone" class="w-full bg-transparent outline-none text-oxford" placeholder="08123..." required>
+                    </div>
+                </div>
+                <div class="flex-grow"></div>
+                <button type="submit" class="w-full bg-maize text-oxford text-lg font-bold py-4 rounded-full shadow-lg active:scale-95 transition-transform">Kirim OTP</button>
+            </form>
 
-        <form id="resetForm" class="hidden mt-4">
-            <hr class="mb-4">
-            <p class="text-sm text-red-500 mb-4 text-center font-bold">OTP berlaku selama 5 menit.</p>
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Kode OTP (4 Digit)</label>
-                <input type="number" id="otp" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+            <form id="resetForm" class="hidden flex-col flex-grow mt-4">
+                <p class="text-sm font-bold text-red-500 mb-4 text-center">OTP berlaku selama 5 Menit.</p>
+                <div class="mb-4">
+                    <label class="block text-oxford font-bold mb-2">Kode OTP (4 Digit)</label>
+                    <div class="flex items-center border border-gray-300 rounded-2xl px-4 py-3 bg-white">
+                        <input type="number" id="otp" class="w-full bg-transparent outline-none text-oxford text-center tracking-widest font-bold text-xl" required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-oxford font-bold mb-2">Password Baru</label>
+                    <div class="flex items-center border border-gray-300 rounded-2xl px-4 py-3 bg-white">
+                        <input type="password" id="newPassword" class="w-full bg-transparent outline-none text-oxford" required>
+                    </div>
+                </div>
+                <div class="flex-grow"></div>
+                <button type="submit" class="w-full bg-oxford text-maize text-lg font-bold py-4 rounded-full shadow-lg active:scale-95 transition-transform">Simpan Password</button>
+            </form>
+            
+            <div class="mt-6 text-center">
+                <a href="/" class="text-gray-500 text-sm hover:text-oxford underline">Kembali ke Login</a>
             </div>
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Password Baru</label>
-                <input type="password" id="newPassword" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
-            </div>
-            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">Simpan Password Baru</button>
-        </form>
-        <div class="mt-4 text-center text-sm">
-            <a href="/" class="text-blue-500 hover:underline">Kembali ke Login</a>
         </div>
     </div>
 
     <script>
         let resetPhone = '';
-
         document.getElementById('requestOtpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const phone = document.getElementById('phone').value;
@@ -253,7 +328,7 @@ cat << 'EOF' > public/forgot.html
                     resetPhone = data.phone;
                     document.getElementById('requestOtpForm').classList.add('hidden');
                     document.getElementById('resetForm').classList.remove('hidden');
-                    alert('OTP Reset Password telah dikirim ke WA Anda! (Berlaku 5 Menit)');
+                    document.getElementById('resetForm').classList.add('flex');
                 } else { alert(data.error); }
             } catch (err) { alert('Gagal mengirim permintaan.'); }
         });
@@ -269,7 +344,7 @@ cat << 'EOF' > public/forgot.html
                 });
                 const data = await res.json();
                 if (res.ok) {
-                    alert('Password berhasil diubah! Silakan Login kembali.');
+                    alert('Password berhasil diubah! Silakan Login.');
                     window.location.href = '/';
                 } else { alert(data.error); }
             } catch (err) { alert('Gagal mereset password.'); }
@@ -279,7 +354,7 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
-# 4. Halaman Dashboard (Tempat Referensi PPOB)
+# 4. Halaman Dashboard (Tempat Referensi PPOB Nanti)
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id">
@@ -287,30 +362,37 @@ cat << 'EOF' > public/dashboard.html
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - DIGITAL FIKY STORE</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { oxford: '#0A174E', maize: '#F5D042' } } }
+        }
+    </script>
 </head>
-<body class="bg-gray-100">
-    <nav class="bg-blue-600 p-4 text-white flex justify-between items-center">
-        <h1 class="font-bold text-xl">DIGITAL FIKY STORE</h1>
-        <div class="flex items-center gap-4">
-            <span id="userName" class="font-semibold"></span>
-            <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm font-bold">Logout</button>
-        </div>
-    </nav>
-    <div class="container mx-auto mt-8 p-4">
-        <div class="bg-white p-6 rounded-lg shadow-md text-center">
-            <h2 class="text-2xl font-bold mb-2">Selamat Datang!</h2>
-            <p class="text-gray-600 mb-4">Nomor WhatsApp Terhubung: <span id="userPhone" class="font-bold text-blue-600"></span></p>
-            <div class="p-4 bg-green-100 border-l-4 border-green-500 text-green-700 text-left">
-                <strong>Sistem Login Sukses!</strong> Halaman ini siap diintegrasikan dengan UI Pembelian PPOB Anda selanjutnya.
+<body class="bg-gray-100 flex justify-center min-h-screen">
+    <div class="w-full max-w-md bg-white min-h-screen relative shadow-2xl overflow-x-hidden flex flex-col">
+        <nav class="bg-oxford p-4 text-maize flex justify-between items-center rounded-b-2xl shadow-md">
+            <h1 class="font-bold text-lg">FIKY STORE</h1>
+            <button onclick="logout()" class="text-sm font-semibold hover:text-white">Logout</button>
+        </nav>
+        
+        <div class="p-6">
+            <div class="bg-maize p-4 rounded-2xl shadow-sm text-oxford">
+                <p class="text-sm">Halo,</p>
+                <h2 id="userName" class="text-2xl font-extrabold">Member</h2>
+                <p id="userPhone" class="text-sm mt-1 font-semibold"></p>
+            </div>
+            
+            <div class="mt-8 text-center p-6 border-2 border-dashed border-gray-300 rounded-2xl">
+                <p class="text-gray-500">Area ini siap untuk fitur Pembelian PPOB.</p>
             </div>
         </div>
     </div>
+
     <script>
-        // Cek Login
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) window.location.href = '/';
         
-        document.getElementById('userName').innerText = "Halo, " + user.name;
+        document.getElementById('userName').innerText = user.name;
         document.getElementById('userPhone').innerText = user.phone;
 
         function logout() {
@@ -342,14 +424,13 @@ const app = express();
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
-// MENJADIKAN FOLDER 'public' SEBAGAI TAMPILAN WEB UTAMA
 app.use(express.static(path.join(__dirname, 'public')));
 
 const configFile = './config.json';
 const dbFile = './database.json';
 const produkFile = './produk.json';
 const trxFile = './trx.json';
-const webUsersFile = './web_users.json'; // Database pengguna Web Aplikasi
+const webUsersFile = './web_users.json'; 
 
 const loadJSON = (file) => fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
 const saveJSON = (file, data) => fs.writeFileSync(file, JSON.stringify(data, null, 2));
@@ -426,38 +507,35 @@ const sendWhatsAppMessage = async (phone, message) => {
 // BACKEND API - SISTEM AUTENTIKASI (LOGIN/REGISTER)
 // ==========================================
 
-// 1. REGISTER
 app.post('/api/auth/register', async (req, res) => {
     const { name, phone, email, password } = req.body;
     let webUsers = loadJSON(webUsersFile);
     let formattedPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
 
     if (webUsers[formattedPhone] && webUsers[formattedPhone].isVerified) {
-        return res.status(400).json({ error: 'Nomor HP sudah terdaftar dan terverifikasi.' });
+        return res.status(400).json({ error: 'Nomor HP sudah terdaftar dan diverifikasi.' });
     }
 
     const otp = Math.floor(1000 + Math.random() * 9000).toString(); // 4 Digit
-    const otpExpires = Date.now() + (5 * 60 * 1000); // 5 Menit kedaluwarsa
+    const otpExpires = Date.now() + (5 * 60 * 1000); // 5 Menit
 
     webUsers[formattedPhone] = { name, email, password, isVerified: false, otp, otpExpires };
     saveJSON(webUsersFile, webUsers);
 
-    const message = `Halo *${name}*!\n\nKode OTP Pendaftaran Akun Anda adalah: *${otp}*\n\n_Sistem akan menghanguskan kode ini dalam waktu 5 menit. Jangan berikan kode ini kepada siapapun._`;
+    const message = `Halo *${name}*!\n\nKode OTP Registrasi Aplikasi Anda adalah: *${otp}*\n\n_Kode ini berlaku 5 Menit. Jangan berikan kode ini kepada siapapun._`;
     const sent = await sendWhatsAppMessage(formattedPhone, message);
 
     if(sent) res.json({ message: 'OTP Terkirim', phone: formattedPhone });
     else res.status(500).json({ error: 'Gagal mengirim WA. Pastikan Bot Aktif.' });
 });
 
-// 2. VERIFY OTP
 app.post('/api/auth/verify', (req, res) => {
     const { phone, otp } = req.body;
     let webUsers = loadJSON(webUsersFile);
     
     if (webUsers[phone] && webUsers[phone].otp === otp) {
-        // Cek Kedaluwarsa 5 menit
         if (Date.now() > webUsers[phone].otpExpires) {
-            return res.status(400).json({ error: 'Kode OTP sudah kedaluwarsa (lebih dari 5 menit). Silakan daftar ulang atau minta OTP baru.' });
+            return res.status(400).json({ error: 'Kode OTP sudah kedaluwarsa (lebih dari 5 menit).' });
         }
 
         webUsers[phone].isVerified = true;
@@ -465,21 +543,18 @@ app.post('/api/auth/verify', (req, res) => {
         webUsers[phone].otpExpires = null; 
         saveJSON(webUsersFile, webUsers);
         
-        // Sinkronisasi ke Database Saldo Bot WA
         let db = loadJSON(dbFile);
-        let senderNum = phone.replace('62', '0'); // Boleh format apa saja, kita pakai default jid
+        let senderNum = phone.replace('62', '0'); 
         if (!db[phone]) {
             db[phone] = { saldo: 0, tanggal_daftar: new Date().toLocaleDateString('id-ID'), jid: phone + '@s.whatsapp.net' };
             saveJSON(dbFile, db);
         }
-
         res.json({ message: 'Verifikasi sukses!' });
     } else {
         res.status(400).json({ error: 'OTP Salah.' });
     }
 });
 
-// 3. LOGIN
 app.post('/api/auth/login', (req, res) => {
     const { identifier, password } = req.body;
     let webUsers = loadJSON(webUsersFile);
@@ -491,8 +566,7 @@ app.post('/api/auth/login', (req, res) => {
     );
 
     if (foundPhone) {
-        if (!webUsers[foundPhone].isVerified) return res.status(400).json({ error: 'Akun belum diverifikasi OTP. Silakan Daftar Ulang / Verifikasi WA Anda.' });
-        // Sembunyikan password saat dikirim ke frontend
+        if (!webUsers[foundPhone].isVerified) return res.status(400).json({ error: 'Akun belum verifikasi WA.' });
         let userData = { phone: foundPhone, name: webUsers[foundPhone].name, email: webUsers[foundPhone].email };
         res.json({ message: 'Login sukses', user: userData });
     } else {
@@ -500,7 +574,6 @@ app.post('/api/auth/login', (req, res) => {
     }
 });
 
-// 4. MINTA OTP LUPA PASSWORD
 app.post('/api/auth/forgot', async (req, res) => {
     const { phone } = req.body;
     let webUsers = loadJSON(webUsersFile);
@@ -511,30 +584,27 @@ app.post('/api/auth/forgot', async (req, res) => {
     }
 
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
-    const otpExpires = Date.now() + (5 * 60 * 1000); // Kedaluwarsa 5 Menit
+    const otpExpires = Date.now() + (5 * 60 * 1000); 
 
     webUsers[formattedPhone].otp = otp;
     webUsers[formattedPhone].otpExpires = otpExpires;
     saveJSON(webUsersFile, webUsers);
 
-    const message = `Halo!\n\nKode OTP Reset Password Anda adalah: *${otp}*\n\n_Kode ini hanya berlaku 5 Menit. Jika Anda tidak meminta ini, abaikan pesan ini._`;
+    const message = `Halo!\n\nKode OTP Reset Password Anda adalah: *${otp}*\n\n_Kode ini hanya berlaku 5 Menit._`;
     const sent = await sendWhatsAppMessage(formattedPhone, message);
 
     if(sent) res.json({ message: 'OTP Reset Terkirim', phone: formattedPhone });
     else res.status(500).json({ error: 'Gagal mengirim WA. Pastikan Bot Aktif.' });
 });
 
-// 5. EKSEKUSI RESET PASSWORD
 app.post('/api/auth/reset', (req, res) => {
     const { phone, otp, newPassword } = req.body;
     let webUsers = loadJSON(webUsersFile);
     
     if (webUsers[phone] && webUsers[phone].otp === otp) {
-        // Cek Kedaluwarsa 5 menit
         if (Date.now() > webUsers[phone].otpExpires) {
-            return res.status(400).json({ error: 'Kode OTP sudah kedaluwarsa (lebih dari 5 menit). Silakan ulangi proses Reset Password.' });
+            return res.status(400).json({ error: 'Kode OTP sudah kedaluwarsa.' });
         }
-
         webUsers[phone].password = newPassword;
         webUsers[phone].otp = null; 
         webUsers[phone].otpExpires = null; 
@@ -562,7 +632,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V11) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V12) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
