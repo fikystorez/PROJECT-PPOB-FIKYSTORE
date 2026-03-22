@@ -35,9 +35,10 @@ while true; do
     echo "4. Hentikan Bot (PM2)"
     echo "5. Lihat Log / Error Bot (Tekan Ctrl+C untuk keluar log)"
     echo "6. Update Bot (Tarik Kode Terbaru Tanpa Rebuild VPS)"
+    echo "7. Reset Sesi WhatsApp (Gunakan jika bot error saat login)"
     echo "0. Keluar dari Panel Menu"
     echo "=========================================================="
-    read -p "Pilih menu (0-6): " PILIHAN_MENU
+    read -p "Pilih menu (0-7): " PILIHAN_MENU
 
     case $PILIHAN_MENU in
         1)
@@ -58,7 +59,7 @@ while true; do
 
             echo "[1/8] Mempersiapkan sistem dan menginstal Node.js & Library Browser (Mohon tunggu)..."
             apt update
-            apt install curl wget gnupg -y
+            apt install curl wget gnupg git -y
             
             # Install Node.js
             curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
@@ -71,7 +72,7 @@ while true; do
             mkdir -p $DIR_NAME
             cd $DIR_NAME
 
-            echo "[3/8] Membuat file package.json..."
+            echo "[3/8] Membuat file package.json (Menggunakan library WA versi Github Main)..."
             cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
@@ -86,7 +87,7 @@ while true; do
     "express": "^4.19.2",
     "md5": "^2.3.0",
     "sqlite3": "^5.1.7",
-    "whatsapp-web.js": "latest"
+    "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js#main"
   }
 }
 EOF
@@ -98,7 +99,7 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const sqlite3 = require('sqlite3').verbose();
 const axios = require('axios');
 const md5 = require('md5');
-const readline = require('readline'); // Modul untuk membaca input terminal
+const readline = require('readline');
 
 const app = express();
 app.use(express.json());
@@ -112,7 +113,6 @@ const db = new sqlite3.Database('./ppob.db', (err) => {
     } else {
         console.log('Berhasil terkoneksi ke database SQLite.');
         
-        // Buat tabel jika belum ada
         db.serialize(() => {
             db.run(`CREATE TABLE IF NOT EXISTS members (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -134,7 +134,6 @@ const db = new sqlite3.Database('./ppob.db', (err) => {
                 value TEXT
             )`);
 
-            // Insert default settings jika kosong
             db.run(`INSERT OR IGNORE INTO settings (key, value) VALUES ('digiflazz_username', 'isi_username_disini')`);
             db.run(`INSERT OR IGNORE INTO settings (key, value) VALUES ('digiflazz_api_key', 'isi_api_key_disini')`);
         });
@@ -147,12 +146,11 @@ const db = new sqlite3.Database('./ppob.db', (err) => {
 const waClient = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
-        args: ['--no-sandbox', '--disable-setuid-sandbox'] // Penting untuk VPS Linux
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
     }
 });
 
 waClient.on('qr', async (qr) => {
-    // Meminta input Nomor HP untuk Pairing Code
     if (!global.isPairingPromptShown && process.stdin.isTTY) {
         global.isPairingPromptShown = true;
         const rl = readline.createInterface({
@@ -165,13 +163,23 @@ waClient.on('qr', async (qr) => {
         console.log('========================================================');
         rl.question('Masukkan Nomor HP Bot (contoh: 628123456789): ', async (phone) => {
             if (phone && phone.trim() !== '') {
-                try {
-                    console.log('\nMeminta Kode Pairing ke WhatsApp... (Mohon tunggu sekitar 5 detik agar sistem siap)');
-                    
-                    // Jeda waktu untuk menghindari error "window.onCodeReceivedEvent is not a function"
-                    await new Promise(resolve => setTimeout(resolve, 5000));
-                    
-                    const code = await waClient.requestPairingCode(phone.trim());
+                console.log('\nMeminta Kode Pairing ke WhatsApp... (Mohon tunggu)');
+                
+                let code = null;
+                let attempts = 0;
+                
+                // SISTEM AUTO-RETRY (Maksimal 5x percobaan)
+                while (attempts < 5 && !code) {
+                    try {
+                        attempts++;
+                        await new Promise(resolve => setTimeout(resolve, 4000)); // Jeda 4 detik agar browser WA siap
+                        code = await waClient.requestPairingCode(phone.trim());
+                    } catch (error) {
+                        console.log(`[Percobaan ${attempts}/5] Sistem WA belum siap memproses kode, mencoba lagi...`);
+                    }
+                }
+
+                if (code) {
                     console.log('\n========================================================');
                     console.log(` KODE PAIRING ANDA: ${code}`);
                     console.log('========================================================');
@@ -182,9 +190,9 @@ waClient.on('qr', async (qr) => {
                     console.log('4. Pilih "Tautkan dengan nomor telepon saja" (Tulisan kecil di bawah)');
                     console.log('5. Masukkan 8 huruf kode di atas!');
                     console.log('========================================================\n');
-                } catch (error) {
-                    console.log('\n[ERROR] Gagal meminta kode pairing:', error.message);
-                    console.log('Solusi: Tekan Ctrl+C, hapus folder sesi, dan jalankan Menu 2 lagi.');
+                } else {
+                    console.log('\n[ERROR] Gagal mendapatkan kode setelah 5 percobaan.');
+                    console.log('Solusi: Tekan Ctrl+C, lalu jalankan Menu 7 untuk Mereset Sesi, dan coba lagi.');
                 }
             } else {
                 console.log('Nomor tidak boleh kosong. Tekan Ctrl+C lalu ulangi Menu 2.');
@@ -200,7 +208,6 @@ waClient.on('ready', () => {
 
 waClient.initialize();
 
-// Fungsi bantuan untuk kirim pesan WA
 const sendWhatsAppMessage = async (phone, message) => {
     try {
         const formattedPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
@@ -216,8 +223,6 @@ const sendWhatsAppMessage = async (phone, message) => {
 // ==========================================
 // 3. ENDPOINT API - MANAJEMEN PENGATURAN & DIGIFLAZZ
 // ==========================================
-
-// Fungsi mengambil setting dari DB
 const getSetting = (key) => {
     return new Promise((resolve, reject) => {
         db.get(`SELECT value FROM settings WHERE key = ?`, [key], (err, row) => {
@@ -227,7 +232,6 @@ const getSetting = (key) => {
     });
 };
 
-// Ubah API Digiflazz
 app.post('/api/settings/digiflazz', (req, res) => {
     const { username, api_key } = req.body;
     if (!username || !api_key) return res.status(400).json({ error: 'Username dan API Key wajib diisi' });
@@ -239,13 +243,10 @@ app.post('/api/settings/digiflazz', (req, res) => {
     });
 });
 
-// Cek Saldo Digiflazz
 app.get('/api/digiflazz/cek-saldo', async (req, res) => {
     try {
         const username = await getSetting('digiflazz_username');
         const apiKey = await getSetting('digiflazz_api_key');
-        
-        // Rumus sign Digiflazz untuk cek saldo: md5(username + apikey + "depo")
         const sign = md5(username + apiKey + "depo");
 
         const response = await axios.post('https://api.digiflazz.com/v1/cek-saldo', {
@@ -263,8 +264,6 @@ app.get('/api/digiflazz/cek-saldo', async (req, res) => {
 // ==========================================
 // 4. ENDPOINT API - MANAJEMEN MEMBER & OTP
 // ==========================================
-
-// Tambah/Daftar Member
 app.post('/api/members', (req, res) => {
     const { phone } = req.body;
     if (!phone) return res.status(400).json({ error: 'Nomor HP wajib diisi' });
@@ -275,14 +274,13 @@ app.post('/api/members', (req, res) => {
     });
 });
 
-// Request OTP WA
 app.post('/api/members/request-otp', (req, res) => {
     const { phone } = req.body;
     
     db.get(`SELECT * FROM members WHERE phone = ?`, [phone], async (err, row) => {
         if (err || !row) return res.status(404).json({ error: 'Member tidak ditemukan' });
 
-        const otp = Math.floor(100000 + Math.random() * 900000).toString(); // Generate 6 digit OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
         
         db.run(`UPDATE members SET otp = ? WHERE phone = ?`, [otp, phone], async (updateErr) => {
             if (updateErr) return res.status(500).json({ error: 'Gagal update OTP' });
@@ -299,9 +297,8 @@ app.post('/api/members/request-otp', (req, res) => {
     });
 });
 
-// Tambah/Kurangi Saldo Member
 app.post('/api/members/saldo', (req, res) => {
-    const { phone, amount, type } = req.body; // type: 'add' atau 'deduct'
+    const { phone, amount, type } = req.body;
     
     db.get(`SELECT balance FROM members WHERE phone = ?`, [phone], (err, row) => {
         if (err || !row) return res.status(404).json({ error: 'Member tidak ditemukan' });
@@ -319,8 +316,6 @@ app.post('/api/members/saldo', (req, res) => {
 // ==========================================
 // 5. ENDPOINT API - MANAJEMEN PRODUK
 // ==========================================
-
-// Tambah Produk
 app.post('/api/products', (req, res) => {
     const { sku, name, digiflazz_price, sell_price } = req.body;
     
@@ -331,7 +326,6 @@ app.post('/api/products', (req, res) => {
     });
 });
 
-// Lihat Semua Produk
 app.get('/api/products', (req, res) => {
     db.all(`SELECT * FROM products`, [], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });
@@ -406,7 +400,6 @@ EOF
             echo "=========================================================="
             if [ -d "$DIR_NAME" ]; then
                 cd $DIR_NAME
-                # Mengecek apakah nodejs sudah terinstal sebelum menjalankan
                 if ! command -v node &> /dev/null; then
                     echo "[ERROR] Node.js belum terinstal!"
                     echo "Silakan jalankan Menu 1 (Install & Buat File) terlebih dahulu."
@@ -474,7 +467,6 @@ EOF
                 cd $DIR_NAME
                 echo "[1/3] Menulis ulang file package.json dan index.js terbaru..."
                 
-                # Menulis ulang package.json
                 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
@@ -489,19 +481,18 @@ EOF
     "express": "^4.19.2",
     "md5": "^2.3.0",
     "sqlite3": "^5.1.7",
-    "whatsapp-web.js": "latest"
+    "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js#main"
   }
 }
 EOF
 
-                # Menulis ulang index.js (Sync dengan yang ada di Menu 1)
                 cat << 'EOF' > index.js
 const express = require('express');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const sqlite3 = require('sqlite3').verbose();
 const axios = require('axios');
 const md5 = require('md5');
-const readline = require('readline'); // Modul untuk membaca input terminal
+const readline = require('readline');
 
 const app = express();
 app.use(express.json());
@@ -515,7 +506,6 @@ const db = new sqlite3.Database('./ppob.db', (err) => {
     } else {
         console.log('Berhasil terkoneksi ke database SQLite.');
         
-        // Buat tabel jika belum ada
         db.serialize(() => {
             db.run(`CREATE TABLE IF NOT EXISTS members (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -537,7 +527,6 @@ const db = new sqlite3.Database('./ppob.db', (err) => {
                 value TEXT
             )`);
 
-            // Insert default settings jika kosong
             db.run(`INSERT OR IGNORE INTO settings (key, value) VALUES ('digiflazz_username', 'isi_username_disini')`);
             db.run(`INSERT OR IGNORE INTO settings (key, value) VALUES ('digiflazz_api_key', 'isi_api_key_disini')`);
         });
@@ -550,12 +539,11 @@ const db = new sqlite3.Database('./ppob.db', (err) => {
 const waClient = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
-        args: ['--no-sandbox', '--disable-setuid-sandbox'] // Penting untuk VPS Linux
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
     }
 });
 
 waClient.on('qr', async (qr) => {
-    // Meminta input Nomor HP untuk Pairing Code
     if (!global.isPairingPromptShown && process.stdin.isTTY) {
         global.isPairingPromptShown = true;
         const rl = readline.createInterface({
@@ -568,13 +556,23 @@ waClient.on('qr', async (qr) => {
         console.log('========================================================');
         rl.question('Masukkan Nomor HP Bot (contoh: 628123456789): ', async (phone) => {
             if (phone && phone.trim() !== '') {
-                try {
-                    console.log('\nMeminta Kode Pairing ke WhatsApp... (Mohon tunggu sekitar 5 detik agar sistem siap)');
-                    
-                    // Jeda waktu untuk menghindari error "window.onCodeReceivedEvent is not a function"
-                    await new Promise(resolve => setTimeout(resolve, 5000));
-                    
-                    const code = await waClient.requestPairingCode(phone.trim());
+                console.log('\nMeminta Kode Pairing ke WhatsApp... (Mohon tunggu)');
+                
+                let code = null;
+                let attempts = 0;
+                
+                // SISTEM AUTO-RETRY (Maksimal 5x percobaan)
+                while (attempts < 5 && !code) {
+                    try {
+                        attempts++;
+                        await new Promise(resolve => setTimeout(resolve, 4000)); // Jeda 4 detik agar browser WA siap
+                        code = await waClient.requestPairingCode(phone.trim());
+                    } catch (error) {
+                        console.log(`[Percobaan ${attempts}/5] Sistem WA belum siap memproses kode, mencoba lagi...`);
+                    }
+                }
+
+                if (code) {
                     console.log('\n========================================================');
                     console.log(` KODE PAIRING ANDA: ${code}`);
                     console.log('========================================================');
@@ -585,9 +583,9 @@ waClient.on('qr', async (qr) => {
                     console.log('4. Pilih "Tautkan dengan nomor telepon saja" (Tulisan kecil di bawah)');
                     console.log('5. Masukkan 8 huruf kode di atas!');
                     console.log('========================================================\n');
-                } catch (error) {
-                    console.log('\n[ERROR] Gagal meminta kode pairing:', error.message);
-                    console.log('Solusi: Tekan Ctrl+C, hapus folder sesi, dan jalankan Menu 2 lagi.');
+                } else {
+                    console.log('\n[ERROR] Gagal mendapatkan kode setelah 5 percobaan.');
+                    console.log('Solusi: Tekan Ctrl+C, lalu jalankan Menu 7 untuk Mereset Sesi, dan coba lagi.');
                 }
             } else {
                 console.log('Nomor tidak boleh kosong. Tekan Ctrl+C lalu ulangi Menu 2.');
@@ -603,7 +601,6 @@ waClient.on('ready', () => {
 
 waClient.initialize();
 
-// Fungsi bantuan untuk kirim pesan WA
 const sendWhatsAppMessage = async (phone, message) => {
     try {
         const formattedPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
@@ -619,8 +616,6 @@ const sendWhatsAppMessage = async (phone, message) => {
 // ==========================================
 // 3. ENDPOINT API - MANAJEMEN PENGATURAN & DIGIFLAZZ
 // ==========================================
-
-// Fungsi mengambil setting dari DB
 const getSetting = (key) => {
     return new Promise((resolve, reject) => {
         db.get(`SELECT value FROM settings WHERE key = ?`, [key], (err, row) => {
@@ -630,7 +625,6 @@ const getSetting = (key) => {
     });
 };
 
-// Ubah API Digiflazz
 app.post('/api/settings/digiflazz', (req, res) => {
     const { username, api_key } = req.body;
     if (!username || !api_key) return res.status(400).json({ error: 'Username dan API Key wajib diisi' });
@@ -642,13 +636,10 @@ app.post('/api/settings/digiflazz', (req, res) => {
     });
 });
 
-// Cek Saldo Digiflazz
 app.get('/api/digiflazz/cek-saldo', async (req, res) => {
     try {
         const username = await getSetting('digiflazz_username');
         const apiKey = await getSetting('digiflazz_api_key');
-        
-        // Rumus sign Digiflazz untuk cek saldo: md5(username + apikey + "depo")
         const sign = md5(username + apiKey + "depo");
 
         const response = await axios.post('https://api.digiflazz.com/v1/cek-saldo', {
@@ -666,8 +657,6 @@ app.get('/api/digiflazz/cek-saldo', async (req, res) => {
 // ==========================================
 // 4. ENDPOINT API - MANAJEMEN MEMBER & OTP
 // ==========================================
-
-// Tambah/Daftar Member
 app.post('/api/members', (req, res) => {
     const { phone } = req.body;
     if (!phone) return res.status(400).json({ error: 'Nomor HP wajib diisi' });
@@ -678,14 +667,13 @@ app.post('/api/members', (req, res) => {
     });
 });
 
-// Request OTP WA
 app.post('/api/members/request-otp', (req, res) => {
     const { phone } = req.body;
     
     db.get(`SELECT * FROM members WHERE phone = ?`, [phone], async (err, row) => {
         if (err || !row) return res.status(404).json({ error: 'Member tidak ditemukan' });
 
-        const otp = Math.floor(100000 + Math.random() * 900000).toString(); // Generate 6 digit OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
         
         db.run(`UPDATE members SET otp = ? WHERE phone = ?`, [otp, phone], async (updateErr) => {
             if (updateErr) return res.status(500).json({ error: 'Gagal update OTP' });
@@ -702,9 +690,8 @@ app.post('/api/members/request-otp', (req, res) => {
     });
 });
 
-// Tambah/Kurangi Saldo Member
 app.post('/api/members/saldo', (req, res) => {
-    const { phone, amount, type } = req.body; // type: 'add' atau 'deduct'
+    const { phone, amount, type } = req.body;
     
     db.get(`SELECT balance FROM members WHERE phone = ?`, [phone], (err, row) => {
         if (err || !row) return res.status(404).json({ error: 'Member tidak ditemukan' });
@@ -722,8 +709,6 @@ app.post('/api/members/saldo', (req, res) => {
 // ==========================================
 // 5. ENDPOINT API - MANAJEMEN PRODUK
 // ==========================================
-
-// Tambah Produk
 app.post('/api/products', (req, res) => {
     const { sku, name, digiflazz_price, sell_price } = req.body;
     
@@ -734,7 +719,6 @@ app.post('/api/products', (req, res) => {
     });
 });
 
-// Lihat Semua Produk
 app.get('/api/products', (req, res) => {
     db.all(`SELECT * FROM products`, [], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });
@@ -751,7 +735,7 @@ app.listen(PORT, () => {
 });
 EOF
                 
-                echo "[2/3] Memperbarui library Node.js (jika ada)..."
+                echo "[2/3] Memperbarui library Node.js (Mengunduh versi GitHub Main)..."
                 npm install
                 
                 cd ..
@@ -770,13 +754,27 @@ EOF
             read -p "Tekan Enter untuk kembali ke Menu Utama..."
             ;;
 
+        7)
+            echo "=========================================================="
+            echo "  Mereset Sesi WhatsApp...                                "
+            echo "=========================================================="
+            if [ -d "$DIR_NAME/.wwebjs_auth" ]; then
+                rm -rf $DIR_NAME/.wwebjs_auth
+                echo "[SUKSES] Folder sesi rusak berhasil dihapus!"
+                echo "Silakan jalankan Menu 2 lagi untuk mendapatkan kode baru."
+            else
+                echo "[INFO] Folder sesi tidak ditemukan. Bot sudah dalam keadaan bersih."
+            fi
+            read -p "Tekan Enter untuk kembali ke Menu Utama..."
+            ;;
+
         0)
             echo "Keluar dari Panel Manajemen. Sampai jumpa!"
             exit 0
             ;;
 
         *)
-            echo "Pilihan tidak valid, silakan masukkan angka 0-6."
+            echo "Pilihan tidak valid, silakan masukkan angka 0-7."
             read -p "Tekan Enter untuk mencoba lagi..."
             ;;
     esac
