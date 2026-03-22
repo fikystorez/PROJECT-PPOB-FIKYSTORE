@@ -143,7 +143,7 @@ cat << 'EOF' > public/register.html
 
     <div class="bg-white p-8 rounded-lg shadow-md w-96 hidden" id="box-otp">
         <h2 class="text-2xl font-bold text-center text-blue-600 mb-6">Verifikasi WA</h2>
-        <p class="text-sm text-gray-600 mb-4 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
+        <p class="text-sm text-gray-600 mb-4 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda. <br><span class="text-red-500 font-bold">Berlaku 5 Menit.</span></p>
         <form id="otpForm">
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2">Kode OTP</label>
@@ -173,7 +173,7 @@ cat << 'EOF' > public/register.html
                     registeredPhone = data.phone;
                     document.getElementById('box-register').classList.add('hidden');
                     document.getElementById('box-otp').classList.remove('hidden');
-                    alert('OTP Terkirim! Silakan cek WhatsApp Anda.');
+                    alert('OTP Terkirim! Silakan cek WhatsApp Anda (Berlaku 5 menit).');
                 } else { alert(data.error); }
             } catch (err) { alert('Gagal memproses pendaftaran.'); }
         });
@@ -221,6 +221,7 @@ cat << 'EOF' > public/forgot.html
 
         <form id="resetForm" class="hidden mt-4">
             <hr class="mb-4">
+            <p class="text-sm text-red-500 mb-4 text-center font-bold">OTP berlaku selama 5 menit.</p>
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2">Kode OTP (4 Digit)</label>
                 <input type="number" id="otp" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
@@ -252,7 +253,7 @@ cat << 'EOF' > public/forgot.html
                     resetPhone = data.phone;
                     document.getElementById('requestOtpForm').classList.add('hidden');
                     document.getElementById('resetForm').classList.remove('hidden');
-                    alert('OTP Reset Password telah dikirim ke WA Anda!');
+                    alert('OTP Reset Password telah dikirim ke WA Anda! (Berlaku 5 Menit)');
                 } else { alert(data.error); }
             } catch (err) { alert('Gagal mengirim permintaan.'); }
         });
@@ -436,10 +437,12 @@ app.post('/api/auth/register', async (req, res) => {
     }
 
     const otp = Math.floor(1000 + Math.random() * 9000).toString(); // 4 Digit
-    webUsers[formattedPhone] = { name, email, password, isVerified: false, otp };
+    const otpExpires = Date.now() + (5 * 60 * 1000); // 5 Menit kedaluwarsa
+
+    webUsers[formattedPhone] = { name, email, password, isVerified: false, otp, otpExpires };
     saveJSON(webUsersFile, webUsers);
 
-    const message = `Halo *${name}*!\n\nKode OTP Pendaftaran Akun Anda adalah: *${otp}*\n\n_Jangan berikan kode ini kepada siapapun._`;
+    const message = `Halo *${name}*!\n\nKode OTP Pendaftaran Akun Anda adalah: *${otp}*\n\n_Sistem akan menghanguskan kode ini dalam waktu 5 menit. Jangan berikan kode ini kepada siapapun._`;
     const sent = await sendWhatsAppMessage(formattedPhone, message);
 
     if(sent) res.json({ message: 'OTP Terkirim', phone: formattedPhone });
@@ -452,8 +455,14 @@ app.post('/api/auth/verify', (req, res) => {
     let webUsers = loadJSON(webUsersFile);
     
     if (webUsers[phone] && webUsers[phone].otp === otp) {
+        // Cek Kedaluwarsa 5 menit
+        if (Date.now() > webUsers[phone].otpExpires) {
+            return res.status(400).json({ error: 'Kode OTP sudah kedaluwarsa (lebih dari 5 menit). Silakan daftar ulang atau minta OTP baru.' });
+        }
+
         webUsers[phone].isVerified = true;
         webUsers[phone].otp = null; 
+        webUsers[phone].otpExpires = null; 
         saveJSON(webUsersFile, webUsers);
         
         // Sinkronisasi ke Database Saldo Bot WA
@@ -482,7 +491,7 @@ app.post('/api/auth/login', (req, res) => {
     );
 
     if (foundPhone) {
-        if (!webUsers[foundPhone].isVerified) return res.status(400).json({ error: 'Akun belum diverifikasi OTP. Silakan Daftar Ulang.' });
+        if (!webUsers[foundPhone].isVerified) return res.status(400).json({ error: 'Akun belum diverifikasi OTP. Silakan Daftar Ulang / Verifikasi WA Anda.' });
         // Sembunyikan password saat dikirim ke frontend
         let userData = { phone: foundPhone, name: webUsers[foundPhone].name, email: webUsers[foundPhone].email };
         res.json({ message: 'Login sukses', user: userData });
@@ -502,10 +511,13 @@ app.post('/api/auth/forgot', async (req, res) => {
     }
 
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    const otpExpires = Date.now() + (5 * 60 * 1000); // Kedaluwarsa 5 Menit
+
     webUsers[formattedPhone].otp = otp;
+    webUsers[formattedPhone].otpExpires = otpExpires;
     saveJSON(webUsersFile, webUsers);
 
-    const message = `Halo!\n\nKode OTP Reset Password Anda adalah: *${otp}*\n\n_Jika Anda tidak meminta ini, abaikan pesan ini._`;
+    const message = `Halo!\n\nKode OTP Reset Password Anda adalah: *${otp}*\n\n_Kode ini hanya berlaku 5 Menit. Jika Anda tidak meminta ini, abaikan pesan ini._`;
     const sent = await sendWhatsAppMessage(formattedPhone, message);
 
     if(sent) res.json({ message: 'OTP Reset Terkirim', phone: formattedPhone });
@@ -518,8 +530,14 @@ app.post('/api/auth/reset', (req, res) => {
     let webUsers = loadJSON(webUsersFile);
     
     if (webUsers[phone] && webUsers[phone].otp === otp) {
+        // Cek Kedaluwarsa 5 menit
+        if (Date.now() > webUsers[phone].otpExpires) {
+            return res.status(400).json({ error: 'Kode OTP sudah kedaluwarsa (lebih dari 5 menit). Silakan ulangi proses Reset Password.' });
+        }
+
         webUsers[phone].password = newPassword;
         webUsers[phone].otp = null; 
+        webUsers[phone].otpExpires = null; 
         saveJSON(webUsersFile, webUsers);
         res.json({ message: 'Password berhasil diubah!' });
     } else {
@@ -544,7 +562,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V10) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V11) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
