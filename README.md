@@ -15,4 +15,4 @@ Selamat datang di *repository* resmi **DIGITAL FIKY STORE**. Ini adalah aplikasi
 Pastikan Anda menggunakan VPS dengan OS Linux (Ubuntu/Debian) dan login sebagai `root`. Jalankan perintah sakti di bawah ini pada terminal VPS Anda:
 
 ```bash
-apt update && apt install wget -y && wget -qO install.sh [https://raw.githubusercontent.com/fikystorez/PROJECT-PPOB-FIKYSTORE/main/install.sh](https://raw.githubusercontent.com/fikystorez/PROJECT-PPOB-FIKYSTORE/main/install.sh) && chmod +x install.sh && ./install.sh
+apt update && apt install wget -y && wget -qO install.sh https://raw.githubusercontent.com/fikystorez/PROJECT-PPOB-FIKYSTORE/main/install.sh && chmod +x install.sh && ./install.sh
