@@ -59,7 +59,7 @@ while true; do
 
             echo "[1/8] Mempersiapkan sistem dan menginstal Node.js & Library Browser (Mohon tunggu)..."
             apt update
-            apt install curl wget gnupg git dos2unix -y
+            apt install curl wget gnupg git dos2unix psmisc -y
             
             # Install Node.js
             curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
@@ -400,11 +400,17 @@ EOF
             echo "=========================================================="
             if [ -d "$DIR_NAME" ]; then
                 cd $DIR_NAME
-                # Memastikan tidak ada error '&>' pada shell yang berbeda
                 if ! command -v node > /dev/null 2>&1; then
                     echo "[ERROR] Node.js belum terinstal!"
                     echo "Silakan jalankan Menu 1 (Install & Buat File) terlebih dahulu."
                 else
+                    echo "[INFO] Membersihkan port 3000 agar tidak bentrok..."
+                    if command -v pm2 > /dev/null 2>&1; then
+                        pm2 stop $BOT_NAME > /dev/null 2>&1
+                    fi
+                    killall node > /dev/null 2>&1
+                    sleep 2
+                    
                     node index.js
                 fi
                 cd ..
