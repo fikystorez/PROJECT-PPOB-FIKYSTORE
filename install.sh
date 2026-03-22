@@ -24,54 +24,12 @@ fi
 DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
-while true; do
-    clear
-    echo "=========================================================="
-    echo "      PANEL MANAJEMEN BOT - DIGITAL FIKY STORE            "
-    echo "=========================================================="
-    echo "1. Install & Buat File Bot Otomatis (Pertama Kali)"
-    echo "2. Mulai Bot (Terminal - Untuk Login Kode/QR & Testing)"
-    echo "3. Jalankan Bot di Latar Belakang (PM2 - 24 Jam)"
-    echo "4. Hentikan Bot (PM2)"
-    echo "5. Lihat Log / Error Bot (Tekan Ctrl+C untuk keluar log)"
-    echo "0. Keluar dari Panel Menu"
-    echo "=========================================================="
-    read -p "Pilih menu (0-5): " PILIHAN_MENU
-
-    case $PILIHAN_MENU in
-        1)
-            echo ""
-            echo "=========================================================="
-            echo "  Mulai Proses Instalasi...                               "
-            echo "=========================================================="
-            echo "Bagaimana Anda ingin mengakses aplikasi ini?"
-            echo "A. Sementara menggunakan IP VPS (Port 3000)"
-            echo "B. Menggunakan Domain (Akan menginstal & set Nginx otomatis)"
-            read -p "Pilih (A atau B): " PILIHAN_DOMAIN
-
-            if [[ "$PILIHAN_DOMAIN" == "B" || "$PILIHAN_DOMAIN" == "b" ]]; then
-                read -p "Masukkan nama domain Anda (contoh: digitalfikystore.com): " DOMAIN
-            fi
-
-            PORT=3000
-
-            echo "[1/8] Mempersiapkan sistem dan menginstal Node.js & Library Browser (Mohon tunggu)..."
-            apt update
-            apt install curl wget gnupg -y
-            
-            # Install Node.js
-            curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-            apt install -y nodejs
-            
-            # Install Dependencies Puppeteer (Chrome) untuk VPS
-            apt install -y gconf-service libgbm-dev libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils
-
-            echo "[2/8] Membuat direktori project: $DIR_NAME..."
-            mkdir -p $DIR_NAME
-            cd $DIR_NAME
-
-            echo "[3/8] Membuat file package.json..."
-            cat << 'EOF' > package.json
+# ==========================================
+# FUNGSI UNTUK MENULIS KODE (AGAR TIDAK REBUILD VPS)
+# ==========================================
+write_bot_files() {
+    echo "[INFO] Menulis ulang file package.json..."
+    cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
   "version": "1.0.0",
@@ -91,8 +49,8 @@ while true; do
 }
 EOF
 
-            echo "[4/8] Membuat file utama index.js (FULL SCRIPT)..."
-            cat << 'EOF' > index.js
+    echo "[INFO] Menulis ulang file utama index.js (FULL SCRIPT)..."
+    cat << 'EOF' > index.js
 const express = require('express');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
@@ -346,6 +304,60 @@ app.listen(PORT, () => {
     console.log(`Server DIGITAL FIKY STORE berjalan di port ${PORT}`);
 });
 EOF
+}
+
+# ==========================================
+# LOOP MENU PANEL UTAMA
+# ==========================================
+while true; do
+    clear
+    echo "=========================================================="
+    echo "      PANEL MANAJEMEN BOT - DIGITAL FIKY STORE            "
+    echo "=========================================================="
+    echo "1. Install & Buat File Bot Otomatis (Pertama Kali)"
+    echo "2. Mulai Bot (Terminal - Untuk Login Kode/QR & Testing)"
+    echo "3. Jalankan Bot di Latar Belakang (PM2 - 24 Jam)"
+    echo "4. Hentikan Bot (PM2)"
+    echo "5. Lihat Log / Error Bot (Tekan Ctrl+C untuk keluar log)"
+    echo "6. Update Bot (Tarik Kode Terbaru Tanpa Rebuild VPS)"
+    echo "0. Keluar dari Panel Menu"
+    echo "=========================================================="
+    read -p "Pilih menu (0-6): " PILIHAN_MENU
+
+    case $PILIHAN_MENU in
+        1)
+            echo ""
+            echo "=========================================================="
+            echo "  Mulai Proses Instalasi...                               "
+            echo "=========================================================="
+            echo "Bagaimana Anda ingin mengakses aplikasi ini?"
+            echo "A. Sementara menggunakan IP VPS (Port 3000)"
+            echo "B. Menggunakan Domain (Akan menginstal & set Nginx otomatis)"
+            read -p "Pilih (A atau B): " PILIHAN_DOMAIN
+
+            if [[ "$PILIHAN_DOMAIN" == "B" || "$PILIHAN_DOMAIN" == "b" ]]; then
+                read -p "Masukkan nama domain Anda (contoh: digitalfikystore.com): " DOMAIN
+            fi
+
+            PORT=3000
+
+            echo "[1/8] Mempersiapkan sistem dan menginstal Node.js & Library Browser (Mohon tunggu)..."
+            apt update
+            apt install curl wget gnupg -y
+            
+            # Install Node.js
+            curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+            apt install -y nodejs
+            
+            # Install Dependencies Puppeteer (Chrome) untuk VPS
+            apt install -y gconf-service libgbm-dev libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils
+
+            echo "[2/8] Membuat direktori project: $DIR_NAME..."
+            mkdir -p $DIR_NAME
+            cd $DIR_NAME
+
+            # Memanggil fungsi untuk menulis file package.json dan index.js
+            write_bot_files
 
             echo "[5/8] Menginstal library Node.js pendukung..."
             npm install
@@ -465,13 +477,36 @@ EOF
             fi
             ;;
 
+        6)
+            echo "=========================================================="
+            echo "  Mengupdate Bot (Tanpa Rebuild Sistem VPS)..."
+            echo "=========================================================="
+            if [ -d "$DIR_NAME" ]; then
+                cd $DIR_NAME
+                write_bot_files
+                echo "[INFO] Mengecek pembaruan library NPM (jika ada)..."
+                npm install
+                if command -v pm2 &> /dev/null; then
+                    echo "[INFO] Merestart Bot di PM2 agar kode baru aktif..."
+                    pm2 restart $BOT_NAME
+                fi
+                cd ..
+                echo "=========================================================="
+                echo "  UPDATE SUKSES! Bot sudah berjalan dengan kode terbaru."
+                echo "=========================================================="
+            else
+                echo "[ERROR] Folder project belum ada. Silakan jalankan Instalasi (Menu 1) terlebih dahulu."
+            fi
+            read -p "Tekan Enter untuk kembali ke Menu Utama..."
+            ;;
+
         0)
             echo "Keluar dari Panel Manajemen. Sampai jumpa!"
             exit 0
             ;;
 
         *)
-            echo "Pilihan tidak valid, silakan masukkan angka 0-5."
+            echo "Pilihan tidak valid, silakan masukkan angka 0-6."
             read -p "Tekan Enter untuk mencoba lagi..."
             ;;
     esac
