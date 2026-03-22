@@ -6,6 +6,21 @@ if [ "$EUID" -ne 0 ]; then
   exit
 fi
 
+# ==========================================
+# MEMBUAT SHORTCUT PERINTAH 'menu'
+# ==========================================
+SCRIPT_PATH=$(realpath "$0")
+if [ "$SCRIPT_PATH" != "/usr/bin/menu" ]; then
+    cp -f "$SCRIPT_PATH" /usr/bin/menu
+    chmod +x /usr/bin/menu
+    echo "=========================================================="
+    echo "  [INFO] Shortcut berhasil dibuat!"
+    echo "  Mulai sekarang, Anda cukup mengetik: menu"
+    echo "  untuk membuka panel ini kapan saja."
+    echo "=========================================================="
+    sleep 2
+fi
+
 DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
@@ -40,11 +55,17 @@ while true; do
 
             PORT=3000
 
-            echo "[1/7] Membuat direktori project: $DIR_NAME..."
+            echo "[1/8] Mempersiapkan sistem dan menginstal Node.js (Mohon tunggu)..."
+            apt update
+            apt install curl -y
+            curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+            apt install -y nodejs
+
+            echo "[2/8] Membuat direktori project: $DIR_NAME..."
             mkdir -p $DIR_NAME
             cd $DIR_NAME
 
-            echo "[2/7] Membuat file package.json..."
+            echo "[3/8] Membuat file package.json..."
             cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
@@ -65,7 +86,7 @@ while true; do
 }
 EOF
 
-            echo "[3/7] Membuat file utama index.js (FULL SCRIPT)..."
+            echo "[4/8] Membuat file utama index.js (FULL SCRIPT)..."
             cat << 'EOF' > index.js
 const express = require('express');
 const { Client, LocalAuth } = require('whatsapp-web.js');
@@ -321,10 +342,10 @@ app.listen(PORT, () => {
 });
 EOF
 
-            echo "[4/7] Menginstal library Node.js pendukung..."
+            echo "[5/8] Menginstal library Node.js pendukung..."
             npm install
 
-            echo "[5/7] Menginstal PM2 untuk manajemen proses background..."
+            echo "[6/8] Menginstal PM2 untuk manajemen proses background..."
             npm install -g pm2
 
             # Keluar dari direktori project
@@ -332,11 +353,11 @@ EOF
 
             # Setup Nginx jika memilih domain
             if [[ "$PILIHAN_DOMAIN" == "B" || "$PILIHAN_DOMAIN" == "b" ]]; then
-                echo "[6/7] Menginstal Nginx Web Server..."
+                echo "[7/8] Menginstal Nginx Web Server..."
                 apt update
                 apt install nginx -y
 
-                echo "[7/7] Mengonfigurasi Reverse Proxy Nginx untuk $DOMAIN..."
+                echo "[8/8] Mengonfigurasi Reverse Proxy Nginx untuk $DOMAIN..."
                 cat << EOF > /etc/nginx/sites-available/$DOMAIN
 server {
     listen 80;
@@ -360,8 +381,8 @@ EOF
                 nginx -t
                 systemctl restart nginx
             else
-                echo "[6/7] Setup Nginx dilewati (Mode IP VPS)."
-                echo "[7/7] Membuka port $PORT di firewall (UFW)..."
+                echo "[7/8] Setup Nginx dilewati (Mode IP VPS)."
+                echo "[8/8] Membuka port $PORT di firewall (UFW)..."
                 ufw allow $PORT/tcp > /dev/null 2>&1 || true
             fi
 
@@ -379,7 +400,13 @@ EOF
             echo "=========================================================="
             if [ -d "$DIR_NAME" ]; then
                 cd $DIR_NAME
-                node index.js
+                # Mengecek apakah nodejs sudah terinstal sebelum menjalankan
+                if ! command -v node &> /dev/null; then
+                    echo "[ERROR] Node.js belum terinstal!"
+                    echo "Silakan jalankan Menu 1 (Install & Buat File) terlebih dahulu."
+                else
+                    node index.js
+                fi
                 cd ..
             else
                 echo "Folder project belum ada. Silakan jalankan Instalasi (Menu 1) terlebih dahulu."
@@ -393,10 +420,14 @@ EOF
             echo "=========================================================="
             if [ -d "$DIR_NAME" ]; then
                 cd $DIR_NAME
-                pm2 start index.js --name $BOT_NAME
-                pm2 save
+                if ! command -v pm2 &> /dev/null; then
+                     echo "[ERROR] PM2 belum terinstal. Silakan jalankan Menu 1."
+                else
+                    pm2 start index.js --name $BOT_NAME
+                    pm2 save
+                    echo "Bot berhasil dijalankan 24 jam!"
+                fi
                 cd ..
-                echo "Bot berhasil dijalankan 24 jam!"
             else
                 echo "Folder project belum ada. Silakan jalankan Instalasi (Menu 1) terlebih dahulu."
             fi
@@ -407,8 +438,12 @@ EOF
             echo "=========================================================="
             echo "  Menghentikan Bot..."
             echo "=========================================================="
-            pm2 stop $BOT_NAME
-            echo "Bot berhasil dihentikan."
+            if ! command -v pm2 &> /dev/null; then
+                 echo "[ERROR] PM2 belum terinstal."
+            else
+                pm2 stop $BOT_NAME
+                echo "Bot berhasil dihentikan."
+            fi
             read -p "Tekan Enter untuk kembali ke Menu Utama..."
             ;;
 
@@ -417,7 +452,12 @@ EOF
             echo "  Menampilkan Log Bot..."
             echo "  (Tekan Ctrl+C untuk keluar dari log dan kembali ke menu)"
             echo "=========================================================="
-            pm2 logs $BOT_NAME
+            if ! command -v pm2 &> /dev/null; then
+                 echo "[ERROR] PM2 belum terinstal."
+                 read -p "Tekan Enter untuk kembali ke Menu Utama..."
+            else
+                pm2 logs $BOT_NAME
+            fi
             ;;
 
         0)
