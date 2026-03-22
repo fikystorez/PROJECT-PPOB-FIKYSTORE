@@ -1,0 +1,433 @@
+#!/bin/bash
+
+# Pastikan script dijalankan dengan akses root/sudo
+if [ "$EUID" -ne 0 ]; then
+  echo "Tolong jalankan script ini sebagai root (ketik: sudo su)"
+  exit
+fi
+
+DIR_NAME="digital-fiky-store"
+BOT_NAME="digital-fiky-bot"
+
+while true; do
+    clear
+    echo "=========================================================="
+    echo "      PANEL MANAJEMEN BOT - DIGITAL FIKY STORE            "
+    echo "=========================================================="
+    echo "1. Install & Buat File Bot Otomatis (Pertama Kali)"
+    echo "2. Mulai Bot (Terminal - Untuk Login Kode/QR & Testing)"
+    echo "3. Jalankan Bot di Latar Belakang (PM2 - 24 Jam)"
+    echo "4. Hentikan Bot (PM2)"
+    echo "5. Lihat Log / Error Bot (Tekan Ctrl+C untuk keluar log)"
+    echo "0. Keluar dari Panel Menu"
+    echo "=========================================================="
+    read -p "Pilih menu (0-5): " PILIHAN_MENU
+
+    case $PILIHAN_MENU in
+        1)
+            echo ""
+            echo "=========================================================="
+            echo "  Mulai Proses Instalasi...                               "
+            echo "=========================================================="
+            echo "Bagaimana Anda ingin mengakses aplikasi ini?"
+            echo "A. Sementara menggunakan IP VPS (Port 3000)"
+            echo "B. Menggunakan Domain (Akan menginstal & set Nginx otomatis)"
+            read -p "Pilih (A atau B): " PILIHAN_DOMAIN
+
+            if [[ "$PILIHAN_DOMAIN" == "B" || "$PILIHAN_DOMAIN" == "b" ]]; then
+                read -p "Masukkan nama domain Anda (contoh: digitalfikystore.com): " DOMAIN
+            fi
+
+            PORT=3000
+
+            echo "[1/7] Membuat direktori project: $DIR_NAME..."
+            mkdir -p $DIR_NAME
+            cd $DIR_NAME
+
+            echo "[2/7] Membuat file package.json..."
+            cat << 'EOF' > package.json
+{
+  "name": "digital-fiky-store",
+  "version": "1.0.0",
+  "description": "Aplikasi PPOB DIGITAL FIKY STORE dengan WhatsApp Bot dan Digiflazz",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "express": "^4.19.2",
+    "md5": "^2.3.0",
+    "qrcode-terminal": "^0.12.0",
+    "sqlite3": "^5.1.7",
+    "whatsapp-web.js": "latest"
+  }
+}
+EOF
+
+            echo "[3/7] Membuat file utama index.js (FULL SCRIPT)..."
+            cat << 'EOF' > index.js
+const express = require('express');
+const { Client, LocalAuth } = require('whatsapp-web.js');
+const qrcode = require('qrcode-terminal');
+const sqlite3 = require('sqlite3').verbose();
+const axios = require('axios');
+const md5 = require('md5');
+const readline = require('readline'); // Modul untuk membaca input terminal
+
+const app = express();
+app.use(express.json());
+
+// ==========================================
+// 1. INISIALISASI DATABASE SQLITE
+// ==========================================
+const db = new sqlite3.Database('./ppob.db', (err) => {
+    if (err) {
+        console.error('Error membuka database:', err.message);
+    } else {
+        console.log('Berhasil terkoneksi ke database SQLite.');
+        
+        // Buat tabel jika belum ada
+        db.serialize(() => {
+            db.run(`CREATE TABLE IF NOT EXISTS members (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                phone TEXT UNIQUE,
+                balance INTEGER DEFAULT 0,
+                otp TEXT
+            )`);
+
+            db.run(`CREATE TABLE IF NOT EXISTS products (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                sku TEXT UNIQUE,
+                name TEXT,
+                digiflazz_price INTEGER,
+                sell_price INTEGER
+            )`);
+
+            db.run(`CREATE TABLE IF NOT EXISTS settings (
+                key TEXT PRIMARY KEY,
+                value TEXT
+            )`);
+
+            // Insert default settings jika kosong
+            db.run(`INSERT OR IGNORE INTO settings (key, value) VALUES ('digiflazz_username', 'isi_username_disini')`);
+            db.run(`INSERT OR IGNORE INTO settings (key, value) VALUES ('digiflazz_api_key', 'isi_api_key_disini')`);
+        });
+    }
+});
+
+// ==========================================
+// 2. INISIALISASI WHATSAPP BOT
+// ==========================================
+const waClient = new Client({
+    authStrategy: new LocalAuth(),
+    puppeteer: {
+        args: ['--no-sandbox', '--disable-setuid-sandbox'] // Penting untuk VPS Linux
+    }
+});
+
+waClient.on('qr', async (qr) => {
+    console.log('\n[Metode Alternatif] Silakan scan QR Code ini jika Anda lebih suka metode QR:');
+    qrcode.generate(qr, { small: true });
+
+    // Meminta input Nomor HP untuk Pairing Code (Hanya jika dijalankan di Terminal interaktif)
+    if (!global.isPairingPromptShown && process.stdin.isTTY) {
+        global.isPairingPromptShown = true;
+        const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout
+        });
+
+        console.log('\n========================================================');
+        console.log(' LOGIN DENGAN KODE (TANPA SCAN QR) ');
+        console.log('========================================================');
+        rl.question('Masukkan Nomor HP Bot (contoh: 628123456789) ATAU tekan Enter untuk lewati: ', async (phone) => {
+            if (phone && phone.trim() !== '') {
+                try {
+                    console.log('\nMeminta Kode Pairing ke WhatsApp...');
+                    const code = await waClient.requestPairingCode(phone.trim());
+                    console.log('\n========================================================');
+                    console.log(` KODE PAIRING ANDA: ${code}`);
+                    console.log('========================================================');
+                    console.log('Langkah-langkah di HP Anda:');
+                    console.log('1. Buka aplikasi WhatsApp');
+                    console.log('2. Ketuk ikon titik tiga di kanan atas -> Perangkat Tautkan');
+                    console.log('3. Ketuk "Tautkan Perangkat"');
+                    console.log('4. Pilih "Tautkan dengan nomor telepon saja" (Tulisan kecil di bawah)');
+                    console.log('5. Masukkan 8 huruf kode di atas!');
+                    console.log('========================================================\n');
+                } catch (error) {
+                    console.log('\n[ERROR] Gagal meminta kode pairing. Pastikan nomor benar.', error.message);
+                }
+            } else {
+                console.log('Menunggu Scan QR Code...');
+            }
+            rl.close();
+        });
+    }
+});
+
+waClient.on('ready', () => {
+    console.log('\nWhatsApp Bot DIGITAL FIKY STORE sudah siap dan terhubung!');
+});
+
+waClient.initialize();
+
+// Fungsi bantuan untuk kirim pesan WA
+const sendWhatsAppMessage = async (phone, message) => {
+    try {
+        const formattedPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
+        const chatId = formattedPhone + '@c.us';
+        await waClient.sendMessage(chatId, message);
+        return true;
+    } catch (error) {
+        console.error('Gagal mengirim WA:', error);
+        return false;
+    }
+};
+
+// ==========================================
+// 3. ENDPOINT API - MANAJEMEN PENGATURAN & DIGIFLAZZ
+// ==========================================
+
+// Fungsi mengambil setting dari DB
+const getSetting = (key) => {
+    return new Promise((resolve, reject) => {
+        db.get(`SELECT value FROM settings WHERE key = ?`, [key], (err, row) => {
+            if (err) reject(err);
+            resolve(row ? row.value : null);
+        });
+    });
+};
+
+// Ubah API Digiflazz
+app.post('/api/settings/digiflazz', (req, res) => {
+    const { username, api_key } = req.body;
+    if (!username || !api_key) return res.status(400).json({ error: 'Username dan API Key wajib diisi' });
+
+    db.run(`UPDATE settings SET value = ? WHERE key = 'digiflazz_username'`, [username]);
+    db.run(`UPDATE settings SET value = ? WHERE key = 'digiflazz_api_key'`, [api_key], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: 'API Digiflazz berhasil diperbarui' });
+    });
+});
+
+// Cek Saldo Digiflazz
+app.get('/api/digiflazz/cek-saldo', async (req, res) => {
+    try {
+        const username = await getSetting('digiflazz_username');
+        const apiKey = await getSetting('digiflazz_api_key');
+        
+        // Rumus sign Digiflazz untuk cek saldo: md5(username + apikey + "depo")
+        const sign = md5(username + apiKey + "depo");
+
+        const response = await axios.post('https://api.digiflazz.com/v1/cek-saldo', {
+            cmd: "deposit",
+            username: username,
+            sign: sign
+        });
+
+        res.json({ success: true, data: response.data.data });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.response ? error.response.data : error.message });
+    }
+});
+
+// ==========================================
+// 4. ENDPOINT API - MANAJEMEN MEMBER & OTP
+// ==========================================
+
+// Tambah/Daftar Member
+app.post('/api/members', (req, res) => {
+    const { phone } = req.body;
+    if (!phone) return res.status(400).json({ error: 'Nomor HP wajib diisi' });
+
+    db.run(`INSERT INTO members (phone, balance) VALUES (?, 0)`, [phone], function(err) {
+        if (err) return res.status(500).json({ error: 'Nomor HP mungkin sudah terdaftar' });
+        res.json({ message: 'Member berhasil didaftarkan', id: this.lastID, phone: phone, balance: 0 });
+    });
+});
+
+// Request OTP WA
+app.post('/api/members/request-otp', (req, res) => {
+    const { phone } = req.body;
+    
+    db.get(`SELECT * FROM members WHERE phone = ?`, [phone], async (err, row) => {
+        if (err || !row) return res.status(404).json({ error: 'Member tidak ditemukan' });
+
+        const otp = Math.floor(100000 + Math.random() * 900000).toString(); // Generate 6 digit OTP
+        
+        db.run(`UPDATE members SET otp = ? WHERE phone = ?`, [otp, phone], async (updateErr) => {
+            if (updateErr) return res.status(500).json({ error: 'Gagal update OTP' });
+            
+            const message = `Halo dari *DIGITAL FIKY STORE*!\n\nKode OTP Anda adalah: *${otp}*.\n\nJangan berikan kode ini kepada siapapun demi keamanan akun Anda.`;
+            const waSent = await sendWhatsAppMessage(phone, message);
+            
+            if (waSent) {
+                res.json({ message: 'OTP berhasil dikirim ke WhatsApp' });
+            } else {
+                res.status(500).json({ error: 'Gagal mengirim pesan WhatsApp' });
+            }
+        });
+    });
+});
+
+// Tambah/Kurangi Saldo Member
+app.post('/api/members/saldo', (req, res) => {
+    const { phone, amount, type } = req.body; // type: 'add' atau 'deduct'
+    
+    db.get(`SELECT balance FROM members WHERE phone = ?`, [phone], (err, row) => {
+        if (err || !row) return res.status(404).json({ error: 'Member tidak ditemukan' });
+
+        let newBalance = type === 'add' ? row.balance + amount : row.balance - amount;
+        if (newBalance < 0) return res.status(400).json({ error: 'Saldo tidak mencukupi' });
+
+        db.run(`UPDATE members SET balance = ? WHERE phone = ?`, [newBalance, phone], function(err) {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json({ message: 'Saldo berhasil diupdate', current_balance: newBalance });
+        });
+    });
+});
+
+// ==========================================
+// 5. ENDPOINT API - MANAJEMEN PRODUK
+// ==========================================
+
+// Tambah Produk
+app.post('/api/products', (req, res) => {
+    const { sku, name, digiflazz_price, sell_price } = req.body;
+    
+    db.run(`INSERT INTO products (sku, name, digiflazz_price, sell_price) VALUES (?, ?, ?, ?)`, 
+    [sku, name, digiflazz_price, sell_price], function(err) {
+        if (err) return res.status(500).json({ error: 'Gagal menambah produk. Pastikan SKU unik.' });
+        res.json({ message: 'Produk berhasil ditambahkan', id: this.lastID });
+    });
+});
+
+// Lihat Semua Produk
+app.get('/api/products', (req, res) => {
+    db.all(`SELECT * FROM products`, [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ data: rows });
+    });
+});
+
+// ==========================================
+// 6. JALANKAN SERVER
+// ==========================================
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Server DIGITAL FIKY STORE berjalan di port ${PORT}`);
+});
+EOF
+
+            echo "[4/7] Menginstal library Node.js pendukung..."
+            npm install
+
+            echo "[5/7] Menginstal PM2 untuk manajemen proses background..."
+            npm install -g pm2
+
+            # Keluar dari direktori project
+            cd ..
+
+            # Setup Nginx jika memilih domain
+            if [[ "$PILIHAN_DOMAIN" == "B" || "$PILIHAN_DOMAIN" == "b" ]]; then
+                echo "[6/7] Menginstal Nginx Web Server..."
+                apt update
+                apt install nginx -y
+
+                echo "[7/7] Mengonfigurasi Reverse Proxy Nginx untuk $DOMAIN..."
+                cat << EOF > /etc/nginx/sites-available/$DOMAIN
+server {
+    listen 80;
+    server_name $DOMAIN www.$DOMAIN;
+
+    location / {
+        proxy_pass http://127.0.0.1:$PORT;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host \$host;
+        proxy_cache_bypass \$http_upgrade;
+        
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+    }
+}
+EOF
+                ln -sf /etc/nginx/sites-available/$DOMAIN /etc/nginx/sites-enabled/
+                rm -f /etc/nginx/sites-enabled/default
+                nginx -t
+                systemctl restart nginx
+            else
+                echo "[6/7] Setup Nginx dilewati (Mode IP VPS)."
+                echo "[7/7] Membuka port $PORT di firewall (UFW)..."
+                ufw allow $PORT/tcp > /dev/null 2>&1 || true
+            fi
+
+            echo "=========================================================="
+            echo "  INSTALASI SELESAI & SUKSES!                             "
+            echo "=========================================================="
+            read -p "Tekan Enter untuk kembali ke Menu Utama..."
+            ;;
+            
+        2)
+            echo "=========================================================="
+            echo "  Memulai Bot di Terminal..."
+            echo "  (PENTING: Gunakan menu ini untuk pertama kali Login WA!)"
+            echo "  (Tekan Ctrl+C untuk mematikan dan kembali ke menu)"
+            echo "=========================================================="
+            if [ -d "$DIR_NAME" ]; then
+                cd $DIR_NAME
+                node index.js
+                cd ..
+            else
+                echo "Folder project belum ada. Silakan jalankan Instalasi (Menu 1) terlebih dahulu."
+            fi
+            read -p "Tekan Enter untuk kembali ke Menu Utama..."
+            ;;
+
+        3)
+            echo "=========================================================="
+            echo "  Menjalankan Bot di Latar Belakang (PM2)..."
+            echo "=========================================================="
+            if [ -d "$DIR_NAME" ]; then
+                cd $DIR_NAME
+                pm2 start index.js --name $BOT_NAME
+                pm2 save
+                cd ..
+                echo "Bot berhasil dijalankan 24 jam!"
+            else
+                echo "Folder project belum ada. Silakan jalankan Instalasi (Menu 1) terlebih dahulu."
+            fi
+            read -p "Tekan Enter untuk kembali ke Menu Utama..."
+            ;;
+
+        4)
+            echo "=========================================================="
+            echo "  Menghentikan Bot..."
+            echo "=========================================================="
+            pm2 stop $BOT_NAME
+            echo "Bot berhasil dihentikan."
+            read -p "Tekan Enter untuk kembali ke Menu Utama..."
+            ;;
+
+        5)
+            echo "=========================================================="
+            echo "  Menampilkan Log Bot..."
+            echo "  (Tekan Ctrl+C untuk keluar dari log dan kembali ke menu)"
+            echo "=========================================================="
+            pm2 logs $BOT_NAME
+            ;;
+
+        0)
+            echo "Keluar dari Panel Manajemen. Sampai jumpa!"
+            exit 0
+            ;;
+
+        *)
+            echo "Pilihan tidak valid, silakan masukkan angka 0-5."
+            read -p "Tekan Enter untuk mencoba lagi..."
+            ;;
+    esac
+done
