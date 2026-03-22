@@ -14,7 +14,7 @@ DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "      MENGINSTAL DIGITAL FIKY STORE (WEB & BOT WA)        "
+echo "      MENGINSTAL DIGITAL FIKY STORE (WEB + AUTH LOGIN)    "
 echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Dependensi..."
@@ -48,9 +48,9 @@ cat << 'EOF' > package.json
 EOF
 
 # ==========================================
-# MEMBUAT TAMPILAN WEB (HTML/CSS)
+# MEMBUAT TAMPILAN WEB (SISTEM AUTENTIKASI)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (UI)..."
+echo "[3/5] Membangun Antarmuka Website (UI) dengan Sistem Login..."
 
 # 1. Halaman Login
 cat << 'EOF' > public/index.html
@@ -67,7 +67,7 @@ cat << 'EOF' > public/index.html
         <form id="loginForm">
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2">Email / No. HP</label>
-                <input type="text" id="email" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                <input type="text" id="identifier" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
@@ -83,8 +83,22 @@ cat << 'EOF' > public/index.html
     <script>
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            alert('Fitur login sedang dikonfigurasi. Menuju dashboard...');
-            window.location.href = '/dashboard.html';
+            const identifier = document.getElementById('identifier').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ identifier, password })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = '/dashboard.html';
+                } else {
+                    alert(data.error);
+                }
+            } catch (err) { alert('Terjadi kesalahan sistem.'); }
         });
     </script>
 </body>
@@ -101,7 +115,7 @@ cat << 'EOF' > public/register.html
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-md w-96">
+    <div class="bg-white p-8 rounded-lg shadow-md w-96" id="box-register">
         <h2 class="text-2xl font-bold text-center text-blue-600 mb-6">Daftar Akun</h2>
         <form id="registerForm">
             <div class="mb-4">
@@ -126,6 +140,60 @@ cat << 'EOF' > public/register.html
             <a href="/" class="text-blue-500 hover:underline">Sudah punya akun? Masuk</a>
         </div>
     </div>
+
+    <div class="bg-white p-8 rounded-lg shadow-md w-96 hidden" id="box-otp">
+        <h2 class="text-2xl font-bold text-center text-blue-600 mb-6">Verifikasi WA</h2>
+        <p class="text-sm text-gray-600 mb-4 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
+        <form id="otpForm">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Kode OTP</label>
+                <input type="number" id="otpCode" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required placeholder="XXXX">
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">Verifikasi OTP</button>
+        </form>
+    </div>
+
+    <script>
+        let registeredPhone = '';
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, phone, email, password })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    registeredPhone = data.phone;
+                    document.getElementById('box-register').classList.add('hidden');
+                    document.getElementById('box-otp').classList.remove('hidden');
+                    alert('OTP Terkirim! Silakan cek WhatsApp Anda.');
+                } else { alert(data.error); }
+            } catch (err) { alert('Gagal memproses pendaftaran.'); }
+        });
+
+        document.getElementById('otpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const otp = document.getElementById('otpCode').value;
+            try {
+                const res = await fetch('/api/auth/verify', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: registeredPhone, otp })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert('Verifikasi Berhasil! Silakan Login.');
+                    window.location.href = '/';
+                } else { alert(data.error); }
+            } catch (err) { alert('Gagal verifikasi OTP.'); }
+        });
+    </script>
 </body>
 </html>
 EOF
@@ -142,28 +210,75 @@ cat << 'EOF' > public/forgot.html
 <body class="bg-gray-100 flex items-center justify-center h-screen">
     <div class="bg-white p-8 rounded-lg shadow-md w-96">
         <h2 class="text-2xl font-bold text-center text-blue-600 mb-6">Reset Password</h2>
-        <p class="text-sm text-gray-600 mb-4 text-center">Masukkan Nomor WA Anda, kami akan mengirimkan 4 digit OTP untuk mereset password.</p>
-        <form id="forgotForm">
+        
+        <form id="requestOtpForm">
+            <p class="text-sm text-gray-600 mb-4 text-center">Masukkan Nomor WA Anda untuk reset password.</p>
             <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Nomor WA</label>
-                <input type="number" id="phone" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                <input type="number" id="phone" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required placeholder="08123...">
             </div>
-            <button type="button" onclick="alert('OTP Terkirim ke WA Anda!')" class="w-full bg-yellow-500 text-white font-bold py-2 px-4 rounded hover:bg-yellow-600 mb-2">Kirim OTP</button>
+            <button type="submit" class="w-full bg-yellow-500 text-white font-bold py-2 px-4 rounded hover:bg-yellow-600">Kirim OTP Reset</button>
+        </form>
+
+        <form id="resetForm" class="hidden mt-4">
+            <hr class="mb-4">
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2">Kode OTP (4 Digit)</label>
-                <input type="number" id="otp" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+                <input type="number" id="otp" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
             </div>
-            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">Verifikasi & Buat Password Baru</button>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Password Baru</label>
+                <input type="password" id="newPassword" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">Simpan Password Baru</button>
         </form>
         <div class="mt-4 text-center text-sm">
             <a href="/" class="text-blue-500 hover:underline">Kembali ke Login</a>
         </div>
     </div>
+
+    <script>
+        let resetPhone = '';
+
+        document.getElementById('requestOtpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const phone = document.getElementById('phone').value;
+            try {
+                const res = await fetch('/api/auth/forgot', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    resetPhone = data.phone;
+                    document.getElementById('requestOtpForm').classList.add('hidden');
+                    document.getElementById('resetForm').classList.remove('hidden');
+                    alert('OTP Reset Password telah dikirim ke WA Anda!');
+                } else { alert(data.error); }
+            } catch (err) { alert('Gagal mengirim permintaan.'); }
+        });
+
+        document.getElementById('resetForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const otp = document.getElementById('otp').value;
+            const newPassword = document.getElementById('newPassword').value;
+            try {
+                const res = await fetch('/api/auth/reset', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: resetPhone, otp, newPassword })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert('Password berhasil diubah! Silakan Login kembali.');
+                    window.location.href = '/';
+                } else { alert(data.error); }
+            } catch (err) { alert('Gagal mereset password.'); }
+        });
+    </script>
 </body>
 </html>
 EOF
 
-# 4. Halaman Dashboard (Tempat Referensi PPOB Nanti)
+# 4. Halaman Dashboard (Tempat Referensi PPOB)
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id">
@@ -173,27 +288,43 @@ cat << 'EOF' > public/dashboard.html
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
-    <nav class="bg-blue-600 p-4 text-white flex justify-between">
+    <nav class="bg-blue-600 p-4 text-white flex justify-between items-center">
         <h1 class="font-bold text-xl">DIGITAL FIKY STORE</h1>
-        <a href="/" class="hover:underline">Logout</a>
+        <div class="flex items-center gap-4">
+            <span id="userName" class="font-semibold"></span>
+            <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm font-bold">Logout</button>
+        </div>
     </nav>
     <div class="container mx-auto mt-8 p-4">
         <div class="bg-white p-6 rounded-lg shadow-md text-center">
-            <h2 class="text-2xl font-bold mb-2">Selamat Datang di Dashboard!</h2>
-            <p class="text-gray-600 mb-4">Halaman ini sudah siap menerima kode antarmuka pembelian PPOB Anda.</p>
-            <div class="p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 text-left">
-                <strong>Status Sistem:</strong> API Web & Bot WhatsApp (Baileys) aktif berjalan di belakang layar.
+            <h2 class="text-2xl font-bold mb-2">Selamat Datang!</h2>
+            <p class="text-gray-600 mb-4">Nomor WhatsApp Terhubung: <span id="userPhone" class="font-bold text-blue-600"></span></p>
+            <div class="p-4 bg-green-100 border-l-4 border-green-500 text-green-700 text-left">
+                <strong>Sistem Login Sukses!</strong> Halaman ini siap diintegrasikan dengan UI Pembelian PPOB Anda selanjutnya.
             </div>
         </div>
     </div>
+    <script>
+        // Cek Login
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) window.location.href = '/';
+        
+        document.getElementById('userName').innerText = "Halo, " + user.name;
+        document.getElementById('userPhone').innerText = user.phone;
+
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = '/';
+        }
+    </script>
 </body>
 </html>
 EOF
 
 # ==========================================
-# FILE NODE.JS (LOGIK BOT + API WEB)
+# FILE NODE.JS (LOGIK BOT + API WEB AUTH)
 # ==========================================
-echo "[4/5] Menulis ulang logika Node.js Server..."
+echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, Browsers, jidNormalizedUser, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
 const { Boom } = require('@hapi/boom');
@@ -291,28 +422,109 @@ const sendWhatsAppMessage = async (phone, message) => {
 };
 
 // ==========================================
-// INTEGRASI WEB API & SISTEM LOGIN
+// BACKEND API - SISTEM AUTENTIKASI (LOGIN/REGISTER)
 // ==========================================
 
-// Endpoint Minta OTP (Disesuaikan jadi 4 Angka)
-app.post('/api/auth/request-otp', async (req, res) => {
+// 1. REGISTER
+app.post('/api/auth/register', async (req, res) => {
+    const { name, phone, email, password } = req.body;
+    let webUsers = loadJSON(webUsersFile);
+    let formattedPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
+
+    if (webUsers[formattedPhone] && webUsers[formattedPhone].isVerified) {
+        return res.status(400).json({ error: 'Nomor HP sudah terdaftar dan terverifikasi.' });
+    }
+
+    const otp = Math.floor(1000 + Math.random() * 9000).toString(); // 4 Digit
+    webUsers[formattedPhone] = { name, email, password, isVerified: false, otp };
+    saveJSON(webUsersFile, webUsers);
+
+    const message = `Halo *${name}*!\n\nKode OTP Pendaftaran Akun Anda adalah: *${otp}*\n\n_Jangan berikan kode ini kepada siapapun._`;
+    const sent = await sendWhatsAppMessage(formattedPhone, message);
+
+    if(sent) res.json({ message: 'OTP Terkirim', phone: formattedPhone });
+    else res.status(500).json({ error: 'Gagal mengirim WA. Pastikan Bot Aktif.' });
+});
+
+// 2. VERIFY OTP
+app.post('/api/auth/verify', (req, res) => {
+    const { phone, otp } = req.body;
+    let webUsers = loadJSON(webUsersFile);
+    
+    if (webUsers[phone] && webUsers[phone].otp === otp) {
+        webUsers[phone].isVerified = true;
+        webUsers[phone].otp = null; 
+        saveJSON(webUsersFile, webUsers);
+        
+        // Sinkronisasi ke Database Saldo Bot WA
+        let db = loadJSON(dbFile);
+        let senderNum = phone.replace('62', '0'); // Boleh format apa saja, kita pakai default jid
+        if (!db[phone]) {
+            db[phone] = { saldo: 0, tanggal_daftar: new Date().toLocaleDateString('id-ID'), jid: phone + '@s.whatsapp.net' };
+            saveJSON(dbFile, db);
+        }
+
+        res.json({ message: 'Verifikasi sukses!' });
+    } else {
+        res.status(400).json({ error: 'OTP Salah.' });
+    }
+});
+
+// 3. LOGIN
+app.post('/api/auth/login', (req, res) => {
+    const { identifier, password } = req.body;
+    let webUsers = loadJSON(webUsersFile);
+    
+    let formattedPhone = identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier;
+    let foundPhone = Object.keys(webUsers).find(p => 
+        (p === formattedPhone || webUsers[p].email === identifier) && 
+        webUsers[p].password === password
+    );
+
+    if (foundPhone) {
+        if (!webUsers[foundPhone].isVerified) return res.status(400).json({ error: 'Akun belum diverifikasi OTP. Silakan Daftar Ulang.' });
+        // Sembunyikan password saat dikirim ke frontend
+        let userData = { phone: foundPhone, name: webUsers[foundPhone].name, email: webUsers[foundPhone].email };
+        res.json({ message: 'Login sukses', user: userData });
+    } else {
+        res.status(400).json({ error: 'Email/No HP atau Password salah.' });
+    }
+});
+
+// 4. MINTA OTP LUPA PASSWORD
+app.post('/api/auth/forgot', async (req, res) => {
     const { phone } = req.body;
-    if (!phone) return res.status(400).json({ error: 'Nomor HP wajib diisi' });
+    let webUsers = loadJSON(webUsersFile);
+    let formattedPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
 
-    // Generate 4 Digit Angka (1000 - 9999)
+    if (!webUsers[formattedPhone] || !webUsers[formattedPhone].isVerified) {
+        return res.status(400).json({ error: 'Nomor belum terdaftar / belum diverifikasi.' });
+    }
+
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
-    
-    // Simpan OTP sementara di database (bisa dikembangkan menggunakan session/JWT)
-    let db = loadJSON(dbFile);
-    if (!db[phone]) db[phone] = { saldo: 0 };
-    db[phone].otp = otp;
-    saveJSON(dbFile, db);
+    webUsers[formattedPhone].otp = otp;
+    saveJSON(webUsersFile, webUsers);
 
-    const message = `Halo dari *DIGITAL FIKY STORE*!\n\nKode OTP Login Aplikasi Anda adalah: *${otp}*\n\nJangan berikan kode ini kepada siapapun!`;
-    const sent = await sendWhatsAppMessage(phone, message);
+    const message = `Halo!\n\nKode OTP Reset Password Anda adalah: *${otp}*\n\n_Jika Anda tidak meminta ini, abaikan pesan ini._`;
+    const sent = await sendWhatsAppMessage(formattedPhone, message);
+
+    if(sent) res.json({ message: 'OTP Reset Terkirim', phone: formattedPhone });
+    else res.status(500).json({ error: 'Gagal mengirim WA. Pastikan Bot Aktif.' });
+});
+
+// 5. EKSEKUSI RESET PASSWORD
+app.post('/api/auth/reset', (req, res) => {
+    const { phone, otp, newPassword } = req.body;
+    let webUsers = loadJSON(webUsersFile);
     
-    if(sent) res.json({ message: 'OTP Terkirim ke WhatsApp' });
-    else res.status(500).json({ error: 'Gagal mengirim OTP' });
+    if (webUsers[phone] && webUsers[phone].otp === otp) {
+        webUsers[phone].password = newPassword;
+        webUsers[phone].otp = null; 
+        saveJSON(webUsersFile, webUsers);
+        res.json({ message: 'Password berhasil diubah!' });
+    } else {
+        res.status(400).json({ error: 'OTP Salah.' });
+    }
 });
 
 if (require.main === module) {
@@ -332,7 +544,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V9) 🤖      "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V10) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
@@ -390,6 +602,5 @@ chmod +x /usr/bin/menu
 echo "=========================================================="
 echo "  SISTEM WEB & BOT BERHASIL DIPERBARUI!                   "
 echo "  ------------------------------------------------------  "
-echo "  Akses Panel Manajemen : Ketik 'menu' di terminal        "
 echo "  Akses Web (Cek Browser) : http://$(wget -qO- eth0.me):3000"
 echo "=========================================================="
