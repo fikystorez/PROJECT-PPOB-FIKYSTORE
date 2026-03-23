@@ -15,7 +15,7 @@ BOT_NAME="digital-fiky-bot"
 PORT=3000
 
 echo "=========================================================="
-echo "      MENGINSTAL DIGITAL FIKY STORE - FIX UI PASSWORD     "
+echo "      MENGINSTAL DIGITAL FIKY STORE - V35 (3x3 MENU)      "
 echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
@@ -95,9 +95,6 @@ body {
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 EOF
 
-# ==========================================
-# FILE HTML AUTHENTIKASI DENGAN MATA PASSWORD
-# ==========================================
 cat << 'EOF' > public/index.html
 <!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Login - DIGITAL FIKY STORE</title><link rel="stylesheet" href="style.css"><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></head><body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]"><div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div><div class="centered-modal-box pt-14"><div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4"><h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1></div><h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2><form id="loginForm"><div><label class="compact-label">Email / No. HP</label><input type="text" id="identifier" class="compact-input-box" required placeholder="Ketik disini"></div><div><label class="compact-label">Password</label><div class="relative mb-[0.85rem]"><input type="password" id="password" class="compact-input-box !mb-0 pr-10" required placeholder="Ketik disini"><i class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-gray-700 transition" onclick="togglePassword('password', this)"></i></div></div><div class="text-right mb-5 mt-[-5px]"><a href="/forgot.html" class="compact-link-small">Lupa password?</a></div><button type="submit" class="btn-yellow">Login Sekarang</button></form><div class="mt-6 text-center compact-text-small">Belum punya akun? <a href="/register.html" class="compact-link-small">Daftar disini</a></div></div>
 <div id="customAlert" class="fixed inset-0 z-[999] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm"><div class="bg-white rounded-[1.5rem] p-6 w-[85%] max-w-[320px] text-center shadow-2xl transform transition-transform scale-100"><div id="alertIcon" class="mb-3 text-5xl"></div><h3 class="text-lg font-extrabold text-[#001229] mb-1 tracking-wide" id="alertTitle">Pemberitahuan</h3><p class="text-sm text-gray-500 mb-6" id="alertMessage">Pesan</p><button onclick="closeAlert()" class="bg-[#001229] text-yellow-400 w-full py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-[#002147] transition">OKE</button></div></div>
@@ -182,9 +179,8 @@ cat << 'EOF' > public/forgot.html
 EOF
 
 # ==========================================
-# FILE HTML LAINNYA (DASHBOARD, PROFIL, RIWAYAT TETAP AMAN 100%)
+# FILE DASHBOARD (GRID 3x3 MODERN)
 # ==========================================
-
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -211,7 +207,7 @@ cat << 'EOF' > public/dashboard.html
 
         <div id="sidebar" class="fixed inset-0 z-[100] transform -translate-x-full transition-transform duration-300 ease-in-out flex">
             <div class="w-full bg-black bg-opacity-50" onclick="toggleSidebar()"></div>
-            <div class="absolute top-0 left-0 w-3/4 max-w-[300px] h-full bg-white dark:bg-gray-900 shadow-2xl flex flex-col transition-colors">
+            <div class="absolute top-0 left-0 w-3/4 max-w-[300px] h-full bg-white dark:bg-[#001229] shadow-2xl flex flex-col transition-colors">
                 <div class="bg-[#002147] p-8 flex flex-col items-center justify-center text-white relative">
                     <button class="absolute top-3 right-4 text-gray-300 hover:text-white" onclick="toggleSidebar()"><i class="fas fa-times text-xl"></i></button>
                     <div class="w-20 h-20 bg-white rounded-full flex justify-center items-center text-[#002147] font-bold text-3xl mb-3 shadow-inner" id="sidebarInitial">U</div>
@@ -262,25 +258,62 @@ cat << 'EOF' > public/dashboard.html
             <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20" id="promoDots"></div>
         </div>
 
-        <div class="mx-4 mt-6 bg-white dark:bg-gray-800 p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors mb-8">
-            <h3 class="font-extrabold text-[#002147] dark:text-gray-100 mb-5 text-[15px] tracking-wide ml-1">Layanan Pilihan</h3>
-            <div class="grid grid-cols-4 gap-y-6 gap-x-2">
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-cyan-400 to-blue-600 text-white flex items-center justify-center text-xl shadow-lg shadow-blue-500/30 mb-2"><i class="fas fa-mobile-screen"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200">PULSA</span></div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-emerald-400 to-green-600 text-white flex items-center justify-center text-xl shadow-lg shadow-green-500/30 mb-2"><i class="fas fa-globe"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200">DATA</span></div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-amber-400 to-orange-500 text-white flex items-center justify-center text-xl shadow-lg shadow-orange-500/30 mb-2"><i class="fas fa-bolt"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200">PLN</span></div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-purple-400 to-pink-600 text-white flex items-center justify-center text-xl shadow-lg shadow-pink-500/30 mb-2"><i class="fas fa-gamepad"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200">GAME</span></div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-indigo-400 to-purple-600 text-white flex items-center justify-center text-xl shadow-lg shadow-indigo-500/30 mb-2"><i class="fas fa-wallet"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200">E-WALLET</span></div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-rose-400 to-red-500 text-white flex items-center justify-center text-xl shadow-lg shadow-red-500/30 mb-2"><i class="fas fa-ticket-alt"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200">VOUCHER</span></div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-teal-400 to-cyan-600 text-white flex items-center justify-center text-xl shadow-lg shadow-cyan-500/30 mb-2"><i class="fas fa-phone-volume"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 leading-tight text-center mt-0.5">SMS<br>TELP</span></div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-gray-400 to-gray-600 text-white flex items-center justify-center text-xl shadow-lg shadow-gray-500/30 mb-2"><i class="fas fa-th-large"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200">LAINNYA</span></div>
+        <div class="mx-4 mt-6 mb-8">
+            <h3 class="font-extrabold text-[#002147] dark:text-gray-100 mb-4 text-[16px] tracking-wide ml-1">Layanan Produk</h3>
+            <div class="grid grid-cols-3 gap-3">
+                
+                <div class="bg-white dark:bg-[#0b192c] rounded-[1.2rem] p-3 flex flex-col items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-[#13284a] cursor-pointer hover:scale-95 transition-transform aspect-square">
+                    <div class="h-10 flex items-center justify-center mb-1"><i class="fas fa-mobile-alt text-4xl text-blue-500 dark:text-yellow-400"></i></div>
+                    <span class="text-[11px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-2">PULSA</span>
+                </div>
+                
+                <div class="bg-white dark:bg-[#0b192c] rounded-[1.2rem] p-3 flex flex-col items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-[#13284a] cursor-pointer hover:scale-95 transition-transform aspect-square">
+                    <div class="h-10 flex items-center justify-center mb-1"><i class="fas fa-globe text-4xl text-green-500 dark:text-gray-100"></i></div>
+                    <span class="text-[11px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-2">DATA</span>
+                </div>
+                
+                <div class="bg-white dark:bg-[#0b192c] rounded-[1.2rem] p-3 flex flex-col items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-[#13284a] cursor-pointer hover:scale-95 transition-transform aspect-square">
+                    <div class="h-10 flex items-center justify-center mb-1"><i class="fas fa-gamepad text-4xl text-rose-500 dark:text-gray-100"></i></div>
+                    <span class="text-[11px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-2">GAME</span>
+                </div>
+
+                <div class="bg-white dark:bg-[#0b192c] rounded-[1.2rem] p-3 flex flex-col items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-[#13284a] cursor-pointer hover:scale-95 transition-transform aspect-square">
+                    <div class="h-10 flex items-center justify-center mb-1"><i class="fas fa-ticket-alt text-4xl text-amber-500 dark:text-yellow-400"></i></div>
+                    <span class="text-[11px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-2">VOUCHER</span>
+                </div>
+
+                <div class="bg-white dark:bg-[#0b192c] rounded-[1.2rem] p-3 flex flex-col items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-[#13284a] cursor-pointer hover:scale-95 transition-transform aspect-square">
+                    <div class="h-10 flex items-center justify-center mb-1"><i class="fas fa-wallet text-4xl text-indigo-500 dark:text-gray-100"></i></div>
+                    <span class="text-[11px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-2">E-WALLET</span>
+                </div>
+
+                <div class="bg-white dark:bg-[#0b192c] rounded-[1.2rem] p-3 flex flex-col items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-[#13284a] cursor-pointer hover:scale-95 transition-transform aspect-square">
+                    <div class="h-10 flex items-center justify-center mb-1"><i class="fas fa-bolt text-4xl text-yellow-400 dark:text-yellow-400"></i></div>
+                    <span class="text-[11px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-2">PLN</span>
+                </div>
+
+                <div class="bg-white dark:bg-[#0b192c] rounded-[1.2rem] p-3 flex flex-col items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-[#13284a] cursor-pointer hover:scale-95 transition-transform aspect-square">
+                    <div class="h-10 flex items-center justify-center mb-1"><i class="fas fa-phone-volume text-4xl text-cyan-500 dark:text-yellow-400"></i></div>
+                    <span class="text-[11px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-2 text-center">SMS TELP</span>
+                </div>
+
+                <div class="bg-white dark:bg-[#0b192c] rounded-[1.2rem] p-3 flex flex-col items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-[#13284a] cursor-pointer hover:scale-95 transition-transform aspect-square">
+                    <div class="h-10 flex items-center justify-center mb-1"><i class="far fa-calendar-check text-4xl text-orange-500 dark:text-yellow-400"></i></div>
+                    <span class="text-[10px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-2 text-center leading-tight">MASA AKTIF</span>
+                </div>
+
+                <div class="bg-white dark:bg-[#0b192c] rounded-[1.2rem] p-3 flex flex-col items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-[#13284a] cursor-pointer hover:scale-95 transition-transform aspect-square">
+                    <div class="h-10 flex items-center justify-center mb-1"><i class="fas fa-sim-card text-4xl text-teal-500 dark:text-gray-100"></i></div>
+                    <span class="text-[11px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-2">PERDANA</span>
+                </div>
             </div>
         </div>
 
         <div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40">
-            <div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
-            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
-            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div>
-            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">HOME</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">RIWAYAT</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">INFO</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">PROFIL</span></div>
         </div>
     </div>
 
@@ -300,32 +333,64 @@ cat << 'EOF' > public/dashboard.html
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
 
         let isDark = localStorage.getItem('darkMode') === 'true';
+        const htmlRoot = document.getElementById('html-root');
+        const dot = document.getElementById('darkModeToggleDot');
+        const bg = document.getElementById('darkModeToggleBg');
+
         function applyDarkMode() {
-            const root = document.getElementById('html-root'); const dot = document.getElementById('darkModeToggleDot'); const bg = document.getElementById('darkModeToggleBg');
-            if (isDark) { root.classList.add('dark'); dot.classList.add('translate-x-5'); bg.classList.add('bg-blue-500'); } 
-            else { root.classList.remove('dark'); dot.classList.remove('translate-x-5'); bg.classList.remove('bg-blue-500'); }
+            if (isDark) { htmlRoot.classList.add('dark'); dot.classList.add('translate-x-5'); bg.classList.add('bg-blue-500'); } 
+            else { htmlRoot.classList.remove('dark'); dot.classList.remove('translate-x-5'); bg.classList.remove('bg-blue-500'); }
         }
         function toggleDarkMode() { isDark = !isDark; localStorage.setItem('darkMode', isDark); applyDarkMode(); }
         applyDarkMode();
 
-        fetch('/api/banners').then(res => res.json()).then(data => {
-            if(data.banners && data.banners[0] !== "") {
+        fetch('/api/banners')
+        .then(res => res.json())
+        .then(data => {
+            if(data.banners && data.banners.length > 0 && data.banners[0] !== "") {
                 const slider = document.getElementById('promoSlider');
-                slider.innerHTML = data.banners.map((url) => `<div class="w-full h-full shrink-0 snap-center relative flex"><img src="${url}" class="absolute inset-0 w-full h-full object-cover"></div>`).join('');
-                document.getElementById('promoDots').innerHTML = data.banners.map((_, i) => `<div class="w-2 h-2 rounded-full bg-white opacity-${i===0?'100':'40'} transition-opacity dot-indicator shadow-sm"></div>`).join('');
+                const dotsContainer = document.getElementById('promoDots');
+                
+                slider.innerHTML = data.banners.map((url, i) => `
+                    <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#002147]">
+                        <img src="${url}" class="absolute inset-0 w-full h-full object-cover">
+                    </div>
+                `).join('');
+
+                let dotsHTML = '';
+                for(let i=0; i<data.banners.length; i++){
+                    dotsHTML += `<div class="w-2 h-2 rounded-full bg-white opacity-${i===0?'100':'40'} transition-opacity duration-300 dot-indicator shadow-sm"></div>`;
+                }
+                dotsContainer.innerHTML = dotsHTML;
             }
-            const el = document.getElementById('promoSlider'); let dots = document.querySelectorAll('.dot-indicator'); let cur = 0;
-            el.addEventListener('scroll', () => {
-                let idx = Math.round(el.scrollLeft / el.clientWidth);
-                dots.forEach((d, i) => { d.classList.toggle('opacity-100', i === idx); d.classList.toggle('opacity-40', i !== idx); }); cur = idx;
+            
+            const sliderElement = document.getElementById('promoSlider');
+            let dots = document.querySelectorAll('.dot-indicator');
+            let currentSlide = 0;
+            let totalSlides = dots.length || 4;
+            
+            sliderElement.addEventListener('scroll', () => {
+                let slideIndex = Math.round(sliderElement.scrollLeft / sliderElement.clientWidth);
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('opacity-100', index === slideIndex);
+                    dot.classList.toggle('opacity-40', index !== slideIndex);
+                });
+                currentSlide = slideIndex;
             });
-            setInterval(() => { cur = (cur + 1) % dots.length; el.scrollTo({ left: cur * el.clientWidth, behavior: 'smooth' }); }, 3500);
+
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                sliderElement.scrollTo({ left: currentSlide * sliderElement.clientWidth, behavior: 'smooth' });
+            }, 3500);
         });
     </script>
 </body>
 </html>
 EOF
 
+# ==========================================
+# FILE HALAMAN PROFIL
+# ==========================================
 cat << 'EOF' > public/profile.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -338,19 +403,19 @@ cat << 'EOF' > public/profile.html
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-300">
     <div class="max-w-md mx-auto bg-white dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl">
-        <div class="bg-[#001229] text-white p-8 flex flex-col items-center relative rounded-b-[2.5rem] shadow-lg">
+        <div class="bg-black text-white p-8 flex flex-col items-center relative rounded-b-[2.5rem] shadow-lg">
             <div class="flex items-center justify-center gap-3 mb-2 relative">
                 <div class="w-8"></div>
-                <div class="w-24 h-24 bg-gray-200 rounded-full flex justify-center items-center text-[#001229] font-bold text-4xl border-4 border-gray-400 shadow-xl" id="profileCircle">U</div>
-                <div class="w-8 text-xl cursor-pointer hover:text-yellow-400 transition flex items-center justify-center"><i class="fas fa-pencil-alt"></i></div>
+                <div class="w-24 h-24 bg-gray-200 rounded-full flex justify-center items-center text-black font-bold text-4xl border-4 border-gray-400 shadow-xl" id="profileCircle">U</div>
+                <div class="w-8 text-xl cursor-pointer hover:text-gray-300 transition flex items-center justify-center"><i class="fas fa-pencil-alt"></i></div>
             </div>
             <h2 class="text-xl font-bold tracking-wide mt-2" id="profileName">Nama Member</h2>
         </div>
         <div class="mt-6">
-            <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-envelope text-[#001229] dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">Email</div><div class="text-sm text-gray-500 dark:text-gray-400 font-medium" id="profileEmail">email@domain.com</div></div>
-            <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-phone-alt text-[#001229] dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">No. Telp</div><div class="text-sm text-gray-500 dark:text-gray-400 font-medium" id="profilePhoneData">0888...</div></div>
-            <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-wallet text-[#001229] dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">Saldo Akun</div><div class="text-sm font-extrabold text-blue-600 dark:text-yellow-400 tracking-wide" id="profileSaldo">Rp 0</div></div>
-            <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-shopping-cart text-[#001229] dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">Jumlah Transaksi</div><div class="text-[11px] font-bold text-gray-600 bg-gray-100 dark:bg-gray-800 dark:text-gray-300 px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700">0 Trx</div></div>
+            <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-envelope text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">Email</div><div class="text-sm text-gray-500 dark:text-gray-400 font-medium" id="profileEmail">email@domain.com</div></div>
+            <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-phone-alt text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">No. Telp</div><div class="text-sm text-gray-500 dark:text-gray-400 font-medium" id="profilePhoneData">0888...</div></div>
+            <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-wallet text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">Saldo Akun</div><div class="text-sm font-extrabold text-blue-600 dark:text-yellow-400 tracking-wide" id="profileSaldo">Rp 0</div></div>
+            <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-shopping-cart text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">Jumlah Transaksi</div><div class="text-[11px] font-bold text-gray-600 bg-gray-100 dark:bg-gray-800 dark:text-gray-300 px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700">0 Trx</div></div>
             <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800 cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 transition" onclick="logout()"><i class="fas fa-sign-out-alt text-red-600 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-bold text-red-600 ml-2 tracking-wide">Keluar Akun</div></div>
         </div>
         <div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40">
@@ -376,6 +441,9 @@ cat << 'EOF' > public/profile.html
 </html>
 EOF
 
+# ==========================================
+# FILE HALAMAN RIWAYAT TRANSAKSI (KOSONG / EMPTY)
+# ==========================================
 cat << 'EOF' > public/riwayat.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -485,7 +553,6 @@ saveJSON(configFile, configAwal);
 if (!fs.existsSync(dbFile)) saveJSON(dbFile, {});
 if (!fs.existsSync(webUsersFile)) saveJSON(webUsersFile, {});
 
-// Fungsi Kirim WA yang TANGGUH
 const sendWhatsAppMessage = async (phone, message) => {
     try {
         if (!global.waSocket) { return false; }
@@ -587,7 +654,6 @@ app.post('/api/auth/reset', (req, res) => {
     } else { res.status(400).json({ error: 'Kode OTP Salah.' }); }
 });
 
-// START BOT BAILEYS
 async function startBot() {
     const { state, saveCreds } = await useMultiFileAuthState('sesi_bot');
     const { version } = await fetchLatestBaileysVersion();
@@ -641,7 +707,7 @@ N=$(tput sgr0)    # Reset
 while true; do
     clear
     echo -e "${C}${B}╔═══════════════════════════════════════════════════╗${N}"
-    echo -e "${C}${B}║${N} ${Y}⚡ DIGITAL FIKY STORE - VPS CONTROL PANEL (V34) ⚡${N} ${C}${B}║${N}"
+    echo -e "${C}${B}║${N} ${Y}⚡ DIGITAL FIKY STORE - VPS CONTROL PANEL (V35) ⚡${N} ${C}${B}║${N}"
     echo -e "${C}${B}╠═══════════════════════════════════════════════════╣${N}"
     echo -e "${C}${B}║${N} ${W}[ BOT & SERVER MANAGEMENT ]                       ${C}${B}║${N}"
     echo -e "${C}${B}║${N}  ${G}1.${N} Setup Nomor Bot & Login Pairing WA            ${C}${B}║${N}"
