@@ -51,7 +51,7 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Dynamic Banners)..."
+echo "[3/5] Membangun Antarmuka Website (Fix Banner & 8 Menu)..."
 
 cat << 'EOF' > public/style.css
 body {
@@ -85,21 +85,6 @@ body {
     font-weight: bold; color: #e2e8f0; 
     text-shadow: 2px 2px 4px rgba(0,0,0,0.9), -1px -1px 1px rgba(255,255,255,0.3); 
     position: absolute; top: 52%; left: 50%; transform: translate(-50%, -50%);
-}
-
-.logo-f-small {
-    width: 45px; height: 45px; margin: 0 auto 10px auto; 
-    display: flex; justify-content: center; align-items: center;
-    border-radius: 50%; border: 2px solid #cbd5e1;
-    background: radial-gradient(circle, #333333 0%, #000000 100%); 
-    box-shadow: inset 0 0 5px rgba(255,255,255,0.2), 0 5px 10px rgba(0,0,0,0.5); 
-    position: relative; z-index: 2;
-}
-.logo-f-small::before {
-    content: "F"; font-size: 28px; font-family: "Times New Roman", Times, serif;
-    font-weight: bold; color: #e2e8f0; 
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.9); 
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
 }
 
 .compact-input-box {
@@ -204,7 +189,7 @@ cat << 'EOF' > public/register.html
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
-    <div class="z-20 mb-[-42px]" id="logo-header">
+    <div class="z-20 mb-[-42px]">
         <div class="logo-f-metalik-box"></div>
     </div>
     <div class="centered-modal-box pt-14" id="box-register">
@@ -359,7 +344,7 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
-# HTML DASHBOARD DENGAN DINAMIS BANNER
+# HTML DASHBOARD PPOB PREMIUM (HEADER BARU, SLIDER FIX, 8 IKON MODERN)
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -431,15 +416,36 @@ cat << 'EOF' > public/dashboard.html
             </div>
         </div>
 
-        <div class="mx-4 mt-6 relative rounded-2xl h-[120px] overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 group bg-gray-200 dark:bg-gray-800">
+        <div class="mx-4 mt-6 relative rounded-2xl h-[120px] overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 bg-gray-200 dark:bg-gray-800">
             <div id="promoSlider" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth">
+                <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#002147]">
+                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-60">
+                    <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">DISKON SPESIAL</h2>
                 </div>
+                <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-indigo-900">
+                    <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-60">
+                    <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">PROMO MEMBER</h2>
+                </div>
+                <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-purple-900">
+                    <img src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-60">
+                    <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">CASHBACK 50%</h2>
+                </div>
+                <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-rose-900">
+                    <img src="https://images.unsplash.com/photo-1616077168712-fc6c788db4fa?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-60">
+                    <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">FLASH SALE</h2>
+                </div>
+            </div>
             <div class="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-20" id="promoDots">
+                <div class="w-2 h-2 rounded-full bg-white opacity-100 transition-opacity duration-300 dot-indicator"></div>
+                <div class="w-2 h-2 rounded-full bg-white opacity-40 transition-opacity duration-300 dot-indicator"></div>
+                <div class="w-2 h-2 rounded-full bg-white opacity-40 transition-opacity duration-300 dot-indicator"></div>
+                <div class="w-2 h-2 rounded-full bg-white opacity-40 transition-opacity duration-300 dot-indicator"></div>
             </div>
         </div>
 
         <div class="mx-4 mt-6 bg-white dark:bg-gray-800 p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors mb-8">
             <h3 class="font-extrabold text-[#002147] dark:text-gray-100 mb-5 text-[15px] tracking-wide ml-1">Layanan Pilihan</h3>
+            
             <div class="grid grid-cols-4 gap-y-6 gap-x-2">
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
                     <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-cyan-400 to-blue-600 text-white flex items-center justify-center text-xl shadow-lg shadow-blue-500/30 mb-2"><i class="fas fa-mobile-screen"></i></div>
@@ -456,6 +462,23 @@ cat << 'EOF' > public/dashboard.html
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
                     <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-purple-400 to-pink-600 text-white flex items-center justify-center text-xl shadow-lg shadow-pink-500/30 mb-2"><i class="fas fa-gamepad"></i></div>
                     <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide">GAME</span>
+                </div>
+                
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-indigo-400 to-purple-600 text-white flex items-center justify-center text-xl shadow-lg shadow-indigo-500/30 mb-2"><i class="fas fa-wallet"></i></div>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide text-center">E-WALLET</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-rose-400 to-red-500 text-white flex items-center justify-center text-xl shadow-lg shadow-red-500/30 mb-2"><i class="fas fa-ticket-alt"></i></div>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide text-center">VOUCHER</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-teal-400 to-cyan-600 text-white flex items-center justify-center text-xl shadow-lg shadow-cyan-500/30 mb-2"><i class="fas fa-phone-volume"></i></div>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide text-center leading-tight mt-0.5">SMS<br>TELP</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-gray-400 to-gray-600 text-white flex items-center justify-center text-xl shadow-lg shadow-gray-500/30 mb-2"><i class="fas fa-th-large"></i></div>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide text-center">LAINNYA</span>
                 </div>
             </div>
         </div>
@@ -497,29 +520,37 @@ cat << 'EOF' > public/dashboard.html
         function toggleDarkMode() { isDark = !isDark; localStorage.setItem('darkMode', isDark); applyDarkMode(); }
         applyDarkMode();
 
-        // LOGIKA DINAMIS BANNER
+        // SLIDER BANNER LOGIC
         fetch('/api/banners')
         .then(res => res.json())
         .then(data => {
-            const slider = document.getElementById('promoSlider');
-            const dotsContainer = document.getElementById('promoDots');
-            const banners = data.banners;
-            const titles = ["DISKON SPESIAL", "PROMO MEMBER", "CASHBACK 50%", "FLASH SALE"];
+            if(data.banners && data.banners.length > 0 && data.banners[0] !== "") {
+                const slider = document.getElementById('promoSlider');
+                const dotsContainer = document.getElementById('promoDots');
+                const titles = ["DISKON SPESIAL", "PROMO MEMBER", "CASHBACK 50%", "FLASH SALE"];
+                
+                slider.innerHTML = data.banners.map((url, i) => `
+                    <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#002147]">
+                        <img src="${url}" class="absolute inset-0 w-full h-full object-cover opacity-60">
+                        <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">${titles[i] || ''}</h2>
+                    </div>
+                `).join('');
+                
+                // Set dots ulang
+                let dotsHTML = '';
+                for(let i=0; i<data.banners.length; i++){
+                    dotsHTML += `<div class="w-2 h-2 rounded-full bg-white opacity-${i===0?'100':'40'} transition-opacity duration-300 dot-indicator"></div>`;
+                }
+                dotsContainer.innerHTML = dotsHTML;
+            }
             
-            slider.innerHTML = banners.map((url, i) => `
-                <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#002147]">
-                    <img src="${url}" class="absolute inset-0 w-full h-full object-cover opacity-60" alt="Promo">
-                    <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">${titles[i]}</h2>
-                </div>
-            `).join('');
-
-            dotsContainer.innerHTML = banners.map((_, i) => `<div class="w-2 h-2 rounded-full bg-white opacity-${i===0?'100':'40'} transition-opacity duration-300 dot-indicator"></div>`).join('');
-
-            const dots = document.querySelectorAll('.dot-indicator');
+            const sliderElement = document.getElementById('promoSlider');
+            let dots = document.querySelectorAll('.dot-indicator');
             let currentSlide = 0;
+            let totalSlides = dots.length || 4;
             
-            slider.addEventListener('scroll', () => {
-                let slideIndex = Math.round(slider.scrollLeft / slider.clientWidth);
+            sliderElement.addEventListener('scroll', () => {
+                let slideIndex = Math.round(sliderElement.scrollLeft / sliderElement.clientWidth);
                 dots.forEach((dot, index) => {
                     dot.classList.toggle('opacity-100', index === slideIndex);
                     dot.classList.toggle('opacity-40', index !== slideIndex);
@@ -528,8 +559,17 @@ cat << 'EOF' > public/dashboard.html
             });
 
             setInterval(() => {
-                currentSlide = (currentSlide + 1) % banners.length;
-                slider.scrollTo({ left: currentSlide * slider.clientWidth, behavior: 'smooth' });
+                currentSlide = (currentSlide + 1) % totalSlides;
+                sliderElement.scrollTo({ left: currentSlide * sliderElement.clientWidth, behavior: 'smooth' });
+            }, 3500);
+        }).catch(err => {
+            // Jika API gagal, jalankan slider bawaan (hardcoded)
+            const sliderElement = document.getElementById('promoSlider');
+            let dots = document.querySelectorAll('.dot-indicator');
+            let currentSlide = 0;
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % 4;
+                sliderElement.scrollTo({ left: currentSlide * sliderElement.clientWidth, behavior: 'smooth' });
             }, 3500);
         });
     </script>
@@ -575,13 +615,11 @@ saveJSON(configFile, configAwal);
 if (!fs.existsSync(dbFile)) saveJSON(dbFile, {});
 if (!fs.existsSync(webUsersFile)) saveJSON(webUsersFile, {});
 
-// API BANNER
 app.get('/api/banners', (req, res) => {
     let cfg = loadJSON(configFile);
     res.json({ banners: cfg.banners });
 });
 
-// API USER & AUTH (Ringkasan tetap dipertahankan)
 app.post('/api/user/balance', (req, res) => {
     let db = loadJSON(dbFile);
     res.json({ saldo: db[req.body.phone]?.saldo || 0 });
@@ -621,6 +659,26 @@ app.post('/api/auth/login', (req, res) => {
     } else res.status(400).json({ error: 'Salah.' });
 });
 
+app.post('/api/auth/forgot', async (req, res) => {
+    const { phone } = req.body;
+    let webUsers = loadJSON(webUsersFile);
+    let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
+    if (!webUsers[fPhone]) return res.status(400).json({ error: 'Nomor tidak terdaftar.' });
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    webUsers[fPhone].otp = otp; saveJSON(webUsersFile, webUsers);
+    await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Kode OTP Reset: *${otp}*` });
+    res.json({ message: 'OTP Terkirim', phone: fPhone });
+});
+
+app.post('/api/auth/reset', (req, res) => {
+    const { phone, otp, newPassword } = req.body;
+    let webUsers = loadJSON(webUsersFile);
+    if (webUsers[phone] && webUsers[phone].otp === otp) {
+        webUsers[phone].password = newPassword; webUsers[phone].otp = null; saveJSON(webUsersFile, webUsers);
+        res.json({ message: 'Diubah!' });
+    } else res.status(400).json({ error: 'OTP Salah.' });
+});
+
 async function startBot() {
     const { state, saveCreds } = await useMultiFileAuthState('sesi_bot');
     const { version } = await fetchLatestBaileysVersion();
@@ -658,7 +716,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V20) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V21) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
