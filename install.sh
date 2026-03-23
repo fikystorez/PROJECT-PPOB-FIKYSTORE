@@ -51,7 +51,7 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Custom SweetAlert UI Elegant)..."
+echo "[3/5] Membangun Antarmuka Website..."
 
 cat << 'EOF' > public/style.css
 body {
@@ -131,43 +131,41 @@ body {
 .tab-active { border-bottom: 3px solid #001229; color: #001229; font-weight: bold; }
 .dark .tab-active { border-bottom: 3px solid #fde047; color: #fde047; }
 
-/* ==========================================
-   CUSTOM SWEETALERT2 STYLING (ELEGANT ROUNDED BOX)
-========================================== */
+/* Custom SweetAlert2 Styling */
 .swal2-popup {
-    background-color: #002147 !important; /* Oxford Blue */
-    border-radius: 1rem !important; /* Sudut melengkung elegan, ga kaku */
+    background-color: #002147 !important; 
+    border-radius: 1rem !important; 
     color: #ffffff !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important; 
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important; /* Bayangan halus */
-    width: 280px !important; /* Ukuran proporsional HP */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important; 
+    width: 280px !important; 
     padding: 1.5rem 1.25rem 1.25rem !important; 
 }
 .swal2-title {
     color: #fde047 !important; 
     font-size: 1.15rem !important; 
     font-weight: 800 !important;
-    letter-spacing: 0.5px !important; /* Teks lebih elegan & renggang */
+    letter-spacing: 0.5px !important; 
     margin: 0 0 0.5em !important;
 }
 .swal2-html-container {
     color: #cbd5e1 !important; 
     font-size: 0.85rem !important; 
-    line-height: 1.5 !important; /* Nyaman dibaca */
+    line-height: 1.5 !important; 
     margin: 0.5em 0.5em 1em !important;
 }
 .swal2-confirm {
-    background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important; /* Gradient kuning mewah */
+    background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important; 
     color: #001229 !important; 
-    border-radius: 0.5rem !important; /* Tombol sudut halus */
+    border-radius: 0.5rem !important; 
     font-weight: 800 !important;
     padding: 0.6rem 1.5rem !important; 
     font-size: 0.85rem !important;
-    box-shadow: 0 4px 6px -1px rgba(253, 224, 71, 0.3) !important; /* Efek tombol menyala */
+    box-shadow: 0 4px 6px -1px rgba(253, 224, 71, 0.3) !important; 
     letter-spacing: 0.5px !important;
 }
 .swal2-cancel {
-    background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important; /* Gradient merah */
+    background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important; 
     color: #ffffff !important;
     border-radius: 0.5rem !important; 
     font-weight: 800 !important;
@@ -177,7 +175,7 @@ body {
     letter-spacing: 0.5px !important;
 }
 .swal2-icon {
-    transform: scale(0.7) !important; /* Ikon proporsional tidak kebesaran */
+    transform: scale(0.7) !important; 
     margin: 0 auto 0.5em !important;
     border-width: 3px !important;
 }
@@ -537,19 +535,15 @@ cat << 'EOF' > public/profile.html
 <body class="bg-gray-100 dark:bg-gray-900 font-sans transition-colors duration-300">
     <div class="max-w-md mx-auto bg-white dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl transition-colors duration-300 overflow-x-hidden">
         
-        <div class="bg-black text-white p-8 flex flex-col items-center relative rounded-b-3xl shadow-lg">
-            <div class="absolute top-6 right-6 text-xl cursor-pointer hover:text-yellow-400 transition" onclick="Swal.fire({icon:'info', title:'Coming Soon', text:'Menu Edit Profil akan segera hadir!'})"><i class="fas fa-pencil-alt"></i></div>
-            <div class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-300 rounded-full flex justify-center items-center text-black font-extrabold text-4xl mb-4 border-4 border-yellow-400 shadow-xl" id="profileCircle">U</div>
-            <h2 class="text-xl font-bold tracking-wide" id="profileName">User Name</h2>
-            <p class="text-sm text-gray-400 mt-1" id="profilePhone">0888...</p>
+        <div class="bg-black text-white p-8 pb-10 flex flex-col items-center relative rounded-b-3xl shadow-lg">
+            <div class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-300 rounded-full flex justify-center items-center text-black font-extrabold text-4xl mb-2 border-4 border-yellow-400 shadow-xl" id="profileCircle">U</div>
+            <div class="flex items-center gap-3 mt-2">
+                <h2 class="text-2xl font-bold tracking-wide" id="profileName">User Name</h2>
+                <i class="fas fa-pencil-alt text-gray-400 hover:text-yellow-400 cursor-pointer transition text-lg" onclick="Swal.fire({icon:'info', title:'Coming Soon', text:'Menu Edit Profil akan segera hadir!'})"></i>
+            </div>
         </div>
 
-        <div class="flex border-b dark:border-gray-800 text-center mt-2">
-            <div class="flex-1 py-3 cursor-pointer text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 text-sm tracking-widest transition" onclick="location.href='/dashboard.html'">MENU</div>
-            <div class="flex-1 py-3 cursor-pointer tab-active dark:text-yellow-400 text-sm tracking-widest">PROFIL</div>
-        </div>
-
-        <div class="mt-2">
+        <div class="mt-4">
             <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800">
                 <i class="fas fa-envelope text-[#002147] dark:text-yellow-400 w-10 text-xl"></i>
                 <div class="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">Email</div>
@@ -569,6 +563,11 @@ cat << 'EOF' > public/profile.html
                 <i class="fas fa-shopping-cart text-[#002147] dark:text-yellow-400 w-10 text-xl"></i>
                 <div class="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">Jumlah Transaksi</div>
                 <div class="text-sm text-gray-500 dark:text-gray-400">0 Trx</div>
+            </div>
+            <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition" onclick="location.href='/forgot.html'">
+                <i class="fas fa-key text-[#002147] dark:text-yellow-400 w-10 text-xl"></i>
+                <div class="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">Reset Password</div>
+                <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
             </div>
             <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800 cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 transition" onclick="logout()">
                 <i class="fas fa-sign-out-alt text-red-600 w-10 text-xl"></i>
@@ -593,7 +592,6 @@ cat << 'EOF' > public/profile.html
         if (!user) window.location.href = '/';
 
         document.getElementById('profileName').innerText = user.name;
-        document.getElementById('profilePhone').innerText = user.phone;
         document.getElementById('profilePhoneData').innerText = user.phone;
         document.getElementById('profileCircle').innerText = user.name.charAt(0).toUpperCase();
         document.getElementById('profileEmail').innerText = user.email || 'fikyshoto@gmail.com';
@@ -675,7 +673,7 @@ app.post('/api/auth/register', async (req, res) => {
     const { name, phone, email, password } = req.body;
     let webUsers = loadJSON(webUsersFile);
     let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
-    if (webUsers[fPhone] && webUsers[fPhone].isVerified) return res.status(400).json({ error: 'Nomor sudah terdaftar.' });
+    if (webUsers[fPhone] && webUsers[fPhone].isVerified) return res.status(400).json({ error: 'Nomor terdaftar.' });
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
     webUsers[fPhone] = { name, email, password, isVerified: false, otp };
     saveJSON(webUsersFile, webUsers);
@@ -768,7 +766,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V31) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V32) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
