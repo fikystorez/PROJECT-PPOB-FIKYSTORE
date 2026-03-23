@@ -28,7 +28,7 @@ sudo ufw allow 80/tcp > /dev/null 2>&1 || true
 sudo ufw allow 443/tcp > /dev/null 2>&1 || true
 
 echo -e "${C_CYAN}${C_BOLD}==========================================================${C_RST}"
-echo -e "${C_YELLOW}${C_BOLD}   🚀 MENGINSTALL DIGITAL FIKY STORE - V52 ULTIMATE 🚀    ${C_RST}"
+echo -e "${C_YELLOW}${C_BOLD}   🚀 MENGINSTALL DIGITAL FIKY STORE - V54 ULTIMATE 🚀    ${C_RST}"
 echo -e "${C_CYAN}${C_BOLD}==========================================================${C_RST}"
 
 echo "[1/5] Memperbarui sistem & menginstal dependensi dasar..."
@@ -48,7 +48,7 @@ cd "$HOME/$DIR_NAME"
 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
-  "version": "5.2.0",
+  "version": "5.4.0",
   "main": "index.js",
   "dependencies": {
     "@hapi/boom": "^10.0.1",
@@ -220,7 +220,7 @@ cat << 'EOF' > public/dashboard.html
             </div>
         </div>
 
-        <div class="mx-4 mt-6 relative rounded-2xl h-[170px] overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 group bg-gray-200 dark:bg-gray-800">
+        <div id="bannerContainer" class="mx-4 mt-6 relative rounded-2xl h-[170px] overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 group bg-gray-200 dark:bg-gray-800 hidden">
             <div id="promoSlider" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth"></div>
             <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20" id="promoDots"></div>
         </div>
@@ -242,7 +242,7 @@ cat << 'EOF' > public/dashboard.html
         <div class="mx-4 mt-6 mb-8">
             <h3 class="font-extrabold text-[#002147] dark:text-gray-100 mb-4 text-[16px] tracking-wide ml-1">Produk Digital</h3>
             <div class="grid grid-cols-4 gap-y-4 gap-x-3">
-                <div onclick="showAlert('Segera Hadir!', 'Fitur Tagihan sedang dalam tahap pengembangan.', false)" class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square"><div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-file-invoice text-3xl text-purple-500 dark:text-yellow-400"></i></div><span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1 text-center">TAGIHAN</span></div>
+                <div onclick="showAlert('Segera Hadir!', 'Fitur pembayaran Tagihan sedang dalam tahap pengembangan.', false)" class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square"><div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-file-invoice text-3xl text-purple-500 dark:text-yellow-400"></i></div><span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1 text-center">TAGIHAN</span></div>
                 <div onclick="showAlert('Segera Hadir!', 'Fitur Saldo E-Toll sedang dalam tahap pengembangan.', false)" class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square"><div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-id-card text-3xl text-teal-500 dark:text-yellow-400"></i></div><span class="text-[8px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1 text-center leading-tight">SALDO<br>E-TOLL</span></div>
             </div>
         </div>
@@ -285,14 +285,19 @@ cat << 'EOF' > public/dashboard.html
         applyDarkMode();
 
         fetch('/api/banners').then(res => res.json()).then(data => {
-            if(data.success && data.data && data.data.length > 0 && data.data[0] !== "") {
-                const slider = document.getElementById('promoSlider'); const dotsContainer = document.getElementById('promoDots');
-                slider.innerHTML = data.data.map((url) => `<div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#002147]"><img src="${url}" class="absolute inset-0 w-full h-full object-cover"></div>`).join('');
-                dotsContainer.innerHTML = data.data.map((_, i) => `<div class="w-2 h-2 rounded-full bg-white opacity-${i===0?'100':'40'} transition-opacity duration-300 dot-indicator shadow-sm"></div>`).join('');
-            }
-            const el = document.getElementById('promoSlider'); let dots = document.querySelectorAll('.dot-indicator'); let cur = 0;
-            el.addEventListener('scroll', () => { let idx = Math.round(el.scrollLeft / el.clientWidth); dots.forEach((d, i) => { d.classList.toggle('opacity-100', i === idx); d.classList.toggle('opacity-40', i !== idx); }); cur = idx; });
-            setInterval(() => { cur = (cur + 1) % dots.length; el.scrollTo({ left: cur * el.clientWidth, behavior: 'smooth' }); }, 3500);
+            const container = document.getElementById('bannerContainer');
+            if(data.success && data.data && Array.isArray(data.data)) {
+                const validBanners = data.data.filter(url => url && url.trim() !== "");
+                if (validBanners.length > 0) {
+                    const slider = document.getElementById('promoSlider'); const dotsContainer = document.getElementById('promoDots');
+                    slider.innerHTML = validBanners.map((url) => `<div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#002147]"><img src="${url}" class="absolute inset-0 w-full h-full object-cover"></div>`).join('');
+                    dotsContainer.innerHTML = validBanners.map((_, i) => `<div class="w-2 h-2 rounded-full bg-white opacity-${i===0?'100':'40'} transition-opacity duration-300 dot-indicator shadow-sm"></div>`).join('');
+                    let dots = document.querySelectorAll('.dot-indicator'); let cur = 0;
+                    slider.addEventListener('scroll', () => { let idx = Math.round(slider.scrollLeft / slider.clientWidth); dots.forEach((d, i) => { d.classList.toggle('opacity-100', i === idx); d.classList.toggle('opacity-40', i !== idx); }); cur = idx; });
+                    setInterval(() => { cur = (cur + 1) % dots.length; slider.scrollTo({ left: cur * slider.clientWidth, behavior: 'smooth' }); }, 3500);
+                    container.classList.remove('hidden');
+                } else { container.classList.add('hidden'); }
+            } else { container.classList.add('hidden'); }
         });
 
         function bantuanWA() {
@@ -352,240 +357,71 @@ cat << 'EOF' > public/dashboard.html
 </html>
 EOF
 
-echo "[4/5] Menulis Skrip Backend Node.js..."
-cat << 'EOF' > index.js
-const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, Browsers, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
-const fs = require('fs');
-const pino = require('pino');
-const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
-const crypto = require('crypto');
-const axios = require('axios');
-const { exec } = require('child_process');
-const crypt = require('./fiky_crypt.js');
-
-const app = express();
-app.use(bodyParser.json({ limit: '10mb' })); 
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use((req, res, next) => {
-    if (req.path.endsWith('.json')) return res.status(403).json({success: false, message: 'Akses Ditolak'});
-    next();
-});
-
-const configFile = './config.json';
-const dbFile = './database.json';
-const infoFile = './info.json'; 
-const trxFile = './trx.json';
-const produkFile = './produk.json';
-const topupFile = './topup.json';
-
-const loadJSON = (file) => crypt.load(file, file === infoFile ? [] : {});
-const saveJSON = (file, data) => crypt.save(file, data);
-
-loadJSON(dbFile); loadJSON(produkFile); loadJSON(trxFile); loadJSON(topupFile);
-
-let configAwal = loadJSON(configFile);
-configAwal.botName = configAwal.botName || "DIGITAL FIKY STORE";
-configAwal.botNumber = configAwal.botNumber || "";
-configAwal.digiflazzUsername = configAwal.digiflazzUsername || ""; 
-configAwal.digiflazzApiKey = configAwal.digiflazzApiKey || "";     
-configAwal.gopayToken = configAwal.gopayToken || "";
-configAwal.gopayMerchantId = configAwal.gopayMerchantId || "";
-configAwal.qrisText = configAwal.qrisText || "";
-configAwal.banners = configAwal.banners || ["https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80", "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=600&q=80"];
-saveJSON(configFile, configAwal);
-
-let globalSock = null;
-
-const sendWhatsAppMessage = async (phone, message) => {
-    try {
-        if (!globalSock) return false;
-        const jid = phone + '@s.whatsapp.net';
-        await globalSock.sendMessage(jid, { text: message });
-        return true;
-    } catch (error) { return false; }
-};
-
-function convertToDynamicQris(staticQris, amount) {
-    try {
-        if(!staticQris || staticQris.length < 30) return staticQris;
-        let qris = staticQris.substring(0, staticQris.length - 8);
-        qris = qris.replace("010211", "010212");
-        let parsed = ""; let i = 0;
-        while (i < qris.length) {
-            let id = qris.substring(i, i+2); let lenStr = qris.substring(i+2, i+4); let len = parseInt(lenStr, 10);
-            if (isNaN(len)) break;
-            let val = qris.substring(i+4, i+4+len);
-            if (id !== "54") parsed += id + lenStr + val;
-            i += 4 + len;
-        }
-        let amtStr = amount.toString(); let amtLen = amtStr.length.toString().padStart(2, '0');
-        let tag54 = "54" + amtLen + amtStr;
-        let finalQris = "";
-        if (parsed.includes("5802ID")) finalQris = parsed.replace("5802ID", tag54 + "5802ID");
-        else finalQris = parsed + tag54;
-        finalQris += "6304";
-        
-        let crc = 0xFFFF;
-        for(let j=0; j<finalQris.length; j++){
-            crc ^= finalQris.charCodeAt(j) << 8;
-            for(let k=0; k<8; k++){ if(crc & 0x8000) crc = (crc << 1) ^ 0x1021; else crc = crc << 1; }
-        }
-        let crcStr = (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
-        return finalQris + crcStr;
-    } catch(e) { return staticQris; }
-}
-
-app.get('/api/banners', (req, res) => res.json({ success: true, data: loadJSON(configFile).banners }));
-app.post('/api/user/balance', (req, res) => {
-    let db = loadJSON(dbFile); let p = req.body.phone;
-    if(db[p]) { res.json({saldo: db[p].saldo || 0, trx_count: db[p].trx_count || 0}); } else { res.json({saldo:0, trx_count:0}); }
-});
-
-app.post('/api/auth/login', (req, res) => {
-    let { identifier, password } = req.body; let db = loadJSON(dbFile);
-    let fPhone = identifier.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1);
-    let foundPhone = Object.keys(db).find(k => (k === fPhone || db[k].email === identifier) && db[k].password === password);
-    if (foundPhone) {
-        if (!db[foundPhone].isVerified && db[foundPhone].otp) return res.status(400).json({ success: false, message: 'Akun belum diverifikasi OTP.' });
-        let safeData = {...db[foundPhone]}; delete safeData.password;
-        res.json({ success: true, data: safeData });
-    } else { res.status(400).json({ success: false, message: 'Email/No HP atau Password salah.' }); }
-});
-
-app.post('/api/auth/register', async (req, res) => {
-    const { name, phone, email, password } = req.body; let db = loadJSON(dbFile);
-    let fPhone = phone.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1);
-    if (db[fPhone] && (!db[fPhone].otp || db[fPhone].isVerified)) return res.status(400).json({ success:false, error: 'Nomor WA sudah terdaftar.' });
-    
-    const otp = Math.floor(1000 + Math.random() * 9000).toString();
-    db[fPhone] = { name: name, email: email, password: password, isVerified: false, otp: otp, photo: '', saldo: 0, trx_count: 0, history: [] }; 
-    saveJSON(dbFile, db);
-    const sent = await sendWhatsAppMessage(fPhone, `Halo *${name}*!\nSelamat datang di DIGITAL FIKY STORE.\n\nKode OTP Pendaftaran Anda: *${otp}*`);
-    if(sent) res.json({ success: true, phone: fPhone }); else res.status(500).json({ success:false, error: 'Gagal mengirim OTP.' });
-});
-
-app.post('/api/auth/verify', (req, res) => {
-    const { phone, otp } = req.body; let db = loadJSON(dbFile); 
-    let fPhone = phone.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1);
-    if (db[fPhone] && db[fPhone].otp === otp.toString().trim()) {
-        db[fPhone].isVerified = true; delete db[fPhone].otp; saveJSON(dbFile, db); res.json({ success: true });
-    } else { res.status(400).json({ success:false, error: 'Kode OTP Salah.' }); }
-});
-
-app.post('/api/topup', async (req, res) => {
-    try {
-        let cfg = loadJSON(configFile);
-        if(!cfg.gopayToken || !cfg.qrisText) return res.json({success: false, message: "Sistem QRIS belum diatur Admin."});
-        let { phone, nominal } = req.body; let db = loadJSON(dbFile);
-        if(!db[phone]) return res.json({success: false, message: "User tidak ditemukan."});
-        
-        let nominalAsli = parseInt(nominal);
-        let uniqueCode = Math.floor(Math.random() * 99) + 1; let totalPay = nominalAsli + uniqueCode;
-        let dynQris = convertToDynamicQris(cfg.qrisText, totalPay);
-        let finalQrisUrl = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=15&format=jpeg&data=" + encodeURIComponent(dynQris);
-
-        let topups = loadJSON(topupFile); let trxId = "TP-" + Date.now(); let expiredAt = Date.now() + 10 * 60 * 1000; 
-        topups[trxId] = { phone, trx_id: trxId, amount_to_pay: totalPay, saldo_to_add: totalPay, status: 'pending', expired_at: expiredAt };
-        saveJSON(topupFile, topups);
-
-        db[phone].history = db[phone].history || [];
-        db[phone].history.unshift({ ts: Date.now(), tanggal: new Date().toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }), type: 'Topup', nama: 'Topup Saldo QRIS', tujuan: 'Sistem Pembayaran', status: 'Pending', sn: trxId, amount: totalPay, qris_url: finalQrisUrl, expired_at: expiredAt });
-        if(db[phone].history.length > 20) db[phone].history.pop();
-        saveJSON(dbFile, db);
-
-        res.json({success: true, total: totalPay, qris: finalQrisUrl});
-    } catch(e) { res.json({success: false, message: "Gagal memproses QRIS."}); }
-});
-
-// POLLING GOPAY DINAMIS
-setInterval(async () => {
-    try {
-        let cfg = loadJSON(configFile); let topups = loadJSON(topupFile);
-        let pendingKeys = Object.keys(topups).filter(k => topups[k].status === 'pending');
-        if(pendingKeys.length === 0 || !cfg.gopayToken || !cfg.gopayMerchantId) return;
-
-        const gopayRes = await axios.post('https://gopay.autoftbot.com/api/backend/transactions', 
-            { merchant_id: cfg.gopayMerchantId }, 
-            { headers: { 'Authorization': 'Bearer ' + cfg.gopayToken, 'Content-Type': 'application/json' } }
-        );
-        let responseStr = JSON.stringify(gopayRes.data);
-        let db = loadJSON(dbFile); let changedTp = false; let changedDb = false;
-
-        for(let key of pendingKeys) {
-            let req = topups[key];
-            if (Date.now() > req.expired_at) {
-                req.status = 'gagal'; changedTp = true;
-                if(db[req.phone]) {
-                    let hist = db[req.phone].history.find(h => h.sn === req.trx_id);
-                    if(hist && hist.status === 'Pending') { hist.status = 'Gagal'; changedDb = true; }
-                }
-            } else {
-                let amountStr = req.amount_to_pay.toString();
-                let isFound = responseStr.includes(`"${amountStr}"`) || responseStr.includes(`:${amountStr}`) || responseStr.includes(`"${amountStr}.00"`) || responseStr.includes(`:${amountStr}.00`);
-                if(isFound) {
-                    req.status = 'sukses'; changedTp = true;
-                    if(db[req.phone]) {
-                        db[req.phone].saldo += req.saldo_to_add; 
-                        let hist = db[req.phone].history.find(h => h.sn === req.trx_id);
-                        if(hist && hist.status === 'Pending') { hist.status = 'Sukses'; }
-                        changedDb = true;
-                        if(globalSock) {
-                            let msg = `✅ *TOPUP QRIS BERHASIL*\n\nTotal: Rp ${req.amount_to_pay.toLocaleString('id-ID')}\nSaldo Sekarang: Rp ${db[req.phone].saldo.toLocaleString('id-ID')}`;
-                            globalSock.sendMessage(req.phone + '@s.whatsapp.net', {text: msg}).catch(()=>{});
-                        }
-                    }
-                }
-            }
-        }
-        if(changedTp) saveJSON(topupFile, topups);
-        if(changedDb) saveJSON(dbFile, db);
-    } catch(e) {}
-}, 30000); 
-
-function doBackupAndSend() {
-    let cfg = loadJSON(configFile);
-    if (!cfg.teleToken || !cfg.teleChatId) return;
-    exec(`[ -d "/etc/letsencrypt" ] && sudo tar -czf ssl_backup.tar.gz -C / etc/letsencrypt 2>/dev/null; rm -f backup.zip && zip backup.zip config.json database.json trx.json produk.json topup.json info.json ssl_backup.tar.gz 2>/dev/null`, (err) => {
-        if (!err) exec(`curl -s -F chat_id="${cfg.teleChatId}" -F document=@"backup.zip" -F caption="📦 Auto-Backup Fiky Store" https://api.telegram.org/bot${cfg.teleToken}/sendDocument`);
-    });
-}
-if (configAwal.autoBackup) setInterval(doBackupAndSend, (configAwal.backupInterval || 720) * 60 * 1000); 
-
-async function startBot() {
-    const { state, saveCreds } = await useMultiFileAuthState('sesi_bot');
-    const { version } = await fetchLatestBaileysVersion();
-    const sock = makeWASocket({ version, auth: state, logger: pino({ level: 'silent' }), browser: Browsers.ubuntu('Chrome'), printQRInTerminal: false });
-    
-    if (!sock.authState.creds.registered) {
-        let config = loadJSON(configFile);
-        if (config.botNumber) {
-            setTimeout(async () => {
-                try {
-                    const code = await sock.requestPairingCode(config.botNumber.replace(/[^0-9]/g, ''));
-                    console.log(`\n=======================================================\n🔑 KODE PAIRING ANDA :  ${code}  \n=======================================================\n`);
-                } catch (error) {}
-            }, 3000); 
-        }
-    }
-    sock.ev.on('creds.update', saveCreds);
-    sock.ev.on('connection.update', (update) => {
-        const { connection } = update;
-        if(connection === 'close') { startBot(); } else if(connection === 'open') { console.log("✅ BOT WHATSAPP TERHUBUNG!"); }
-    });
-    globalSock = sock; 
-}
-
-if (require.main === module) {
-    app.listen(3000, () => { console.log('🌐 Web Server berjalan di port 3000'); });
-    startBot();
-}
+cat << 'EOF' > public/provider.html
+<!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Pilih Provider - DIGITAL FIKY STORE</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-[#f4f6f9] dark:bg-gray-900 min-h-screen relative pb-8 shadow-2xl overflow-x-hidden"><div class="flex items-center p-4 bg-[#001229] text-white shadow-md sticky top-0 z-40"><i class="fas fa-arrow-left text-xl cursor-pointer text-gray-300 hover:text-white mr-4 px-2" onclick="history.back()"></i><h1 class="font-bold text-[17px] tracking-wide flex-1" id="pageTitle">Pilih Provider</h1></div><div class="px-4 mt-6 mb-2"><p class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1" id="topLabel">Pilih Operator Tujuan</p></div><div class="mx-4" id="contentContainer"></div></div><div id="customAlert" class="fixed inset-0 z-[1001] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-white dark:bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-100 dark:border-gray-700 transform transition-transform scale-100"><div id="alertIcon" class="mb-4 text-6xl"></div><h3 class="text-xl font-bold text-[#001229] dark:text-white mb-2 tracking-wide" id="alertTitle">Pemberitahuan</h3><p class="text-sm text-gray-500 dark:text-gray-300 mb-6" id="alertMessage">Pesan</p><button onclick="closeAlert()" class="bg-[#001229] dark:bg-[#facc15] text-yellow-400 dark:text-[#0f172a] w-full py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-[#002147] dark:hover:bg-yellow-500 transition">OKE</button></div></div><script>const user = JSON.parse(localStorage.getItem('user')); if (!user) window.location.href = '/'; if(localStorage.getItem('darkMode') === 'true') document.getElementById('html-root').classList.add('dark'); const params = new URLSearchParams(window.location.search); const type = params.get('type') || 'pulsa'; const topLabel = document.getElementById('topLabel'); const contentContainer = document.getElementById('contentContainer'); let alertCallback = null; function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check text-green-500"></i>' : '<i class="fas fa-tools text-yellow-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; } function closeAlert() { document.getElementById('customAlert').classList.add('hidden'); if(alertCallback) alertCallback(); } if (type === 'game') { document.getElementById('pageTitle').innerText = 'Top Up Game'; topLabel.innerText = 'PILIH GAME FAVORITMU'; contentContainer.innerHTML = `<div class="bg-white dark:bg-[#0f172a] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden"><div class="bg-black text-white px-4 py-3 flex items-center gap-2"><i class="fas fa-gamepad text-yellow-400"></i> <span class="font-bold text-[15px] tracking-wide">Game</span></div><div class="p-4 grid grid-cols-3 gap-3"><div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition" onclick="showAlert('Segera Hadir!', 'Menu nominal untuk Free Fire sedang tahap pengembangan.', false)"><div class="w-14 h-14 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center mb-2 text-[#001229] dark:text-yellow-400 font-black italic text-sm tracking-tighter">FF</div><span class="text-[10px] font-bold text-center text-[#001229] dark:text-gray-200">Free Fire</span></div><div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition" onclick="showAlert('Segera Hadir!', 'Menu nominal untuk Mobile Legends sedang tahap pengembangan.', false)"><div class="w-14 h-14 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center mb-2 text-[#001229] dark:text-yellow-400 font-black italic text-[10px] text-center leading-tight tracking-tighter">ML<br>BB</div><span class="text-[10px] font-bold text-center text-[#001229] dark:text-gray-200 leading-tight mt-1">Mobile<br>Legends</span></div><div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition" onclick="showAlert('Segera Hadir!', 'Menu nominal untuk PUBG Mobile sedang tahap pengembangan.', false)"><div class="w-14 h-14 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center mb-2 text-[#001229] dark:text-yellow-400 font-black italic text-xs tracking-tighter">PUBG</div><span class="text-[10px] font-bold text-center text-[#001229] dark:text-gray-200 leading-tight mt-1">PUBG<br>Mobile</span></div><div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition" onclick="showAlert('Segera Hadir!', 'Menu nominal untuk Valorant sedang tahap pengembangan.', false)"><div class="w-14 h-14 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center mb-2 text-[#001229] dark:text-yellow-400 font-black italic text-[11px] tracking-tighter">VALO</div><span class="text-[10px] font-bold text-center text-[#001229] dark:text-gray-200 mt-1">Valorant</span></div></div></div>`; } else { document.getElementById('pageTitle').innerText = type === 'data' ? 'Paket Internet' : 'Isi Pulsa'; topLabel.innerText = 'PILIH OPERATOR TUJUAN'; const providers = [ { name: 'Axis', color: 'bg-purple-600', initial: 'AX' }, { name: 'Indosat', color: 'bg-yellow-500', initial: 'IS' }, { name: 'Smartfren', color: 'bg-red-500', initial: 'SF' }, { name: 'Telkomsel', color: 'bg-red-600', initial: 'TS' }, { name: 'By.U', color: 'bg-blue-400', initial: 'BU' }, { name: 'Three', color: 'bg-gray-800', initial: '3' }, { name: 'XL', color: 'bg-blue-600', initial: 'XL' } ]; let html = '<div class="bg-white dark:bg-[#0f172a] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">'; providers.forEach((p, idx) => { const border = idx !== providers.length - 1 ? 'border-b border-gray-100 dark:border-gray-800' : ''; html += `<div class="flex items-center px-5 py-4 ${border} cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition" onclick="showAlert('Segera Hadir!', 'Menu nominal untuk ${p.name} sedang dalam tahap pengembangan.', false)"><div class="w-10 h-10 rounded-full ${p.color} text-white flex items-center justify-center font-extrabold text-sm shadow-sm mr-4 tracking-tighter">${p.initial}</div><div class="flex-1 font-bold text-[#001229] dark:text-gray-200 text-[15px] tracking-wide">${p.name}</div><i class="fas fa-chevron-right text-gray-400 text-sm"></i></div>`; }); html += '</div>'; contentContainer.innerHTML = html; }</script></body></html>
 EOF
 
-echo "[5/5] Membuat Script Menu Terminal VPS..."
-cat << 'EOF_MENU' > /usr/bin/menu
+cat << 'EOF' > public/profile.html
+<!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Profil - DIGITAL FIKY STORE</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-white dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl"><div class="bg-black text-white p-8 flex flex-col items-center relative rounded-b-[2.5rem] shadow-lg"><div class="flex items-center justify-center gap-3 mb-2 relative"><div class="w-8"></div><div class="w-24 h-24 bg-gray-200 rounded-full flex justify-center items-center text-black font-bold text-4xl border-4 border-gray-400 shadow-xl overflow-hidden" id="profileCircle">U</div><div class="w-8 text-xl cursor-pointer hover:text-gray-300 transition flex items-center justify-center" onclick="openEditProfile()"><i class="fas fa-pencil-alt"></i></div></div><h2 class="text-xl font-bold tracking-wide mt-2" id="profileName">Nama Member</h2></div><div class="mt-6"><div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-envelope text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">Email</div><div class="text-sm text-gray-500 dark:text-gray-400 font-medium" id="profileEmail">email@domain.com</div></div><div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-phone-alt text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">No. Telp</div><div class="text-sm text-gray-500 dark:text-gray-400 font-medium" id="profilePhoneData">0888...</div></div><div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-wallet text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">Saldo Akun</div><div class="text-sm font-extrabold text-blue-600 dark:text-yellow-400 tracking-wide" id="profileSaldo">Rp 0</div></div><div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-shopping-cart text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">Jumlah Transaksi</div><div class="text-[11px] font-bold text-gray-600 bg-gray-100 dark:bg-gray-800 dark:text-gray-300 px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700">0 Trx</div></div><div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition" onclick="openChangePassword()"><i class="fas fa-lock text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">Ubah Password</div><i class="fas fa-chevron-right text-gray-400 text-sm"></i></div><div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800 cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 transition" onclick="logout()"><i class="fas fa-sign-out-alt text-red-600 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-bold text-red-600 ml-2 tracking-wide">Keluar Akun</div></div></div><div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40"><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/info.html'"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div><div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div></div></div>
+<div id="customAlert" class="fixed inset-0 z-[1001] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-700"><div id="alertIcon" class="mb-4 text-6xl"></div><h3 class="text-xl font-bold text-white mb-2 tracking-wide" id="alertTitle">Pemberitahuan</h3><p class="text-sm text-gray-300 mb-6" id="alertMessage">Pesan</p><button onclick="closeAlert()" class="bg-[#facc15] text-[#0f172a] w-full py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-yellow-500 transition">OKE</button></div></div>
+<div id="editProfileModal" class="fixed inset-0 z-[998] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-white dark:bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[340px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-100 dark:border-gray-700 relative"><button onclick="closeEditProfile()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fas fa-times text-xl"></i></button><h3 class="text-lg font-extrabold text-[#001229] dark:text-white mb-4">Ubah Profil</h3><div class="flex justify-center mb-4"><div class="relative w-20 h-20"><div id="editPreview" class="w-full h-full bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center text-2xl font-bold border-2 border-yellow-400 overflow-hidden text-[#001229] dark:text-white">U</div><button onclick="document.getElementById('photoInput').click()" class="absolute bottom-0 right-0 bg-[#001229] dark:bg-yellow-400 text-yellow-400 dark:text-[#001229] w-7 h-7 rounded-full flex items-center justify-center border border-white dark:border-gray-900 shadow-sm hover:scale-110 transition"><i class="fas fa-camera text-xs"></i></button></div><input type="file" id="photoInput" accept="image/*" class="hidden" onchange="previewPhoto(event)"></div><div class="text-left mb-3"><label class="text-[10px] font-bold text-gray-500 ml-1">Email (Hanya Baca)</label><input type="email" id="editEmail" disabled class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl py-2 px-3 text-sm text-gray-500 outline-none mt-1"></div><div class="text-left mb-3"><label class="text-[10px] font-bold text-gray-500 ml-1">Nama Pengguna</label><input type="text" id="editName" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-2 px-3 text-sm text-[#001229] dark:text-white outline-none focus:border-yellow-400 mt-1 transition"></div><div class="text-left mb-5"><label class="text-[10px] font-bold text-gray-500 ml-1">Nomor Telepon</label><input type="number" id="editPhone" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-2 px-3 text-sm text-[#001229] dark:text-white outline-none focus:border-yellow-400 mt-1 transition"></div><button onclick="saveProfile()" class="w-full bg-[#001229] dark:bg-yellow-400 text-yellow-400 dark:text-[#001229] py-2.5 rounded-xl font-bold tracking-wide shadow-md mb-3 hover:bg-[#002147] dark:hover:bg-yellow-500 transition">Simpan Profil</button><button onclick="deleteAccount()" class="w-full bg-red-50 dark:bg-red-900/30 text-red-600 border border-red-200 dark:border-red-800 py-2.5 rounded-xl font-bold tracking-wide transition hover:bg-red-100">Hapus Akun</button></div></div>
+<div id="changePassModal" class="fixed inset-0 z-[998] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-white dark:bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-100 dark:border-gray-700 relative"><button onclick="closeChangePass()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fas fa-times text-xl"></i></button><h3 class="text-lg font-extrabold text-[#001229] dark:text-white mb-4">Ubah Password</h3><div class="text-left mb-3 relative"><label class="text-[10px] font-bold text-gray-500 ml-1">Password Lama</label><input type="password" id="oldPass" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-2 px-3 pr-10 text-sm text-[#001229] dark:text-white outline-none focus:border-yellow-400 mt-1 transition"><i class="fas fa-eye absolute right-3 top-8 text-gray-500 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300" onclick="togglePassword('oldPass', this)"></i></div><div class="text-left mb-5 relative"><label class="text-[10px] font-bold text-gray-500 ml-1">Password Baru</label><input type="password" id="newPass" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-2 px-3 pr-10 text-sm text-[#001229] dark:text-white outline-none focus:border-yellow-400 mt-1 transition"><i class="fas fa-eye absolute right-3 top-8 text-gray-500 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300" onclick="togglePassword('newPass', this)"></i></div><button onclick="savePassword()" class="w-full bg-[#001229] dark:bg-yellow-400 text-yellow-400 dark:text-[#001229] py-2.5 rounded-xl font-bold tracking-wide shadow-md hover:bg-[#002147] dark:hover:bg-yellow-500 transition">Simpan Password</button></div></div>
+<div id="otpVerifyModal" class="fixed inset-0 z-[1000] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-white dark:bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-100 dark:border-gray-700 relative"><button onclick="closeOtpModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fas fa-times text-xl"></i></button><h3 class="text-lg font-extrabold text-[#001229] dark:text-white mb-2">Verifikasi Keamanan</h3><p class="text-xs text-gray-500 dark:text-gray-400 mb-4" id="otpVerifyMsg">Masukkan kode OTP dari WhatsApp.</p><input type="number" id="modalOtpInput" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-3 px-4 text-center text-2xl tracking-[0.5em] font-bold text-[#001229] dark:text-white outline-none focus:border-yellow-400 mb-5 transition" placeholder="XXXX"><button onclick="submitOtpAction()" class="w-full bg-[#001229] dark:bg-yellow-400 text-yellow-400 dark:text-[#001229] py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-[#002147] dark:hover:bg-yellow-500 transition">VERIFIKASI</button></div></div>
+<script>
+    let user = JSON.parse(localStorage.getItem('user')); if (!user) window.location.href = '/';
+    function renderProfile() { document.getElementById('profileName').innerText = user.name; document.getElementById('profilePhoneData').innerText = user.phone; document.getElementById('profileEmail').innerText = user.email || 'Belum diatur'; if (user.photo) { document.getElementById('profileCircle').innerHTML = `<img src="${user.photo}" class="w-full h-full object-cover">`; document.getElementById('editPreview').innerHTML = `<img src="${user.photo}" class="w-full h-full object-cover">`; } else { document.getElementById('profileCircle').innerText = user.name.charAt(0).toUpperCase(); document.getElementById('editPreview').innerText = user.name.charAt(0).toUpperCase(); } } renderProfile();
+    function logout() { localStorage.removeItem('user'); window.location.href = '/'; }
+    fetch('/api/user/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }).then(res => res.json()).then(data => { document.getElementById('profileSaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); });
+    if(localStorage.getItem('darkMode') === 'true') document.getElementById('html-root').classList.add('dark');
+    let alertCallback = null; function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check text-green-500"></i>' : '<i class="fas fa-times text-red-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; } function closeAlert() { document.getElementById('customAlert').classList.add('hidden'); if(alertCallback) alertCallback(); } function togglePassword(id, icon) { const el = document.getElementById(id); if(el.type === 'password') { el.type = 'text'; icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash'); } else { el.type = 'password'; icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); } }
+    let otpContext = ''; let pendingProfileData = {}; let pendingPasswordData = {};
+    function showOtpModal(msg) { document.getElementById('otpVerifyMsg').innerText = msg; document.getElementById('modalOtpInput').value = ''; document.getElementById('otpVerifyModal').classList.remove('hidden'); } function closeOtpModal() { document.getElementById('otpVerifyModal').classList.add('hidden'); }
+    async function submitOtpAction() { const otp = document.getElementById('modalOtpInput').value; if(!otp) return showAlert('Peringatan', 'OTP tidak boleh kosong.', false); if(otpContext === 'profile') { pendingProfileData.otp = otp; try { const res = await fetch('/api/user/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pendingProfileData) }); const data = await res.json(); if(res.ok) { user = data.user; localStorage.setItem('user', JSON.stringify(user)); renderProfile(); closeOtpModal(); closeEditProfile(); showAlert('Berhasil!', 'Profil dan Nomor WA berhasil diperbarui.', true); } else { showAlert('Gagal', data.error, false); } } catch(e) { showAlert('Error', 'Gagal terhubung ke server', false); } } else if(otpContext === 'password') { pendingPasswordData.otp = otp; try { const res = await fetch('/api/user/change-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pendingPasswordData) }); const data = await res.json(); if(res.ok) { closeOtpModal(); closeChangePass(); showAlert('Berhasil', 'Password berhasil diubah!', true); } else { showAlert('Gagal', data.error, false); } } catch(e) { showAlert('Error', 'Gagal terhubung ke server', false); } } }
+    let tempPhotoBase64 = user.photo || ''; function openEditProfile() { document.getElementById('editName').value = user.name; document.getElementById('editPhone').value = user.phone; document.getElementById('editEmail').value = user.email || ''; document.getElementById('editProfileModal').classList.remove('hidden'); } function closeEditProfile() { document.getElementById('editProfileModal').classList.add('hidden'); } function previewPhoto(event) { const file = event.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(e) { tempPhotoBase64 = e.target.result; document.getElementById('editPreview').innerHTML = `<img src="${tempPhotoBase64}" class="w-full h-full object-cover">`; }; reader.readAsDataURL(file); } }
+    async function saveProfile() { const name = document.getElementById('editName').value; const newPhone = document.getElementById('editPhone').value; const payload = { oldPhone: user.phone, name, newPhone, photo: tempPhotoBase64 }; try { const res = await fetch('/api/user/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const data = await res.json(); if(data.status === 'OTP_SENT') { pendingProfileData = payload; otpContext = 'profile'; showOtpModal(`Masukkan OTP yang dikirim ke WA baru Anda.`); } else if (res.ok) { user = data.user; localStorage.setItem('user', JSON.stringify(user)); renderProfile(); closeEditProfile(); showAlert('Berhasil!', 'Profil berhasil diperbarui.', true); } else { showAlert('Gagal', data.error, false); } } catch(e) { showAlert('Error', 'Gagal terhubung ke server', false); } }
+    async function deleteAccount() { if(confirm("Yakin hapus akun permanen? Saldo hangus.")) { try { const res = await fetch('/api/user/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }); if(res.ok) { alert('Akun dihapus.'); logout(); } else { showAlert('Gagal', 'Tidak dapat menghapus akun.', false); } } catch(e) { showAlert('Error', 'Gagal terhubung', false); } } }
+    function openChangePassword() { document.getElementById('oldPass').value=''; document.getElementById('newPass').value=''; document.getElementById('changePassModal').classList.remove('hidden'); } function closeChangePass() { document.getElementById('changePassModal').classList.add('hidden'); }
+    async function savePassword() { const oldPassword = document.getElementById('oldPass').value; const newPassword = document.getElementById('newPass').value; if(!oldPassword || !newPassword) return showAlert('Peringatan', 'Harap isi semua kolom.', false); const payload = { phone: user.phone, oldPassword, newPassword }; try { const res = await fetch('/api/user/change-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const data = await res.json(); if(data.status === 'OTP_SENT') { pendingPasswordData = payload; otpContext = 'password'; showOtpModal('Masukkan OTP yang dikirim ke WA Anda.'); } else { showAlert('Gagal', data.error || 'Password lama salah.', false); } } catch(e) { showAlert('Error', 'Gagal terhubung', false); } }
+</script></body></html>
+EOF
+
+cat << 'EOF' > public/riwayat.html
+<!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Riwayat - DIGITAL FIKY STORE</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><style> .hide-scrollbar::-webkit-scrollbar { display: none; } </style><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-[#f4f6f9] dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl overflow-x-hidden"><div class="flex items-center p-4 bg-[#001229] text-white shadow-md sticky top-0 z-40"><i class="fas fa-arrow-left text-xl cursor-pointer text-gray-300 hover:text-white mr-4" onclick="location.href='/dashboard.html'"></i><h1 class="font-bold text-[17px] tracking-wide flex-1">Riwayat Transaksi</h1></div><div class="mx-4 mt-5 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700"><div class="relative mb-4"><i class="fas fa-search absolute left-3 top-3 text-gray-400"></i><input type="text" placeholder="Cari transaksi..." class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-2.5 pl-10 pr-4 text-sm outline-none focus:border-yellow-400 dark:text-gray-200 transition"></div><div class="flex gap-2 overflow-x-auto hide-scrollbar pb-1"><button class="bg-[#001229] text-yellow-400 px-5 py-1.5 rounded-full text-xs font-bold shrink-0 border border-[#001229] shadow-sm">Semua</button><button class="bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-4 py-1.5 rounded-full text-xs font-semibold shrink-0 border border-gray-200 dark:border-gray-600 hover:bg-gray-50">Sukses</button><button class="bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-4 py-1.5 rounded-full text-xs font-semibold shrink-0 border border-gray-200 dark:border-gray-600 hover:bg-gray-50">Proses</button><button class="bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-4 py-1.5 rounded-full text-xs font-semibold shrink-0 border border-gray-200 dark:border-gray-600 hover:bg-gray-50">Gagal</button></div><div class="flex gap-2 mt-4 items-end"><div class="flex-1"><label class="text-[10px] font-bold text-gray-500 mb-1 block">Dari</label><input type="date" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg py-1.5 px-2 text-xs outline-none text-gray-600 dark:text-gray-300"></div><div class="flex-1"><label class="text-[10px] font-bold text-gray-500 mb-1 block">Sampai</label><input type="date" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg py-1.5 px-2 text-xs outline-none text-gray-600 dark:text-gray-300"></div><button class="bg-gray-100 dark:bg-gray-700 w-8 h-8 rounded-lg flex items-center justify-center text-gray-500 border border-gray-200 hover:bg-gray-200"><i class="fas fa-sync-alt text-xs"></i></button></div></div><div class="flex flex-col items-center justify-center mt-12 mb-8"><div class="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4 shadow-inner"><i class="fas fa-receipt text-4xl text-gray-400"></i></div><h3 class="font-bold text-[#001229] dark:text-gray-100 text-lg">Belum Ada Transaksi</h3><p class="text-xs text-gray-500 mt-2 text-center max-w-[200px]">Ayo mulai transaksi pertamamu sekarang dan nikmati berbagai promo menarik!</p><button onclick="location.href='/dashboard.html'" class="mt-5 bg-[#001229] text-yellow-400 px-6 py-2.5 rounded-full text-xs font-bold shadow-md hover:bg-[#002147] transition">Transaksi Sekarang</button></div><div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40"><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">HOME</span></div><div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">RIWAYAT</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/info.html'"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">INFO</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">PROFIL</span></div></div></div><script>const user = JSON.parse(localStorage.getItem('user')); if (!user) window.location.href = '/'; if(localStorage.getItem('darkMode') === 'true') document.getElementById('html-root').classList.add('dark');</script></body></html>
+EOF
+
+cat << 'EOF' > public/info.html
+<!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Pusat Info - DIGITAL FIKY STORE</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-[#f4f6f9] dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl overflow-x-hidden"><div class="flex items-center p-4 bg-[#001229] text-white shadow-md sticky top-0 z-40"><i class="fas fa-arrow-left text-xl cursor-pointer text-gray-300 hover:text-white mr-4" onclick="location.href='/dashboard.html'"></i><h1 class="font-bold text-[17px] tracking-wide flex-1">Pusat Informasi</h1></div><div id="infoContainer" class="mx-4 mt-5 pb-8"><div class="flex items-center justify-center h-40"><i class="fas fa-circle-notch fa-spin text-3xl text-gray-400"></i></div></div><div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40"><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">HOME</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">RIWAYAT</span></div><div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">INFO</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">PROFIL</span></div></div></div><script>const user = JSON.parse(localStorage.getItem('user')); if (!user) window.location.href = '/'; if(localStorage.getItem('darkMode') === 'true') document.getElementById('html-root').classList.add('dark'); fetch('/api/info').then(res => res.json()).then(data => { const container = document.getElementById('infoContainer'); if (data.data.length === 0) { container.innerHTML = `<div class="flex flex-col items-center justify-center mt-12"><div class="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4 shadow-inner"><i class="fas fa-bell-slash text-4xl text-gray-400"></i></div><h3 class="font-bold text-[#001229] dark:text-gray-100 text-lg">Belum Ada Informasi</h3><p class="text-xs text-gray-500 mt-2 text-center max-w-[200px]">Saat ini belum ada pengumuman atau informasi terbaru.</p></div>`; } else { let html = ''; data.data.forEach(info => { html += `<div class="bg-white dark:bg-[#0f172a] rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mb-4 flex gap-4 transition-transform hover:-translate-y-1 cursor-pointer"><div class="w-12 h-12 rounded-full bg-blue-50 dark:bg-black flex items-center justify-center text-blue-600 dark:text-yellow-400 shrink-0 border border-transparent dark:border-gray-700"><i class="fas fa-bullhorn text-xl"></i></div><div class="flex-1"><div class="flex justify-between items-start mb-1"><h4 class="font-bold text-[#001229] dark:text-gray-100 text-sm leading-tight pr-2">${info.title}</h4><span class="text-[9px] font-bold text-gray-400 shrink-0 mt-0.5">${info.date}</span></div><p class="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed">${info.content}</p></div></div>`; }); container.innerHTML = html; } }).catch(err => { document.getElementById('infoContainer').innerHTML = `<p class="text-center text-sm text-red-500 mt-10">Gagal memuat informasi.</p>`; });</script></body></html>
+EOF
+
+echo "[4/5] Mengatur sistem Backend (index.js)..."
+cat << 'EOF' > index.js
+const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, Browsers, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
+const fs = require('fs'); const pino = require('pino'); const express = require('express'); const bodyParser = require('body-parser'); const path = require('path'); const crypto = require('crypto'); const axios = require('axios'); const { exec } = require('child_process'); const crypt = require('./fiky_crypt.js');
+const app = express(); app.use(bodyParser.json({ limit: '10mb' })); app.use(express.static(path.join(__dirname, 'public')));
+app.use((req, res, next) => { if (req.path.endsWith('.json')) return res.status(403).json({success: false, message: 'Akses Ditolak'}); next(); });
+const configFile = './config.json'; const dbFile = './database.json'; const infoFile = './info.json'; const trxFile = './trx.json'; const produkFile = './produk.json'; const globalStatsFile = './global_stats.json'; const topupFile = './topup.json';
+const loadJSON = (file) => crypt.load(file, file === infoFile ? [] : {}); const saveJSON = (file, data) => crypt.save(file, data);
+loadJSON(dbFile); loadJSON(produkFile); loadJSON(trxFile); loadJSON(globalStatsFile); loadJSON(topupFile);
+let configAwal = loadJSON(configFile); configAwal.botName = configAwal.botName || "DIGITAL FIKY STORE"; configAwal.botNumber = configAwal.botNumber || ""; configAwal.digiflazzUsername = configAwal.digiflazzUsername || ""; configAwal.digiflazzApiKey = configAwal.digiflazzApiKey || ""; configAwal.gopayToken = configAwal.gopayToken || ""; configAwal.gopayMerchantId = configAwal.gopayMerchantId || ""; configAwal.qrisText = configAwal.qrisText || ""; configAwal.banners = configAwal.banners || ["https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80", "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=600&q=80"]; saveJSON(configFile, configAwal);
+let globalSock = null;
+const sendWhatsAppMessage = async (phone, message) => { try { if (!globalSock) return false; await globalSock.sendMessage(phone + '@s.whatsapp.net', { text: message }); return true; } catch (error) { return false; } };
+function convertToDynamicQris(staticQris, amount) { try { if(!staticQris || staticQris.length < 30) return staticQris; let qris = staticQris.substring(0, staticQris.length - 8); qris = qris.replace("010211", "010212"); let parsed = ""; let i = 0; while (i < qris.length) { let id = qris.substring(i, i+2); let lenStr = qris.substring(i+2, i+4); let len = parseInt(lenStr, 10); if (isNaN(len)) break; let val = qris.substring(i+4, i+4+len); if (id !== "54") parsed += id + lenStr + val; i += 4 + len; } let amtStr = amount.toString(); let amtLen = amtStr.length.toString().padStart(2, '0'); let tag54 = "54" + amtLen + amtStr; let finalQris = ""; if (parsed.includes("5802ID")) finalQris = parsed.replace("5802ID", tag54 + "5802ID"); else finalQris = parsed + tag54; finalQris += "6304"; let crc = 0xFFFF; for(let j=0; j<finalQris.length; j++){ crc ^= finalQris.charCodeAt(j) << 8; for(let k=0; k<8; k++){ if(crc & 0x8000) crc = (crc << 1) ^ 0x1021; else crc = crc << 1; } } let crcStr = (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0'); return finalQris + crcStr; } catch(e) { return staticQris; } }
+app.get('/api/banners', (req, res) => res.json({ success: true, data: loadJSON(configFile).banners }));
+app.get('/api/info', (req, res) => res.json({ data: loadJSON(infoFile).reverse() }));
+app.get('/api/user/:phone', (req, res) => { let db = loadJSON(dbFile); let p = req.params.phone; if(db[p]) { let data = {...db[p]}; delete data.password; res.json({success: true, data}); } else res.json({success: false}); });
+app.post('/api/auth/login', (req, res) => { let { identifier, password } = req.body; let db = loadJSON(dbFile); let fPhone = identifier.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1); let foundPhone = Object.keys(db).find(k => (k === fPhone || db[k].email === identifier) && db[k].password === password); if (foundPhone) { if (!db[foundPhone].isVerified && db[foundPhone].otp) return res.status(400).json({ success: false, message: 'Akun belum diverifikasi OTP.' }); let safeData = {...db[foundPhone]}; delete safeData.password; res.json({ success: true, data: safeData }); } else { res.status(400).json({ success: false, message: 'Email/No HP atau Password salah.' }); } });
+app.post('/api/auth/register', async (req, res) => { const { name, phone, email, password } = req.body; let db = loadJSON(dbFile); let fPhone = phone.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1); if (db[fPhone] && (!db[fPhone].otp || db[fPhone].isVerified)) return res.status(400).json({ success:false, error: 'Nomor WA sudah terdaftar.' }); const otp = Math.floor(1000 + Math.random() * 9000).toString(); db[fPhone] = { name: name, email: email, password: password, isVerified: false, otp: otp, photo: '', saldo: 0, trx_count: 0, history: [] }; saveJSON(dbFile, db); const sent = await sendWhatsAppMessage(fPhone, `Halo *${name}*!\nSelamat datang di DIGITAL FIKY STORE.\n\nKode OTP Pendaftaran Anda: *${otp}*`); if(sent) res.json({ success: true, phone: fPhone }); else res.status(500).json({ success:false, error: 'Gagal mengirim OTP.' }); });
+app.post('/api/auth/verify', (req, res) => { const { phone, otp } = req.body; let db = loadJSON(dbFile); let fPhone = phone.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1); if (db[fPhone] && db[fPhone].otp === otp.toString().trim()) { db[fPhone].isVerified = true; delete db[fPhone].otp; saveJSON(dbFile, db); res.json({ success: true }); } else { res.status(400).json({ success:false, error: 'Kode OTP Salah.' }); } });
+app.post('/api/topup', async (req, res) => { try { let cfg = loadJSON(configFile); if(!cfg.gopayToken || !cfg.qrisText) return res.json({success: false, message: "Sistem QRIS belum diatur Admin."}); let { phone, nominal } = req.body; let db = loadJSON(dbFile); if(!db[phone]) return res.json({success: false, message: "User tidak ditemukan."}); let nominalAsli = parseInt(nominal); let uniqueCode = Math.floor(Math.random() * 99) + 1; let totalPay = nominalAsli + uniqueCode; let dynQris = convertToDynamicQris(cfg.qrisText, totalPay); let finalQrisUrl = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=15&format=jpeg&data=" + encodeURIComponent(dynQris); let topups = loadJSON(topupFile); let trxId = "TP-" + Date.now(); let expiredAt = Date.now() + 10 * 60 * 1000; topups[trxId] = { phone, trx_id: trxId, amount_to_pay: totalPay, saldo_to_add: totalPay, status: 'pending', expired_at: expiredAt }; saveJSON(topupFile, topups); db[phone].history = db[phone].history || []; db[phone].history.unshift({ ts: Date.now(), tanggal: new Date().toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }), type: 'Topup', nama: 'Topup Saldo QRIS', tujuan: 'Sistem Pembayaran', status: 'Pending', sn: trxId, amount: totalPay, qris_url: finalQrisUrl, expired_at: expiredAt }); if(db[phone].history.length > 20) db[phone].history.pop(); saveJSON(dbFile, db); res.json({success: true, total: totalPay, qris: finalQrisUrl}); } catch(e) { res.json({success: false, message: "Gagal memproses QRIS."}); } });
+setInterval(async () => { try { let cfg = loadJSON(configFile); let topups = loadJSON(topupFile); let pendingKeys = Object.keys(topups).filter(k => topups[k].status === 'pending'); if(pendingKeys.length === 0 || !cfg.gopayToken || !cfg.gopayMerchantId) return; const gopayRes = await axios.post('https://gopay.autoftbot.com/api/backend/transactions', { merchant_id: cfg.gopayMerchantId }, { headers: { 'Authorization': 'Bearer ' + cfg.gopayToken, 'Content-Type': 'application/json' } }); let responseStr = JSON.stringify(gopayRes.data); let db = loadJSON(dbFile); let changedTp = false; let changedDb = false; for(let key of pendingKeys) { let req = topups[key]; if (Date.now() > req.expired_at) { req.status = 'gagal'; changedTp = true; if(db[req.phone]) { let hist = db[req.phone].history.find(h => h.sn === req.trx_id); if(hist && hist.status === 'Pending') { hist.status = 'Gagal'; changedDb = true; } } } else { let amountStr = req.amount_to_pay.toString(); let isFound = responseStr.includes(`"${amountStr}"`) || responseStr.includes(`:${amountStr}`) || responseStr.includes(`"${amountStr}.00"`) || responseStr.includes(`:${amountStr}.00`); if(isFound) { req.status = 'sukses'; changedTp = true; if(db[req.phone]) { db[req.phone].saldo += req.saldo_to_add; let hist = db[req.phone].history.find(h => h.sn === req.trx_id); if(hist && hist.status === 'Pending') { hist.status = 'Sukses'; } changedDb = true; if(globalSock) { let msg = `✅ *TOPUP QRIS BERHASIL*\n\nTotal: Rp ${req.amount_to_pay.toLocaleString('id-ID')}\nSaldo Sekarang: Rp ${db[req.phone].saldo.toLocaleString('id-ID')}`; globalSock.sendMessage(req.phone + '@s.whatsapp.net', {text: msg}).catch(()=>{}); } } } } } if(changedTp) saveJSON(topupFile, topups); if(changedDb) saveJSON(dbFile, db); } catch(e) {} }, 30000); 
+setInterval(() => { if(fs.existsSync('japri.txt')) { let lines = fs.readFileSync('japri.txt', 'utf8').split('\n'); fs.unlinkSync('japri.txt'); for(let line of lines) { if(line.includes('|') && globalSock) { let parts = line.split('|'); let target = parts[0]; parts.shift(); let msg = parts.join('|'); globalSock.sendMessage(target + '@s.whatsapp.net', { text: msg }).catch(e=>{}); } } } }, 3000);
+function doBackupAndSend() { let cfg = loadJSON(configFile); if (!cfg.teleToken || !cfg.teleChatId) return; exec(`[ -d "/etc/letsencrypt" ] && sudo tar -czf ssl_backup.tar.gz -C / etc/letsencrypt 2>/dev/null; rm -f backup.zip && zip backup.zip config.json database.json trx.json produk.json global_stats.json topup.json info.json ssl_backup.tar.gz 2>/dev/null`, (err) => { if (!err) exec(`curl -s -F chat_id="${cfg.teleChatId}" -F document=@"backup.zip" -F caption="📦 Auto-Backup Fiky Store" https://api.telegram.org/bot${cfg.teleToken}/sendDocument`); }); } if (configAwal.autoBackup) setInterval(doBackupAndSend, (configAwal.backupInterval || 720) * 60 * 1000); 
+async function startBot() { const { state, saveCreds } = await useMultiFileAuthState('sesi_bot'); const { version } = await fetchLatestBaileysVersion(); const sock = makeWASocket({ version, auth: state, logger: pino({ level: 'silent' }), browser: Browsers.ubuntu('Chrome'), printQRInTerminal: false }); if (!sock.authState.creds.registered) { let config = loadJSON(configFile); if (config.botNumber) { setTimeout(async () => { try { const code = await sock.requestPairingCode(config.botNumber.replace(/[^0-9]/g, '')); console.log(`\n=======================================================\n🔑 KODE PAIRING ANDA :  ${code}  \n=======================================================\n`); } catch (error) {} }, 3000); } } sock.ev.on('creds.update', saveCreds); sock.ev.on('connection.update', (update) => { const { connection } = update; if(connection === 'close') { startBot(); } else if(connection === 'open') { console.log("✅ BOT WHATSAPP TERHUBUNG!"); } }); globalSock = sock; }
+if (require.main === module) { app.listen(3000, () => { console.log('🌐 Web Server berjalan di port 3000'); }); startBot(); }
+EOF
+
+echo "[5/5] Menginstall Menu Panel Ultimate..."
+cat << 'EOF' > /usr/bin/menu
 #!/bin/bash
 DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
@@ -603,7 +439,6 @@ run_node_script() {
     cat << 'EOF_NODE' > /tmp/menu_temp.js
 const crypt = require('./fiky_crypt.js');
 const fs = require('fs');
-const xlsx = require('xlsx');
 const { exec } = require('child_process');
 try {
     const action = process.env.NODE_ACTION;
@@ -659,6 +494,20 @@ try {
         if (process.env.Q_TXT) config.qrisText = process.env.Q_TXT.trim();
         crypt.save('config.json', config);
         console.log('\x1b[32m\n✅ Konfigurasi GoPay berhasil disimpan!\x1b[0m');
+    }
+    else if (action === 'set_banner') {
+        let config = crypt.load('config.json');
+        let def = ["https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80", "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=600&q=80"];
+        if (!config.banners) config.banners = def;
+        if (process.env.B1.trim()) config.banners[0] = process.env.B1.trim(); 
+        if (process.env.B2.trim()) config.banners[1] = process.env.B2.trim();
+        if (process.env.B3.trim()) config.banners[2] = process.env.B3.trim(); 
+        if (process.env.B4.trim()) config.banners[3] = process.env.B4.trim();
+        
+        config.banners = config.banners.filter(b => b.trim() !== '');
+        if(config.banners.length === 0) config.banners = def;
+        crypt.save('config.json', config);
+        console.log('\x1b[32m\n✅ Foto banner diperbarui!\x1b[0m');
     }
 } catch(e) { console.log('Error: ' + e.message); }
 EOF_NODE
@@ -770,9 +619,6 @@ menu_backup() {
     done
 }
 
-# ==========================================
-# MENU UTAMA
-# ==========================================
 while true; do
     clear
     echo -e "${C_CYAN}${C_BOLD}======================================================${C_RST}"
@@ -793,16 +639,24 @@ while true; do
     echo -e "  ${C_GREEN}[10]${C_RST} 📢 Kirim Pemberitahuan ke Website"
     echo -e "  ${C_GREEN}[11]${C_RST} 💳 Setup GoPay Merchant API (QRIS Dinamis)"
     echo -e "  ${C_GREEN}[12]${C_RST} 🌍 Setup Domain & HTTPS (SSL)"
-    echo -e "  ${C_GREEN}[13]${C_RST} 🛒 Import Produk Excel Digiflazz (Coming Soon)"
+    echo -e "  ${C_GREEN}[13]${C_RST} 🖼️ Ganti Foto Banner Promo"
+    echo -e "  ${C_GREEN}[14]${C_RST} 💬 Kirim Pesan Langsung (Japri) WA"
+    echo -e "  ${C_GREEN}[15]${C_RST} 🛒 Import Produk Excel Digiflazz (Segera Hadir)"
+    echo -e "${C_CYAN}------------------------------------------------------${C_RST}"
+    echo -e "  ${C_GREEN}[16]${C_RST} 🚀 Update Script (Pull dari GitHub)"
     echo -e "${C_CYAN}======================================================${C_RST}"
     echo -e "  ${C_RED}[0]${C_RST}  Keluar dari Panel"
     echo -e "${C_CYAN}======================================================${C_RST}"
-    echo -ne "${C_YELLOW}Pilih menu [0-13]: ${C_RST}"
+    echo -ne "${C_YELLOW}Pilih menu [0-16]: ${C_RST}"
     read choice
 
     case $choice in
         1) 
             cd "$HOME/$DIR_NAME"
+            if [ ! -d "sesi_bot" ]; then
+                read -p "📲 Masukkan Nomor WA Bot (Awali 628...): " nomor_bot
+                if [ ! -z "$nomor_bot" ]; then node -e "const crypt=require('./fiky_crypt.js');let cfg=crypt.load('config.json');cfg.botNumber='$nomor_bot';crypt.save('config.json',cfg);"; fi
+            fi
             pm2 stop $BOT_NAME > /dev/null 2>&1; fuser -k $PORT/tcp > /dev/null 2>&1
             echo -e "\n${C_MAG}⏳ Menjalankan bot... (Tekan CTRL+C untuk mematikan dan kembali ke menu)${C_RST}"
             node index.js
@@ -891,16 +745,50 @@ EOF_NGINX
             read -p "Tekan Enter untuk kembali..."
             ;;
         13)
+            echo -e "\n${C_MAG}--- GANTI FOTO BANNER PROMO ---${C_RST}"
+            echo -e "${C_YELLOW}Note: Biarkan kosong jika tidak ingin mengubah slide tersebut.${C_RST}"
+            read -p "Link Slide 1: " b1
+            read -p "Link Slide 2: " b2
+            read -p "Link Slide 3: " b3
+            read -p "Link Slide 4: " b4
+            export NODE_ACTION="set_banner"
+            export B1="$b1"
+            export B2="$b2"
+            export B3="$b3"
+            export B4="$b4"
+            cd "$HOME/$DIR_NAME" && run_node_script
+            read -p "Tekan Enter untuk kembali..."
+            ;;
+        14)
+            echo -e "\n${C_MAG}--- KIRIM PESAN LANGSUNG JAPRI WA ---${C_RST}"
+            read -p "Masukkan Nomor Tujuan (Awalan 62/08): " jp_num
+            read -p "Masukkan Pesan: " jp_msg
+            cd "$HOME/$DIR_NAME"
+            node -e "
+                const fs = require('fs'); let num = '$jp_num'.replace(/[^0-9]/g, ''); if (num.startsWith('0')) num = '62' + num.slice(1);
+                fs.appendFileSync('japri.txt', num + '|' + \`$jp_msg\` + '\n');
+                console.log('\x1b[32m✅ Pesan Japri dimasukkan ke antrean pengiriman!\x1b[0m');
+            "
+            read -p "Tekan Enter untuk kembali..."
+            ;;
+        15)
             echo -e "\n${C_YELLOW}Fitur Import Excel Digiflazz segera hadir di update selanjutnya!${C_RST}"
             read -p "Tekan Enter untuk kembali..."
+            ;;
+        16)
+            echo -e "\n${C_MAG}--- UPDATE SCRIPT DARI GITHUB ---${C_RST}"
+            cd "$HOME"
+            wget -qO- https://raw.githubusercontent.com/fikystorez/PROJECT-PPOB-FIKYSTORE/main/install.sh | tr -d '\r' > install.sh
+            chmod +x install.sh && ./install.sh
+            exit 0
             ;;
         0) exit 0 ;;
         *) echo -e "${C_RED}❌ Pilihan tidak valid!${C_RST}"; sleep 1 ;;
     esac
 done
-EOF_MENU
+EOF
 
 chmod +x /usr/bin/menu
 echo "=========================================================="
-echo "  SUKSES V52 ULTIMATE! Silakan ketik 'menu' di terminal."
+echo "  SUKSES V54 ULTIMATE! Silakan ketik 'menu' di terminal."
 echo "=========================================================="
