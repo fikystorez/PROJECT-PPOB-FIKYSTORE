@@ -51,7 +51,7 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Fix Banner & 8 Menu)..."
+echo "[3/5] Membangun Antarmuka Website..."
 
 cat << 'EOF' > public/style.css
 body {
@@ -85,6 +85,21 @@ body {
     font-weight: bold; color: #e2e8f0; 
     text-shadow: 2px 2px 4px rgba(0,0,0,0.9), -1px -1px 1px rgba(255,255,255,0.3); 
     position: absolute; top: 52%; left: 50%; transform: translate(-50%, -50%);
+}
+
+.logo-f-small {
+    width: 45px; height: 45px; margin: 0 auto 10px auto; 
+    display: flex; justify-content: center; align-items: center;
+    border-radius: 50%; border: 2px solid #cbd5e1;
+    background: radial-gradient(circle, #333333 0%, #000000 100%); 
+    box-shadow: inset 0 0 5px rgba(255,255,255,0.2), 0 5px 10px rgba(0,0,0,0.5); 
+    position: relative; z-index: 2;
+}
+.logo-f-small::before {
+    content: "F"; font-size: 28px; font-family: "Times New Roman", Times, serif;
+    font-weight: bold; color: #e2e8f0; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.9); 
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
 }
 
 .compact-input-box {
@@ -189,7 +204,7 @@ cat << 'EOF' > public/register.html
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
-    <div class="z-20 mb-[-42px]">
+    <div class="z-20 mb-[-42px]" id="logo-header">
         <div class="logo-f-metalik-box"></div>
     </div>
     <div class="centered-modal-box pt-14" id="box-register">
@@ -344,7 +359,7 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
-# HTML DASHBOARD PPOB PREMIUM (HEADER BARU, SLIDER FIX, 8 IKON MODERN)
+# HTML DASHBOARD DENGAN DINAMIS BANNER CLEAN (NO TEXT) & 4 BOTTOM NAV
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -416,36 +431,15 @@ cat << 'EOF' > public/dashboard.html
             </div>
         </div>
 
-        <div class="mx-4 mt-6 relative rounded-2xl h-[120px] overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 bg-gray-200 dark:bg-gray-800">
+        <div class="mx-4 mt-6 relative rounded-2xl h-[120px] overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 group bg-gray-200 dark:bg-gray-800">
             <div id="promoSlider" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth">
-                <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#002147]">
-                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-60">
-                    <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">DISKON SPESIAL</h2>
                 </div>
-                <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-indigo-900">
-                    <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-60">
-                    <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">PROMO MEMBER</h2>
-                </div>
-                <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-purple-900">
-                    <img src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-60">
-                    <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">CASHBACK 50%</h2>
-                </div>
-                <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-rose-900">
-                    <img src="https://images.unsplash.com/photo-1616077168712-fc6c788db4fa?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-60">
-                    <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">FLASH SALE</h2>
-                </div>
-            </div>
             <div class="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-20" id="promoDots">
-                <div class="w-2 h-2 rounded-full bg-white opacity-100 transition-opacity duration-300 dot-indicator"></div>
-                <div class="w-2 h-2 rounded-full bg-white opacity-40 transition-opacity duration-300 dot-indicator"></div>
-                <div class="w-2 h-2 rounded-full bg-white opacity-40 transition-opacity duration-300 dot-indicator"></div>
-                <div class="w-2 h-2 rounded-full bg-white opacity-40 transition-opacity duration-300 dot-indicator"></div>
             </div>
         </div>
 
         <div class="mx-4 mt-6 bg-white dark:bg-gray-800 p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors mb-8">
             <h3 class="font-extrabold text-[#002147] dark:text-gray-100 mb-5 text-[15px] tracking-wide ml-1">Layanan Pilihan</h3>
-            
             <div class="grid grid-cols-4 gap-y-6 gap-x-2">
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
                     <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-cyan-400 to-blue-600 text-white flex items-center justify-center text-xl shadow-lg shadow-blue-500/30 mb-2"><i class="fas fa-mobile-screen"></i></div>
@@ -486,6 +480,7 @@ cat << 'EOF' > public/dashboard.html
         <div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40">
             <div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div>
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
         </div>
     </div>
@@ -520,26 +515,24 @@ cat << 'EOF' > public/dashboard.html
         function toggleDarkMode() { isDark = !isDark; localStorage.setItem('darkMode', isDark); applyDarkMode(); }
         applyDarkMode();
 
-        // SLIDER BANNER LOGIC
+        // LOGIKA DINAMIS BANNER (CLEAN IMAGE ONLY)
         fetch('/api/banners')
         .then(res => res.json())
         .then(data => {
             if(data.banners && data.banners.length > 0 && data.banners[0] !== "") {
                 const slider = document.getElementById('promoSlider');
                 const dotsContainer = document.getElementById('promoDots');
-                const titles = ["DISKON SPESIAL", "PROMO MEMBER", "CASHBACK 50%", "FLASH SALE"];
                 
+                // Menghapus elemen teks dan opacity agar gambar tampil 100% terang dan bersih
                 slider.innerHTML = data.banners.map((url, i) => `
                     <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#002147]">
-                        <img src="${url}" class="absolute inset-0 w-full h-full object-cover opacity-60">
-                        <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">${titles[i] || ''}</h2>
+                        <img src="${url}" class="absolute inset-0 w-full h-full object-cover">
                     </div>
                 `).join('');
-                
-                // Set dots ulang
+
                 let dotsHTML = '';
                 for(let i=0; i<data.banners.length; i++){
-                    dotsHTML += `<div class="w-2 h-2 rounded-full bg-white opacity-${i===0?'100':'40'} transition-opacity duration-300 dot-indicator"></div>`;
+                    dotsHTML += `<div class="w-2 h-2 rounded-full bg-white opacity-${i===0?'100':'40'} transition-opacity duration-300 dot-indicator shadow-sm"></div>`;
                 }
                 dotsContainer.innerHTML = dotsHTML;
             }
@@ -563,9 +556,7 @@ cat << 'EOF' > public/dashboard.html
                 sliderElement.scrollTo({ left: currentSlide * sliderElement.clientWidth, behavior: 'smooth' });
             }, 3500);
         }).catch(err => {
-            // Jika API gagal, jalankan slider bawaan (hardcoded)
             const sliderElement = document.getElementById('promoSlider');
-            let dots = document.querySelectorAll('.dot-indicator');
             let currentSlide = 0;
             setInterval(() => {
                 currentSlide = (currentSlide + 1) % 4;
@@ -716,7 +707,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V21) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V22) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
