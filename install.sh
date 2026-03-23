@@ -51,7 +51,7 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Dashboard & Profil)..."
+echo "[3/5] Membangun Antarmuka Website (Dashboard & Profil Clean)..."
 
 cat << 'EOF' > public/style.css
 body {
@@ -133,9 +133,6 @@ body {
 
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-/* Tab Aktif Profil */
-.tab-active { border-bottom: 3px solid #000; font-weight: bold; }
 EOF
 
 cat << 'EOF' > public/index.html
@@ -285,7 +282,12 @@ cat << 'EOF' > public/forgot.html
             try {
                 const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
                 const data = await res.json();
-                if (res.ok) { resetPhone = data.phone; document.getElementById('requestOtpForm').classList.add('hidden'); document.getElementById('resetForm').classList.remove('hidden'); alert('OTP Terkirim ke WA!'); } else { alert(data.error); }
+                if (res.ok) {
+                    resetPhone = data.phone;
+                    document.getElementById('requestOtpForm').classList.add('hidden');
+                    document.getElementById('resetForm').classList.remove('hidden');
+                    alert('OTP Terkirim ke WA!');
+                } else { alert(data.error); }
             } catch (err) { alert('Gagal.'); }
         });
         document.getElementById('resetForm').addEventListener('submit', async (e) => {
@@ -302,7 +304,7 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
-# HTML DASHBOARD PPOB PREMIUM (BANNER 170PX, NO TEXT, SIDEBAR INFO/ADMIN, 8 MENU Modern)
+# HTML DASHBOARD PPOB PREMIUM
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -382,7 +384,7 @@ cat << 'EOF' > public/dashboard.html
 
         <div class="mx-4 mt-6 relative rounded-2xl h-[170px] overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 group bg-gray-200 dark:bg-gray-800">
             <div id="promoSlider" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth">
-                </div>
+            </div>
             <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20" id="promoDots">
             </div>
         </div>
@@ -464,7 +466,6 @@ cat << 'EOF' > public/dashboard.html
         function toggleDarkMode() { isDark = !isDark; localStorage.setItem('darkMode', isDark); applyDarkMode(); }
         applyDarkMode();
 
-        // LOGIKA SLIDER BANNER CLEAN FOTO
         fetch('/api/banners')
         .then(res => res.json())
         .then(data => {
@@ -511,7 +512,7 @@ cat << 'EOF' > public/dashboard.html
 </html>
 EOF
 
-# HTML HALAMAN PROFIL (NEW & CLEAN)
+# HTML HALAMAN PROFIL (NEW & SUPER CLEAN)
 cat << 'EOF' > public/profile.html
 <!DOCTYPE html>
 <html lang="id">
@@ -522,59 +523,53 @@ cat << 'EOF' > public/profile.html
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .tab-active { border-bottom: 3px solid #000; font-weight: bold; color: #000;}
     </style>
 </head>
-<body class="bg-white font-sans">
-    <div class="max-w-md mx-auto min-h-screen relative pb-24 shadow-2xl">
+<body class="bg-gray-50 font-sans">
+    <div class="max-w-md mx-auto bg-white min-h-screen relative pb-24 shadow-2xl">
         
-        <div class="bg-black text-white p-8 flex flex-col items-center relative rounded-b-[2.5rem] shadow-md">
-            <div class="absolute top-6 right-6 text-xl cursor-pointer hover:text-gray-300 transition">
-                <i class="fas fa-pencil-alt"></i>
+        <div class="bg-black text-white p-8 flex flex-col items-center relative rounded-b-[2.5rem] shadow-lg">
+            
+            <div class="flex items-center justify-center gap-3 mb-2 relative">
+                <div class="w-8"></div>
+                
+                <div class="w-24 h-24 bg-gray-200 rounded-full flex justify-center items-center text-black font-bold text-4xl border-4 border-gray-400 shadow-xl" id="profileCircle">
+                    U
+                </div>
+                
+                <div class="w-8 text-xl cursor-pointer hover:text-gray-300 transition flex items-center justify-center">
+                    <i class="fas fa-pencil-alt"></i>
+                </div>
             </div>
             
-            <div class="w-24 h-24 bg-gray-200 rounded-full flex justify-center items-center text-black font-bold text-4xl mb-4 border-4 border-gray-400 shadow-lg" id="profileCircle">
-                U
+            <h2 class="text-xl font-bold tracking-wide mt-2" id="profileName">Nama Member</h2>
             </div>
-            
-            <h2 class="text-xl font-bold tracking-wide" id="profileName">Nama Member</h2>
-            <p class="text-sm text-gray-400 mt-1" id="profilePhone">0888...</p>
-        </div>
 
-        <div class="flex border-b text-center mt-4 mx-2">
-            <div class="flex-1 py-3 cursor-pointer text-gray-500 text-sm tracking-widest hover:bg-gray-50" onclick="location.href='/dashboard.html'">MENU</div>
-            <div class="flex-1 py-3 cursor-pointer tab-active text-sm tracking-widest">PROFIL</div>
-        </div>
-
-        <div class="mt-2">
-            <div class="flex items-center px-6 py-4 border-b border-gray-50">
+        <div class="mt-6">
+            <div class="flex items-center px-6 py-4 border-b border-gray-100">
                 <i class="fas fa-envelope text-gray-800 w-10 text-xl text-center"></i>
-                <div class="flex-1 text-sm font-medium text-gray-800 ml-2">Email</div>
+                <div class="flex-1 text-sm font-semibold text-gray-800 ml-2 tracking-wide">Email</div>
                 <div class="text-sm text-gray-500 font-medium" id="profileEmail">email@domain.com</div>
             </div>
-            <div class="flex items-center px-6 py-4 border-b border-gray-50">
+            <div class="flex items-center px-6 py-4 border-b border-gray-100">
                 <i class="fas fa-phone-alt text-gray-800 w-10 text-xl text-center"></i>
-                <div class="flex-1 text-sm font-medium text-gray-800 ml-2">No. Telp</div>
+                <div class="flex-1 text-sm font-semibold text-gray-800 ml-2 tracking-wide">No. Telp</div>
                 <div class="text-sm text-gray-500 font-medium" id="profilePhoneData">0888...</div>
             </div>
-            <div class="flex items-center px-6 py-4 border-b border-gray-50">
+            <div class="flex items-center px-6 py-4 border-b border-gray-100">
                 <i class="fas fa-wallet text-gray-800 w-10 text-xl text-center"></i>
-                <div class="flex-1 text-sm font-medium text-gray-800 ml-2">Saldo Akun</div>
+                <div class="flex-1 text-sm font-semibold text-gray-800 ml-2 tracking-wide">Saldo Akun</div>
                 <div class="text-sm font-extrabold text-blue-600 tracking-wide" id="profileSaldo">Rp 0</div>
             </div>
-            <div class="flex items-center px-6 py-4 border-b border-gray-50">
+            <div class="flex items-center px-6 py-4 border-b border-gray-100">
                 <i class="fas fa-shopping-cart text-gray-800 w-10 text-xl text-center"></i>
-                <div class="flex-1 text-sm font-medium text-gray-800 ml-2">Jumlah Transaksi</div>
-                <div class="text-sm font-bold text-gray-500 bg-gray-100 px-3 py-1 rounded-full">0 Trx</div>
+                <div class="flex-1 text-sm font-semibold text-gray-800 ml-2 tracking-wide">Jumlah Transaksi</div>
+                <div class="text-[11px] font-bold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full border border-gray-200">0 Trx</div>
             </div>
-            <div class="flex items-center px-6 py-4 border-b border-gray-50 cursor-pointer hover:bg-red-50 transition" onclick="logout()">
+            <div class="flex items-center px-6 py-4 border-b border-gray-100 cursor-pointer hover:bg-red-50 transition" onclick="logout()">
                 <i class="fas fa-sign-out-alt text-red-600 w-10 text-xl text-center"></i>
-                <div class="flex-1 text-sm font-bold text-red-600 ml-2">Keluar Akun</div>
+                <div class="flex-1 text-sm font-bold text-red-600 ml-2 tracking-wide">Keluar Akun</div>
             </div>
-        </div>
-
-        <div class="mt-8 text-center text-[10px] text-gray-400">
-            Powered by<br><span class="font-bold text-gray-600 text-xs tracking-wider">ORDER DIGITAL</span>
         </div>
 
         <div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40">
@@ -590,7 +585,6 @@ cat << 'EOF' > public/profile.html
         if (!user) window.location.href = '/';
 
         document.getElementById('profileName').innerText = user.name;
-        document.getElementById('profilePhone').innerText = user.phone;
         document.getElementById('profilePhoneData').innerText = user.phone;
         document.getElementById('profileCircle').innerText = user.name.charAt(0).toUpperCase();
         document.getElementById('profileEmail').innerText = user.email || 'Belum diatur';
@@ -743,7 +737,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V26) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V27) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
