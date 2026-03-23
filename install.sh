@@ -51,7 +51,7 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Custom SweetAlert UI)..."
+echo "[3/5] Membangun Antarmuka Website (Custom SweetAlert UI Small)..."
 
 cat << 'EOF' > public/style.css
 body {
@@ -132,34 +132,46 @@ body {
 .dark .tab-active { border-bottom: 3px solid #fde047; color: #fde047; }
 
 /* ==========================================
-   CUSTOM SWEETALERT2 STYLING (KOTAK, OXFORD BLUE, TOMBOL KUNING)
+   CUSTOM SWEETALERT2 STYLING (SMALL COMPACT)
 ========================================== */
 .swal2-popup {
-    background-color: #002147 !important; /* Oxford Blue */
-    border-radius: 0.35rem !important; /* Bentuk lebih kotak */
+    background-color: #002147 !important; 
+    border-radius: 0.35rem !important; 
     color: #ffffff !important;
-    border: 1px solid #1e3a8a !important; /* Garis tepi tipis agar elegan */
+    border: 1px solid #1e3a8a !important; 
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
+    width: 260px !important; /* DIPERKECIL */
+    padding: 1.25rem 1rem 1rem !important; /* PADDING LEBIH RAPAT */
 }
 .swal2-title {
-    color: #fde047 !important; /* Judul kuning */
+    color: #fde047 !important; 
+    font-size: 1.1rem !important; /* UKURAN FONT DIPERKECIL */
+    margin: 0 0 0.4em !important;
 }
 .swal2-html-container {
-    color: #cbd5e1 !important; /* Teks putih keabuan */
+    color: #cbd5e1 !important; 
+    font-size: 0.85rem !important; /* UKURAN FONT DIPERKECIL */
+    margin: 0.5em 0.5em 0.5em !important;
 }
 .swal2-confirm {
-    background-color: #fde047 !important; /* Tombol Kuning */
-    color: #002147 !important; /* Teks tombol biru dongker */
-    border-radius: 0.25rem !important; /* Tombol kotak */
+    background-color: #fde047 !important; 
+    color: #002147 !important; 
+    border-radius: 0.25rem !important; 
     font-weight: bold !important;
-    padding: 0.625rem 1.5rem !important;
+    padding: 0.5rem 1.25rem !important; /* TOMBOL LEBIH KECIL */
+    font-size: 0.85rem !important;
 }
 .swal2-cancel {
-    background-color: #ef4444 !important; /* Tombol batal merah */
+    background-color: #ef4444 !important; 
     color: #ffffff !important;
-    border-radius: 0.25rem !important; /* Tombol kotak */
+    border-radius: 0.25rem !important; 
     font-weight: bold !important;
-    padding: 0.625rem 1.5rem !important;
+    padding: 0.5rem 1.25rem !important;
+    font-size: 0.85rem !important;
+}
+.swal2-icon {
+    transform: scale(0.65) !important; /* IKON ANIMASI DIPERKECIL */
+    margin: 0.5em auto 0.5em !important;
 }
 EOF
 
@@ -655,7 +667,7 @@ app.post('/api/auth/register', async (req, res) => {
     const { name, phone, email, password } = req.body;
     let webUsers = loadJSON(webUsersFile);
     let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
-    if (webUsers[fPhone] && webUsers[fPhone].isVerified) return res.status(400).json({ error: 'Nomor terdaftar.' });
+    if (webUsers[fPhone] && webUsers[fPhone].isVerified) return res.status(400).json({ error: 'Nomor sudah terdaftar.' });
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
     webUsers[fPhone] = { name, email, password, isVerified: false, otp };
     saveJSON(webUsersFile, webUsers);
@@ -748,7 +760,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V29) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V30) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
