@@ -51,7 +51,7 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Custom SweetAlert UI Small)..."
+echo "[3/5] Membangun Antarmuka Website (Custom SweetAlert UI Elegant)..."
 
 cat << 'EOF' > public/style.css
 body {
@@ -132,46 +132,54 @@ body {
 .dark .tab-active { border-bottom: 3px solid #fde047; color: #fde047; }
 
 /* ==========================================
-   CUSTOM SWEETALERT2 STYLING (SMALL COMPACT)
+   CUSTOM SWEETALERT2 STYLING (ELEGANT ROUNDED BOX)
 ========================================== */
 .swal2-popup {
-    background-color: #002147 !important; 
-    border-radius: 0.35rem !important; 
+    background-color: #002147 !important; /* Oxford Blue */
+    border-radius: 1rem !important; /* Sudut melengkung elegan, ga kaku */
     color: #ffffff !important;
-    border: 1px solid #1e3a8a !important; 
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
-    width: 260px !important; /* DIPERKECIL */
-    padding: 1.25rem 1rem 1rem !important; /* PADDING LEBIH RAPAT */
+    border: 1px solid rgba(255, 255, 255, 0.1) !important; 
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important; /* Bayangan halus */
+    width: 280px !important; /* Ukuran proporsional HP */
+    padding: 1.5rem 1.25rem 1.25rem !important; 
 }
 .swal2-title {
     color: #fde047 !important; 
-    font-size: 1.1rem !important; /* UKURAN FONT DIPERKECIL */
-    margin: 0 0 0.4em !important;
+    font-size: 1.15rem !important; 
+    font-weight: 800 !important;
+    letter-spacing: 0.5px !important; /* Teks lebih elegan & renggang */
+    margin: 0 0 0.5em !important;
 }
 .swal2-html-container {
     color: #cbd5e1 !important; 
-    font-size: 0.85rem !important; /* UKURAN FONT DIPERKECIL */
-    margin: 0.5em 0.5em 0.5em !important;
+    font-size: 0.85rem !important; 
+    line-height: 1.5 !important; /* Nyaman dibaca */
+    margin: 0.5em 0.5em 1em !important;
 }
 .swal2-confirm {
-    background-color: #fde047 !important; 
-    color: #002147 !important; 
-    border-radius: 0.25rem !important; 
-    font-weight: bold !important;
-    padding: 0.5rem 1.25rem !important; /* TOMBOL LEBIH KECIL */
+    background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important; /* Gradient kuning mewah */
+    color: #001229 !important; 
+    border-radius: 0.5rem !important; /* Tombol sudut halus */
+    font-weight: 800 !important;
+    padding: 0.6rem 1.5rem !important; 
     font-size: 0.85rem !important;
+    box-shadow: 0 4px 6px -1px rgba(253, 224, 71, 0.3) !important; /* Efek tombol menyala */
+    letter-spacing: 0.5px !important;
 }
 .swal2-cancel {
-    background-color: #ef4444 !important; 
+    background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important; /* Gradient merah */
     color: #ffffff !important;
-    border-radius: 0.25rem !important; 
-    font-weight: bold !important;
-    padding: 0.5rem 1.25rem !important;
+    border-radius: 0.5rem !important; 
+    font-weight: 800 !important;
+    padding: 0.6rem 1.5rem !important;
     font-size: 0.85rem !important;
+    box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3) !important;
+    letter-spacing: 0.5px !important;
 }
 .swal2-icon {
-    transform: scale(0.65) !important; /* IKON ANIMASI DIPERKECIL */
-    margin: 0.5em auto 0.5em !important;
+    transform: scale(0.7) !important; /* Ikon proporsional tidak kebesaran */
+    margin: 0 auto 0.5em !important;
+    border-width: 3px !important;
 }
 EOF
 
@@ -760,7 +768,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V30) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V31) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
