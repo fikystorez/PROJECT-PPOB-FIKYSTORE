@@ -51,7 +51,7 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Desain Dashboard & Dark Mode)..."
+echo "[3/5] Membangun Antarmuka Website (Header & Ikon Modern)..."
 
 cat << 'EOF' > public/style.css
 body {
@@ -72,7 +72,7 @@ body {
     z-index: 10;
 }
 
-/* Logo "F" Metalik 3D dengan CSS Murni */
+/* Logo "F" Metalik 3D */
 .logo-f-metalik-box {
     width: 85px; height: 85px; margin: 0 auto; 
     display: flex; justify-content: center; align-items: center;
@@ -81,7 +81,6 @@ body {
     box-shadow: inset 0 0 10px rgba(255,255,255,0.2), 0 10px 20px rgba(0,0,0,0.5); 
     position: relative;
 }
-
 .logo-f-metalik-box::before {
     content: "F"; font-size: 55px; font-family: "Times New Roman", Times, serif;
     font-weight: bold; color: #e2e8f0; 
@@ -89,7 +88,6 @@ body {
     position: absolute; top: 52%; left: 50%; transform: translate(-50%, -50%);
 }
 
-/* Logo F Versi Kecil untuk Dashboard */
 .logo-f-small {
     width: 45px; height: 45px; margin: 0 auto 10px auto; 
     display: flex; justify-content: center; align-items: center;
@@ -111,7 +109,6 @@ body {
     outline: none; background-color: #ffffff; color: #0f172a;
 }
 .compact-input-box:focus { border-color: #fde047; box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3); }
-
 ::placeholder { color: #94a3b8; font-size: 0.8rem; }
 .compact-text-small { font-size: 0.8rem; color: #cbd5e1; }
 .compact-label { font-size: 0.8rem; font-weight: bold; color: #f8fafc; margin-bottom: 0.25rem; display: block; text-align: left; }
@@ -129,7 +126,7 @@ body {
     font-weight: bold; font-size: 0.9rem; border-radius: 0.5rem; cursor: pointer; border: none; transition: all 0.2s;
 }
 
-/* Background Robotik (Tech-Grid/Sirkuit) Baru */
+/* Background Robotik */
 .tech-bg {
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5'%3E%3Cpath d='M0 40h20l10-10h20l10 10h20'/%3E%3Cpath d='M20 40v20l10 10'/%3E%3Cpath d='M60 40V20L50 10'/%3E%3Ccircle cx='30' cy='30' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='50' cy='50' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='10' cy='40' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='70' cy='40' r='2' fill='rgba(255,255,255,0.1)'/%3E%3C/g%3E%3C/svg%3E");
@@ -361,7 +358,7 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
-# HTML DASHBOARD PPOB PREMIUM (GRID 3 KOLOM)
+# HTML DASHBOARD PPOB PREMIUM (HEADER BARU & IKON MODERN)
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -378,10 +375,12 @@ cat << 'EOF' > public/dashboard.html
 <body class="bg-gray-100 dark:bg-gray-900 font-sans transition-colors duration-300">
     <div class="max-w-md mx-auto bg-[#f4f6f9] dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl transition-colors duration-300 overflow-x-hidden">
         
-        <div class="flex justify-between items-center p-4 bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-40 transition-colors">
-            <i class="fas fa-bars text-2xl text-[#002147] dark:text-gray-100 cursor-pointer" onclick="toggleSidebar()"></i>
-            <h1 class="font-extrabold text-[#002147] dark:text-gray-100 tracking-widest text-sm">DIGITAL FIKY STORE</h1>
-            <div class="bg-gray-100 dark:bg-gray-700 text-[10px] font-bold px-3 py-1 rounded-full text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 shadow-sm">
+        <div class="flex justify-between items-center p-4 bg-[#001229] text-white shadow-md sticky top-0 z-40 transition-colors">
+            <div class="flex items-center gap-4">
+                <i class="fas fa-bars text-xl cursor-pointer text-gray-300 hover:text-white transition" onclick="toggleSidebar()"></i>
+                <h1 class="font-medium text-[17px] tracking-wide" id="headerGreeting">Hai, Member</h1>
+            </div>
+            <div class="bg-white/10 text-[11px] font-bold px-3 py-1.5 rounded-full border border-white/20 shadow-sm flex items-center gap-1 text-gray-200">
                 0 Trx
             </div>
         </div>
@@ -440,65 +439,77 @@ cat << 'EOF' > public/dashboard.html
             <h2 class="z-10 text-2xl font-extrabold text-[#002147] dark:text-gray-200 tracking-widest drop-shadow-sm">BANNER PROMO</h2>
         </div>
 
-        <div class="mx-4 mt-6">
-            <h3 class="font-extrabold text-[#002147] dark:text-gray-100 mb-4 text-[15px] ml-1 tracking-wide">Layanan Produk</h3>
+        <div class="mx-4 mt-6 bg-white dark:bg-gray-800 p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors mb-8">
+            <h3 class="font-extrabold text-[#002147] dark:text-gray-100 mb-5 text-[15px] tracking-wide ml-1">Layanan Pilihan</h3>
             
-            <div class="grid grid-cols-3 gap-3">
-                <div class="bg-white dark:bg-gray-800 rounded-2xl aspect-square flex flex-col items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-700 cursor-pointer hover:scale-95 transition-transform">
-                    <div class="text-blue-500 mb-2"><i class="fas fa-mobile-screen text-3xl"></i></div>
-                    <span class="text-[10px] font-extrabold text-[#002147] dark:text-gray-200 tracking-wider">PULSA</span>
+            <div class="grid grid-cols-4 gap-y-6 gap-x-2">
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-cyan-400 to-blue-600 text-white flex items-center justify-center text-xl shadow-lg shadow-blue-500/30 mb-2">
+                        <i class="fas fa-mobile-screen"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center tracking-wide">PULSA</span>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-2xl aspect-square flex flex-col items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-700 cursor-pointer hover:scale-95 transition-transform">
-                    <div class="text-teal-500 mb-2"><i class="fas fa-globe text-3xl"></i></div>
-                    <span class="text-[10px] font-extrabold text-[#002147] dark:text-gray-200 tracking-wider">DATA</span>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-emerald-400 to-green-600 text-white flex items-center justify-center text-xl shadow-lg shadow-green-500/30 mb-2">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center tracking-wide">DATA</span>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-2xl aspect-square flex flex-col items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-700 cursor-pointer hover:scale-95 transition-transform">
-                    <div class="text-pink-500 mb-2"><i class="fas fa-gamepad text-3xl"></i></div>
-                    <span class="text-[10px] font-extrabold text-[#002147] dark:text-gray-200 tracking-wider">GAME</span>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-amber-400 to-orange-500 text-white flex items-center justify-center text-xl shadow-lg shadow-orange-500/30 mb-2">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center tracking-wide">PLN</span>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-2xl aspect-square flex flex-col items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-700 cursor-pointer hover:scale-95 transition-transform">
-                    <div class="text-yellow-500 mb-2"><i class="fas fa-ticket-alt text-3xl"></i></div>
-                    <span class="text-[10px] font-extrabold text-[#002147] dark:text-gray-200 tracking-wider">VOUCHER</span>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-purple-400 to-pink-600 text-white flex items-center justify-center text-xl shadow-lg shadow-pink-500/30 mb-2">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center tracking-wide">GAME</span>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-2xl aspect-square flex flex-col items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-700 cursor-pointer hover:scale-95 transition-transform">
-                    <div class="text-indigo-500 mb-2"><i class="fas fa-wallet text-3xl"></i></div>
-                    <span class="text-[10px] font-extrabold text-[#002147] dark:text-gray-200 tracking-wider">E-WALLET</span>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-indigo-400 to-purple-600 text-white flex items-center justify-center text-xl shadow-lg shadow-indigo-500/30 mb-2">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center tracking-wide">E-WALLET</span>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-2xl aspect-square flex flex-col items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-700 cursor-pointer hover:scale-95 transition-transform">
-                    <div class="text-yellow-400 mb-2"><i class="fas fa-bolt text-3xl"></i></div>
-                    <span class="text-[10px] font-extrabold text-[#002147] dark:text-gray-200 tracking-wider">PLN</span>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-rose-400 to-red-500 text-white flex items-center justify-center text-xl shadow-lg shadow-red-500/30 mb-2">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center tracking-wide">VOUCHER</span>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-2xl aspect-square flex flex-col items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-700 cursor-pointer hover:scale-95 transition-transform">
-                    <div class="text-purple-500 mb-2"><i class="fas fa-phone-volume text-3xl"></i></div>
-                    <span class="text-[10px] font-extrabold text-[#002147] dark:text-gray-200 tracking-wider">SMS TELP</span>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-teal-400 to-cyan-600 text-white flex items-center justify-center text-xl shadow-lg shadow-cyan-500/30 mb-2">
+                        <i class="fas fa-phone-volume"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center tracking-wide leading-tight mt-0.5">SMS<br>TELP</span>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-2xl aspect-square flex flex-col items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-700 cursor-pointer hover:scale-95 transition-transform">
-                    <div class="text-orange-500 mb-2"><i class="fas fa-calendar-check text-3xl"></i></div>
-                    <span class="text-[10px] font-extrabold text-[#002147] dark:text-gray-200 tracking-wider">MASA AKTIF</span>
-                </div>
-                <div class="bg-white dark:bg-gray-800 rounded-2xl aspect-square flex flex-col items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-700 cursor-pointer hover:scale-95 transition-transform">
-                    <div class="text-cyan-500 mb-2"><i class="fas fa-sim-card text-3xl"></i></div>
-                    <span class="text-[10px] font-extrabold text-[#002147] dark:text-gray-200 tracking-wider">PERDANA</span>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-gray-400 to-gray-600 text-white flex items-center justify-center text-xl shadow-lg shadow-gray-500/30 mb-2">
+                        <i class="fas fa-th-large"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center tracking-wide">LAINNYA</span>
                 </div>
             </div>
         </div>
 
-        <div class="fixed bottom-0 w-full max-w-md bg-[#002147] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.1)] z-40">
+        <div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40">
             <div class="flex flex-col items-center cursor-pointer text-yellow-400">
                 <i class="fas fa-home text-xl"></i>
-                <span class="text-[10px] mt-1 font-bold">HOME</span>
+                <span class="text-[10px] mt-1 font-bold tracking-wide">HOME</span>
             </div>
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition">
                 <i class="fas fa-file-alt text-xl"></i>
-                <span class="text-[10px] mt-1 font-bold">RIWAYAT</span>
+                <span class="text-[10px] mt-1 font-bold tracking-wide">RIWAYAT</span>
             </div>
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition">
                 <i class="fas fa-bell text-xl"></i>
-                <span class="text-[10px] mt-1 font-bold">INFO</span>
+                <span class="text-[10px] mt-1 font-bold tracking-wide">INFO</span>
             </div>
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition">
                 <i class="fas fa-user text-xl"></i>
-                <span class="text-[10px] mt-1 font-bold">PROFIL</span>
+                <span class="text-[10px] mt-1 font-bold tracking-wide">PROFIL</span>
             </div>
         </div>
 
@@ -507,6 +518,10 @@ cat << 'EOF' > public/dashboard.html
     <script>
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) window.location.href = '/';
+        
+        // Memisahkan nama depan untuk Header
+        const firstName = user.name.split(' ')[0];
+        document.getElementById('headerGreeting').innerText = "Hai, " + firstName;
         
         document.getElementById('sidebarName').innerText = user.name;
         document.getElementById('sidebarPhone').innerText = user.phone;
@@ -722,7 +737,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V17) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V18) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
