@@ -15,7 +15,7 @@ BOT_NAME="digital-fiky-bot"
 PORT=3000
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE - V39 (PUSAT INFO)      "
+echo "    MENGINSTAL DIGITAL FIKY STORE - V40 (ALL YELLOW)      "
 echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
@@ -122,6 +122,7 @@ cat << 'EOF' > public/register.html
     let alertCallback = null;
     function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check text-green-500"></i>' : '<i class="fas fa-times text-red-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; }
     function closeAlert() { document.getElementById('customAlert').classList.add('hidden'); if(alertCallback) alertCallback(); }
+
     let registeredPhone = ''; 
     document.getElementById('registerForm').addEventListener('submit', async (e) => { 
         e.preventDefault(); const name = document.getElementById('name').value; const phone = document.getElementById('phone').value; const email = document.getElementById('email').value; const password = document.getElementById('password').value; 
@@ -174,7 +175,7 @@ cat << 'EOF' > public/forgot.html
 </script></body></html>
 EOF
 
-# HTML DASHBOARD PPOB PREMIUM
+# HTML DASHBOARD PPOB PREMIUM (SEMUA IKON KUNING DI DARK MODE)
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -194,7 +195,9 @@ cat << 'EOF' > public/dashboard.html
                 <i class="fas fa-bars text-xl cursor-pointer text-gray-300 hover:text-white transition" onclick="toggleSidebar()"></i>
                 <h1 class="font-medium text-[17px] tracking-wide" id="headerGreeting">Hai, Member</h1>
             </div>
-            <div class="bg-white/10 text-[11px] font-bold px-3 py-1.5 rounded-full border border-white/20 shadow-sm flex items-center gap-1 text-gray-200">0 Trx</div>
+            <div class="bg-white/10 text-[11px] font-bold px-3 py-1.5 rounded-full border border-white/20 shadow-sm flex items-center gap-1 text-gray-200">
+                0 Trx
+            </div>
         </div>
 
         <div id="sidebar" class="fixed inset-0 z-[100] transform -translate-x-full transition-transform duration-300 ease-in-out flex">
@@ -257,25 +260,25 @@ cat << 'EOF' > public/dashboard.html
                     <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-mobile-alt text-3xl text-blue-500 dark:text-yellow-400"></i></div><span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1">PULSA</span>
                 </div>
                 <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square">
-                    <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-globe text-3xl text-green-500 dark:text-white"></i></div><span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1">DATA</span>
+                    <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-globe text-3xl text-green-500 dark:text-yellow-400"></i></div><span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1">DATA</span>
                 </div>
                 <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square">
                     <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-gamepad text-3xl text-rose-500 dark:text-yellow-400"></i></div><span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1">GAME</span>
                 </div>
                 <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square">
-                    <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-ticket-alt text-3xl text-amber-500 dark:text-white"></i></div><span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1">VOUCHER</span>
+                    <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-ticket-alt text-3xl text-amber-500 dark:text-yellow-400"></i></div><span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1">VOUCHER</span>
                 </div>
                 <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square">
                     <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-wallet text-3xl text-indigo-500 dark:text-yellow-400"></i></div><span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1 text-center">E-WALLET</span>
                 </div>
                 <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square">
-                    <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-bolt text-3xl text-yellow-500 dark:text-white"></i></div><span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1">PLN</span>
+                    <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-bolt text-3xl text-yellow-500 dark:text-yellow-400"></i></div><span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1">PLN</span>
                 </div>
                 <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square">
                     <div class="h-8 flex items-center justify-center mb-1"><i class="far fa-calendar-check text-3xl text-orange-500 dark:text-yellow-400"></i></div><span class="text-[8px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1 text-center leading-tight">MASA<br>AKTIF</span>
                 </div>
                 <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square">
-                    <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-sim-card text-3xl text-teal-500 dark:text-white"></i></div><span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1 text-center">PERDANA</span>
+                    <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-sim-card text-3xl text-teal-500 dark:text-yellow-400"></i></div><span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1 text-center">PERDANA</span>
                 </div>
             </div>
         </div>
@@ -287,7 +290,7 @@ cat << 'EOF' > public/dashboard.html
                     <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-file-invoice text-3xl text-purple-500 dark:text-yellow-400"></i></div><span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1 text-center">TAGIHAN</span>
                 </div>
                 <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square">
-                    <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-id-card text-3xl text-teal-500 dark:text-white"></i></div><span class="text-[8px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1 text-center leading-tight">SALDO<br>E-TOLL</span>
+                    <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-id-card text-3xl text-teal-500 dark:text-yellow-400"></i></div><span class="text-[8px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1 text-center leading-tight">SALDO<br>E-TOLL</span>
                 </div>
             </div>
         </div>
@@ -374,10 +377,10 @@ cat << 'EOF' > public/profile.html
             <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800 cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 transition" onclick="logout()"><i class="fas fa-sign-out-alt text-red-600 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-bold text-red-600 ml-2 tracking-wide">Keluar Akun</div></div>
         </div>
         <div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40">
-            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">HOME</span></div>
-            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">RIWAYAT</span></div>
-            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/info.html'"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">INFO</span></div>
-            <div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">PROFIL</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/info.html'"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
         </div>
     </div>
     <script>
@@ -397,7 +400,7 @@ cat << 'EOF' > public/profile.html
 EOF
 
 # ==========================================
-# FILE HALAMAN RIWAYAT
+# FILE HALAMAN RIWAYAT & INFO (GABUNGAN)
 # ==========================================
 cat << 'EOF' > public/riwayat.html
 <!DOCTYPE html>
@@ -412,34 +415,21 @@ cat << 'EOF' > public/riwayat.html
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-300">
     <div class="max-w-md mx-auto bg-[#f4f6f9] dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
-        
         <div class="flex items-center p-4 bg-[#001229] text-white shadow-md sticky top-0 z-40">
             <i class="fas fa-arrow-left text-xl cursor-pointer text-gray-300 hover:text-white mr-4" onclick="location.href='/dashboard.html'"></i>
             <h1 class="font-bold text-[17px] tracking-wide flex-1">Riwayat Transaksi</h1>
         </div>
-
         <div class="mx-4 mt-5 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
-            <div class="relative mb-4">
-                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                <input type="text" placeholder="Cari transaksi..." class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-2.5 pl-10 pr-4 text-sm outline-none focus:border-yellow-400 dark:text-gray-200 transition">
-            </div>
-            <div class="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
-                <button class="bg-[#001229] text-yellow-400 px-5 py-1.5 rounded-full text-xs font-bold shrink-0 border border-[#001229] shadow-sm">Semua</button>
-                <button class="bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-4 py-1.5 rounded-full text-xs font-semibold shrink-0 border border-gray-200 dark:border-gray-600 hover:bg-gray-50">Sukses</button>
-                <button class="bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-4 py-1.5 rounded-full text-xs font-semibold shrink-0 border border-gray-200 dark:border-gray-600 hover:bg-gray-50">Proses</button>
-                <button class="bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-4 py-1.5 rounded-full text-xs font-semibold shrink-0 border border-gray-200 dark:border-gray-600 hover:bg-gray-50">Gagal</button>
-            </div>
+            <div class="relative mb-4"><i class="fas fa-search absolute left-3 top-3 text-gray-400"></i><input type="text" placeholder="Cari transaksi..." class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-2.5 pl-10 pr-4 text-sm outline-none focus:border-yellow-400 dark:text-gray-200 transition"></div>
+            <div class="flex gap-2 overflow-x-auto hide-scrollbar pb-1"><button class="bg-[#001229] text-yellow-400 px-5 py-1.5 rounded-full text-xs font-bold shrink-0 border border-[#001229] shadow-sm">Semua</button><button class="bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-4 py-1.5 rounded-full text-xs font-semibold shrink-0 border border-gray-200 dark:border-gray-600 hover:bg-gray-50">Sukses</button><button class="bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-4 py-1.5 rounded-full text-xs font-semibold shrink-0 border border-gray-200 dark:border-gray-600 hover:bg-gray-50">Proses</button><button class="bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-4 py-1.5 rounded-full text-xs font-semibold shrink-0 border border-gray-200 dark:border-gray-600 hover:bg-gray-50">Gagal</button></div>
+            <div class="flex gap-2 mt-4 items-end"><div class="flex-1"><label class="text-[10px] font-bold text-gray-500 mb-1 block">Dari</label><input type="date" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg py-1.5 px-2 text-xs outline-none text-gray-600 dark:text-gray-300"></div><div class="flex-1"><label class="text-[10px] font-bold text-gray-500 mb-1 block">Sampai</label><input type="date" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg py-1.5 px-2 text-xs outline-none text-gray-600 dark:text-gray-300"></div><button class="bg-gray-100 dark:bg-gray-700 w-8 h-8 rounded-lg flex items-center justify-center text-gray-500 border border-gray-200 hover:bg-gray-200"><i class="fas fa-sync-alt text-xs"></i></button></div>
         </div>
-
         <div class="flex flex-col items-center justify-center mt-12 mb-8">
-            <div class="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4 shadow-inner">
-                <i class="fas fa-receipt text-4xl text-gray-400"></i>
-            </div>
+            <div class="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4 shadow-inner"><i class="fas fa-receipt text-4xl text-gray-400"></i></div>
             <h3 class="font-bold text-[#001229] dark:text-gray-100 text-lg">Belum Ada Transaksi</h3>
             <p class="text-xs text-gray-500 mt-2 text-center max-w-[200px]">Ayo mulai transaksi pertamamu sekarang dan nikmati berbagai promo menarik!</p>
             <button onclick="location.href='/dashboard.html'" class="mt-5 bg-[#001229] text-yellow-400 px-6 py-2.5 rounded-full text-xs font-bold shadow-md hover:bg-[#002147] transition">Transaksi Sekarang</button>
         </div>
-
         <div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40">
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">HOME</span></div>
             <div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">RIWAYAT</span></div>
@@ -456,9 +446,6 @@ cat << 'EOF' > public/riwayat.html
 </html>
 EOF
 
-# ==========================================
-# FILE HALAMAN PUSAT INFO (BARU!)
-# ==========================================
 cat << 'EOF' > public/info.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -471,18 +458,13 @@ cat << 'EOF' > public/info.html
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-300">
     <div class="max-w-md mx-auto bg-[#f4f6f9] dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
-        
         <div class="flex items-center p-4 bg-[#001229] text-white shadow-md sticky top-0 z-40">
             <i class="fas fa-arrow-left text-xl cursor-pointer text-gray-300 hover:text-white mr-4" onclick="location.href='/dashboard.html'"></i>
             <h1 class="font-bold text-[17px] tracking-wide flex-1">Pusat Informasi</h1>
         </div>
-
         <div id="infoContainer" class="mx-4 mt-5 pb-8">
-            <div class="flex items-center justify-center h-40">
-                <i class="fas fa-circle-notch fa-spin text-3xl text-gray-400"></i>
-            </div>
+            <div class="flex items-center justify-center h-40"><i class="fas fa-circle-notch fa-spin text-3xl text-gray-400"></i></div>
         </div>
-
         <div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40">
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">HOME</span></div>
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">RIWAYAT</span></div>
@@ -490,56 +472,29 @@ cat << 'EOF' > public/info.html
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">PROFIL</span></div>
         </div>
     </div>
-
     <script>
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) window.location.href = '/';
         if(localStorage.getItem('darkMode') === 'true') document.getElementById('html-root').classList.add('dark');
-
-        fetch('/api/info')
-        .then(res => res.json())
-        .then(data => {
+        fetch('/api/info').then(res => res.json()).then(data => {
             const container = document.getElementById('infoContainer');
             if (data.data.length === 0) {
-                container.innerHTML = `
-                    <div class="flex flex-col items-center justify-center mt-12">
-                        <div class="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4 shadow-inner">
-                            <i class="fas fa-bell-slash text-4xl text-gray-400"></i>
-                        </div>
-                        <h3 class="font-bold text-[#001229] dark:text-gray-100 text-lg">Belum Ada Informasi</h3>
-                        <p class="text-xs text-gray-500 mt-2 text-center max-w-[200px]">Saat ini belum ada pengumuman atau informasi terbaru.</p>
-                    </div>
-                `;
+                container.innerHTML = `<div class="flex flex-col items-center justify-center mt-12"><div class="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4 shadow-inner"><i class="fas fa-bell-slash text-4xl text-gray-400"></i></div><h3 class="font-bold text-[#001229] dark:text-gray-100 text-lg">Belum Ada Informasi</h3><p class="text-xs text-gray-500 mt-2 text-center max-w-[200px]">Saat ini belum ada pengumuman atau informasi terbaru.</p></div>`;
             } else {
                 let html = '';
                 data.data.forEach(info => {
-                    html += `
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 mb-4 flex gap-4 transition-transform hover:-translate-y-1 cursor-pointer">
-                        <div class="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-yellow-400 shrink-0">
-                            <i class="fas fa-bullhorn text-xl"></i>
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start mb-1">
-                                <h4 class="font-bold text-[#001229] dark:text-gray-100 text-sm leading-tight pr-2">${info.title}</h4>
-                                <span class="text-[9px] font-bold text-gray-400 shrink-0 mt-0.5">${info.date}</span>
-                            </div>
-                            <p class="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed">${info.content}</p>
-                        </div>
-                    </div>`;
+                    html += `<div class="bg-white dark:bg-[#0f172a] rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mb-4 flex gap-4 transition-transform hover:-translate-y-1 cursor-pointer"><div class="w-12 h-12 rounded-full bg-blue-50 dark:bg-black flex items-center justify-center text-blue-600 dark:text-yellow-400 shrink-0 border border-transparent dark:border-gray-700"><i class="fas fa-bullhorn text-xl"></i></div><div class="flex-1"><div class="flex justify-between items-start mb-1"><h4 class="font-bold text-[#001229] dark:text-gray-100 text-sm leading-tight pr-2">${info.title}</h4><span class="text-[9px] font-bold text-gray-400 shrink-0 mt-0.5">${info.date}</span></div><p class="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed">${info.content}</p></div></div>`;
                 });
                 container.innerHTML = html;
             }
-        })
-        .catch(err => {
-            document.getElementById('infoContainer').innerHTML = `<p class="text-center text-sm text-red-500 mt-10">Gagal memuat informasi.</p>`;
-        });
+        }).catch(err => { document.getElementById('infoContainer').innerHTML = `<p class="text-center text-sm text-red-500 mt-10">Gagal memuat informasi.</p>`; });
     </script>
 </body>
 </html>
 EOF
 
 # ==========================================
-# FILE NODE.JS (BACKEND FULL TERMASUK API INFO)
+# FILE NODE.JS (BACKEND & PENGIRIMAN WA BAILEYS FULL)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -585,9 +540,13 @@ const sendWhatsAppMessage = async (phone, message) => {
     } catch (error) { return false; }
 };
 
-app.get('/api/banners', (req, res) => res.json({ banners: loadJSON(configFile).banners }));
+app.get('/api/banners', (req, res) => {
+    let cfg = loadJSON(configFile); res.json({ banners: cfg.banners });
+});
 app.get('/api/info', (req, res) => res.json({ data: loadJSON(infoFile).reverse() }));
-app.post('/api/user/balance', (req, res) => res.json({ saldo: loadJSON(dbFile)[req.body.phone]?.saldo || 0 }));
+app.post('/api/user/balance', (req, res) => {
+    let db = loadJSON(dbFile); res.json({ saldo: db[req.body.phone]?.saldo || 0 });
+});
 
 app.post('/api/auth/register', async (req, res) => {
     const { name, phone, email, password } = req.body;
@@ -595,16 +554,15 @@ app.post('/api/auth/register', async (req, res) => {
     let fPhone = phone.toString().replace(/[^0-9]/g, '');
     if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1);
     
-    if (webUsers[fPhone] && webUsers[fPhone].isVerified) return res.status(400).json({ error: 'Nomor WA sudah terdaftar.' });
+    if (webUsers[fPhone] && webUsers[fPhone].isVerified) { return res.status(400).json({ error: 'Nomor WA sudah terdaftar.' }); }
     
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
     webUsers[fPhone] = { name, email, password, isVerified: false, otp };
     saveJSON(webUsersFile, webUsers);
     
-    const pesan = `Halo *${name}*!\nSelamat datang di DIGITAL FIKY STORE.\n\nKode OTP Pendaftaran Anda: *${otp}*`;
+    const pesan = `Halo *${name}*!\nSelamat datang di DIGITAL FIKY STORE.\n\nKode OTP Pendaftaran Anda: *${otp}*\n\n_Mohon jangan berikan kode ini kepada siapapun._`;
     const sent = await sendWhatsAppMessage(fPhone, pesan);
-    if(sent) res.json({ message: 'OTP Terkirim', phone: fPhone }); 
-    else res.status(500).json({ error: 'Gagal mengirim OTP. Bot WA Offline.' });
+    if(sent) { res.json({ message: 'OTP Terkirim', phone: fPhone }); } else { res.status(500).json({ error: 'Gagal mengirim OTP. Bot WA Offline.' }); }
 });
 
 app.post('/api/auth/verify', (req, res) => {
@@ -645,8 +603,7 @@ app.post('/api/auth/forgot', async (req, res) => {
     users[fPhone].otp = otp; saveJSON(webUsersFile, users);
     
     const sent = await sendWhatsAppMessage(fPhone, `Kode OTP Reset Password: *${otp}*`);
-    if(sent) res.json({ message: 'OTP Terkirim', phone: fPhone }); 
-    else res.status(500).json({ error: 'Gagal mengirim OTP.' });
+    if(sent) res.json({ message: 'OTP Terkirim', phone: fPhone }); else res.status(500).json({ error: 'Gagal mengirim OTP.' });
 });
 
 app.post('/api/auth/reset', (req, res) => {
@@ -714,7 +671,7 @@ N=$(tput sgr0)    # Reset
 while true; do
     clear
     echo -e "${C}${B}╔═══════════════════════════════════════════════════╗${N}"
-    echo -e "${C}${B}║${N} ${Y}⚡ DIGITAL FIKY STORE - VPS CONTROL PANEL (V39) ⚡${N} ${C}${B}║${N}"
+    echo -e "${C}${B}║${N} ${Y}⚡ DIGITAL FIKY STORE - VPS CONTROL PANEL (V40) ⚡${N} ${C}${B}║${N}"
     echo -e "${C}${B}╠═══════════════════════════════════════════════════╣${N}"
     echo -e "${C}${B}║${N} ${W}[ BOT & SERVER MANAGEMENT ]                       ${C}${B}║${N}"
     echo -e "${C}${B}║${N}  ${G}1.${N} Setup Nomor Bot & Login Pairing WA            ${C}${B}║${N}"
