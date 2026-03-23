@@ -28,7 +28,7 @@ sudo ufw allow 80/tcp > /dev/null 2>&1 || true
 sudo ufw allow 443/tcp > /dev/null 2>&1 || true
 
 echo -e "${C_CYAN}${C_BOLD}==========================================================${C_RST}"
-echo -e "${C_YELLOW}${C_BOLD}   🚀 MENGINSTALL DIGITAL FIKY STORE - V54 ULTIMATE 🚀    ${C_RST}"
+echo -e "${C_YELLOW}${C_BOLD}   🚀 MENGINSTALL DIGITAL FIKY STORE - V55 FIX MODULE 🚀  ${C_RST}"
 echo -e "${C_CYAN}${C_BOLD}==========================================================${C_RST}"
 
 echo "[1/5] Memperbarui sistem & menginstal dependensi dasar..."
@@ -48,7 +48,7 @@ cd "$HOME/$DIR_NAME"
 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
-  "version": "5.4.0",
+  "version": "5.5.0",
   "main": "index.js",
   "dependencies": {
     "@hapi/boom": "^10.0.1",
@@ -362,27 +362,7 @@ cat << 'EOF' > public/provider.html
 EOF
 
 cat << 'EOF' > public/profile.html
-<!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Profil - DIGITAL FIKY STORE</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-white dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl"><div class="bg-black text-white p-8 flex flex-col items-center relative rounded-b-[2.5rem] shadow-lg"><div class="flex items-center justify-center gap-3 mb-2 relative"><div class="w-8"></div><div class="w-24 h-24 bg-gray-200 rounded-full flex justify-center items-center text-black font-bold text-4xl border-4 border-gray-400 shadow-xl overflow-hidden" id="profileCircle">U</div><div class="w-8 text-xl cursor-pointer hover:text-gray-300 transition flex items-center justify-center" onclick="openEditProfile()"><i class="fas fa-pencil-alt"></i></div></div><h2 class="text-xl font-bold tracking-wide mt-2" id="profileName">Nama Member</h2></div><div class="mt-6"><div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-envelope text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">Email</div><div class="text-sm text-gray-500 dark:text-gray-400 font-medium" id="profileEmail">email@domain.com</div></div><div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-phone-alt text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">No. Telp</div><div class="text-sm text-gray-500 dark:text-gray-400 font-medium" id="profilePhoneData">0888...</div></div><div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-wallet text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">Saldo Akun</div><div class="text-sm font-extrabold text-blue-600 dark:text-yellow-400 tracking-wide" id="profileSaldo">Rp 0</div></div><div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-shopping-cart text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">Jumlah Transaksi</div><div class="text-[11px] font-bold text-gray-600 bg-gray-100 dark:bg-gray-800 dark:text-gray-300 px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700">0 Trx</div></div><div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition" onclick="openChangePassword()"><i class="fas fa-lock text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">Ubah Password</div><i class="fas fa-chevron-right text-gray-400 text-sm"></i></div><div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800 cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 transition" onclick="logout()"><i class="fas fa-sign-out-alt text-red-600 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-bold text-red-600 ml-2 tracking-wide">Keluar Akun</div></div></div><div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40"><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/info.html'"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div><div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div></div></div>
-<div id="customAlert" class="fixed inset-0 z-[1001] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-700"><div id="alertIcon" class="mb-4 text-6xl"></div><h3 class="text-xl font-bold text-white mb-2 tracking-wide" id="alertTitle">Pemberitahuan</h3><p class="text-sm text-gray-300 mb-6" id="alertMessage">Pesan</p><button onclick="closeAlert()" class="bg-[#facc15] text-[#0f172a] w-full py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-yellow-500 transition">OKE</button></div></div>
-<div id="editProfileModal" class="fixed inset-0 z-[998] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-white dark:bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[340px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-100 dark:border-gray-700 relative"><button onclick="closeEditProfile()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fas fa-times text-xl"></i></button><h3 class="text-lg font-extrabold text-[#001229] dark:text-white mb-4">Ubah Profil</h3><div class="flex justify-center mb-4"><div class="relative w-20 h-20"><div id="editPreview" class="w-full h-full bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center text-2xl font-bold border-2 border-yellow-400 overflow-hidden text-[#001229] dark:text-white">U</div><button onclick="document.getElementById('photoInput').click()" class="absolute bottom-0 right-0 bg-[#001229] dark:bg-yellow-400 text-yellow-400 dark:text-[#001229] w-7 h-7 rounded-full flex items-center justify-center border border-white dark:border-gray-900 shadow-sm hover:scale-110 transition"><i class="fas fa-camera text-xs"></i></button></div><input type="file" id="photoInput" accept="image/*" class="hidden" onchange="previewPhoto(event)"></div><div class="text-left mb-3"><label class="text-[10px] font-bold text-gray-500 ml-1">Email (Hanya Baca)</label><input type="email" id="editEmail" disabled class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl py-2 px-3 text-sm text-gray-500 outline-none mt-1"></div><div class="text-left mb-3"><label class="text-[10px] font-bold text-gray-500 ml-1">Nama Pengguna</label><input type="text" id="editName" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-2 px-3 text-sm text-[#001229] dark:text-white outline-none focus:border-yellow-400 mt-1 transition"></div><div class="text-left mb-5"><label class="text-[10px] font-bold text-gray-500 ml-1">Nomor Telepon</label><input type="number" id="editPhone" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-2 px-3 text-sm text-[#001229] dark:text-white outline-none focus:border-yellow-400 mt-1 transition"></div><button onclick="saveProfile()" class="w-full bg-[#001229] dark:bg-yellow-400 text-yellow-400 dark:text-[#001229] py-2.5 rounded-xl font-bold tracking-wide shadow-md mb-3 hover:bg-[#002147] dark:hover:bg-yellow-500 transition">Simpan Profil</button><button onclick="deleteAccount()" class="w-full bg-red-50 dark:bg-red-900/30 text-red-600 border border-red-200 dark:border-red-800 py-2.5 rounded-xl font-bold tracking-wide transition hover:bg-red-100">Hapus Akun</button></div></div>
-<div id="changePassModal" class="fixed inset-0 z-[998] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-white dark:bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-100 dark:border-gray-700 relative"><button onclick="closeChangePass()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fas fa-times text-xl"></i></button><h3 class="text-lg font-extrabold text-[#001229] dark:text-white mb-4">Ubah Password</h3><div class="text-left mb-3 relative"><label class="text-[10px] font-bold text-gray-500 ml-1">Password Lama</label><input type="password" id="oldPass" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-2 px-3 pr-10 text-sm text-[#001229] dark:text-white outline-none focus:border-yellow-400 mt-1 transition"><i class="fas fa-eye absolute right-3 top-8 text-gray-500 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300" onclick="togglePassword('oldPass', this)"></i></div><div class="text-left mb-5 relative"><label class="text-[10px] font-bold text-gray-500 ml-1">Password Baru</label><input type="password" id="newPass" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-2 px-3 pr-10 text-sm text-[#001229] dark:text-white outline-none focus:border-yellow-400 mt-1 transition"><i class="fas fa-eye absolute right-3 top-8 text-gray-500 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300" onclick="togglePassword('newPass', this)"></i></div><button onclick="savePassword()" class="w-full bg-[#001229] dark:bg-yellow-400 text-yellow-400 dark:text-[#001229] py-2.5 rounded-xl font-bold tracking-wide shadow-md hover:bg-[#002147] dark:hover:bg-yellow-500 transition">Simpan Password</button></div></div>
-<div id="otpVerifyModal" class="fixed inset-0 z-[1000] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-white dark:bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-100 dark:border-gray-700 relative"><button onclick="closeOtpModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fas fa-times text-xl"></i></button><h3 class="text-lg font-extrabold text-[#001229] dark:text-white mb-2">Verifikasi Keamanan</h3><p class="text-xs text-gray-500 dark:text-gray-400 mb-4" id="otpVerifyMsg">Masukkan kode OTP dari WhatsApp.</p><input type="number" id="modalOtpInput" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-3 px-4 text-center text-2xl tracking-[0.5em] font-bold text-[#001229] dark:text-white outline-none focus:border-yellow-400 mb-5 transition" placeholder="XXXX"><button onclick="submitOtpAction()" class="w-full bg-[#001229] dark:bg-yellow-400 text-yellow-400 dark:text-[#001229] py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-[#002147] dark:hover:bg-yellow-500 transition">VERIFIKASI</button></div></div>
-<script>
-    let user = JSON.parse(localStorage.getItem('user')); if (!user) window.location.href = '/';
-    function renderProfile() { document.getElementById('profileName').innerText = user.name; document.getElementById('profilePhoneData').innerText = user.phone; document.getElementById('profileEmail').innerText = user.email || 'Belum diatur'; if (user.photo) { document.getElementById('profileCircle').innerHTML = `<img src="${user.photo}" class="w-full h-full object-cover">`; document.getElementById('editPreview').innerHTML = `<img src="${user.photo}" class="w-full h-full object-cover">`; } else { document.getElementById('profileCircle').innerText = user.name.charAt(0).toUpperCase(); document.getElementById('editPreview').innerText = user.name.charAt(0).toUpperCase(); } } renderProfile();
-    function logout() { localStorage.removeItem('user'); window.location.href = '/'; }
-    fetch('/api/user/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }).then(res => res.json()).then(data => { document.getElementById('profileSaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); });
-    if(localStorage.getItem('darkMode') === 'true') document.getElementById('html-root').classList.add('dark');
-    let alertCallback = null; function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check text-green-500"></i>' : '<i class="fas fa-times text-red-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; } function closeAlert() { document.getElementById('customAlert').classList.add('hidden'); if(alertCallback) alertCallback(); } function togglePassword(id, icon) { const el = document.getElementById(id); if(el.type === 'password') { el.type = 'text'; icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash'); } else { el.type = 'password'; icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); } }
-    let otpContext = ''; let pendingProfileData = {}; let pendingPasswordData = {};
-    function showOtpModal(msg) { document.getElementById('otpVerifyMsg').innerText = msg; document.getElementById('modalOtpInput').value = ''; document.getElementById('otpVerifyModal').classList.remove('hidden'); } function closeOtpModal() { document.getElementById('otpVerifyModal').classList.add('hidden'); }
-    async function submitOtpAction() { const otp = document.getElementById('modalOtpInput').value; if(!otp) return showAlert('Peringatan', 'OTP tidak boleh kosong.', false); if(otpContext === 'profile') { pendingProfileData.otp = otp; try { const res = await fetch('/api/user/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pendingProfileData) }); const data = await res.json(); if(res.ok) { user = data.user; localStorage.setItem('user', JSON.stringify(user)); renderProfile(); closeOtpModal(); closeEditProfile(); showAlert('Berhasil!', 'Profil dan Nomor WA berhasil diperbarui.', true); } else { showAlert('Gagal', data.error, false); } } catch(e) { showAlert('Error', 'Gagal terhubung ke server', false); } } else if(otpContext === 'password') { pendingPasswordData.otp = otp; try { const res = await fetch('/api/user/change-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pendingPasswordData) }); const data = await res.json(); if(res.ok) { closeOtpModal(); closeChangePass(); showAlert('Berhasil', 'Password berhasil diubah!', true); } else { showAlert('Gagal', data.error, false); } } catch(e) { showAlert('Error', 'Gagal terhubung ke server', false); } } }
-    let tempPhotoBase64 = user.photo || ''; function openEditProfile() { document.getElementById('editName').value = user.name; document.getElementById('editPhone').value = user.phone; document.getElementById('editEmail').value = user.email || ''; document.getElementById('editProfileModal').classList.remove('hidden'); } function closeEditProfile() { document.getElementById('editProfileModal').classList.add('hidden'); } function previewPhoto(event) { const file = event.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(e) { tempPhotoBase64 = e.target.result; document.getElementById('editPreview').innerHTML = `<img src="${tempPhotoBase64}" class="w-full h-full object-cover">`; }; reader.readAsDataURL(file); } }
-    async function saveProfile() { const name = document.getElementById('editName').value; const newPhone = document.getElementById('editPhone').value; const payload = { oldPhone: user.phone, name, newPhone, photo: tempPhotoBase64 }; try { const res = await fetch('/api/user/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const data = await res.json(); if(data.status === 'OTP_SENT') { pendingProfileData = payload; otpContext = 'profile'; showOtpModal(`Masukkan OTP yang dikirim ke WA baru Anda.`); } else if (res.ok) { user = data.user; localStorage.setItem('user', JSON.stringify(user)); renderProfile(); closeEditProfile(); showAlert('Berhasil!', 'Profil berhasil diperbarui.', true); } else { showAlert('Gagal', data.error, false); } } catch(e) { showAlert('Error', 'Gagal terhubung ke server', false); } }
-    async function deleteAccount() { if(confirm("Yakin hapus akun permanen? Saldo hangus.")) { try { const res = await fetch('/api/user/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }); if(res.ok) { alert('Akun dihapus.'); logout(); } else { showAlert('Gagal', 'Tidak dapat menghapus akun.', false); } } catch(e) { showAlert('Error', 'Gagal terhubung', false); } } }
-    function openChangePassword() { document.getElementById('oldPass').value=''; document.getElementById('newPass').value=''; document.getElementById('changePassModal').classList.remove('hidden'); } function closeChangePass() { document.getElementById('changePassModal').classList.add('hidden'); }
-    async function savePassword() { const oldPassword = document.getElementById('oldPass').value; const newPassword = document.getElementById('newPass').value; if(!oldPassword || !newPassword) return showAlert('Peringatan', 'Harap isi semua kolom.', false); const payload = { phone: user.phone, oldPassword, newPassword }; try { const res = await fetch('/api/user/change-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const data = await res.json(); if(data.status === 'OTP_SENT') { pendingPasswordData = payload; otpContext = 'password'; showOtpModal('Masukkan OTP yang dikirim ke WA Anda.'); } else { showAlert('Gagal', data.error || 'Password lama salah.', false); } } catch(e) { showAlert('Error', 'Gagal terhubung', false); } }
-</script></body></html>
+<!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Profil - DIGITAL FIKY STORE</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-white dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl"><div class="bg-black text-white p-8 flex flex-col items-center relative rounded-b-[2.5rem] shadow-lg"><div class="flex items-center justify-center gap-3 mb-2 relative"><div class="w-8"></div><div class="w-24 h-24 bg-gray-200 rounded-full flex justify-center items-center text-black font-bold text-4xl border-4 border-gray-400 shadow-xl overflow-hidden" id="profileCircle">U</div><div class="w-8 text-xl cursor-pointer hover:text-gray-300 transition flex items-center justify-center" onclick="openEditProfile()"><i class="fas fa-pencil-alt"></i></div></div><h2 class="text-xl font-bold tracking-wide mt-2" id="profileName">Nama Member</h2></div><div class="mt-6"><div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-envelope text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">Email</div><div class="text-sm text-gray-500 dark:text-gray-400 font-medium" id="profileEmail">email@domain.com</div></div><div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-phone-alt text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">No. Telp</div><div class="text-sm text-gray-500 dark:text-gray-400 font-medium" id="profilePhoneData">0888...</div></div><div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-wallet text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">Saldo Akun</div><div class="text-sm font-extrabold text-blue-600 dark:text-yellow-400 tracking-wide" id="profileSaldo">Rp 0</div></div><div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800"><i class="fas fa-shopping-cart text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">Jumlah Transaksi</div><div class="text-[11px] font-bold text-gray-600 bg-gray-100 dark:bg-gray-800 dark:text-gray-300 px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700">0 Trx</div></div><div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition" onclick="openChangePassword()"><i class="fas fa-lock text-gray-800 dark:text-gray-300 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-200 ml-2 tracking-wide">Ubah Password</div><i class="fas fa-chevron-right text-gray-400 text-sm"></i></div><div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800 cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 transition" onclick="logout()"><i class="fas fa-sign-out-alt text-red-600 w-10 text-xl text-center"></i><div class="flex-1 text-sm font-bold text-red-600 ml-2 tracking-wide">Keluar Akun</div></div></div><div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40"><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/info.html'"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div><div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div></div></div><div id="customAlert" class="fixed inset-0 z-[1001] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-700"><div id="alertIcon" class="mb-4 text-6xl"></div><h3 class="text-xl font-bold text-white mb-2 tracking-wide" id="alertTitle">Pemberitahuan</h3><p class="text-sm text-gray-300 mb-6" id="alertMessage">Pesan</p><button onclick="closeAlert()" class="bg-[#facc15] text-[#0f172a] w-full py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-yellow-500 transition">OKE</button></div></div><div id="editProfileModal" class="fixed inset-0 z-[998] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-white dark:bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[340px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-100 dark:border-gray-700 relative"><button onclick="closeEditProfile()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fas fa-times text-xl"></i></button><h3 class="text-lg font-extrabold text-[#001229] dark:text-white mb-4">Ubah Profil</h3><div class="flex justify-center mb-4"><div class="relative w-20 h-20"><div id="editPreview" class="w-full h-full bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center text-2xl font-bold border-2 border-yellow-400 overflow-hidden text-[#001229] dark:text-white">U</div><button onclick="document.getElementById('photoInput').click()" class="absolute bottom-0 right-0 bg-[#001229] dark:bg-yellow-400 text-yellow-400 dark:text-[#001229] w-7 h-7 rounded-full flex items-center justify-center border border-white dark:border-gray-900 shadow-sm hover:scale-110 transition"><i class="fas fa-camera text-xs"></i></button></div><input type="file" id="photoInput" accept="image/*" class="hidden" onchange="previewPhoto(event)"></div><div class="text-left mb-3"><label class="text-[10px] font-bold text-gray-500 ml-1">Email (Hanya Baca)</label><input type="email" id="editEmail" disabled class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl py-2 px-3 text-sm text-gray-500 outline-none mt-1"></div><div class="text-left mb-3"><label class="text-[10px] font-bold text-gray-500 ml-1">Nama Pengguna</label><input type="text" id="editName" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-2 px-3 text-sm text-[#001229] dark:text-white outline-none focus:border-yellow-400 mt-1 transition"></div><div class="text-left mb-5"><label class="text-[10px] font-bold text-gray-500 ml-1">Nomor Telepon</label><input type="number" id="editPhone" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-2 px-3 text-sm text-[#001229] dark:text-white outline-none focus:border-yellow-400 mt-1 transition"></div><button onclick="saveProfile()" class="w-full bg-[#001229] dark:bg-yellow-400 text-yellow-400 dark:text-[#001229] py-2.5 rounded-xl font-bold tracking-wide shadow-md mb-3 hover:bg-[#002147] dark:hover:bg-yellow-500 transition">Simpan Profil</button><button onclick="deleteAccount()" class="w-full bg-red-50 dark:bg-red-900/30 text-red-600 border border-red-200 dark:border-red-800 py-2.5 rounded-xl font-bold tracking-wide transition hover:bg-red-100">Hapus Akun</button></div></div><div id="changePassModal" class="fixed inset-0 z-[998] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-white dark:bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-100 dark:border-gray-700 relative"><button onclick="closeChangePass()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fas fa-times text-xl"></i></button><h3 class="text-lg font-extrabold text-[#001229] dark:text-white mb-4">Ubah Password</h3><div class="text-left mb-3 relative"><label class="text-[10px] font-bold text-gray-500 ml-1">Password Lama</label><input type="password" id="oldPass" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-2 px-3 pr-10 text-sm text-[#001229] dark:text-white outline-none focus:border-yellow-400 mt-1 transition"><i class="fas fa-eye absolute right-3 top-8 text-gray-500 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300" onclick="togglePassword('oldPass', this)"></i></div><div class="text-left mb-5 relative"><label class="text-[10px] font-bold text-gray-500 ml-1">Password Baru</label><input type="password" id="newPass" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-2 px-3 pr-10 text-sm text-[#001229] dark:text-white outline-none focus:border-yellow-400 mt-1 transition"><i class="fas fa-eye absolute right-3 top-8 text-gray-500 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300" onclick="togglePassword('newPass', this)"></i></div><button onclick="savePassword()" class="w-full bg-[#001229] dark:bg-yellow-400 text-yellow-400 dark:text-[#001229] py-2.5 rounded-xl font-bold tracking-wide shadow-md hover:bg-[#002147] dark:hover:bg-yellow-500 transition">Simpan Password</button></div></div><div id="otpVerifyModal" class="fixed inset-0 z-[1000] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-white dark:bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-100 dark:border-gray-700 relative"><button onclick="closeOtpModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fas fa-times text-xl"></i></button><h3 class="text-lg font-extrabold text-[#001229] dark:text-white mb-2">Verifikasi Keamanan</h3><p class="text-xs text-gray-500 dark:text-gray-400 mb-4" id="otpVerifyMsg">Masukkan kode OTP dari WhatsApp.</p><input type="number" id="modalOtpInput" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-3 px-4 text-center text-2xl tracking-[0.5em] font-bold text-[#001229] dark:text-white outline-none focus:border-yellow-400 mb-5 transition" placeholder="XXXX"><button onclick="submitOtpAction()" class="w-full bg-[#001229] dark:bg-yellow-400 text-yellow-400 dark:text-[#001229] py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-[#002147] dark:hover:bg-yellow-500 transition">VERIFIKASI</button></div></div><script>let user = JSON.parse(localStorage.getItem('user')); if (!user) window.location.href = '/'; function renderProfile() { document.getElementById('profileName').innerText = user.name; document.getElementById('profilePhoneData').innerText = user.phone; document.getElementById('profileEmail').innerText = user.email || 'Belum diatur'; if (user.photo) { document.getElementById('profileCircle').innerHTML = `<img src="${user.photo}" class="w-full h-full object-cover">`; document.getElementById('editPreview').innerHTML = `<img src="${user.photo}" class="w-full h-full object-cover">`; } else { document.getElementById('profileCircle').innerText = user.name.charAt(0).toUpperCase(); document.getElementById('editPreview').innerText = user.name.charAt(0).toUpperCase(); } } renderProfile(); function logout() { localStorage.removeItem('user'); window.location.href = '/'; } fetch('/api/user/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }).then(res => res.json()).then(data => { document.getElementById('profileSaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); }); if(localStorage.getItem('darkMode') === 'true') document.getElementById('html-root').classList.add('dark'); let alertCallback = null; function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check text-green-500"></i>' : '<i class="fas fa-times text-red-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; } function closeAlert() { document.getElementById('customAlert').classList.add('hidden'); if(alertCallback) alertCallback(); } function togglePassword(id, icon) { const el = document.getElementById(id); if(el.type === 'password') { el.type = 'text'; icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash'); } else { el.type = 'password'; icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); } } let otpContext = ''; let pendingProfileData = {}; let pendingPasswordData = {}; function showOtpModal(msg) { document.getElementById('otpVerifyMsg').innerText = msg; document.getElementById('modalOtpInput').value = ''; document.getElementById('otpVerifyModal').classList.remove('hidden'); } function closeOtpModal() { document.getElementById('otpVerifyModal').classList.add('hidden'); } async function submitOtpAction() { const otp = document.getElementById('modalOtpInput').value; if(!otp) return showAlert('Peringatan', 'OTP tidak boleh kosong.', false); if(otpContext === 'profile') { pendingProfileData.otp = otp; try { const res = await fetch('/api/user/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pendingProfileData) }); const data = await res.json(); if(res.ok) { user = data.user; localStorage.setItem('user', JSON.stringify(user)); renderProfile(); closeOtpModal(); closeEditProfile(); showAlert('Berhasil!', 'Profil dan Nomor WA berhasil diperbarui.', true); } else { showAlert('Gagal', data.error, false); } } catch(e) { showAlert('Error', 'Gagal terhubung ke server', false); } } else if(otpContext === 'password') { pendingPasswordData.otp = otp; try { const res = await fetch('/api/user/change-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pendingPasswordData) }); const data = await res.json(); if(res.ok) { closeOtpModal(); closeChangePass(); showAlert('Berhasil', 'Password berhasil diubah!', true); } else { showAlert('Gagal', data.error, false); } } catch(e) { showAlert('Error', 'Gagal terhubung ke server', false); } } } let tempPhotoBase64 = user.photo || ''; function openEditProfile() { document.getElementById('editName').value = user.name; document.getElementById('editPhone').value = user.phone; document.getElementById('editEmail').value = user.email || ''; document.getElementById('editProfileModal').classList.remove('hidden'); } function closeEditProfile() { document.getElementById('editProfileModal').classList.add('hidden'); } function previewPhoto(event) { const file = event.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(e) { tempPhotoBase64 = e.target.result; document.getElementById('editPreview').innerHTML = `<img src="${tempPhotoBase64}" class="w-full h-full object-cover">`; }; reader.readAsDataURL(file); } } async function saveProfile() { const name = document.getElementById('editName').value; const newPhone = document.getElementById('editPhone').value; const payload = { oldPhone: user.phone, name, newPhone, photo: tempPhotoBase64 }; try { const res = await fetch('/api/user/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const data = await res.json(); if(data.status === 'OTP_SENT') { pendingProfileData = payload; otpContext = 'profile'; showOtpModal(`Masukkan OTP yang dikirim ke WA baru Anda.`); } else if (res.ok) { user = data.user; localStorage.setItem('user', JSON.stringify(user)); renderProfile(); closeEditProfile(); showAlert('Berhasil!', 'Profil berhasil diperbarui.', true); } else { showAlert('Gagal', data.error, false); } } catch(e) { showAlert('Error', 'Gagal terhubung ke server', false); } } async function deleteAccount() { if(confirm("Yakin hapus akun permanen? Saldo hangus.")) { try { const res = await fetch('/api/user/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }); if(res.ok) { alert('Akun dihapus.'); logout(); } else { showAlert('Gagal', 'Tidak dapat menghapus akun.', false); } } catch(e) { showAlert('Error', 'Gagal terhubung', false); } } } function openChangePassword() { document.getElementById('oldPass').value=''; document.getElementById('newPass').value=''; document.getElementById('changePassModal').classList.remove('hidden'); } function closeChangePass() { document.getElementById('changePassModal').classList.add('hidden'); } async function savePassword() { const oldPassword = document.getElementById('oldPass').value; const newPassword = document.getElementById('newPass').value; if(!oldPassword || !newPassword) return showAlert('Peringatan', 'Harap isi semua kolom.', false); const payload = { phone: user.phone, oldPassword, newPassword }; try { const res = await fetch('/api/user/change-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const data = await res.json(); if(data.status === 'OTP_SENT') { pendingPasswordData = payload; otpContext = 'password'; showOtpModal('Masukkan OTP yang dikirim ke WA Anda.'); } else { showAlert('Gagal', data.error || 'Password lama salah.', false); } } catch(e) { showAlert('Error', 'Gagal terhubung', false); } }</script></body></html>
 EOF
 
 cat << 'EOF' > public/riwayat.html
@@ -393,39 +373,258 @@ cat << 'EOF' > public/info.html
 <!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Pusat Info - DIGITAL FIKY STORE</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-[#f4f6f9] dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl overflow-x-hidden"><div class="flex items-center p-4 bg-[#001229] text-white shadow-md sticky top-0 z-40"><i class="fas fa-arrow-left text-xl cursor-pointer text-gray-300 hover:text-white mr-4" onclick="location.href='/dashboard.html'"></i><h1 class="font-bold text-[17px] tracking-wide flex-1">Pusat Informasi</h1></div><div id="infoContainer" class="mx-4 mt-5 pb-8"><div class="flex items-center justify-center h-40"><i class="fas fa-circle-notch fa-spin text-3xl text-gray-400"></i></div></div><div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40"><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">HOME</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">RIWAYAT</span></div><div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">INFO</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">PROFIL</span></div></div></div><script>const user = JSON.parse(localStorage.getItem('user')); if (!user) window.location.href = '/'; if(localStorage.getItem('darkMode') === 'true') document.getElementById('html-root').classList.add('dark'); fetch('/api/info').then(res => res.json()).then(data => { const container = document.getElementById('infoContainer'); if (data.data.length === 0) { container.innerHTML = `<div class="flex flex-col items-center justify-center mt-12"><div class="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4 shadow-inner"><i class="fas fa-bell-slash text-4xl text-gray-400"></i></div><h3 class="font-bold text-[#001229] dark:text-gray-100 text-lg">Belum Ada Informasi</h3><p class="text-xs text-gray-500 mt-2 text-center max-w-[200px]">Saat ini belum ada pengumuman atau informasi terbaru.</p></div>`; } else { let html = ''; data.data.forEach(info => { html += `<div class="bg-white dark:bg-[#0f172a] rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mb-4 flex gap-4 transition-transform hover:-translate-y-1 cursor-pointer"><div class="w-12 h-12 rounded-full bg-blue-50 dark:bg-black flex items-center justify-center text-blue-600 dark:text-yellow-400 shrink-0 border border-transparent dark:border-gray-700"><i class="fas fa-bullhorn text-xl"></i></div><div class="flex-1"><div class="flex justify-between items-start mb-1"><h4 class="font-bold text-[#001229] dark:text-gray-100 text-sm leading-tight pr-2">${info.title}</h4><span class="text-[9px] font-bold text-gray-400 shrink-0 mt-0.5">${info.date}</span></div><p class="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed">${info.content}</p></div></div>`; }); container.innerHTML = html; } }).catch(err => { document.getElementById('infoContainer').innerHTML = `<p class="text-center text-sm text-red-500 mt-10">Gagal memuat informasi.</p>`; });</script></body></html>
 EOF
 
-echo "[4/5] Mengatur sistem Backend (index.js)..."
+echo "[4/5] Mengatur sistem Backend Node.js..."
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, Browsers, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
-const fs = require('fs'); const pino = require('pino'); const express = require('express'); const bodyParser = require('body-parser'); const path = require('path'); const crypto = require('crypto'); const axios = require('axios'); const { exec } = require('child_process'); const crypt = require('./fiky_crypt.js');
-const app = express(); app.use(bodyParser.json({ limit: '10mb' })); app.use(express.static(path.join(__dirname, 'public')));
-app.use((req, res, next) => { if (req.path.endsWith('.json')) return res.status(403).json({success: false, message: 'Akses Ditolak'}); next(); });
-const configFile = './config.json'; const dbFile = './database.json'; const infoFile = './info.json'; const trxFile = './trx.json'; const produkFile = './produk.json'; const globalStatsFile = './global_stats.json'; const topupFile = './topup.json';
-const loadJSON = (file) => crypt.load(file, file === infoFile ? [] : {}); const saveJSON = (file, data) => crypt.save(file, data);
-loadJSON(dbFile); loadJSON(produkFile); loadJSON(trxFile); loadJSON(globalStatsFile); loadJSON(topupFile);
-let configAwal = loadJSON(configFile); configAwal.botName = configAwal.botName || "DIGITAL FIKY STORE"; configAwal.botNumber = configAwal.botNumber || ""; configAwal.digiflazzUsername = configAwal.digiflazzUsername || ""; configAwal.digiflazzApiKey = configAwal.digiflazzApiKey || ""; configAwal.gopayToken = configAwal.gopayToken || ""; configAwal.gopayMerchantId = configAwal.gopayMerchantId || ""; configAwal.qrisText = configAwal.qrisText || ""; configAwal.banners = configAwal.banners || ["https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80", "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=600&q=80"]; saveJSON(configFile, configAwal);
+const fs = require('fs');
+const pino = require('pino');
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
+const crypto = require('crypto');
+const axios = require('axios');
+const { exec } = require('child_process');
+const crypt = require('./fiky_crypt.js');
+
+const app = express();
+app.use(bodyParser.json({ limit: '10mb' })); 
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use((req, res, next) => {
+    if (req.path.endsWith('.json')) return res.status(403).json({success: false, message: 'Akses Ditolak'});
+    next();
+});
+
+const configFile = './config.json';
+const dbFile = './database.json';
+const infoFile = './info.json'; 
+const trxFile = './trx.json';
+const produkFile = './produk.json';
+const topupFile = './topup.json';
+const globalStatsFile = './global_stats.json';
+
+const loadJSON = (file) => crypt.load(file, file === infoFile ? [] : {});
+const saveJSON = (file, data) => crypt.save(file, data);
+
+loadJSON(dbFile); loadJSON(produkFile); loadJSON(trxFile); loadJSON(topupFile); loadJSON(globalStatsFile);
+
+let configAwal = loadJSON(configFile);
+configAwal.botName = configAwal.botName || "DIGITAL FIKY STORE";
+configAwal.botNumber = configAwal.botNumber || "";
+configAwal.digiflazzUsername = configAwal.digiflazzUsername || ""; 
+configAwal.digiflazzApiKey = configAwal.digiflazzApiKey || "";     
+configAwal.gopayToken = configAwal.gopayToken || "";
+configAwal.gopayMerchantId = configAwal.gopayMerchantId || "";
+configAwal.qrisText = configAwal.qrisText || "";
+configAwal.banners = configAwal.banners || ["https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80", "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=600&q=80"];
+saveJSON(configFile, configAwal);
+
 let globalSock = null;
-const sendWhatsAppMessage = async (phone, message) => { try { if (!globalSock) return false; await globalSock.sendMessage(phone + '@s.whatsapp.net', { text: message }); return true; } catch (error) { return false; } };
-function convertToDynamicQris(staticQris, amount) { try { if(!staticQris || staticQris.length < 30) return staticQris; let qris = staticQris.substring(0, staticQris.length - 8); qris = qris.replace("010211", "010212"); let parsed = ""; let i = 0; while (i < qris.length) { let id = qris.substring(i, i+2); let lenStr = qris.substring(i+2, i+4); let len = parseInt(lenStr, 10); if (isNaN(len)) break; let val = qris.substring(i+4, i+4+len); if (id !== "54") parsed += id + lenStr + val; i += 4 + len; } let amtStr = amount.toString(); let amtLen = amtStr.length.toString().padStart(2, '0'); let tag54 = "54" + amtLen + amtStr; let finalQris = ""; if (parsed.includes("5802ID")) finalQris = parsed.replace("5802ID", tag54 + "5802ID"); else finalQris = parsed + tag54; finalQris += "6304"; let crc = 0xFFFF; for(let j=0; j<finalQris.length; j++){ crc ^= finalQris.charCodeAt(j) << 8; for(let k=0; k<8; k++){ if(crc & 0x8000) crc = (crc << 1) ^ 0x1021; else crc = crc << 1; } } let crcStr = (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0'); return finalQris + crcStr; } catch(e) { return staticQris; } }
+
+const sendWhatsAppMessage = async (phone, message) => {
+    try {
+        if (!globalSock) return false;
+        const jid = phone + '@s.whatsapp.net';
+        await globalSock.sendMessage(jid, { text: message });
+        return true;
+    } catch (error) { return false; }
+};
+
+function convertToDynamicQris(staticQris, amount) {
+    try {
+        if(!staticQris || staticQris.length < 30) return staticQris;
+        let qris = staticQris.substring(0, staticQris.length - 8);
+        qris = qris.replace("010211", "010212");
+        let parsed = ""; let i = 0;
+        while (i < qris.length) {
+            let id = qris.substring(i, i+2); let lenStr = qris.substring(i+2, i+4); let len = parseInt(lenStr, 10);
+            if (isNaN(len)) break;
+            let val = qris.substring(i+4, i+4+len);
+            if (id !== "54") parsed += id + lenStr + val;
+            i += 4 + len;
+        }
+        let amtStr = amount.toString(); let amtLen = amtStr.length.toString().padStart(2, '0');
+        let tag54 = "54" + amtLen + amtStr;
+        let finalQris = "";
+        if (parsed.includes("5802ID")) finalQris = parsed.replace("5802ID", tag54 + "5802ID");
+        else finalQris = parsed + tag54;
+        finalQris += "6304";
+        
+        let crc = 0xFFFF;
+        for(let j=0; j<finalQris.length; j++){
+            crc ^= finalQris.charCodeAt(j) << 8;
+            for(let k=0; k<8; k++){ if(crc & 0x8000) crc = (crc << 1) ^ 0x1021; else crc = crc << 1; }
+        }
+        let crcStr = (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+        return finalQris + crcStr;
+    } catch(e) { return staticQris; }
+}
+
 app.get('/api/banners', (req, res) => res.json({ success: true, data: loadJSON(configFile).banners }));
 app.get('/api/info', (req, res) => res.json({ data: loadJSON(infoFile).reverse() }));
-app.get('/api/user/:phone', (req, res) => { let db = loadJSON(dbFile); let p = req.params.phone; if(db[p]) { let data = {...db[p]}; delete data.password; res.json({success: true, data}); } else res.json({success: false}); });
-app.post('/api/auth/login', (req, res) => { let { identifier, password } = req.body; let db = loadJSON(dbFile); let fPhone = identifier.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1); let foundPhone = Object.keys(db).find(k => (k === fPhone || db[k].email === identifier) && db[k].password === password); if (foundPhone) { if (!db[foundPhone].isVerified && db[foundPhone].otp) return res.status(400).json({ success: false, message: 'Akun belum diverifikasi OTP.' }); let safeData = {...db[foundPhone]}; delete safeData.password; res.json({ success: true, data: safeData }); } else { res.status(400).json({ success: false, message: 'Email/No HP atau Password salah.' }); } });
-app.post('/api/auth/register', async (req, res) => { const { name, phone, email, password } = req.body; let db = loadJSON(dbFile); let fPhone = phone.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1); if (db[fPhone] && (!db[fPhone].otp || db[fPhone].isVerified)) return res.status(400).json({ success:false, error: 'Nomor WA sudah terdaftar.' }); const otp = Math.floor(1000 + Math.random() * 9000).toString(); db[fPhone] = { name: name, email: email, password: password, isVerified: false, otp: otp, photo: '', saldo: 0, trx_count: 0, history: [] }; saveJSON(dbFile, db); const sent = await sendWhatsAppMessage(fPhone, `Halo *${name}*!\nSelamat datang di DIGITAL FIKY STORE.\n\nKode OTP Pendaftaran Anda: *${otp}*`); if(sent) res.json({ success: true, phone: fPhone }); else res.status(500).json({ success:false, error: 'Gagal mengirim OTP.' }); });
-app.post('/api/auth/verify', (req, res) => { const { phone, otp } = req.body; let db = loadJSON(dbFile); let fPhone = phone.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1); if (db[fPhone] && db[fPhone].otp === otp.toString().trim()) { db[fPhone].isVerified = true; delete db[fPhone].otp; saveJSON(dbFile, db); res.json({ success: true }); } else { res.status(400).json({ success:false, error: 'Kode OTP Salah.' }); } });
-app.post('/api/topup', async (req, res) => { try { let cfg = loadJSON(configFile); if(!cfg.gopayToken || !cfg.qrisText) return res.json({success: false, message: "Sistem QRIS belum diatur Admin."}); let { phone, nominal } = req.body; let db = loadJSON(dbFile); if(!db[phone]) return res.json({success: false, message: "User tidak ditemukan."}); let nominalAsli = parseInt(nominal); let uniqueCode = Math.floor(Math.random() * 99) + 1; let totalPay = nominalAsli + uniqueCode; let dynQris = convertToDynamicQris(cfg.qrisText, totalPay); let finalQrisUrl = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=15&format=jpeg&data=" + encodeURIComponent(dynQris); let topups = loadJSON(topupFile); let trxId = "TP-" + Date.now(); let expiredAt = Date.now() + 10 * 60 * 1000; topups[trxId] = { phone, trx_id: trxId, amount_to_pay: totalPay, saldo_to_add: totalPay, status: 'pending', expired_at: expiredAt }; saveJSON(topupFile, topups); db[phone].history = db[phone].history || []; db[phone].history.unshift({ ts: Date.now(), tanggal: new Date().toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }), type: 'Topup', nama: 'Topup Saldo QRIS', tujuan: 'Sistem Pembayaran', status: 'Pending', sn: trxId, amount: totalPay, qris_url: finalQrisUrl, expired_at: expiredAt }); if(db[phone].history.length > 20) db[phone].history.pop(); saveJSON(dbFile, db); res.json({success: true, total: totalPay, qris: finalQrisUrl}); } catch(e) { res.json({success: false, message: "Gagal memproses QRIS."}); } });
-setInterval(async () => { try { let cfg = loadJSON(configFile); let topups = loadJSON(topupFile); let pendingKeys = Object.keys(topups).filter(k => topups[k].status === 'pending'); if(pendingKeys.length === 0 || !cfg.gopayToken || !cfg.gopayMerchantId) return; const gopayRes = await axios.post('https://gopay.autoftbot.com/api/backend/transactions', { merchant_id: cfg.gopayMerchantId }, { headers: { 'Authorization': 'Bearer ' + cfg.gopayToken, 'Content-Type': 'application/json' } }); let responseStr = JSON.stringify(gopayRes.data); let db = loadJSON(dbFile); let changedTp = false; let changedDb = false; for(let key of pendingKeys) { let req = topups[key]; if (Date.now() > req.expired_at) { req.status = 'gagal'; changedTp = true; if(db[req.phone]) { let hist = db[req.phone].history.find(h => h.sn === req.trx_id); if(hist && hist.status === 'Pending') { hist.status = 'Gagal'; changedDb = true; } } } else { let amountStr = req.amount_to_pay.toString(); let isFound = responseStr.includes(`"${amountStr}"`) || responseStr.includes(`:${amountStr}`) || responseStr.includes(`"${amountStr}.00"`) || responseStr.includes(`:${amountStr}.00`); if(isFound) { req.status = 'sukses'; changedTp = true; if(db[req.phone]) { db[req.phone].saldo += req.saldo_to_add; let hist = db[req.phone].history.find(h => h.sn === req.trx_id); if(hist && hist.status === 'Pending') { hist.status = 'Sukses'; } changedDb = true; if(globalSock) { let msg = `✅ *TOPUP QRIS BERHASIL*\n\nTotal: Rp ${req.amount_to_pay.toLocaleString('id-ID')}\nSaldo Sekarang: Rp ${db[req.phone].saldo.toLocaleString('id-ID')}`; globalSock.sendMessage(req.phone + '@s.whatsapp.net', {text: msg}).catch(()=>{}); } } } } } if(changedTp) saveJSON(topupFile, topups); if(changedDb) saveJSON(dbFile, db); } catch(e) {} }, 30000); 
-setInterval(() => { if(fs.existsSync('japri.txt')) { let lines = fs.readFileSync('japri.txt', 'utf8').split('\n'); fs.unlinkSync('japri.txt'); for(let line of lines) { if(line.includes('|') && globalSock) { let parts = line.split('|'); let target = parts[0]; parts.shift(); let msg = parts.join('|'); globalSock.sendMessage(target + '@s.whatsapp.net', { text: msg }).catch(e=>{}); } } } }, 3000);
-function doBackupAndSend() { let cfg = loadJSON(configFile); if (!cfg.teleToken || !cfg.teleChatId) return; exec(`[ -d "/etc/letsencrypt" ] && sudo tar -czf ssl_backup.tar.gz -C / etc/letsencrypt 2>/dev/null; rm -f backup.zip && zip backup.zip config.json database.json trx.json produk.json global_stats.json topup.json info.json ssl_backup.tar.gz 2>/dev/null`, (err) => { if (!err) exec(`curl -s -F chat_id="${cfg.teleChatId}" -F document=@"backup.zip" -F caption="📦 Auto-Backup Fiky Store" https://api.telegram.org/bot${cfg.teleToken}/sendDocument`); }); } if (configAwal.autoBackup) setInterval(doBackupAndSend, (configAwal.backupInterval || 720) * 60 * 1000); 
-async function startBot() { const { state, saveCreds } = await useMultiFileAuthState('sesi_bot'); const { version } = await fetchLatestBaileysVersion(); const sock = makeWASocket({ version, auth: state, logger: pino({ level: 'silent' }), browser: Browsers.ubuntu('Chrome'), printQRInTerminal: false }); if (!sock.authState.creds.registered) { let config = loadJSON(configFile); if (config.botNumber) { setTimeout(async () => { try { const code = await sock.requestPairingCode(config.botNumber.replace(/[^0-9]/g, '')); console.log(`\n=======================================================\n🔑 KODE PAIRING ANDA :  ${code}  \n=======================================================\n`); } catch (error) {} }, 3000); } } sock.ev.on('creds.update', saveCreds); sock.ev.on('connection.update', (update) => { const { connection } = update; if(connection === 'close') { startBot(); } else if(connection === 'open') { console.log("✅ BOT WHATSAPP TERHUBUNG!"); } }); globalSock = sock; }
-if (require.main === module) { app.listen(3000, () => { console.log('🌐 Web Server berjalan di port 3000'); }); startBot(); }
+app.post('/api/user/balance', (req, res) => {
+    let db = loadJSON(dbFile); let p = req.body.phone;
+    if(db[p]) { res.json({saldo: db[p].saldo || 0, trx_count: db[p].trx_count || 0}); } else { res.json({saldo:0, trx_count:0}); }
+});
+
+app.post('/api/auth/login', (req, res) => {
+    let { identifier, password } = req.body; let db = loadJSON(dbFile);
+    let fPhone = identifier.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1);
+    let foundPhone = Object.keys(db).find(k => (k === fPhone || db[k].email === identifier) && db[k].password === password);
+    if (foundPhone) {
+        if (!db[foundPhone].isVerified && db[foundPhone].otp) return res.status(400).json({ success: false, message: 'Akun belum diverifikasi OTP.' });
+        let safeData = {...db[foundPhone]}; delete safeData.password;
+        res.json({ success: true, data: safeData });
+    } else { res.status(400).json({ success: false, message: 'Email/No HP atau Password salah.' }); }
+});
+
+app.post('/api/auth/register', async (req, res) => {
+    const { name, phone, email, password } = req.body; let db = loadJSON(dbFile);
+    let fPhone = phone.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1);
+    if (db[fPhone] && (!db[fPhone].otp || db[fPhone].isVerified)) return res.status(400).json({ success:false, error: 'Nomor WA sudah terdaftar.' });
+    
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    db[fPhone] = { name: name, email: email, password: password, isVerified: false, otp: otp, photo: '', saldo: 0, trx_count: 0, history: [] }; 
+    saveJSON(dbFile, db);
+    const sent = await sendWhatsAppMessage(fPhone, `Halo *${name}*!\nSelamat datang di DIGITAL FIKY STORE.\n\nKode OTP Pendaftaran Anda: *${otp}*`);
+    if(sent) res.json({ success: true, phone: fPhone }); else res.status(500).json({ success:false, error: 'Gagal mengirim OTP.' });
+});
+
+app.post('/api/auth/verify', (req, res) => {
+    const { phone, otp } = req.body; let db = loadJSON(dbFile); 
+    let fPhone = phone.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1);
+    if (db[fPhone] && db[fPhone].otp === otp.toString().trim()) {
+        db[fPhone].isVerified = true; delete db[fPhone].otp; saveJSON(dbFile, db); res.json({ success: true });
+    } else { res.status(400).json({ success:false, error: 'Kode OTP Salah.' }); }
+});
+
+app.post('/api/topup', async (req, res) => {
+    try {
+        let cfg = loadJSON(configFile);
+        if(!cfg.gopayToken || !cfg.qrisText) return res.json({success: false, message: "Sistem QRIS belum diatur Admin."});
+        let { phone, nominal } = req.body; let db = loadJSON(dbFile);
+        if(!db[phone]) return res.json({success: false, message: "User tidak ditemukan."});
+        
+        let nominalAsli = parseInt(nominal);
+        let uniqueCode = Math.floor(Math.random() * 99) + 1; let totalPay = nominalAsli + uniqueCode;
+        let dynQris = convertToDynamicQris(cfg.qrisText, totalPay);
+        let finalQrisUrl = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=15&format=jpeg&data=" + encodeURIComponent(dynQris);
+
+        let topups = loadJSON(topupFile); let trxId = "TP-" + Date.now(); let expiredAt = Date.now() + 10 * 60 * 1000; 
+        topups[trxId] = { phone, trx_id: trxId, amount_to_pay: totalPay, saldo_to_add: totalPay, status: 'pending', expired_at: expiredAt };
+        saveJSON(topupFile, topups);
+
+        db[phone].history = db[phone].history || [];
+        db[phone].history.unshift({ ts: Date.now(), tanggal: new Date().toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }), type: 'Topup', nama: 'Topup Saldo QRIS', tujuan: 'Sistem Pembayaran', status: 'Pending', sn: trxId, amount: totalPay, qris_url: finalQrisUrl, expired_at: expiredAt });
+        if(db[phone].history.length > 20) db[phone].history.pop();
+        saveJSON(dbFile, db);
+
+        res.json({success: true, total: totalPay, qris: finalQrisUrl});
+    } catch(e) { res.json({success: false, message: "Gagal memproses QRIS."}); }
+});
+
+setInterval(async () => {
+    try {
+        let cfg = loadJSON(configFile); let topups = loadJSON(topupFile);
+        let pendingKeys = Object.keys(topups).filter(k => topups[k].status === 'pending');
+        if(pendingKeys.length === 0 || !cfg.gopayToken || !cfg.gopayMerchantId) return;
+
+        const gopayRes = await axios.post('https://gopay.autoftbot.com/api/backend/transactions', 
+            { merchant_id: cfg.gopayMerchantId }, 
+            { headers: { 'Authorization': 'Bearer ' + cfg.gopayToken, 'Content-Type': 'application/json' } }
+        );
+        let responseStr = JSON.stringify(gopayRes.data);
+        let db = loadJSON(dbFile); let changedTp = false; let changedDb = false;
+
+        for(let key of pendingKeys) {
+            let req = topups[key];
+            if (Date.now() > req.expired_at) {
+                req.status = 'gagal'; changedTp = true;
+                if(db[req.phone]) {
+                    let hist = db[req.phone].history.find(h => h.sn === req.trx_id);
+                    if(hist && hist.status === 'Pending') { hist.status = 'Gagal'; changedDb = true; }
+                }
+            } else {
+                let amountStr = req.amount_to_pay.toString();
+                let isFound = responseStr.includes(`"${amountStr}"`) || responseStr.includes(`:${amountStr}`) || responseStr.includes(`"${amountStr}.00"`) || responseStr.includes(`:${amountStr}.00`);
+                if(isFound) {
+                    req.status = 'sukses'; changedTp = true;
+                    if(db[req.phone]) {
+                        db[req.phone].saldo += req.saldo_to_add; 
+                        let hist = db[req.phone].history.find(h => h.sn === req.trx_id);
+                        if(hist && hist.status === 'Pending') { hist.status = 'Sukses'; }
+                        changedDb = true;
+                        if(globalSock) {
+                            let msg = `✅ *TOPUP QRIS BERHASIL*\n\nTotal: Rp ${req.amount_to_pay.toLocaleString('id-ID')}\nSaldo Sekarang: Rp ${db[req.phone].saldo.toLocaleString('id-ID')}`;
+                            globalSock.sendMessage(req.phone + '@s.whatsapp.net', {text: msg}).catch(()=>{});
+                        }
+                    }
+                }
+            }
+        }
+        if(changedTp) saveJSON(topupFile, topups);
+        if(changedDb) saveJSON(dbFile, db);
+    } catch(e) {}
+}, 30000); 
+
+setInterval(() => {
+    if(fs.existsSync('japri.txt')) {
+        let lines = fs.readFileSync('japri.txt', 'utf8').split('\n'); fs.unlinkSync('japri.txt');
+        for(let line of lines) {
+            if(line.includes('|') && globalSock) {
+                let parts = line.split('|'); let target = parts[0]; parts.shift(); let msg = parts.join('|');
+                globalSock.sendMessage(target + '@s.whatsapp.net', { text: msg }).catch(e=>{});
+            }
+        }
+    }
+}, 3000);
+
+function doBackupAndSend() {
+    let cfg = loadJSON(configFile);
+    if (!cfg.teleToken || !cfg.teleChatId) return;
+    exec(`[ -d "/etc/letsencrypt" ] && sudo tar -czf ssl_backup.tar.gz -C / etc/letsencrypt 2>/dev/null; rm -f backup.zip && zip backup.zip config.json database.json trx.json produk.json topup.json info.json global_stats.json ssl_backup.tar.gz 2>/dev/null`, (err) => {
+        if (!err) exec(`curl -s -F chat_id="${cfg.teleChatId}" -F document=@"backup.zip" -F caption="📦 Auto-Backup Fiky Store" https://api.telegram.org/bot${cfg.teleToken}/sendDocument`);
+    });
+}
+if (configAwal.autoBackup) setInterval(doBackupAndSend, (configAwal.backupInterval || 720) * 60 * 1000); 
+
+async function startBot() {
+    const { state, saveCreds } = await useMultiFileAuthState('sesi_bot');
+    const { version } = await fetchLatestBaileysVersion();
+    const sock = makeWASocket({ version, auth: state, logger: pino({ level: 'silent' }), browser: Browsers.ubuntu('Chrome'), printQRInTerminal: false });
+    
+    if (!sock.authState.creds.registered) {
+        let config = loadJSON(configFile);
+        if (config.botNumber) {
+            setTimeout(async () => {
+                try {
+                    const code = await sock.requestPairingCode(config.botNumber.replace(/[^0-9]/g, ''));
+                    console.log(`\n=======================================================\n🔑 KODE PAIRING ANDA :  ${code}  \n=======================================================\n`);
+                } catch (error) {}
+            }, 3000); 
+        }
+    }
+    sock.ev.on('creds.update', saveCreds);
+    sock.ev.on('connection.update', (update) => {
+        const { connection } = update;
+        if(connection === 'close') { startBot(); } else if(connection === 'open') { console.log("✅ BOT WHATSAPP TERHUBUNG!"); }
+    });
+    globalSock = sock; 
+}
+
+if (require.main === module) {
+    app.listen(3000, () => { console.log('🌐 Web Server berjalan di port 3000'); });
+    startBot();
+}
 EOF
 
-echo "[5/5] Menginstall Menu Panel Ultimate..."
-cat << 'EOF' > /usr/bin/menu
+echo "[5/5] Membuat Script Menu Terminal VPS..."
+cat << 'EOF_MENU' > /usr/bin/menu
 #!/bin/bash
 DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 PORT=3000
+PROJECT_DIR="$HOME/$DIR_NAME"
 
 C_RED="\e[31m"
 C_GREEN="\e[32m"
@@ -436,7 +635,8 @@ C_RST="\e[0m"
 C_BOLD="\e[1m"
 
 run_node_script() {
-    cat << 'EOF_NODE' > /tmp/menu_temp.js
+    cd "$PROJECT_DIR"
+    cat << 'EOF_NODE' > menu_temp.js
 const crypt = require('./fiky_crypt.js');
 const fs = require('fs');
 const { exec } = require('child_process');
@@ -511,8 +711,8 @@ try {
     }
 } catch(e) { console.log('Error: ' + e.message); }
 EOF_NODE
-    node /tmp/menu_temp.js
-    rm -f /tmp/menu_temp.js
+    node menu_temp.js
+    rm -f menu_temp.js
 }
 
 menu_telegram() {
@@ -536,7 +736,7 @@ menu_telegram() {
                 export NODE_ACTION="set_tele"
                 export T_TOKEN="$token"
                 export T_CHATID="$chatid"
-                cd "$HOME/$DIR_NAME" && run_node_script
+                run_node_script
                 read -p "Tekan Enter..."
                 ;;
             2)
@@ -553,7 +753,7 @@ menu_telegram() {
                     echo -e "\n${C_RED}❌ Auto-Backup DIMATIKAN!${C_RST}"
                 fi
                 export NODE_ACTION="set_auto_backup"
-                cd "$HOME/$DIR_NAME" && run_node_script
+                run_node_script
                 read -p "Tekan Enter..."
                 ;;
             0) break ;;
@@ -580,10 +780,10 @@ menu_backup() {
             1)
                 echo -e "\n${C_MAG}⏳ Sedang memproses arsip backup...${C_RST}"
                 if ! command -v zip &> /dev/null; then sudo apt install zip -y > /dev/null 2>&1; fi
-                cd "$HOME/$DIR_NAME"
+                cd "$PROJECT_DIR"
                 rm -f backup.zip
                 if [ -d "/etc/letsencrypt" ]; then sudo tar -czf ssl_backup.tar.gz -C / etc/letsencrypt 2>/dev/null; fi
-                zip backup.zip config.json database.json trx.json produk.json info.json topup.json ssl_backup.tar.gz 2>/dev/null
+                zip backup.zip config.json database.json trx.json produk.json info.json topup.json global_stats.json ssl_backup.tar.gz 2>/dev/null
                 echo -e "${C_GREEN}✅ File backup.zip berhasil dikompresi!${C_RST}"
                 export NODE_ACTION="backup_now"
                 run_node_script
@@ -595,7 +795,7 @@ menu_backup() {
                 if [ "$yakin" == "y" ] || [ "$yakin" == "Y" ]; then
                     read -p "🔗 Masukkan Direct Link file ZIP Backup Anda: " linkzip
                     if [ ! -z "$linkzip" ]; then
-                        cd "$HOME/$DIR_NAME"
+                        cd "$PROJECT_DIR"
                         wget -qO restore.zip "$linkzip"
                         if [ -f "restore.zip" ]; then
                             if ! command -v unzip &> /dev/null; then sudo apt install unzip -y > /dev/null 2>&1; fi
@@ -652,7 +852,7 @@ while true; do
 
     case $choice in
         1) 
-            cd "$HOME/$DIR_NAME"
+            cd "$PROJECT_DIR"
             if [ ! -d "sesi_bot" ]; then
                 read -p "📲 Masukkan Nomor WA Bot (Awali 628...): " nomor_bot
                 if [ ! -z "$nomor_bot" ]; then node -e "const crypt=require('./fiky_crypt.js');let cfg=crypt.load('config.json');cfg.botNumber='$nomor_bot';crypt.save('config.json',cfg);"; fi
@@ -662,7 +862,7 @@ while true; do
             node index.js
             read -p "Tekan Enter untuk kembali..." ;;
         2) 
-            cd "$HOME/$DIR_NAME"
+            cd "$PROJECT_DIR"
             pm2 delete $BOT_NAME 2>/dev/null; pm2 start index.js --name "$BOT_NAME" && pm2 save
             echo -e "\n${C_GREEN}✅ Sistem berjalan 24 jam!${C_RST}"
             read -p "Tekan Enter..." ;;
@@ -678,7 +878,7 @@ while true; do
             export NODE_ACTION="add_saldo"
             export T_NOMOR="$nomor"
             export T_JUMLAH="$jumlah"
-            cd "$HOME/$DIR_NAME" && run_node_script
+            run_node_script
             read -p "Tekan Enter..." ;;
         6) menu_telegram ;;
         7) menu_backup ;;
@@ -689,7 +889,7 @@ while true; do
             export NODE_ACTION="set_digi"
             export D_USER="$user_api"
             export D_KEY="$key_api"
-            cd "$HOME/$DIR_NAME" && run_node_script
+            run_node_script
             read -p "Tekan Enter untuk kembali..."
             ;;
         9)
@@ -697,7 +897,7 @@ while true; do
             read -p "Yakin ingin mereset sesi? (y/n): " reset_sesi
             if [ "$reset_sesi" == "y" ]; then
                 pm2 stop $BOT_NAME >/dev/null 2>&1
-                rm -rf "$HOME/$DIR_NAME/sesi_bot"
+                rm -rf "$PROJECT_DIR/sesi_bot"
                 echo -e "${C_GREEN}✅ Sesi berhasil dihapus. Silakan jalankan bot kembali (Menu 1).${C_RST}"
             fi
             read -p "Tekan Enter untuk kembali..."
@@ -709,7 +909,7 @@ while true; do
             export NODE_ACTION="add_info"
             export I_TITLE="$notif_title"
             export I_MSG="$notif_msg"
-            cd "$HOME/$DIR_NAME" && run_node_script
+            run_node_script
             read -p "Tekan Enter untuk kembali..."
             ;;
         11)
@@ -721,7 +921,7 @@ while true; do
             export Q_TOK="$gopay_token"
             export Q_MID="$gopay_mid"
             export Q_TXT="$qris_text"
-            cd "$HOME/$DIR_NAME" && run_node_script
+            run_node_script
             read -p "Tekan Enter untuk kembali..."
             ;;
         12)
@@ -756,14 +956,14 @@ EOF_NGINX
             export B2="$b2"
             export B3="$b3"
             export B4="$b4"
-            cd "$HOME/$DIR_NAME" && run_node_script
+            run_node_script
             read -p "Tekan Enter untuk kembali..."
             ;;
         14)
             echo -e "\n${C_MAG}--- KIRIM PESAN LANGSUNG JAPRI WA ---${C_RST}"
             read -p "Masukkan Nomor Tujuan (Awalan 62/08): " jp_num
             read -p "Masukkan Pesan: " jp_msg
-            cd "$HOME/$DIR_NAME"
+            cd "$PROJECT_DIR"
             node -e "
                 const fs = require('fs'); let num = '$jp_num'.replace(/[^0-9]/g, ''); if (num.startsWith('0')) num = '62' + num.slice(1);
                 fs.appendFileSync('japri.txt', num + '|' + \`$jp_msg\` + '\n');
@@ -786,9 +986,9 @@ EOF_NGINX
         *) echo -e "${C_RED}❌ Pilihan tidak valid!${C_RST}"; sleep 1 ;;
     esac
 done
-EOF
+EOF_MENU
 
 chmod +x /usr/bin/menu
 echo "=========================================================="
-echo "  SUKSES V54 ULTIMATE! Silakan ketik 'menu' di terminal."
+echo "  SUKSES V55 ULTIMATE! Silakan ketik 'menu' di terminal."
 echo "=========================================================="
