@@ -15,7 +15,7 @@ BOT_NAME="digital-fiky-bot"
 PORT=3000
 
 echo "=========================================================="
-echo "  MENGINSTAL DIGITAL FIKY STORE - V42 (SECURITY OTP)      "
+echo "    MENGINSTAL DIGITAL FIKY STORE - V43 (FIX FULL NAME)   "
 echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
@@ -123,6 +123,7 @@ cat << 'EOF' > public/register.html
     let alertCallback = null;
     function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check text-green-500"></i>' : '<i class="fas fa-times text-red-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; }
     function closeAlert() { document.getElementById('customAlert').classList.add('hidden'); if(alertCallback) alertCallback(); }
+
     let registeredPhone = ''; 
     document.getElementById('registerForm').addEventListener('submit', async (e) => { 
         e.preventDefault(); const name = document.getElementById('name').value; const phone = document.getElementById('phone').value; const email = document.getElementById('email').value; const password = document.getElementById('password').value; 
@@ -175,7 +176,7 @@ cat << 'EOF' > public/forgot.html
 </script></body></html>
 EOF
 
-# HTML DASHBOARD PPOB PREMIUM
+# HTML DASHBOARD PPOB PREMIUM (FIX FULL NAME)
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -292,8 +293,9 @@ cat << 'EOF' > public/dashboard.html
     <script>
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) window.location.href = '/';
-        const firstName = user.name.split(' ')[0];
-        document.getElementById('headerGreeting').innerText = "Hai, " + firstName;
+        
+        // FIX: Display Full Name
+        document.getElementById('headerGreeting').innerText = "Hai, " + user.name;
         document.getElementById('sidebarName').innerText = user.name;
         document.getElementById('sidebarPhone').innerText = user.phone;
         
@@ -338,7 +340,7 @@ cat << 'EOF' > public/dashboard.html
 EOF
 
 # ==========================================
-# FILE HALAMAN PROFIL (WITH OTP SECURITY)
+# FILE HALAMAN PROFIL
 # ==========================================
 cat << 'EOF' > public/profile.html
 <!DOCTYPE html>
@@ -471,6 +473,7 @@ cat << 'EOF' > public/profile.html
         let alertCallback = null;
         function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check text-green-500"></i>' : '<i class="fas fa-times text-red-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; }
         function closeAlert() { document.getElementById('customAlert').classList.add('hidden'); if(alertCallback) alertCallback(); }
+
         function togglePassword(id, icon) { const el = document.getElementById(id); if(el.type === 'password') { el.type = 'text'; icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash'); } else { el.type = 'password'; icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); } }
 
         // OTP Modal Logic
@@ -797,26 +800,19 @@ app.post('/api/user/update', async (req, res) => {
         if (users[fNew]) return res.status(400).json({error: 'Nomor WA baru sudah terdaftar.'});
 
         if (!otp) {
-            // Minta OTP ke nomor baru
             const genOtp = Math.floor(1000 + Math.random() * 9000).toString();
             users[fOld].updateOtp = genOtp;
             saveJSON(webUsersFile, users);
-            
-            const sent = await sendWhatsAppMessage(fNew, `Halo *${name}*!\n\nKode OTP Verifikasi Nomor Baru Anda: *${genOtp}*\n\n_Abaikan jika Anda tidak meminta ini._`);
+            const sent = await sendWhatsAppMessage(fNew, `Halo *${name}*!\n\nKode OTP Verifikasi Nomor Baru Anda: *${genOtp}*`);
             if(sent) return res.json({ status: 'OTP_SENT' });
-            else return res.status(500).json({ error: 'Gagal kirim OTP. Bot WA Offline.' });
+            else return res.status(500).json({ error: 'Gagal kirim OTP.' });
         } else {
-            // Verifikasi OTP
-            if (users[fOld].updateOtp !== otp.toString().trim()) {
-                return res.status(400).json({ error: 'Kode OTP Salah / Kadaluarsa.' });
-            }
+            if (users[fOld].updateOtp !== otp.toString().trim()) return res.status(400).json({ error: 'Kode OTP Salah.' });
             users[fNew] = { ...users[fOld], name: name, photo: photo !== undefined ? photo : users[fOld].photo };
-            delete users[fNew].updateOtp; 
-            delete users[fOld];
+            delete users[fNew].updateOtp; delete users[fOld];
             if (db[fOld]) { db[fNew] = { ...db[fOld] }; delete db[fOld]; }
         }
     } else {
-        // Jika tidak ganti nomor, langsung simpan (Tidak butuh OTP)
         users[fOld].name = name;
         if (photo !== undefined) users[fOld].photo = photo;
     }
@@ -832,40 +828,30 @@ app.post('/api/user/change-password', async (req, res) => {
     let fPhone = phone.toString().replace(/[^0-9]/g, '');
     if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1);
 
-    if (!users[fPhone] || users[fPhone].password !== oldPassword) {
-        return res.status(400).json({ error: 'Password lama Anda salah.' });
-    }
+    if (!users[fPhone] || users[fPhone].password !== oldPassword) return res.status(400).json({ error: 'Password lama salah.' });
 
     if (!otp) {
-        // Generate OTP
         const genOtp = Math.floor(1000 + Math.random() * 9000).toString();
         users[fPhone].passOtp = genOtp;
         saveJSON(webUsersFile, users);
-        
-        const sent = await sendWhatsAppMessage(fPhone, `Peringatan Keamanan 🚨\nSeseorang mencoba mengubah password akun Anda.\n\nKode OTP Anda: *${genOtp}*`);
+        const sent = await sendWhatsAppMessage(fPhone, `Peringatan Keamanan 🚨\nSeseorang mencoba mengubah password akun Anda.\n\nKode OTP: *${genOtp}*`);
         if(sent) return res.json({ status: 'OTP_SENT' });
         else return res.status(500).json({ error: 'Gagal kirim OTP.' });
     } else {
-        if (users[fPhone].passOtp !== otp.toString().trim()) {
-            return res.status(400).json({ error: 'Kode OTP Salah.' });
-        }
-        users[fPhone].password = newPassword;
-        delete users[fPhone].passOtp;
+        if (users[fPhone].passOtp !== otp.toString().trim()) return res.status(400).json({ error: 'Kode OTP Salah.' });
+        users[fPhone].password = newPassword; delete users[fPhone].passOtp;
         saveJSON(webUsersFile, users);
         res.json({ message: 'Password berhasil diubah!' });
     }
 });
 
-// FITUR HAPUS AKUN
 app.post('/api/user/delete', (req, res) => {
     const { phone } = req.body;
     let users = loadJSON(webUsersFile); let db = loadJSON(dbFile);
     let fPhone = phone.toString().replace(/[^0-9]/g, '');
     if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1);
-
     if (users[fPhone]) delete users[fPhone];
     if (db[fPhone]) delete db[fPhone];
-
     saveJSON(webUsersFile, users); saveJSON(dbFile, db);
     res.json({ message: 'Akun dihapus' });
 });
@@ -923,7 +909,7 @@ N=$(tput sgr0)    # Reset
 while true; do
     clear
     echo -e "${C}${B}╔═══════════════════════════════════════════════════╗${N}"
-    echo -e "${C}${B}║${N} ${Y}⚡ DIGITAL FIKY STORE - VPS CONTROL PANEL (V42) ⚡${N} ${C}${B}║${N}"
+    echo -e "${C}${B}║${N} ${Y}⚡ DIGITAL FIKY STORE - VPS CONTROL PANEL (V43) ⚡${N} ${C}${B}║${N}"
     echo -e "${C}${B}╠═══════════════════════════════════════════════════╣${N}"
     echo -e "${C}${B}║${N} ${W}[ BOT & SERVER MANAGEMENT ]                       ${C}${B}║${N}"
     echo -e "${C}${B}║${N}  ${G}1.${N} Setup Nomor Bot & Login Pairing WA            ${C}${B}║${N}"
