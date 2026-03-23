@@ -15,7 +15,7 @@ BOT_NAME="digital-fiky-bot"
 PORT=3000
 
 echo "=========================================================="
-echo "      MENGINSTAL DIGITAL FIKY STORE - V35 (3x3 MENU)      "
+echo "   MENGINSTAL DIGITAL FIKY STORE - V36 (MODAL & GRID)     "
 echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
@@ -97,11 +97,18 @@ EOF
 
 cat << 'EOF' > public/index.html
 <!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Login - DIGITAL FIKY STORE</title><link rel="stylesheet" href="style.css"><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></head><body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]"><div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div><div class="centered-modal-box pt-14"><div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4"><h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1></div><h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2><form id="loginForm"><div><label class="compact-label">Email / No. HP</label><input type="text" id="identifier" class="compact-input-box" required placeholder="Ketik disini"></div><div><label class="compact-label">Password</label><div class="relative mb-[0.85rem]"><input type="password" id="password" class="compact-input-box !mb-0 pr-10" required placeholder="Ketik disini"><i class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-gray-700 transition" onclick="togglePassword('password', this)"></i></div></div><div class="text-right mb-5 mt-[-5px]"><a href="/forgot.html" class="compact-link-small">Lupa password?</a></div><button type="submit" class="btn-yellow">Login Sekarang</button></form><div class="mt-6 text-center compact-text-small">Belum punya akun? <a href="/register.html" class="compact-link-small">Daftar disini</a></div></div>
-<div id="customAlert" class="fixed inset-0 z-[999] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm"><div class="bg-white rounded-[1.5rem] p-6 w-[85%] max-w-[320px] text-center shadow-2xl transform transition-transform scale-100"><div id="alertIcon" class="mb-3 text-5xl"></div><h3 class="text-lg font-extrabold text-[#001229] mb-1 tracking-wide" id="alertTitle">Pemberitahuan</h3><p class="text-sm text-gray-500 mb-6" id="alertMessage">Pesan</p><button onclick="closeAlert()" class="bg-[#001229] text-yellow-400 w-full py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-[#002147] transition">OKE</button></div></div>
+<div id="customAlert" class="fixed inset-0 z-[999] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm">
+    <div class="bg-[#0f172a] rounded-[1.5rem] p-6 w-[85%] max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-700 transform transition-transform scale-100">
+        <div id="alertIcon" class="mb-4 text-6xl"></div>
+        <h3 class="text-xl font-bold text-white mb-2 tracking-wide" id="alertTitle">Pemberitahuan</h3>
+        <p class="text-sm text-gray-300 mb-6" id="alertMessage">Pesan</p>
+        <button onclick="closeAlert()" class="bg-[#facc15] text-[#0f172a] w-full py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-yellow-500 transition">OKE</button>
+    </div>
+</div>
 <script>
     function togglePassword(id, icon) { const el = document.getElementById(id); if(el.type === 'password') { el.type = 'text'; icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash'); } else { el.type = 'password'; icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); } }
     let alertCallback = null;
-    function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check-circle text-green-500"></i>' : '<i class="fas fa-times-circle text-red-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; }
+    function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check text-green-500"></i>' : '<i class="fas fa-times text-red-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; }
     function closeAlert() { document.getElementById('customAlert').classList.add('hidden'); if(alertCallback) alertCallback(); }
 
     document.getElementById('loginForm').addEventListener('submit', async (e) => { 
@@ -117,11 +124,16 @@ EOF
 
 cat << 'EOF' > public/register.html
 <!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Daftar - DIGITAL FIKY STORE</title><link rel="stylesheet" href="style.css"><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></head><body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]"><div class="z-20 mb-[-42px]" id="logo-header"><div class="logo-f-metalik-box"></div></div><div class="centered-modal-box pt-14" id="box-register"><div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-2"><h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1></div><h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2><form id="registerForm"><div><label class="compact-label">Nama Lengkap</label><input type="text" id="name" class="compact-input-box" required placeholder="Ketik disini"></div><div><label class="compact-label">Nomor WA Aktif</label><input type="number" id="phone" class="compact-input-box" required placeholder="08123..."></div><div><label class="compact-label">Email</label><input type="email" id="email" class="compact-input-box" required placeholder="Ketik disini"></div><div><label class="compact-label">Password</label><div class="relative mb-[0.85rem]"><input type="password" id="password" class="compact-input-box !mb-0 pr-10" required placeholder="Ketik disini"><i class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-gray-700 transition" onclick="togglePassword('password', this)"></i></div></div><button type="submit" class="btn-yellow mt-1">Daftar Sekarang</button></form><div class="mt-4 text-center compact-text-small">Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a></div></div><div class="centered-modal-box pt-14 hidden" id="box-otp"><h2 class="text-lg font-bold text-white mb-1">VERIFIKASI WA</h2><p class="compact-text-small mb-5 text-center">4 Digit OTP dikirim ke WA Anda.</p><form id="otpForm"><div><label class="compact-label text-center">Kode OTP</label><input type="number" id="otpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX"></div><button type="submit" class="btn-yellow mt-4">Verifikasi OTP</button></form></div>
-<div id="customAlert" class="fixed inset-0 z-[999] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm"><div class="bg-white rounded-[1.5rem] p-6 w-[85%] max-w-[320px] text-center shadow-2xl"><div id="alertIcon" class="mb-3 text-5xl"></div><h3 class="text-lg font-extrabold text-[#001229] mb-1 tracking-wide" id="alertTitle">Pemberitahuan</h3><p class="text-sm text-gray-500 mb-6" id="alertMessage">Pesan</p><button onclick="closeAlert()" class="bg-[#001229] text-yellow-400 w-full py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-[#002147] transition">OKE</button></div></div>
+<div id="customAlert" class="fixed inset-0 z-[999] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm">
+    <div class="bg-[#0f172a] rounded-[1.5rem] p-6 w-[85%] max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-700">
+        <div id="alertIcon" class="mb-4 text-6xl"></div><h3 class="text-xl font-bold text-white mb-2 tracking-wide" id="alertTitle">Pemberitahuan</h3><p class="text-sm text-gray-300 mb-6" id="alertMessage">Pesan</p>
+        <button onclick="closeAlert()" class="bg-[#facc15] text-[#0f172a] w-full py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-yellow-500 transition">OKE</button>
+    </div>
+</div>
 <script>
     function togglePassword(id, icon) { const el = document.getElementById(id); if(el.type === 'password') { el.type = 'text'; icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash'); } else { el.type = 'password'; icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); } }
     let alertCallback = null;
-    function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check-circle text-green-500"></i>' : '<i class="fas fa-times-circle text-red-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; }
+    function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check text-green-500"></i>' : '<i class="fas fa-times text-red-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; }
     function closeAlert() { document.getElementById('customAlert').classList.add('hidden'); if(alertCallback) alertCallback(); }
 
     let registeredPhone = ''; 
@@ -139,7 +151,7 @@ cat << 'EOF' > public/register.html
         try { 
             const res = await fetch('/api/auth/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: registeredPhone, otp }) }); 
             const data = await res.json();
-            if (res.ok) { showAlert('Verifikasi Berhasil', 'Pendaftaran sukses! Silakan Login.', true, () => { window.location.href = '/'; }); } 
+            if (res.ok) { showAlert('Verifikasi Sukses!', 'OTP Berhasil! Pendaftaran Selesai.', true, () => { window.location.href = '/'; }); } 
             else { showAlert('Verifikasi Gagal', data.error || 'OTP Salah / Expired.', false); } 
         } catch (err) { showAlert('Error', 'Sistem sedang sibuk.', false); } 
     });
@@ -148,11 +160,16 @@ EOF
 
 cat << 'EOF' > public/forgot.html
 <!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Lupa Password - DIGITAL FIKY STORE</title><link rel="stylesheet" href="style.css"><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></head><body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]"><div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div><div class="centered-modal-box pt-14"><h2 class="text-lg font-bold text-white mb-1">RESET PASSWORD</h2><form id="requestOtpForm"><p class="compact-text-small mb-5 text-center">Masukkan Nomor WA.</p><input type="number" id="phone" class="compact-input-box text-center" required placeholder="08123..."><button type="submit" class="btn-yellow mt-2">Kirim OTP</button></form><form id="resetForm" class="hidden mt-4"><input type="number" id="otp" class="compact-input-box text-center font-bold" required placeholder="OTP 4 Digit"><div><label class="compact-label mt-2 text-left">Password Baru</label><div class="relative mb-[0.85rem]"><input type="password" id="newPassword" class="compact-input-box !mb-0 pr-10" required placeholder="Ketik disini"><i class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-gray-700 transition" onclick="togglePassword('newPassword', this)"></i></div></div><button type="submit" class="btn-yellow mt-3">Simpan</button></form><div class="mt-6 text-center compact-text-small"><a href="/" class="compact-link-small">Kembali ke Login</a></div></div>
-<div id="customAlert" class="fixed inset-0 z-[999] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm"><div class="bg-white rounded-[1.5rem] p-6 w-[85%] max-w-[320px] text-center shadow-2xl"><div id="alertIcon" class="mb-3 text-5xl"></div><h3 class="text-lg font-extrabold text-[#001229] mb-1 tracking-wide" id="alertTitle">Pemberitahuan</h3><p class="text-sm text-gray-500 mb-6" id="alertMessage">Pesan</p><button onclick="closeAlert()" class="bg-[#001229] text-yellow-400 w-full py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-[#002147] transition">OKE</button></div></div>
+<div id="customAlert" class="fixed inset-0 z-[999] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm">
+    <div class="bg-[#0f172a] rounded-[1.5rem] p-6 w-[85%] max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-700">
+        <div id="alertIcon" class="mb-4 text-6xl"></div><h3 class="text-xl font-bold text-white mb-2 tracking-wide" id="alertTitle">Pemberitahuan</h3><p class="text-sm text-gray-300 mb-6" id="alertMessage">Pesan</p>
+        <button onclick="closeAlert()" class="bg-[#facc15] text-[#0f172a] w-full py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-yellow-500 transition">OKE</button>
+    </div>
+</div>
 <script>
     function togglePassword(id, icon) { const el = document.getElementById(id); if(el.type === 'password') { el.type = 'text'; icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash'); } else { el.type = 'password'; icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); } }
     let alertCallback = null;
-    function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check-circle text-green-500"></i>' : '<i class="fas fa-times-circle text-red-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; }
+    function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check text-green-500"></i>' : '<i class="fas fa-times text-red-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; }
     function closeAlert() { document.getElementById('customAlert').classList.add('hidden'); if(alertCallback) alertCallback(); }
 
     let resetPhone=''; 
@@ -178,9 +195,7 @@ cat << 'EOF' > public/forgot.html
 </script></body></html>
 EOF
 
-# ==========================================
-# FILE DASHBOARD (GRID 3x3 MODERN)
-# ==========================================
+# HTML DASHBOARD PPOB PREMIUM (NEW 4 COLUMNS GRID)
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -260,60 +275,55 @@ cat << 'EOF' > public/dashboard.html
 
         <div class="mx-4 mt-6 mb-8">
             <h3 class="font-extrabold text-[#002147] dark:text-gray-100 mb-4 text-[16px] tracking-wide ml-1">Layanan Produk</h3>
-            <div class="grid grid-cols-3 gap-3">
+            <div class="grid grid-cols-4 gap-y-4 gap-x-3">
                 
-                <div class="bg-white dark:bg-[#0b192c] rounded-[1.2rem] p-3 flex flex-col items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-[#13284a] cursor-pointer hover:scale-95 transition-transform aspect-square">
-                    <div class="h-10 flex items-center justify-center mb-1"><i class="fas fa-mobile-alt text-4xl text-blue-500 dark:text-yellow-400"></i></div>
-                    <span class="text-[11px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-2">PULSA</span>
-                </div>
-                
-                <div class="bg-white dark:bg-[#0b192c] rounded-[1.2rem] p-3 flex flex-col items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-[#13284a] cursor-pointer hover:scale-95 transition-transform aspect-square">
-                    <div class="h-10 flex items-center justify-center mb-1"><i class="fas fa-globe text-4xl text-green-500 dark:text-gray-100"></i></div>
-                    <span class="text-[11px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-2">DATA</span>
+                <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square">
+                    <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-mobile-alt text-3xl text-blue-500 dark:text-yellow-400"></i></div>
+                    <span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1">PULSA</span>
                 </div>
                 
-                <div class="bg-white dark:bg-[#0b192c] rounded-[1.2rem] p-3 flex flex-col items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-[#13284a] cursor-pointer hover:scale-95 transition-transform aspect-square">
-                    <div class="h-10 flex items-center justify-center mb-1"><i class="fas fa-gamepad text-4xl text-rose-500 dark:text-gray-100"></i></div>
-                    <span class="text-[11px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-2">GAME</span>
+                <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square">
+                    <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-globe text-3xl text-green-500 dark:text-white"></i></div>
+                    <span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1">DATA</span>
+                </div>
+                
+                <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square">
+                    <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-gamepad text-3xl text-rose-500 dark:text-yellow-400"></i></div>
+                    <span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1">GAME</span>
                 </div>
 
-                <div class="bg-white dark:bg-[#0b192c] rounded-[1.2rem] p-3 flex flex-col items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-[#13284a] cursor-pointer hover:scale-95 transition-transform aspect-square">
-                    <div class="h-10 flex items-center justify-center mb-1"><i class="fas fa-ticket-alt text-4xl text-amber-500 dark:text-yellow-400"></i></div>
-                    <span class="text-[11px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-2">VOUCHER</span>
+                <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square">
+                    <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-ticket-alt text-3xl text-amber-500 dark:text-white"></i></div>
+                    <span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1">VOUCHER</span>
                 </div>
 
-                <div class="bg-white dark:bg-[#0b192c] rounded-[1.2rem] p-3 flex flex-col items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-[#13284a] cursor-pointer hover:scale-95 transition-transform aspect-square">
-                    <div class="h-10 flex items-center justify-center mb-1"><i class="fas fa-wallet text-4xl text-indigo-500 dark:text-gray-100"></i></div>
-                    <span class="text-[11px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-2">E-WALLET</span>
+                <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square">
+                    <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-wallet text-3xl text-indigo-500 dark:text-yellow-400"></i></div>
+                    <span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1 text-center">E-WALLET</span>
                 </div>
 
-                <div class="bg-white dark:bg-[#0b192c] rounded-[1.2rem] p-3 flex flex-col items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-[#13284a] cursor-pointer hover:scale-95 transition-transform aspect-square">
-                    <div class="h-10 flex items-center justify-center mb-1"><i class="fas fa-bolt text-4xl text-yellow-400 dark:text-yellow-400"></i></div>
-                    <span class="text-[11px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-2">PLN</span>
+                <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square">
+                    <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-bolt text-3xl text-yellow-500 dark:text-white"></i></div>
+                    <span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1">PLN</span>
                 </div>
 
-                <div class="bg-white dark:bg-[#0b192c] rounded-[1.2rem] p-3 flex flex-col items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-[#13284a] cursor-pointer hover:scale-95 transition-transform aspect-square">
-                    <div class="h-10 flex items-center justify-center mb-1"><i class="fas fa-phone-volume text-4xl text-cyan-500 dark:text-yellow-400"></i></div>
-                    <span class="text-[11px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-2 text-center">SMS TELP</span>
+                <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square">
+                    <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-phone-volume text-3xl text-cyan-500 dark:text-yellow-400"></i></div>
+                    <span class="text-[8px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1 text-center leading-tight">SMS<br>TELP</span>
                 </div>
 
-                <div class="bg-white dark:bg-[#0b192c] rounded-[1.2rem] p-3 flex flex-col items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-[#13284a] cursor-pointer hover:scale-95 transition-transform aspect-square">
-                    <div class="h-10 flex items-center justify-center mb-1"><i class="far fa-calendar-check text-4xl text-orange-500 dark:text-yellow-400"></i></div>
-                    <span class="text-[10px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-2 text-center leading-tight">MASA AKTIF</span>
-                </div>
-
-                <div class="bg-white dark:bg-[#0b192c] rounded-[1.2rem] p-3 flex flex-col items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-[#13284a] cursor-pointer hover:scale-95 transition-transform aspect-square">
-                    <div class="h-10 flex items-center justify-center mb-1"><i class="fas fa-sim-card text-4xl text-teal-500 dark:text-gray-100"></i></div>
-                    <span class="text-[11px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-2">PERDANA</span>
+                <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-2 flex flex-col items-center justify-center shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 cursor-pointer hover:scale-95 transition-transform aspect-square">
+                    <div class="h-8 flex items-center justify-center mb-1"><i class="fas fa-th-large text-3xl text-gray-500 dark:text-white"></i></div>
+                    <span class="text-[9px] font-bold text-[#001229] dark:text-gray-200 tracking-wider mt-1">LAINNYA</span>
                 </div>
             </div>
         </div>
 
         <div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40">
-            <div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">HOME</span></div>
-            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">RIWAYAT</span></div>
-            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">INFO</span></div>
-            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">PROFIL</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
         </div>
     </div>
 
@@ -441,9 +451,6 @@ cat << 'EOF' > public/profile.html
 </html>
 EOF
 
-# ==========================================
-# FILE HALAMAN RIWAYAT TRANSAKSI (KOSONG / EMPTY)
-# ==========================================
 cat << 'EOF' > public/riwayat.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -707,7 +714,7 @@ N=$(tput sgr0)    # Reset
 while true; do
     clear
     echo -e "${C}${B}╔═══════════════════════════════════════════════════╗${N}"
-    echo -e "${C}${B}║${N} ${Y}⚡ DIGITAL FIKY STORE - VPS CONTROL PANEL (V35) ⚡${N} ${C}${B}║${N}"
+    echo -e "${C}${B}║${N} ${Y}⚡ DIGITAL FIKY STORE - VPS CONTROL PANEL (V36) ⚡${N} ${C}${B}║${N}"
     echo -e "${C}${B}╠═══════════════════════════════════════════════════╣${N}"
     echo -e "${C}${B}║${N} ${W}[ BOT & SERVER MANAGEMENT ]                       ${C}${B}║${N}"
     echo -e "${C}${B}║${N}  ${G}1.${N} Setup Nomor Bot & Login Pairing WA            ${C}${B}║${N}"
