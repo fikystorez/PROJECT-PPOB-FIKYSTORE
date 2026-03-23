@@ -51,7 +51,7 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Header & Ikon Modern)..."
+echo "[3/5] Membangun Antarmuka Website (Header, Ikon Modern & Slider)..."
 
 cat << 'EOF' > public/style.css
 body {
@@ -72,7 +72,6 @@ body {
     z-index: 10;
 }
 
-/* Logo "F" Metalik 3D */
 .logo-f-metalik-box {
     width: 85px; height: 85px; margin: 0 auto; 
     display: flex; justify-content: center; align-items: center;
@@ -126,12 +125,15 @@ body {
     font-weight: bold; font-size: 0.9rem; border-radius: 0.5rem; cursor: pointer; border: none; transition: all 0.2s;
 }
 
-/* Background Robotik */
 .tech-bg {
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5'%3E%3Cpath d='M0 40h20l10-10h20l10 10h20'/%3E%3Cpath d='M20 40v20l10 10'/%3E%3Cpath d='M60 40V20L50 10'/%3E%3Ccircle cx='30' cy='30' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='50' cy='50' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='10' cy='40' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='70' cy='40' r='2' fill='rgba(255,255,255,0.1)'/%3E%3C/g%3E%3C/svg%3E");
     background-size: 80px 80px; pointer-events: none; z-index: 1; border-radius: 1rem;
 }
+
+/* Sembunyikan scrollbar untuk slider agar rapi */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 EOF
 
 cat << 'EOF' > public/index.html
@@ -358,7 +360,7 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
-# HTML DASHBOARD PPOB PREMIUM (HEADER BARU & IKON MODERN)
+# HTML DASHBOARD PPOB PREMIUM DENGAN SLIDER BANNER & IKON MODERN
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -435,8 +437,32 @@ cat << 'EOF' > public/dashboard.html
             </div>
         </div>
 
-        <div class="mx-4 mt-6 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-gray-800 dark:to-gray-700 rounded-2xl h-28 overflow-hidden shadow-sm relative flex items-center justify-center border border-gray-200 dark:border-gray-700 cursor-pointer">
-            <h2 class="z-10 text-2xl font-extrabold text-[#002147] dark:text-gray-200 tracking-widest drop-shadow-sm">BANNER PROMO</h2>
+        <div class="mx-4 mt-6 relative rounded-2xl h-[120px] overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 group">
+            <div id="promoSlider" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth">
+                <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#002147]">
+                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-50" alt="Promo 1">
+                    <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">DISKON PULSA</h2>
+                </div>
+                <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-indigo-900">
+                    <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-50" alt="Promo 2">
+                    <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">PROMO SPESIAL</h2>
+                </div>
+                <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-purple-900">
+                    <img src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-50" alt="Promo 3">
+                    <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">CASHBACK 50%</h2>
+                </div>
+                <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-green-900">
+                    <img src="https://images.unsplash.com/photo-1616077168712-fc6c788db4fa?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-50" alt="Promo 4">
+                    <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">MEMBER BARU</h2>
+                </div>
+            </div>
+            
+            <div class="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-20">
+                <div class="w-2 h-2 rounded-full bg-white opacity-100 transition-opacity duration-300 dot-indicator"></div>
+                <div class="w-2 h-2 rounded-full bg-white opacity-40 transition-opacity duration-300 dot-indicator"></div>
+                <div class="w-2 h-2 rounded-full bg-white opacity-40 transition-opacity duration-300 dot-indicator"></div>
+                <div class="w-2 h-2 rounded-full bg-white opacity-40 transition-opacity duration-300 dot-indicator"></div>
+            </div>
         </div>
 
         <div class="mx-4 mt-6 bg-white dark:bg-gray-800 p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors mb-8">
@@ -519,7 +545,6 @@ cat << 'EOF' > public/dashboard.html
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) window.location.href = '/';
         
-        // Memisahkan nama depan untuk Header
         const firstName = user.name.split(' ')[0];
         document.getElementById('headerGreeting').innerText = "Hai, " + firstName;
         
@@ -551,6 +576,25 @@ cat << 'EOF' > public/dashboard.html
 
         function toggleDarkMode() { isDark = !isDark; localStorage.setItem('darkMode', isDark); applyDarkMode(); }
         applyDarkMode();
+
+        // SLIDER LOGIC
+        const slider = document.getElementById('promoSlider');
+        const dots = document.querySelectorAll('.dot-indicator');
+        let currentSlide = 0;
+        
+        slider.addEventListener('scroll', () => {
+            let slideIndex = Math.round(slider.scrollLeft / slider.clientWidth);
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('opacity-100', index === slideIndex);
+                dot.classList.toggle('opacity-40', index !== slideIndex);
+            });
+            currentSlide = slideIndex;
+        });
+
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % 4;
+            slider.scrollTo({ left: currentSlide * slider.clientWidth, behavior: 'smooth' });
+        }, 3500); // Ganti foto setiap 3.5 detik
     </script>
 </body>
 </html>
@@ -737,7 +781,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V18) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V19) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
