@@ -78,7 +78,7 @@ body {
     z-index: 10;
 }
 
-/* Logo "F" Metalik 3D dengan CSS Murni */
+/* Logo "F" Premium Hitam & Perak (Sesuai Referensi Terbaru) */
 .logo-f-metalik-box {
     width: 85px; 
     height: 85px;
@@ -87,10 +87,10 @@ body {
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    background: radial-gradient(circle, #f8f9fa 0%, #94a3b8 100%); /* Efek perak metalik */
-    box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 10px 20px rgba(0,0,0,0.4); 
+    background: radial-gradient(circle, #333333 0%, #000000 100%); /* Latar hitam elegan */
+    box-shadow: inset 0 0 10px rgba(255,255,255,0.2), 0 10px 20px rgba(0,0,0,0.5); 
     position: relative;
-    border: 4px solid #ffffff; 
+    border: 3px solid #94a3b8; /* Border perak metalik */
 }
 
 .logo-f-metalik-box::before {
@@ -98,8 +98,8 @@ body {
     font-size: 55px;
     font-family: "Times New Roman", Times, serif;
     font-weight: bold;
-    color: #1e293b; /* Warna F gelap */
-    text-shadow: 1px 1px 2px rgba(255,255,255,0.8), -1px -1px 2px rgba(0,0,0,0.5); /* Efek 3D */
+    color: #e2e8f0; /* Huruf F Perak Terang */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.9), -1px -1px 1px rgba(255,255,255,0.3); /* Efek 3D Metalik */
     position: absolute;
     top: 52%;
     left: 50%;
@@ -132,7 +132,7 @@ body {
 .compact-link-small { font-size: 0.8rem; color: #fde047; text-decoration: none; font-weight: bold; }
 .compact-link-small:hover { text-decoration: underline; color: #fef08a; }
 
-/* Tombol */
+/* Tombol Kuning Penuh */
 .btn-yellow {
     width: 100%; padding: 0.625rem 1rem;
     background-color: #fde047; color: #002147;
@@ -141,15 +141,6 @@ body {
     transition: all 0.2s;
 }
 .btn-yellow:hover { background-color: #facc15; }
-
-.btn-green {
-    width: 100%; padding: 0.625rem 1rem;
-    background-color: #16a34a; color: #ffffff;
-    font-weight: bold; font-size: 0.9rem;
-    border-radius: 0.5rem; cursor: pointer; border: none;
-    transition: all 0.2s;
-}
-.btn-green:hover { background-color: #15803d; }
 EOF
 
 # HTML LOGIN
@@ -164,10 +155,12 @@ cat << 'EOF' > public/index.html
 </head>
 <body class="flex flex-col items-center justify-center h-screen relative">
     
-    <div class="z-20 mb-[-42px]"> <div class="logo-f-metalik-box"></div>
+    <div class="z-20 mb-[-42px]">
+        <div class="logo-f-metalik-box"></div>
     </div>
 
-    <div class="centered-modal-box pt-14"> <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
+    <div class="centered-modal-box pt-14">
+        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
             <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
         </div>
         
@@ -259,7 +252,7 @@ cat << 'EOF' > public/register.html
                 <input type="password" id="password" class="compact-input-box" required placeholder="Ketik disini">
             </div>
             
-            <button type="submit" class="btn-green mt-1">Daftar Sekarang</button>
+            <button type="submit" class="btn-yellow mt-1">Daftar Sekarang</button>
         </form>
         
         <div class="mt-4 text-center compact-text-small">
@@ -367,7 +360,8 @@ cat << 'EOF' > public/forgot.html
                 <label class="compact-label text-center mt-2">Password Baru</label>
                 <input type="password" id="newPassword" class="compact-input-box" required placeholder="Ketik disini">
             </div>
-            <button type="submit" class="btn-green mt-3">Simpan Password Baru</button>
+            
+            <button type="submit" class="btn-yellow mt-3">Simpan Password Baru</button>
         </form>
         
         <div class="mt-6 text-center compact-text-small">
@@ -661,7 +655,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V13) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V14) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
