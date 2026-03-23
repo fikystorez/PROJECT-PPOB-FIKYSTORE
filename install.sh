@@ -359,7 +359,7 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
-# HTML DASHBOARD PPOB PREMIUM DENGAN BANNER DIPERBESAR (h-[170px])
+# HTML DASHBOARD PPOB PREMIUM
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -403,7 +403,13 @@ cat << 'EOF' > public/dashboard.html
                         <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition">
                             <i class="far fa-clock text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Transaksi Saya</span>
                         </li>
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition" onclick="toggleDarkMode()">
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition">
+                            <i class="far fa-bell text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Pemberitahuan</span>
+                        </li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition" onclick="window.open('https://wa.me/6282231154407', '_blank')">
+                            <i class="fas fa-headset text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Hubungi Admin</span>
+                        </li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition" onclick="toggleDarkMode()">
                             <div class="flex items-center gap-4">
                                 <i class="far fa-moon text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Mode Gelap</span>
                             </div>
@@ -515,7 +521,7 @@ cat << 'EOF' > public/dashboard.html
         function toggleDarkMode() { isDark = !isDark; localStorage.setItem('darkMode', isDark); applyDarkMode(); }
         applyDarkMode();
 
-        // LOGIKA DINAMIS BANNER
+        // LOGIKA DINAMIS BANNER (CLEAN IMAGE ONLY)
         fetch('/api/banners')
         .then(res => res.json())
         .then(data => {
@@ -523,6 +529,7 @@ cat << 'EOF' > public/dashboard.html
                 const slider = document.getElementById('promoSlider');
                 const dotsContainer = document.getElementById('promoDots');
                 
+                // Menghapus elemen teks dan opacity agar gambar tampil 100% terang dan bersih
                 slider.innerHTML = data.banners.map((url, i) => `
                     <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#002147]">
                         <img src="${url}" class="absolute inset-0 w-full h-full object-cover">
@@ -531,7 +538,7 @@ cat << 'EOF' > public/dashboard.html
 
                 let dotsHTML = '';
                 for(let i=0; i<data.banners.length; i++){
-                    dotsHTML += `<div class="w-2 h-2 rounded-full bg-white opacity-${i===0?'100':'40'} transition-opacity duration-300 dot-indicator shadow-[0_1px_3px_rgba(0,0,0,0.5)]"></div>`;
+                    dotsHTML += `<div class="w-2 h-2 rounded-full bg-white opacity-${i===0?'100':'40'} transition-opacity duration-300 dot-indicator shadow-sm"></div>`;
                 }
                 dotsContainer.innerHTML = dotsHTML;
             }
@@ -706,7 +713,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V23) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V24) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
