@@ -120,11 +120,6 @@ body {
 }
 .btn-yellow:hover { background-color: #facc15; }
 
-.btn-green {
-    width: 100%; padding: 0.625rem 1rem; background-color: #16a34a; color: #ffffff;
-    font-weight: bold; font-size: 0.9rem; border-radius: 0.5rem; cursor: pointer; border: none; transition: all 0.2s;
-}
-
 .tech-bg {
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5'%3E%3Cpath d='M0 40h20l10-10h20l10 10h20'/%3E%3Cpath d='M20 40v20l10 10'/%3E%3Cpath d='M60 40V20L50 10'/%3E%3Ccircle cx='30' cy='30' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='50' cy='50' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='10' cy='40' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='70' cy='40' r='2' fill='rgba(255,255,255,0.1)'/%3E%3C/g%3E%3C/svg%3E");
@@ -133,8 +128,6 @@ body {
 
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-/* CSS Tab Profil */
 .tab-active { border-bottom: 3px solid #001229; color: #001229; font-weight: bold; }
 .dark .tab-active { border-bottom: 3px solid #fde047; color: #fde047; }
 EOF
@@ -155,7 +148,6 @@ cat << 'EOF' > public/index.html
             <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
         </div>
         <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
-        <p class="compact-text-small mb-6">Silahkan masukkan email/no HP dan password kamu!</p>
         <form id="loginForm">
             <div><label class="compact-label">Email / No. HP</label><input type="text" id="identifier" class="compact-input-box" required placeholder="Ketik disini"></div>
             <div><label class="compact-label">Password</label><input type="password" id="password" class="compact-input-box" required placeholder="Ketik disini"></div>
@@ -173,7 +165,7 @@ cat << 'EOF' > public/index.html
                 const res = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password }) });
                 const data = await res.json();
                 if (res.ok) { localStorage.setItem('user', JSON.stringify(data.user)); window.location.href = '/dashboard.html'; } else { alert(data.error); }
-            } catch (err) { alert('Terjadi kesalahan sistem.'); }
+            } catch (err) { alert('Gagal.'); }
         });
     </script>
 </body>
@@ -190,13 +182,12 @@ cat << 'EOF' > public/register.html
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
-    <div class="z-20 mb-[-42px]" id="logo-header"><div class="logo-f-metalik-box"></div></div>
+    <div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div>
     <div class="centered-modal-box pt-14" id="box-register">
         <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-2">
             <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
         </div>
         <h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2>
-        <p class="compact-text-small mb-4">Silahkan lengkapi data untuk mendaftar!</p>
         <form id="registerForm">
             <div><label class="compact-label">Nama Lengkap</label><input type="text" id="name" class="compact-input-box" required placeholder="Ketik disini"></div>
             <div><label class="compact-label">Nomor WA Aktif</label><input type="number" id="phone" class="compact-input-box" required placeholder="Ketik disini (08123...)"></div>
@@ -228,86 +219,23 @@ cat << 'EOF' > public/register.html
             try {
                 const res = await fetch('/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, email, password }) });
                 const data = await res.json();
-                if (res.ok) {
-                    registeredPhone = data.phone;
-                    document.getElementById('box-register').classList.add('hidden');
-                    document.getElementById('box-otp').classList.remove('hidden');
-                    alert('OTP Terkirim! Silakan cek WhatsApp Anda.');
-                } else { alert(data.error); }
-            } catch (err) { alert('Gagal memproses pendaftaran.'); }
+                if (res.ok) { registeredPhone = data.phone; document.getElementById('box-register').classList.add('hidden'); document.getElementById('box-otp').classList.remove('hidden'); alert('OTP Terkirim! Silakan cek WhatsApp Anda.'); } else { alert(data.error); }
+            } catch (err) { alert('Gagal.'); }
         });
         document.getElementById('otpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const otp = document.getElementById('otpCode').value;
             try {
                 const res = await fetch('/api/auth/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: registeredPhone, otp }) });
-                if (res.ok) { alert('Verifikasi Berhasil! Silakan Login.'); window.location.href = '/'; } else { alert(await res.json().error); }
-            } catch (err) { alert('Gagal verifikasi OTP.'); }
-        });
-    </script>
-</body>
-</html>
-EOF
-
-cat << 'EOF' > public/forgot.html
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lupa Password - DIGITAL FIKY STORE</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
-    <div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div>
-    <div class="centered-modal-box pt-14">
-        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
-            <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
-        </div>
-        <h2 class="text-lg font-bold text-white mb-1">RESET PASSWORD</h2>
-        <form id="requestOtpForm">
-            <p class="compact-text-small mb-5 text-center">Masukkan Nomor WA Anda untuk reset password.</p>
-            <div><input type="number" id="phone" class="compact-input-box text-center" required placeholder="Ketik disini (08123...)"></div>
-            <button type="submit" class="btn-yellow mt-2">Kirim OTP Reset</button>
-        </form>
-        <form id="resetForm" class="hidden mt-4">
-            <hr class="mb-5 border-gray-600">
-            <div><label class="compact-label text-center">Kode OTP (4 Digit)</label><input type="number" id="otp" class="compact-input-box text-center text-xl tracking-[0.5em] font-bold" required placeholder="XXXX"></div>
-            <div><label class="compact-label text-center mt-2">Password Baru</label><input type="password" id="newPassword" class="compact-input-box" required placeholder="Ketik disini"></div>
-            <button type="submit" class="btn-yellow mt-3">Simpan Password Baru</button>
-        </form>
-        <div class="mt-6 text-center compact-text-small">Kembali ke <a href="/" class="compact-link-small">Login</a></div>
-    </div>
-    <script>
-        let resetPhone = '';
-        document.getElementById('requestOtpForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const phone = document.getElementById('phone').value;
-            try {
-                const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
-                const data = await res.json();
-                if (res.ok) {
-                    resetPhone = data.phone;
-                    document.getElementById('requestOtpForm').classList.add('hidden');
-                    document.getElementById('resetForm').classList.remove('hidden');
-                    alert('OTP Terkirim ke WA!');
-                } else { alert(data.error); }
+                if (res.ok) { alert('Berhasil! Silakan Login.'); window.location.href = '/'; } else { alert(await res.json().error); }
             } catch (err) { alert('Gagal.'); }
         });
-        document.getElementById('resetForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const otp = document.getElementById('otp').value;
-            const newPassword = document.getElementById('newPassword').value;
-            try {
-                const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) });
-                if (res.ok) { alert('Password diubah!'); window.location.href = '/'; } else { alert(await res.json().error); }
-            } catch (err) { alert('Gagal mereset.'); }
-        });
     </script>
 </body>
 </html>
 EOF
 
+# HTML DASHBOARD
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -321,15 +249,10 @@ cat << 'EOF' > public/dashboard.html
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 font-sans transition-colors duration-300">
     <div class="max-w-md mx-auto bg-[#f4f6f9] dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl transition-colors duration-300 overflow-x-hidden">
-        
         <div class="flex justify-between items-center p-4 bg-[#001229] text-white shadow-md sticky top-0 z-40 transition-colors">
-            <div class="flex items-center gap-4">
-                <i class="fas fa-bars text-xl cursor-pointer text-gray-300 hover:text-white transition" onclick="toggleSidebar()"></i>
-                <h1 class="font-medium text-[17px] tracking-wide" id="headerGreeting">Hai, Member</h1>
-            </div>
-            <div class="bg-white/10 text-[11px] font-bold px-3 py-1.5 rounded-full border border-white/20 shadow-sm flex items-center gap-1 text-gray-200">0 Trx</div>
+            <div class="flex items-center gap-4"><i class="fas fa-bars text-xl cursor-pointer text-gray-300 hover:text-white transition" onclick="toggleSidebar()"></i><h1 class="font-medium text-[17px] tracking-wide" id="headerGreeting">Hai, Member</h1></div>
+            <div class="bg-white/10 text-[11px] font-bold px-3 py-1.5 rounded-full border border-white/20 shadow-sm">0 Trx</div>
         </div>
-
         <div id="sidebar" class="fixed inset-0 z-[100] transform -translate-x-full transition-transform duration-300 flex">
             <div class="w-full bg-black bg-opacity-50" onclick="toggleSidebar()"></div>
             <div class="absolute top-0 left-0 w-3/4 max-w-[300px] h-full bg-white dark:bg-gray-900 shadow-2xl flex flex-col transition-colors">
@@ -341,44 +264,31 @@ cat << 'EOF' > public/dashboard.html
                 </div>
                 <div class="flex-1 overflow-y-auto py-2">
                     <ul class="text-gray-700 dark:text-gray-200">
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition" onclick="location.href='/profile.html'">
-                            <i class="far fa-user text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Profil Akun</span>
-                        </li>
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition">
-                            <i class="far fa-clock text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Transaksi Saya</span>
-                        </li>
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition">
-                            <i class="far fa-bell text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Pemberitahuan</span>
-                        </li>
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition" onclick="window.open('https://wa.me/6282231154407', '_blank')">
-                            <i class="fas fa-headset text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Hubungi Admin</span>
-                        </li>
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition" onclick="toggleDarkMode()">
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 cursor-pointer transition" onclick="location.href='/profile.html'"><i class="far fa-user text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Profil Akun</span></li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 cursor-pointer transition"><i class="far fa-clock text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Transaksi Saya</span></li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 cursor-pointer transition"><i class="far fa-bell text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Pemberitahuan</span></li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 cursor-pointer transition" onclick="window.open('https://wa.me/6282231154407', '_blank')"><i class="fas fa-headset text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Hubungi Admin</span></li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition" onclick="toggleDarkMode()">
                             <div class="flex items-center gap-4"><i class="far fa-moon text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Mode Gelap</span></div>
                             <div class="w-10 h-5 bg-gray-300 dark:bg-blue-500 rounded-full relative transition-colors duration-300" id="darkModeToggleBg"><div class="w-5 h-5 bg-white rounded-full absolute left-0 shadow-md transform transition-transform duration-300" id="darkModeToggleDot"></div></div>
                         </li>
                     </ul>
                 </div>
+                <div class="p-6 border-t border-gray-100 dark:border-gray-800"><button onclick="logout()" class="w-full py-3 border-2 border-red-500 text-red-500 font-bold rounded-lg hover:bg-red-50 transition">Keluar Akun</button></div>
             </div>
         </div>
-
         <div class="mx-4 mt-5 bg-[#002147] rounded-3xl p-6 text-white relative overflow-hidden shadow-lg border-b-[5px] border-yellow-400">
             <div class="tech-bg opacity-70"></div> 
             <div class="text-center relative z-10">
                 <p class="text-xs text-gray-300 mb-1">Sisa Saldo Anda</p>
                 <h2 class="text-4xl font-extrabold mb-6 tracking-tight drop-shadow-md" id="displaySaldo">Rp 0</h2>
-                <div class="flex gap-4">
-                    <button class="flex-1 border border-gray-500 text-white rounded-full py-2.5 text-xs font-bold hover:bg-white hover:text-[#002147] transition">ISI SALDO</button>
-                    <button class="flex-1 border border-gray-500 text-white rounded-full py-2.5 text-xs font-bold hover:bg-white hover:text-[#002147] transition">BANTUAN</button>
-                </div>
+                <div class="flex gap-4"><button class="flex-1 border border-gray-500 text-white rounded-full py-2.5 text-xs font-bold hover:bg-white hover:text-[#002147] transition">ISI SALDO</button><button class="flex-1 border border-gray-500 text-white rounded-full py-2.5 text-xs font-bold hover:bg-white hover:text-[#002147] transition">BANTUAN</button></div>
             </div>
         </div>
-
         <div class="mx-4 mt-6 relative rounded-2xl h-[170px] overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 bg-gray-200 dark:bg-gray-800">
             <div id="promoSlider" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth"></div>
             <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20" id="promoDots"></div>
         </div>
-
         <div class="mx-4 mt-6 bg-white dark:bg-gray-800 p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors mb-8">
             <h3 class="font-extrabold text-[#002147] dark:text-gray-100 mb-5 text-[15px] tracking-wide ml-1">Layanan Pilihan</h3>
             <div class="grid grid-cols-4 gap-y-6 gap-x-2">
@@ -392,7 +302,6 @@ cat << 'EOF' > public/dashboard.html
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-gray-400 to-gray-600 text-white flex items-center justify-center text-xl shadow-lg shadow-gray-500/30 mb-2"><i class="fas fa-th-large"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide text-center">LAINNYA</span></div>
             </div>
         </div>
-
         <div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40">
             <div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
@@ -400,42 +309,35 @@ cat << 'EOF' > public/dashboard.html
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
         </div>
     </div>
-
     <script>
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) window.location.href = '/';
-        
         document.getElementById('headerGreeting').innerText = "Hai, " + user.name.split(' ')[0];
         document.getElementById('sidebarName').innerText = user.name;
         document.getElementById('sidebarPhone').innerText = user.phone;
         document.getElementById('sidebarInitial').innerText = user.name.charAt(0).toUpperCase();
 
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
         function logout() { localStorage.removeItem('user'); window.location.href = '/'; }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
 
         fetch('/api/user/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) })
-        .then(res => res.json()).then(data => { document.getElementById('displaySaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); })
-        .catch(err => { document.getElementById('displaySaldo').innerText = 'Rp 0'; });
+        .then(res => res.json()).then(data => { document.getElementById('displaySaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); });
 
         let isDark = localStorage.getItem('darkMode') === 'true';
-        const htmlRoot = document.getElementById('html-root');
-        const dot = document.getElementById('darkModeToggleDot');
-        const bg = document.getElementById('darkModeToggleBg');
-
         function applyDarkMode() {
-            if (isDark) { htmlRoot.classList.add('dark'); dot.classList.add('translate-x-5'); bg.classList.add('bg-blue-500'); } 
-            else { htmlRoot.classList.remove('dark'); dot.classList.remove('translate-x-5'); bg.classList.remove('bg-blue-500'); }
+            if (isDark) { document.getElementById('html-root').classList.add('dark'); document.getElementById('darkModeToggleDot').classList.add('translate-x-5'); document.getElementById('darkModeToggleBg').classList.add('bg-blue-500'); } 
+            else { document.getElementById('html-root').classList.remove('dark'); document.getElementById('darkModeToggleDot').classList.remove('translate-x-5'); document.getElementById('darkModeToggleBg').classList.remove('bg-blue-500'); }
         }
         function toggleDarkMode() { isDark = !isDark; localStorage.setItem('darkMode', isDark); applyDarkMode(); }
         applyDarkMode();
 
         fetch('/api/banners').then(res => res.json()).then(data => {
-            if(data.banners && data.banners.length > 0 && data.banners[0] !== "") {
+            if(data.banners && data.banners.length > 0) {
                 const slider = document.getElementById('promoSlider');
                 const dotsContainer = document.getElementById('promoDots');
-                slider.innerHTML = data.banners.map(url => `<div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#002147]"><img src="${url}" class="absolute inset-0 w-full h-full object-cover"></div>`).join('');
+                slider.innerHTML = data.banners.map(url => `<div class="w-full h-full shrink-0 snap-center relative"><img src="${url}" class="absolute inset-0 w-full h-full object-cover"></div>`).join('');
                 let dotsHTML = '';
-                for(let i=0; i<data.banners.length; i++){ dotsHTML += `<div class="w-2 h-2 rounded-full bg-white opacity-${i===0?'100':'40'} transition-opacity duration-300 dot-indicator shadow-sm"></div>`; }
+                for(let i=0; i<data.banners.length; i++) dotsHTML += `<div class="w-2 h-2 rounded-full bg-white opacity-${i===0?'100':'40'} dot-indicator shadow-sm"></div>`;
                 dotsContainer.innerHTML = dotsHTML;
             }
             const sliderElement = document.getElementById('promoSlider');
@@ -443,7 +345,7 @@ cat << 'EOF' > public/dashboard.html
             let currentSlide = 0;
             sliderElement.addEventListener('scroll', () => {
                 let slideIndex = Math.round(sliderElement.scrollLeft / sliderElement.clientWidth);
-                dots.forEach((dot, index) => { dot.classList.toggle('opacity-100', index === slideIndex); dot.classList.toggle('opacity-40', index !== slideIndex); });
+                dots.forEach((dot, idx) => { dot.classList.toggle('opacity-100', idx === slideIndex); dot.classList.toggle('opacity-40', idx !== slideIndex); });
                 currentSlide = slideIndex;
             });
             setInterval(() => { currentSlide = (currentSlide + 1) % (dots.length||4); sliderElement.scrollTo({ left: currentSlide * sliderElement.clientWidth, behavior: 'smooth' }); }, 3500);
@@ -469,15 +371,9 @@ cat << 'EOF' > public/profile.html
     <div class="max-w-md mx-auto bg-white dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl transition-colors duration-300 overflow-x-hidden">
         
         <div class="bg-black text-white p-8 flex flex-col items-center relative rounded-b-3xl shadow-lg">
-            <div class="absolute top-6 right-6 text-xl cursor-pointer hover:text-yellow-400 transition" onclick="alert('Menu Edit akan datang segera!')">
-                <i class="fas fa-pencil-alt"></i>
-            </div>
-            
-            <div class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-300 rounded-full flex justify-center items-center text-black font-extrabold text-4xl mb-4 border-4 border-yellow-400 shadow-xl" id="profileCircle">
-                U
-            </div>
-            
-            <h2 class="text-2xl font-bold tracking-wide" id="profileName">User Name</h2>
+            <div class="absolute top-6 right-6 text-xl cursor-pointer hover:text-yellow-400 transition" onclick="alert('Menu Edit akan datang segera!')"><i class="fas fa-pencil-alt"></i></div>
+            <div class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-300 rounded-full flex justify-center items-center text-black font-extrabold text-4xl mb-4 border-4 border-yellow-400 shadow-xl" id="profileCircle">U</div>
+            <h2 class="text-xl font-bold tracking-wide" id="profileName">User Name</h2>
             <p class="text-sm text-gray-400 mt-1" id="profilePhone">0888...</p>
         </div>
 
@@ -528,7 +424,6 @@ cat << 'EOF' > public/profile.html
     <script>
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) window.location.href = '/';
-
         document.getElementById('profileName').innerText = user.name;
         document.getElementById('profilePhone').innerText = user.phone;
         document.getElementById('profilePhoneData').innerText = user.phone;
@@ -547,9 +442,9 @@ cat << 'EOF' > public/profile.html
 EOF
 
 # ==========================================
-# FILE NODE.JS (FULL RESTORE)
+# FILE NODE.JS (MENGEMBALIKAN LOGIKA PENUH)
 # ==========================================
-echo "[4/5] Mengembalikan logika penuh Backend Node.js..."
+echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, Browsers, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
 const { Boom } = require('@hapi/boom');
@@ -585,19 +480,16 @@ saveJSON(configFile, configAwal);
 if (!fs.existsSync(dbFile)) saveJSON(dbFile, {});
 if (!fs.existsSync(webUsersFile)) saveJSON(webUsersFile, {});
 
-// Endpoint Banner Dinamis
 app.get('/api/banners', (req, res) => {
     let cfg = loadJSON(configFile);
     res.json({ banners: cfg.banners });
 });
 
-// Endpoint Cek Saldo
 app.post('/api/user/balance', (req, res) => {
     let db = loadJSON(dbFile);
     res.json({ saldo: db[req.body.phone]?.saldo || 0 });
 });
 
-// Sistem Auth Web (Kirim OTP WA)
 app.post('/api/auth/register', async (req, res) => {
     const { name, phone, email, password } = req.body;
     let webUsers = loadJSON(webUsersFile);
@@ -665,7 +557,7 @@ app.post('/api/auth/forgot', async (req, res) => {
         await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Kode OTP Reset Password Anda: *${otp}*` });
         res.json({ message: 'OTP Terkirim', phone: fPhone });
     } catch(err) {
-        res.status(500).json({ error: 'Gagal mengirim pesan WA.' });
+        res.status(500).json({ error: 'Gagal mengirim WA. Pastikan Bot Aktif.' });
     }
 });
 
@@ -706,7 +598,7 @@ async function startBot() {
                     console.log(`🔑 KODE PAIRING ANDA :  ${code}  `);
                     console.log(`=======================================================\n`);
                 } catch (error) {
-                    console.log("Gagal meminta pairing code, coba lagi nanti.");
+                    console.log("Gagal meminta pairing code.");
                 }
             }, 3000); 
         } else {
@@ -739,6 +631,11 @@ if (require.main === module) {
 }
 EOF
 
+# PASTIKAN NPM INSTALL DIJALANKAN (FIX ERROR MODULE)
+echo "Menginstal modul Node.js (harap tunggu sebentar)..."
+npm install --silent
+npm install -g pm2 > /dev/null 2>&1
+
 # ==========================================
 # FILE PANEL MENU VPS (FULL RESTORE)
 # ==========================================
@@ -750,7 +647,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V26) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V27) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
@@ -758,7 +655,7 @@ while true; do clear
     echo "3. Hentikan Bot (PM2)"
     echo "4. Lihat Log / Error Bot"
     echo "5. Reset Sesi WhatsApp"
-    echo "6. 👥 Tambah Saldo Member (Top Up Manual)"
+    echo "6. 👥 Tambah Saldo Member"
     echo "7. 🖼️ Ganti Foto Banner Promo"
     echo "8. Update Sistem (Tarik Kode Terbaru)"
     echo "0. Keluar"
@@ -781,7 +678,7 @@ while true; do clear
         2) 
             cd "$HOME/$DIR_NAME"
             pm2 delete $BOT_NAME 2>/dev/null; pm2 start index.js --name "$BOT_NAME" && pm2 save
-            echo "✅ Bot dan Web berjalan 24 jam di latar belakang!"
+            echo "✅ Bot dan Web berjalan 24 jam!"
             read -p "Tekan Enter..." ;;
         3) pm2 stop $BOT_NAME; read -p "Tekan Enter..." ;;
         4) pm2 logs $BOT_NAME ;;
@@ -795,7 +692,7 @@ while true; do clear
             fi
             read -p "Tekan Enter..." ;;
         6) 
-            read -p "ID Member (No WA yg dipakai daftar web, cth: 62812...): " nomor
+            read -p "ID Member (No WA): " nomor
             read -p "Jumlah Tambah Saldo: " jumlah
             node -e "
                 const fs=require('fs');
@@ -808,12 +705,12 @@ while true; do clear
             read -p "Tekan Enter..." ;;
         7)
             echo "--- GANTI FOTO BANNER PROMO ---"
-            echo "Masukkan Link URL gambar langsung (akhiri dengan .jpg / .png)"
-            echo "Tekan Enter saja (kosongkan) jika tidak ingin mengubah slide tersebut."
-            read -p "Link Gambar Slide 1: " b1
-            read -p "Link Gambar Slide 2: " b2
-            read -p "Link Gambar Slide 3: " b3
-            read -p "Link Gambar Slide 4: " b4
+            echo "Masukkan Link URL langsung gambar (diakhiri .jpg atau .png)"
+            echo "Tekan Enter saja jika tidak ingin mengubah slide tersebut."
+            read -p "Link Slide 1: " b1
+            read -p "Link Slide 2: " b2
+            read -p "Link Slide 3: " b3
+            read -p "Link Slide 4: " b4
             node -e "
                 const fs = require('fs');
                 let file = '$HOME/$DIR_NAME/config.json';
@@ -824,7 +721,7 @@ while true; do clear
                 if ('$b3'.trim()) cfg.banners[2] = '$b3'.trim();
                 if ('$b4'.trim()) cfg.banners[3] = '$b4'.trim();
                 fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
-                console.log('\n✅ Foto banner berhasil diperbarui! Silakan restart (Pilih Menu 2).');
+                console.log('\n✅ Foto banner berhasil diperbarui! Silakan restart (Menu 2).');
             "
             read -p "Tekan Enter untuk kembali..." ;;
         8)
