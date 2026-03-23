@@ -49,15 +49,14 @@ cat << 'EOF' > package.json
 EOF
 
 # ==========================================
-# MEMBUAT TAMPILAN WEB (OXFORD BLUE & YELLOW HEADER)
+# MEMBUAT TAMPILAN WEB (FULL YELLOW & OXFORD BLUE)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Logo Custom & Lingkaran)..."
+echo "[3/5] Membangun Antarmuka Website (Logo Custom F & Full Yellow)..."
 
 cat << 'EOF' > public/style.css
 body {
-    background-color: #f3f4f6; 
+    background-color: #fde047; /* KUNING PENUH SAMPAI BAWAH */
     margin: 0;
-    /* Flex-col agar Logo dan Modal tersusun rapi dari atas ke bawah */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -66,29 +65,45 @@ body {
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 }
 
-/* Lengkungan Kuning di Atas (Diperbesar agar logo muat) */
-.yellow-header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 38vh; 
-    background-color: #fde047; /* Kuning cerah */
-    border-radius: 0 0 50% 50% / 0 0 10% 10%;
-    z-index: -1;
-}
-
 /* Kotak Modal Oxford Blue */
 .centered-modal-box {
     background-color: #002147; /* Oxford Blue */
-    padding: 2rem 1.5rem; 
+    padding: 3rem 1.5rem 2rem 1.5rem; /* Padding atas dilebarkan untuk ruang logo */
     border-radius: 1.2rem; 
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1); 
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); 
     width: 90%;
     max-width: 360px; 
     text-align: center;
     position: relative;
     z-index: 10;
+}
+
+/* Logo "F" Metalik 3D dengan CSS Murni */
+.logo-f-metalik-box {
+    width: 85px; 
+    height: 85px;
+    margin: 0 auto; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: radial-gradient(circle, #f8f9fa 0%, #94a3b8 100%); /* Efek perak metalik */
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 10px 20px rgba(0,0,0,0.4); 
+    position: relative;
+    border: 4px solid #ffffff; 
+}
+
+.logo-f-metalik-box::before {
+    content: "F";
+    font-size: 55px;
+    font-family: "Times New Roman", Times, serif;
+    font-weight: bold;
+    color: #1e293b; /* Warna F gelap */
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.8), -1px -1px 2px rgba(0,0,0,0.5); /* Efek 3D */
+    position: absolute;
+    top: 52%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 /* Input Fields */
@@ -147,20 +162,12 @@ cat << 'EOF' > public/index.html
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex flex-col items-center justify-center h-screen relative">
-    <div class="yellow-header"></div>
-
-    <div class="z-10 mb-6 mt-[-6vh]">
-        <div class="bg-[#002147] w-24 h-24 rounded-full flex justify-center items-center shadow-2xl border-4 border-white">
-            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#fde047" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-                <path d="M13 7l-3 5h4l-3 5"></path>
-            </svg>
-        </div>
+<body class="flex flex-col items-center justify-center h-screen relative">
+    
+    <div class="z-20 mb-[-42px]"> <div class="logo-f-metalik-box"></div>
     </div>
 
-    <div class="centered-modal-box">
-        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
+    <div class="centered-modal-box pt-14"> <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
             <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
         </div>
         
@@ -220,19 +227,13 @@ cat << 'EOF' > public/register.html
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex flex-col items-center justify-center h-screen relative">
-    <div class="yellow-header"></div>
-
-    <div class="z-10 mb-4 mt-[-6vh]" id="logo-header">
-        <div class="bg-[#002147] w-20 h-20 rounded-full flex justify-center items-center shadow-2xl border-4 border-white">
-            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#fde047" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-                <path d="M13 7l-3 5h4l-3 5"></path>
-            </svg>
-        </div>
+<body class="flex flex-col items-center justify-center h-screen relative">
+    
+    <div class="z-20 mb-[-42px]" id="logo-header">
+        <div class="logo-f-metalik-box"></div>
     </div>
 
-    <div class="centered-modal-box" id="box-register">
+    <div class="centered-modal-box pt-14" id="box-register">
         <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-2">
             <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
         </div>
@@ -266,7 +267,7 @@ cat << 'EOF' > public/register.html
         </div>
     </div>
 
-    <div class="centered-modal-box hidden" id="box-otp">
+    <div class="centered-modal-box pt-14 hidden" id="box-otp">
         <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
             <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
         </div>
@@ -336,19 +337,13 @@ cat << 'EOF' > public/forgot.html
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex flex-col items-center justify-center h-screen relative">
-    <div class="yellow-header"></div>
-
-    <div class="z-10 mb-6 mt-[-6vh]">
-        <div class="bg-[#002147] w-24 h-24 rounded-full flex justify-center items-center shadow-2xl border-4 border-white">
-            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#fde047" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-                <path d="M13 7l-3 5h4l-3 5"></path>
-            </svg>
-        </div>
+<body class="flex flex-col items-center justify-center h-screen relative">
+    
+    <div class="z-20 mb-[-42px]">
+        <div class="logo-f-metalik-box"></div>
     </div>
 
-    <div class="centered-modal-box">
+    <div class="centered-modal-box pt-14">
         <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
             <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
         </div>
@@ -365,11 +360,11 @@ cat << 'EOF' > public/forgot.html
         <form id="resetForm" class="hidden mt-4">
             <hr class="mb-5 border-gray-600">
             <div>
-                <label class="compact-label">Kode OTP (4 Digit)</label>
+                <label class="compact-label text-center">Kode OTP (4 Digit)</label>
                 <input type="number" id="otp" class="compact-input-box text-center text-xl tracking-[0.5em] font-bold" required placeholder="XXXX">
             </div>
             <div>
-                <label class="compact-label">Password Baru</label>
+                <label class="compact-label text-center mt-2">Password Baru</label>
                 <input type="password" id="newPassword" class="compact-input-box" required placeholder="Ketik disini">
             </div>
             <button type="submit" class="btn-green mt-3">Simpan Password Baru</button>
@@ -666,7 +661,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V12) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V13) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
