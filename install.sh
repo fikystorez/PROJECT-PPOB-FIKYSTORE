@@ -15,7 +15,7 @@ BOT_NAME="digital-fiky-bot"
 PORT=3000
 
 echo "=========================================================="
-echo "      MENGINSTAL DIGITAL FIKY STORE - FULL VERSION        "
+echo "      MENGINSTAL DIGITAL FIKY STORE - TECH DASHBOARD      "
 echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
@@ -49,7 +49,7 @@ cat << 'EOF' > package.json
 EOF
 
 # ==========================================
-# MEMBUAT TAMPILAN WEB (CSS)
+# MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
 echo "[3/5] Membangun Antarmuka Website..."
 
@@ -87,6 +87,21 @@ body {
     position: absolute; top: 52%; left: 50%; transform: translate(-50%, -50%);
 }
 
+.logo-f-small {
+    width: 45px; height: 45px; margin: 0 auto 10px auto; 
+    display: flex; justify-content: center; align-items: center;
+    border-radius: 50%; border: 2px solid #cbd5e1;
+    background: radial-gradient(circle, #333333 0%, #000000 100%); 
+    box-shadow: inset 0 0 5px rgba(255,255,255,0.2), 0 5px 10px rgba(0,0,0,0.5); 
+    position: relative; z-index: 2;
+}
+.logo-f-small::before {
+    content: "F"; font-size: 28px; font-family: "Times New Roman", Times, serif;
+    font-weight: bold; color: #e2e8f0; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.9); 
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+}
+
 .compact-input-box {
     width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #334155; 
     border-radius: 0.5rem; margin-bottom: 0.85rem; font-size: 0.875rem; 
@@ -115,10 +130,6 @@ body {
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 EOF
 
-# ==========================================
-# FILE HTML AUTHENTIKASI (LOGIN, REGISTER, FORGOT)
-# ==========================================
-
 cat << 'EOF' > public/index.html
 <!DOCTYPE html>
 <html lang="id">
@@ -129,32 +140,19 @@ cat << 'EOF' > public/index.html
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
-    <div class="z-20 mb-[-42px]">
-        <div class="logo-f-metalik-box"></div>
-    </div>
+    <div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div>
     <div class="centered-modal-box pt-14">
         <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
             <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
         </div>
         <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
-        <p class="compact-text-small mb-6">Silahkan masukkan email/no HP dan password kamu!</p>
         <form id="loginForm">
-            <div>
-                <label class="compact-label">Email / No. HP</label>
-                <input type="text" id="identifier" class="compact-input-box" required placeholder="Ketik disini">
-            </div>
-            <div>
-                <label class="compact-label">Password</label>
-                <input type="password" id="password" class="compact-input-box" required placeholder="Ketik disini">
-            </div>
-            <div class="text-right mb-5 mt-[-5px]">
-                <a href="/forgot.html" class="compact-link-small">Lupa password?</a>
-            </div>
+            <div><label class="compact-label">Email / No. HP</label><input type="text" id="identifier" class="compact-input-box" required placeholder="Ketik disini"></div>
+            <div><label class="compact-label">Password</label><input type="password" id="password" class="compact-input-box" required placeholder="Ketik disini"></div>
+            <div class="text-right mb-5 mt-[-5px]"><a href="/forgot.html" class="compact-link-small">Lupa password?</a></div>
             <button type="submit" class="btn-yellow">Login Sekarang</button>
         </form>
-        <div class="mt-6 text-center compact-text-small">
-            Belum punya akun? <a href="/register.html" class="compact-link-small">Daftar disini</a>
-        </div>
+        <div class="mt-6 text-center compact-text-small">Belum punya akun? <a href="/register.html" class="compact-link-small">Daftar disini</a></div>
     </div>
     <script>
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -162,16 +160,10 @@ cat << 'EOF' > public/index.html
             const identifier = document.getElementById('identifier').value;
             const password = document.getElementById('password').value;
             try {
-                const res = await fetch('/api/auth/login', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ identifier, password })
-                });
+                const res = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password }) });
                 const data = await res.json();
-                if (res.ok) {
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    window.location.href = '/dashboard.html';
-                } else { alert(data.error); }
-            } catch (err) { alert('Terjadi kesalahan sistem.'); }
+                if (res.ok) { localStorage.setItem('user', JSON.stringify(data.user)); window.location.href = '/dashboard.html'; } else { alert(data.error); }
+            } catch (err) { alert('Gagal.'); }
         });
     </script>
 </body>
@@ -188,50 +180,28 @@ cat << 'EOF' > public/register.html
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
-    <div class="z-20 mb-[-42px]" id="logo-header">
-        <div class="logo-f-metalik-box"></div>
-    </div>
+    <div class="z-20 mb-[-42px]" id="logo-header"><div class="logo-f-metalik-box"></div></div>
     <div class="centered-modal-box pt-14" id="box-register">
         <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-2">
             <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
         </div>
         <h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2>
-        <p class="compact-text-small mb-4">Silahkan lengkapi data untuk mendaftar!</p>
         <form id="registerForm">
-            <div>
-                <label class="compact-label">Nama Lengkap</label>
-                <input type="text" id="name" class="compact-input-box" required placeholder="Ketik disini">
-            </div>
-            <div>
-                <label class="compact-label">Nomor WA Aktif</label>
-                <input type="number" id="phone" class="compact-input-box" required placeholder="Ketik disini (08123...)">
-            </div>
-            <div>
-                <label class="compact-label">Email</label>
-                <input type="email" id="email" class="compact-input-box" required placeholder="Ketik disini">
-            </div>
-            <div>
-                <label class="compact-label">Password</label>
-                <input type="password" id="password" class="compact-input-box" required placeholder="Ketik disini">
-            </div>
+            <div><label class="compact-label">Nama Lengkap</label><input type="text" id="name" class="compact-input-box" required placeholder="Ketik disini"></div>
+            <div><label class="compact-label">Nomor WA Aktif</label><input type="number" id="phone" class="compact-input-box" required placeholder="Ketik disini (08123...)"></div>
+            <div><label class="compact-label">Email</label><input type="email" id="email" class="compact-input-box" required placeholder="Ketik disini"></div>
+            <div><label class="compact-label">Password</label><input type="password" id="password" class="compact-input-box" required placeholder="Ketik disini"></div>
             <button type="submit" class="btn-yellow mt-1">Daftar Sekarang</button>
         </form>
-        <div class="mt-4 text-center compact-text-small">
-            Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a>
-        </div>
+        <div class="mt-4 text-center compact-text-small">Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a></div>
     </div>
-    
     <div class="centered-modal-box pt-14 hidden" id="box-otp">
         <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
             <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
         </div>
         <h2 class="text-lg font-bold text-white mb-1">VERIFIKASI WA</h2>
-        <p class="compact-text-small mb-5 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
         <form id="otpForm">
-            <div>
-                <label class="compact-label text-center">Kode OTP (4 Digit)</label>
-                <input type="number" id="otpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX">
-            </div>
+            <div><label class="compact-label text-center">Kode OTP (4 Digit)</label><input type="number" id="otpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX"></div>
             <button type="submit" class="btn-yellow mt-4">Verifikasi OTP</button>
         </form>
     </div>
@@ -244,32 +214,17 @@ cat << 'EOF' > public/register.html
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             try {
-                const res = await fetch('/api/auth/register', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, phone, email, password })
-                });
+                const res = await fetch('/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, email, password }) });
                 const data = await res.json();
-                if (res.ok) {
-                    registeredPhone = data.phone;
-                    document.getElementById('box-register').classList.add('hidden');
-                    document.getElementById('box-otp').classList.remove('hidden');
-                    alert('OTP Terkirim! Silakan cek WhatsApp Anda.');
-                } else { alert(data.error); }
-            } catch (err) { alert('Gagal memproses pendaftaran.'); }
+                if (res.ok) { registeredPhone = data.phone; document.getElementById('box-register').classList.add('hidden'); document.getElementById('box-otp').classList.remove('hidden'); alert('OTP Terkirim! Silakan cek WhatsApp Anda.'); } else { alert(data.error); }
+            } catch (err) { alert('Gagal.'); }
         });
-        
         document.getElementById('otpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const otp = document.getElementById('otpCode').value;
             try {
-                const res = await fetch('/api/auth/verify', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone: registeredPhone, otp })
-                });
-                if (res.ok) {
-                    alert('Verifikasi Berhasil! Silakan Login.');
-                    window.location.href = '/';
-                } else { alert('Verifikasi gagal, OTP Salah.'); }
+                const res = await fetch('/api/auth/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: registeredPhone, otp }) });
+                if (res.ok) { alert('Verifikasi Berhasil! Silakan Login.'); window.location.href = '/'; } else { alert('Gagal verifikasi OTP.'); }
             } catch (err) { alert('Gagal verifikasi OTP.'); }
         });
     </script>
@@ -322,12 +277,7 @@ cat << 'EOF' > public/forgot.html
             try {
                 const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
                 const data = await res.json();
-                if (res.ok) {
-                    resetPhone = data.phone;
-                    document.getElementById('requestOtpForm').classList.add('hidden');
-                    document.getElementById('resetForm').classList.remove('hidden');
-                    alert('OTP Terkirim ke WA!');
-                } else { alert(data.error); }
+                if (res.ok) { resetPhone = data.phone; document.getElementById('requestOtpForm').classList.add('hidden'); document.getElementById('resetForm').classList.remove('hidden'); alert('OTP Terkirim ke WA!'); } else { alert(data.error); }
             } catch (err) { alert('Gagal.'); }
         });
         document.getElementById('resetForm').addEventListener('submit', async (e) => {
@@ -344,9 +294,7 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
-# ==========================================
-# FILE DASHBOARD UTAMA
-# ==========================================
+# HTML DASHBOARD PPOB PREMIUM
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -356,11 +304,9 @@ cat << 'EOF' > public/dashboard.html
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = { darkMode: 'class' }
-    </script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 font-sans transition-colors duration-300">
+<body class="bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-300">
     <div class="max-w-md mx-auto bg-[#f4f6f9] dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl transition-colors duration-300 overflow-x-hidden">
         
         <div class="flex justify-between items-center p-4 bg-[#001229] text-white shadow-md sticky top-0 z-40 transition-colors">
@@ -368,7 +314,7 @@ cat << 'EOF' > public/dashboard.html
                 <i class="fas fa-bars text-xl cursor-pointer text-gray-300 hover:text-white transition" onclick="toggleSidebar()"></i>
                 <h1 class="font-medium text-[17px] tracking-wide" id="headerGreeting">Hai, Member</h1>
             </div>
-            <div class="bg-white/10 text-[11px] font-bold px-3 py-1.5 rounded-full border border-white/20 shadow-sm text-gray-200">
+            <div class="bg-white/10 text-[11px] font-bold px-3 py-1.5 rounded-full border border-white/20 shadow-sm flex items-center gap-1 text-gray-200">
                 0 Trx
             </div>
         </div>
@@ -421,9 +367,9 @@ cat << 'EOF' > public/dashboard.html
             </div>
         </div>
 
-        <div class="mx-4 mt-6 relative rounded-2xl h-[170px] overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 bg-gray-200 dark:bg-gray-800">
+        <div class="mx-4 mt-6 relative rounded-2xl h-[170px] overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 group bg-gray-200 dark:bg-gray-800">
             <div id="promoSlider" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth">
-                </div>
+            </div>
             <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20" id="promoDots">
             </div>
         </div>
@@ -447,7 +393,6 @@ cat << 'EOF' > public/dashboard.html
                     <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-purple-400 to-pink-600 text-white flex items-center justify-center text-xl shadow-lg shadow-pink-500/30 mb-2"><i class="fas fa-gamepad"></i></div>
                     <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide">GAME</span>
                 </div>
-                
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
                     <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-indigo-400 to-purple-600 text-white flex items-center justify-center text-xl shadow-lg shadow-indigo-500/30 mb-2"><i class="fas fa-wallet"></i></div>
                     <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide text-center">E-WALLET</span>
@@ -484,6 +429,8 @@ cat << 'EOF' > public/dashboard.html
         document.getElementById('sidebarName').innerText = user.name;
         document.getElementById('sidebarPhone').innerText = user.phone;
         document.getElementById('sidebarInitial').innerText = user.name.charAt(0).toUpperCase();
+
+        function logout() { localStorage.removeItem('user'); window.location.href = '/'; }
 
         fetch('/api/user/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) })
         .then(res => res.json()).then(data => { document.getElementById('displaySaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); })
@@ -566,12 +513,8 @@ cat << 'EOF' > public/profile.html
         <div class="bg-black text-white p-8 flex flex-col items-center relative rounded-b-[2.5rem] shadow-lg">
             <div class="flex items-center justify-center gap-3 mb-2 relative">
                 <div class="w-8"></div>
-                <div class="w-24 h-24 bg-gray-200 rounded-full flex justify-center items-center text-black font-bold text-4xl border-4 border-gray-400 shadow-xl" id="profileCircle">
-                    U
-                </div>
-                <div class="w-8 text-xl cursor-pointer hover:text-gray-300 transition flex items-center justify-center">
-                    <i class="fas fa-pencil-alt"></i>
-                </div>
+                <div class="w-24 h-24 bg-gray-200 rounded-full flex justify-center items-center text-black font-bold text-4xl border-4 border-gray-400 shadow-xl" id="profileCircle">U</div>
+                <div class="w-8 text-xl cursor-pointer hover:text-gray-300 transition flex items-center justify-center"><i class="fas fa-pencil-alt"></i></div>
             </div>
             <h2 class="text-xl font-bold tracking-wide mt-2" id="profileName">Nama Member</h2>
         </div>
@@ -607,7 +550,7 @@ cat << 'EOF' > public/profile.html
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">HOME</span></div>
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">RIWAYAT</span></div>
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">INFO</span></div>
-            <div class="flex flex-col items-center cursor-pointer text-yellow-400" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">PROFIL</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">PROFIL</span></div>
         </div>
     </div>
 
@@ -632,7 +575,7 @@ cat << 'EOF' > public/profile.html
 EOF
 
 # ==========================================
-# FILE HALAMAN RIWAYAT TRANSAKSI
+# FILE HALAMAN RIWAYAT
 # ==========================================
 cat << 'EOF' > public/riwayat.html
 <!DOCTYPE html>
@@ -691,6 +634,12 @@ cat << 'EOF' > public/riwayat.html
                 <div class="flex-1"><h4 class="font-bold text-[#001229] dark:text-gray-100 text-sm">Token PLN 50.000</h4><p class="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">112233445566</p><p class="text-[10px] text-gray-400 mt-0.5">23 Mar 2026 • 09:30</p></div>
                 <div class="text-right"><div class="text-sm font-extrabold text-[#001229] dark:text-gray-100 mb-1.5">Rp 51.500</div><span class="bg-amber-100 text-amber-700 px-2 py-0.5 rounded text-[9px] font-bold tracking-wide border border-amber-200">PROSES</span></div>
             </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 mb-3 flex items-center gap-3">
+                <div class="w-11 h-11 rounded-full bg-rose-50 dark:bg-rose-900/30 flex items-center justify-center text-rose-600 dark:text-rose-400 shrink-0"><i class="fas fa-gamepad text-lg"></i></div>
+                <div class="flex-1"><h4 class="font-bold text-[#001229] dark:text-gray-100 text-sm">Diamond MLBB 140</h4><p class="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">12345678 (1234)</p><p class="text-[10px] text-gray-400 mt-0.5">20 Mar 2026 • 20:00</p></div>
+                <div class="text-right"><div class="text-sm font-extrabold text-gray-400 line-through mb-1.5">Rp 38.000</div><span class="bg-rose-100 text-rose-700 px-2 py-0.5 rounded text-[9px] font-bold tracking-wide border border-rose-200">GAGAL</span></div>
+            </div>
             
             <div class="text-center mt-6 pb-4">
                 <p class="text-xs text-gray-400">Tidak ada transaksi lainnya</p>
@@ -715,7 +664,7 @@ cat << 'EOF' > public/riwayat.html
 EOF
 
 # ==========================================
-# FILE NODE.JS (BACKEND & BOT)
+# FILE NODE.JS (BACKEND & BOT WA SUNGGUHAN)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -770,50 +719,47 @@ app.post('/api/auth/register', async (req, res) => {
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
     webUsers[fPhone] = { name, email, password, isVerified: false, otp };
     saveJSON(webUsersFile, webUsers);
-    await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Halo *${name}*!\n\nOTP Anda: *${otp}*` });
+    await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Halo *${name}*!\n\nKode OTP Anda: *${otp}*` });
     res.json({ message: 'OTP Terkirim', phone: fPhone });
 });
 
 app.post('/api/auth/verify', (req, res) => {
     const { phone, otp } = req.body;
-    let webUsers = loadJSON(webUsersFile);
-    if (webUsers[phone] && webUsers[phone].otp === otp) {
-        webUsers[phone].isVerified = true; webUsers[phone].otp = null; saveJSON(webUsersFile, webUsers);
-        let db = loadJSON(dbFile);
-        if (!db[phone]) { db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net' }; saveJSON(dbFile, db); }
-        res.json({ message: 'Sukses!' });
-    } else res.status(400).json({ error: 'OTP Salah.' });
+    let users = loadJSON(webUsersFile);
+    if (users[phone] && users[phone].otp === otp) {
+        users[phone].isVerified = true; users[phone].otp = null; saveJSON(webUsersFile, users);
+        let db = loadJSON(dbFile); if (!db[phone]) db[phone] = { saldo: 0 }; saveJSON(dbFile, db);
+        res.json({ message: 'Sukses' });
+    } else res.status(400).json({ error: 'Salah' });
 });
 
 app.post('/api/auth/login', (req, res) => {
     const { identifier, password } = req.body;
-    let webUsers = loadJSON(webUsersFile);
+    let users = loadJSON(webUsersFile);
     let fPhone = identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier;
-    let foundPhone = Object.keys(webUsers).find(p => (p === fPhone || webUsers[p].email === identifier) && webUsers[p].password === password);
-    if (foundPhone) {
-        if (!webUsers[foundPhone].isVerified) return res.status(400).json({ error: 'Belum verifikasi.' });
-        res.json({ message: 'Login sukses', user: { phone: foundPhone, name: webUsers[foundPhone].name, email: webUsers[foundPhone].email } });
-    } else res.status(400).json({ error: 'Salah.' });
+    let found = Object.keys(users).find(p => (p === fPhone || users[p].email === identifier) && users[p].password === password);
+    if (found) res.json({ user: { phone: found, name: users[found].name, email: users[found].email } });
+    else res.status(400).json({ error: 'Salah' });
 });
 
 app.post('/api/auth/forgot', async (req, res) => {
     const { phone } = req.body;
-    let webUsers = loadJSON(webUsersFile);
+    let users = loadJSON(webUsersFile);
     let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
-    if (!webUsers[fPhone]) return res.status(400).json({ error: 'Nomor tidak terdaftar.' });
+    if (!users[fPhone]) return res.status(400).json({ error: 'Tidak terdaftar' });
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
-    webUsers[fPhone].otp = otp; saveJSON(webUsersFile, webUsers);
-    await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Kode OTP Reset: *${otp}*` });
-    res.json({ message: 'OTP Terkirim', phone: fPhone });
+    users[fPhone].otp = otp; saveJSON(webUsersFile, users);
+    await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `OTP Reset Password Anda: *${otp}*` });
+    res.json({ message: 'Terkirim', phone: fPhone });
 });
 
 app.post('/api/auth/reset', (req, res) => {
     const { phone, otp, newPassword } = req.body;
-    let webUsers = loadJSON(webUsersFile);
-    if (webUsers[phone] && webUsers[phone].otp === otp) {
-        webUsers[phone].password = newPassword; webUsers[phone].otp = null; saveJSON(webUsersFile, webUsers);
+    let users = loadJSON(webUsersFile);
+    if (users[phone] && users[phone].otp === otp) {
+        users[phone].password = newPassword; users[phone].otp = null; saveJSON(webUsersFile, users);
         res.json({ message: 'Diubah!' });
-    } else res.status(400).json({ error: 'OTP Salah.' });
+    } else res.status(400).json({ error: 'Salah' });
 });
 
 async function startBot() {
@@ -837,7 +783,7 @@ async function startBot() {
 }
 
 if (require.main === module) {
-    app.listen(3000, () => { console.log('🌐 Web Server berjalan.'); });
+    app.listen(3000, () => { console.log('🌐 Web Server berjalan di port 3000'); });
     startBot();
 }
 EOF
@@ -851,21 +797,35 @@ cat << 'EOF' > /usr/bin/menu
 DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
-while true; do clear
-    echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V29) 🤖     "
-    echo "==============================================="
-    echo "--- MANAJEMEN BOT & WEB ---"
-    echo "1. Setup No. Bot & Login Pairing"
-    echo "2. Jalankan Bot (Latar Belakang/PM2)"
-    echo "3. Hentikan Bot (PM2)"
-    echo "4. Lihat Log / Error Bot"
-    echo "5. 👥 Tambah Saldo Member"
-    echo "6. 🖼️ Ganti Foto Banner Promo"
-    echo "7. Update Sistem (Tarik Kode Terbaru)"
-    echo "0. Keluar"
-    echo "==============================================="
-    read -p "Pilih menu [0-7]: " choice
+C=$(tput setaf 6) # Cyan
+Y=$(tput setaf 3) # Yellow
+G=$(tput setaf 2) # Green
+R=$(tput setaf 1) # Red
+W=$(tput setaf 7) # White
+B=$(tput bold)
+N=$(tput sgr0)    # Reset
+
+while true; do
+    clear
+    echo -e "${C}${B}╔═══════════════════════════════════════════════════╗${N}"
+    echo -e "${C}${B}║${N} ${Y}⚡ DIGITAL FIKY STORE - VPS CONTROL PANEL (V30) ⚡${N} ${C}${B}║${N}"
+    echo -e "${C}${B}╠═══════════════════════════════════════════════════╣${N}"
+    echo -e "${C}${B}║${N} ${W}[ BOT & SERVER MANAGEMENT ]                       ${C}${B}║${N}"
+    echo -e "${C}${B}║${N}  ${G}1.${N} Setup Nomor Bot & Login Pairing WA            ${C}${B}║${N}"
+    echo -e "${C}${B}║${N}  ${G}2.${N} Jalankan Sistem (Start PM2)                   ${C}${B}║${N}"
+    echo -e "${C}${B}║${N}  ${R}3.${N} Hentikan Sistem (Stop PM2)                    ${C}${B}║${N}"
+    echo -e "${C}${B}║${N}  ${Y}4.${N} Lihat Log & Error System                      ${C}${B}║${N}"
+    echo -e "${C}${B}╠═══════════════════════════════════════════════════╣${N}"
+    echo -e "${C}${B}║${N} ${W}[ DATABASE & DASHBOARD ]                          ${C}${B}║${N}"
+    echo -e "${C}${B}║${N}  ${G}5.${N} 👥 Tambah / Ubah Saldo Member                 ${C}${B}║${N}"
+    echo -e "${C}${B}║${N}  ${G}6.${N} 🖼️ Ganti Foto Banner Promo (Slider)           ${C}${B}║${N}"
+    echo -e "${C}${B}╠═══════════════════════════════════════════════════╣${N}"
+    echo -e "${C}${B}║${N} ${W}[ SYSTEM UTILITIES ]                              ${C}${B}║${N}"
+    echo -e "${C}${B}║${N}  ${Y}7.${N} Update Script (Pull dari GitHub)              ${C}${B}║${N}"
+    echo -e "${C}${B}║${N}  ${R}0.${N} Keluar / Exit Panel                           ${C}${B}║${N}"
+    echo -e "${C}${B}╚═══════════════════════════════════════════════════╝${N}"
+    echo -e ""
+    read -p "${B}Pilih menu [0-7]: ${N}" choice
 
     case $choice in
         1) 
@@ -921,7 +881,6 @@ done
 EOF
 
 chmod +x /usr/bin/menu
-
 echo "=========================================================="
-echo "  SISTEM WEB & BOT BERHASIL DIPERBARUI!                   "
+echo "  SUKSES! Silakan restart sistem (Menu 2)."
 echo "=========================================================="
