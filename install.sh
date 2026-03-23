@@ -15,7 +15,7 @@ BOT_NAME="digital-fiky-bot"
 PORT=3000
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE - V41 (EDIT PROFIL)     "
+echo "  MENGINSTAL DIGITAL FIKY STORE - V42 (SECURITY OTP)      "
 echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
@@ -95,6 +95,7 @@ body {
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 EOF
 
+# HTML AUTH FILES
 cat << 'EOF' > public/index.html
 <!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Login - DIGITAL FIKY STORE</title><link rel="stylesheet" href="style.css"><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></head><body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]"><div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div><div class="centered-modal-box pt-14"><div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4"><h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1></div><h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2><form id="loginForm"><div><label class="compact-label">Email / No. HP</label><input type="text" id="identifier" class="compact-input-box" required placeholder="Ketik disini"></div><div><label class="compact-label">Password</label><div class="relative mb-[0.85rem]"><input type="password" id="password" class="compact-input-box !mb-0 pr-10" required placeholder="Ketik disini"><i class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-gray-700 transition" onclick="togglePassword('password', this)"></i></div></div><div class="text-right mb-5 mt-[-5px]"><a href="/forgot.html" class="compact-link-small">Lupa password?</a></div><button type="submit" class="btn-yellow">Login Sekarang</button></form><div class="mt-6 text-center compact-text-small">Belum punya akun? <a href="/register.html" class="compact-link-small">Daftar disini</a></div></div>
 <div id="customAlert" class="fixed inset-0 z-[999] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm"><div class="bg-[#0f172a] rounded-[1.5rem] p-6 w-[85%] max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-700 transform transition-transform scale-100"><div id="alertIcon" class="mb-4 text-6xl"></div><h3 class="text-xl font-bold text-white mb-2 tracking-wide" id="alertTitle">Pemberitahuan</h3><p class="text-sm text-gray-300 mb-6" id="alertMessage">Pesan</p><button onclick="closeAlert()" class="bg-[#facc15] text-[#0f172a] w-full py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-yellow-500 transition">OKE</button></div></div>
@@ -122,7 +123,6 @@ cat << 'EOF' > public/register.html
     let alertCallback = null;
     function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check text-green-500"></i>' : '<i class="fas fa-times text-red-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; }
     function closeAlert() { document.getElementById('customAlert').classList.add('hidden'); if(alertCallback) alertCallback(); }
-
     let registeredPhone = ''; 
     document.getElementById('registerForm').addEventListener('submit', async (e) => { 
         e.preventDefault(); const name = document.getElementById('name').value; const phone = document.getElementById('phone').value; const email = document.getElementById('email').value; const password = document.getElementById('password').value; 
@@ -153,7 +153,6 @@ cat << 'EOF' > public/forgot.html
     let alertCallback = null;
     function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check text-green-500"></i>' : '<i class="fas fa-times text-red-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; }
     function closeAlert() { document.getElementById('customAlert').classList.add('hidden'); if(alertCallback) alertCallback(); }
-
     let resetPhone=''; 
     document.getElementById('requestOtpForm').addEventListener('submit', async(e)=>{
         e.preventDefault(); resetPhone=document.getElementById('phone').value; 
@@ -164,7 +163,6 @@ cat << 'EOF' > public/forgot.html
             else{ showAlert('Gagal', data.error || 'Gagal mengirim OTP.', false); } 
         } catch(err) { showAlert('Error', 'Gagal terhubung ke server.', false); } 
     }); 
-    
     document.getElementById('resetForm').addEventListener('submit', async(e)=>{
         e.preventDefault(); const otp=document.getElementById('otp').value; const newPassword=document.getElementById('newPassword').value; 
         try { 
@@ -340,7 +338,7 @@ cat << 'EOF' > public/dashboard.html
 EOF
 
 # ==========================================
-# FILE HALAMAN PROFIL (NEW FEATURES: EDIT, PHOTO, PASS, DELETE)
+# FILE HALAMAN PROFIL (WITH OTP SECURITY)
 # ==========================================
 cat << 'EOF' > public/profile.html
 <!DOCTYPE html>
@@ -380,13 +378,13 @@ cat << 'EOF' > public/profile.html
         </div>
     </div>
 
-    <div id="customAlert" class="fixed inset-0 z-[999] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div id="customAlert" class="fixed inset-0 z-[1001] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
         <div class="bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-700">
             <div id="alertIcon" class="mb-4 text-6xl"></div><h3 class="text-xl font-bold text-white mb-2 tracking-wide" id="alertTitle">Pemberitahuan</h3><p class="text-sm text-gray-300 mb-6" id="alertMessage">Pesan</p><button onclick="closeAlert()" class="bg-[#facc15] text-[#0f172a] w-full py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-yellow-500 transition">OKE</button>
         </div>
     </div>
 
-    <div id="editProfileModal" class="fixed inset-0 z-[999] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div id="editProfileModal" class="fixed inset-0 z-[998] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
         <div class="bg-white dark:bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[340px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-100 dark:border-gray-700 relative">
             <button onclick="closeEditProfile()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fas fa-times text-xl"></i></button>
             <h3 class="text-lg font-extrabold text-[#001229] dark:text-white mb-4">Ubah Profil</h3>
@@ -417,7 +415,7 @@ cat << 'EOF' > public/profile.html
         </div>
     </div>
 
-    <div id="changePassModal" class="fixed inset-0 z-[999] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div id="changePassModal" class="fixed inset-0 z-[998] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
         <div class="bg-white dark:bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-100 dark:border-gray-700 relative">
             <button onclick="closeChangePass()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fas fa-times text-xl"></i></button>
             <h3 class="text-lg font-extrabold text-[#001229] dark:text-white mb-4">Ubah Password</h3>
@@ -434,6 +432,16 @@ cat << 'EOF' > public/profile.html
             </div>
 
             <button onclick="savePassword()" class="w-full bg-[#001229] dark:bg-yellow-400 text-yellow-400 dark:text-[#001229] py-2.5 rounded-xl font-bold tracking-wide shadow-md hover:bg-[#002147] dark:hover:bg-yellow-500 transition">Simpan Password</button>
+        </div>
+    </div>
+
+    <div id="otpVerifyModal" class="fixed inset-0 z-[1000] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-100 dark:border-gray-700 relative">
+            <button onclick="closeOtpModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fas fa-times text-xl"></i></button>
+            <h3 class="text-lg font-extrabold text-[#001229] dark:text-white mb-2">Verifikasi Keamanan</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-4" id="otpVerifyMsg">Masukkan kode OTP dari WhatsApp.</p>
+            <input type="number" id="modalOtpInput" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-3 px-4 text-center text-2xl tracking-[0.5em] font-bold text-[#001229] dark:text-white outline-none focus:border-yellow-400 mb-5 transition" placeholder="XXXX">
+            <button onclick="submitOtpAction()" class="w-full bg-[#001229] dark:bg-yellow-400 text-yellow-400 dark:text-[#001229] py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-[#002147] dark:hover:bg-yellow-500 transition">VERIFIKASI</button>
         </div>
     </div>
 
@@ -463,41 +471,60 @@ cat << 'EOF' > public/profile.html
         let alertCallback = null;
         function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check text-green-500"></i>' : '<i class="fas fa-times text-red-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; }
         function closeAlert() { document.getElementById('customAlert').classList.add('hidden'); if(alertCallback) alertCallback(); }
-
         function togglePassword(id, icon) { const el = document.getElementById(id); if(el.type === 'password') { el.type = 'text'; icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash'); } else { el.type = 'password'; icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); } }
+
+        // OTP Modal Logic
+        let otpContext = '';
+        let pendingProfileData = {};
+        let pendingPasswordData = {};
+
+        function showOtpModal(msg) { document.getElementById('otpVerifyMsg').innerText = msg; document.getElementById('modalOtpInput').value = ''; document.getElementById('otpVerifyModal').classList.remove('hidden'); }
+        function closeOtpModal() { document.getElementById('otpVerifyModal').classList.add('hidden'); }
+
+        async function submitOtpAction() {
+            const otp = document.getElementById('modalOtpInput').value;
+            if(!otp) return showAlert('Peringatan', 'OTP tidak boleh kosong.', false);
+
+            if(otpContext === 'profile') {
+                pendingProfileData.otp = otp;
+                try {
+                    const res = await fetch('/api/user/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pendingProfileData) });
+                    const data = await res.json();
+                    if(res.ok) {
+                        user = data.user; localStorage.setItem('user', JSON.stringify(user)); renderProfile();
+                        closeOtpModal(); closeEditProfile(); showAlert('Berhasil!', 'Profil dan Nomor WA berhasil diperbarui.', true);
+                    } else { showAlert('Gagal', data.error, false); }
+                } catch(e) { showAlert('Error', 'Gagal terhubung ke server', false); }
+            } else if(otpContext === 'password') {
+                pendingPasswordData.otp = otp;
+                try {
+                    const res = await fetch('/api/user/change-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pendingPasswordData) });
+                    const data = await res.json();
+                    if(res.ok) {
+                        closeOtpModal(); closeChangePass(); showAlert('Berhasil', 'Password berhasil diubah!', true);
+                    } else { showAlert('Gagal', data.error, false); }
+                } catch(e) { showAlert('Error', 'Gagal terhubung ke server', false); }
+            }
+        }
 
         // Edit Profile Logic
         let tempPhotoBase64 = user.photo || '';
-        function openEditProfile() {
-            document.getElementById('editName').value = user.name;
-            document.getElementById('editPhone').value = user.phone;
-            document.getElementById('editEmail').value = user.email || '';
-            document.getElementById('editProfileModal').classList.remove('hidden');
-        }
+        function openEditProfile() { document.getElementById('editName').value = user.name; document.getElementById('editPhone').value = user.phone; document.getElementById('editEmail').value = user.email || ''; document.getElementById('editProfileModal').classList.remove('hidden'); }
         function closeEditProfile() { document.getElementById('editProfileModal').classList.add('hidden'); }
-        
-        function previewPhoto(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    tempPhotoBase64 = e.target.result;
-                    document.getElementById('editPreview').innerHTML = `<img src="${tempPhotoBase64}" class="w-full h-full object-cover">`;
-                }
-                reader.readAsDataURL(file);
-            }
-        }
+        function previewPhoto(event) { const file = event.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(e) { tempPhotoBase64 = e.target.result; document.getElementById('editPreview').innerHTML = `<img src="${tempPhotoBase64}" class="w-full h-full object-cover">`; }; reader.readAsDataURL(file); } }
 
         async function saveProfile() {
             const name = document.getElementById('editName').value;
             const newPhone = document.getElementById('editPhone').value;
+            const payload = { oldPhone: user.phone, name, newPhone, photo: tempPhotoBase64 };
+
             try {
-                const res = await fetch('/api/user/update', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ oldPhone: user.phone, name, newPhone, photo: tempPhotoBase64 })
-                });
+                const res = await fetch('/api/user/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                 const data = await res.json();
-                if(res.ok) {
+                if(data.status === 'OTP_SENT') {
+                    pendingProfileData = payload; otpContext = 'profile';
+                    showOtpModal(`Masukkan OTP yang dikirim ke nomor WA baru Anda: ${newPhone}`);
+                } else if (res.ok) {
                     user = data.user; localStorage.setItem('user', JSON.stringify(user)); renderProfile(); closeEditProfile();
                     showAlert('Berhasil!', 'Profil berhasil diperbarui.', true);
                 } else { showAlert('Gagal', data.error, false); }
@@ -516,18 +543,20 @@ cat << 'EOF' > public/profile.html
         // Change Password Logic
         function openChangePassword() { document.getElementById('oldPass').value=''; document.getElementById('newPass').value=''; document.getElementById('changePassModal').classList.remove('hidden'); }
         function closeChangePass() { document.getElementById('changePassModal').classList.add('hidden'); }
+        
         async function savePassword() {
             const oldPassword = document.getElementById('oldPass').value;
             const newPassword = document.getElementById('newPass').value;
             if(!oldPassword || !newPassword) return showAlert('Peringatan', 'Harap isi semua kolom.', false);
+            const payload = { phone: user.phone, oldPassword, newPassword };
+
             try {
-                const res = await fetch('/api/user/change-password', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone: user.phone, oldPassword, newPassword })
-                });
+                const res = await fetch('/api/user/change-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                 const data = await res.json();
-                if(res.ok) { closeChangePass(); showAlert('Berhasil', 'Password berhasil diubah!', true); } 
-                else { showAlert('Gagal', data.error, false); }
+                if(data.status === 'OTP_SENT') {
+                    pendingPasswordData = payload; otpContext = 'password';
+                    showOtpModal('Masukkan OTP yang dikirim ke WhatsApp Anda untuk konfirmasi perubahan password.');
+                } else { showAlert('Gagal', data.error || 'Password lama salah.', false); }
             } catch(e) { showAlert('Error', 'Gagal terhubung ke server', false); }
         }
     </script>
@@ -535,7 +564,9 @@ cat << 'EOF' > public/profile.html
 </html>
 EOF
 
-# MISC: INFO DAN RIWAYAT
+# ==========================================
+# FILE HTML LAINNYA (RIWAYAT, INFO)
+# ==========================================
 cat << 'EOF' > public/riwayat.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -628,7 +659,7 @@ cat << 'EOF' > public/info.html
 EOF
 
 # ==========================================
-# FILE NODE.JS (BACKEND: PROFILE UPDATE, PASSWORD, DELETE)
+# FILE NODE.JS (BACKEND: PROFILE UPDATE, PASSWORD WITH OTP)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -641,7 +672,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 const app = express();
-app.use(bodyParser.json({ limit: '10mb' })); // Support Base64 Image Profile
+app.use(bodyParser.json({ limit: '10mb' })); 
 app.use(express.static(path.join(__dirname, 'public')));
 
 const configFile = './config.json';
@@ -676,9 +707,7 @@ const sendWhatsAppMessage = async (phone, message) => {
 
 app.get('/api/banners', (req, res) => res.json({ banners: loadJSON(configFile).banners }));
 app.get('/api/info', (req, res) => res.json({ data: loadJSON(infoFile).reverse() }));
-app.post('/api/user/balance', (req, res) => {
-    let db = loadJSON(dbFile); res.json({ saldo: db[req.body.phone]?.saldo || 0 });
-});
+app.post('/api/user/balance', (req, res) => { let db = loadJSON(dbFile); res.json({ saldo: db[req.body.phone]?.saldo || 0 }); });
 
 app.post('/api/auth/register', async (req, res) => {
     const { name, phone, email, password } = req.body;
@@ -692,10 +721,10 @@ app.post('/api/auth/register', async (req, res) => {
     webUsers[fPhone] = { name, email, password, isVerified: false, otp, photo: '' };
     saveJSON(webUsersFile, webUsers);
     
-    const pesan = `Halo *${name}*!\nSelamat datang di DIGITAL FIKY STORE.\n\nKode OTP Pendaftaran Anda: *${otp}*\n\n_Mohon jangan berikan kode ini kepada siapapun._`;
+    const pesan = `Halo *${name}*!\nSelamat datang di DIGITAL FIKY STORE.\n\nKode OTP Pendaftaran Anda: *${otp}*`;
     const sent = await sendWhatsAppMessage(fPhone, pesan);
     if(sent) res.json({ message: 'OTP Terkirim', phone: fPhone }); 
-    else res.status(500).json({ error: 'Gagal mengirim OTP. Bot WA Offline.' });
+    else res.status(500).json({ error: 'Gagal mengirim OTP.' });
 });
 
 app.post('/api/auth/verify', (req, res) => {
@@ -751,9 +780,9 @@ app.post('/api/auth/reset', (req, res) => {
     } else { res.status(400).json({ error: 'Kode OTP Salah.' }); }
 });
 
-// FITUR UPDATE PROFIL (NAMA, NO HP, FOTO)
-app.post('/api/user/update', (req, res) => {
-    const { oldPhone, name, newPhone, photo } = req.body;
+// FITUR UPDATE PROFIL DENGAN SECURITY OTP JIKA GANTI NOMOR
+app.post('/api/user/update', async (req, res) => {
+    const { oldPhone, name, newPhone, photo, otp } = req.body;
     let users = loadJSON(webUsersFile);
     let db = loadJSON(dbFile);
 
@@ -765,49 +794,79 @@ app.post('/api/user/update', (req, res) => {
     if (!users[fOld]) return res.status(400).json({error: 'User tidak ditemukan.'});
 
     if (fOld !== fNew) {
-        if (users[fNew]) return res.status(400).json({error: 'Nomor baru sudah terdaftar oleh pengguna lain.'});
-        users[fNew] = { ...users[fOld], name: name, photo: photo || users[fOld].photo };
-        delete users[fOld];
-        if (db[fOld]) { db[fNew] = { ...db[fOld] }; delete db[fOld]; }
+        if (users[fNew]) return res.status(400).json({error: 'Nomor WA baru sudah terdaftar.'});
+
+        if (!otp) {
+            // Minta OTP ke nomor baru
+            const genOtp = Math.floor(1000 + Math.random() * 9000).toString();
+            users[fOld].updateOtp = genOtp;
+            saveJSON(webUsersFile, users);
+            
+            const sent = await sendWhatsAppMessage(fNew, `Halo *${name}*!\n\nKode OTP Verifikasi Nomor Baru Anda: *${genOtp}*\n\n_Abaikan jika Anda tidak meminta ini._`);
+            if(sent) return res.json({ status: 'OTP_SENT' });
+            else return res.status(500).json({ error: 'Gagal kirim OTP. Bot WA Offline.' });
+        } else {
+            // Verifikasi OTP
+            if (users[fOld].updateOtp !== otp.toString().trim()) {
+                return res.status(400).json({ error: 'Kode OTP Salah / Kadaluarsa.' });
+            }
+            users[fNew] = { ...users[fOld], name: name, photo: photo !== undefined ? photo : users[fOld].photo };
+            delete users[fNew].updateOtp; 
+            delete users[fOld];
+            if (db[fOld]) { db[fNew] = { ...db[fOld] }; delete db[fOld]; }
+        }
     } else {
+        // Jika tidak ganti nomor, langsung simpan (Tidak butuh OTP)
         users[fOld].name = name;
         if (photo !== undefined) users[fOld].photo = photo;
     }
 
-    saveJSON(webUsersFile, users);
-    saveJSON(dbFile, db);
+    saveJSON(webUsersFile, users); saveJSON(dbFile, db);
     res.json({ message: 'Profil diperbarui', user: { phone: fNew, name: name, email: users[fNew].email, photo: users[fNew].photo }});
 });
 
-// FITUR UBAH PASSWORD DARI PROFIL
-app.post('/api/user/change-password', (req, res) => {
-    const { phone, oldPassword, newPassword } = req.body;
+// FITUR UBAH PASSWORD DARI PROFIL (WAJIB OTP)
+app.post('/api/user/change-password', async (req, res) => {
+    const { phone, oldPassword, newPassword, otp } = req.body;
     let users = loadJSON(webUsersFile);
     let fPhone = phone.toString().replace(/[^0-9]/g, '');
     if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1);
 
-    if (users[fPhone] && users[fPhone].password === oldPassword) {
+    if (!users[fPhone] || users[fPhone].password !== oldPassword) {
+        return res.status(400).json({ error: 'Password lama Anda salah.' });
+    }
+
+    if (!otp) {
+        // Generate OTP
+        const genOtp = Math.floor(1000 + Math.random() * 9000).toString();
+        users[fPhone].passOtp = genOtp;
+        saveJSON(webUsersFile, users);
+        
+        const sent = await sendWhatsAppMessage(fPhone, `Peringatan Keamanan 🚨\nSeseorang mencoba mengubah password akun Anda.\n\nKode OTP Anda: *${genOtp}*`);
+        if(sent) return res.json({ status: 'OTP_SENT' });
+        else return res.status(500).json({ error: 'Gagal kirim OTP.' });
+    } else {
+        if (users[fPhone].passOtp !== otp.toString().trim()) {
+            return res.status(400).json({ error: 'Kode OTP Salah.' });
+        }
         users[fPhone].password = newPassword;
+        delete users[fPhone].passOtp;
         saveJSON(webUsersFile, users);
         res.json({ message: 'Password berhasil diubah!' });
-    } else {
-        res.status(400).json({ error: 'Password lama salah.' });
     }
 });
 
 // FITUR HAPUS AKUN
 app.post('/api/user/delete', (req, res) => {
     const { phone } = req.body;
-    let users = loadJSON(webUsersFile);
-    let db = loadJSON(dbFile);
+    let users = loadJSON(webUsersFile); let db = loadJSON(dbFile);
     let fPhone = phone.toString().replace(/[^0-9]/g, '');
     if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1);
 
     if (users[fPhone]) delete users[fPhone];
     if (db[fPhone]) delete db[fPhone];
 
-    saveJSON(webUsersFile, users);
-    saveJSON(dbFile, db);
+    saveJSON(webUsersFile, users); saveJSON(dbFile, db);
     res.json({ message: 'Akun dihapus' });
 });
 
@@ -864,7 +923,7 @@ N=$(tput sgr0)    # Reset
 while true; do
     clear
     echo -e "${C}${B}╔═══════════════════════════════════════════════════╗${N}"
-    echo -e "${C}${B}║${N} ${Y}⚡ DIGITAL FIKY STORE - VPS CONTROL PANEL (V41) ⚡${N} ${C}${B}║${N}"
+    echo -e "${C}${B}║${N} ${Y}⚡ DIGITAL FIKY STORE - VPS CONTROL PANEL (V42) ⚡${N} ${C}${B}║${N}"
     echo -e "${C}${B}╠═══════════════════════════════════════════════════╣${N}"
     echo -e "${C}${B}║${N} ${W}[ BOT & SERVER MANAGEMENT ]                       ${C}${B}║${N}"
     echo -e "${C}${B}║${N}  ${G}1.${N} Setup Nomor Bot & Login Pairing WA            ${C}${B}║${N}"
