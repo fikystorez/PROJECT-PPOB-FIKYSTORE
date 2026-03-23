@@ -6,52 +6,37 @@ if [ "$EUID" -ne 0 ]; then
   exit
 fi
 
-# Fungsi untuk membersihkan karakter Windows (CRLF) jika ada
 if command -v dos2unix > /dev/null 2>&1; then
     dos2unix "$0" > /dev/null 2>&1
 fi
 
-# ==========================================
-# 1. KONFIGURASI NAMA & DIREKTORI
-# ==========================================
 DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 PORT=3000
 
 echo "=========================================================="
-echo "      MENGINSTAL DIGITAL FIKY STORE - DESAIN UI BARU      "
+echo "      MENGINSTAL DIGITAL FIKY STORE - THEME OXFORD BLUE   "
 echo "=========================================================="
 
-# ==========================================
-# 2. INSTALASI DEPENDENSI SISTEM RINGAN (SILENT)
-# ==========================================
 echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
-# Baileys tidak perlu Chromium, jadi kita hapus dependensi Chromium yang berat.
 apt update -y && apt install curl wget gnupg git dos2unix psmisc zip unzip -y > /dev/null 2>&1
 
-# Install Node.js v20
 if ! command -v node > /dev/null 2>&1; then
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - > /dev/null 2>&1
     apt install -y nodejs > /dev/null 2>&1
 fi
 
-# ==========================================
-# 3. MEMBUAT PROJECT & FILE SOURCE CODE
-# ==========================================
-echo "[2/5] Membuat direktori dan file aplikasi..."
+echo "[2/5] Membuat direktori aplikasi dan web..."
 mkdir -p "$HOME/$DIR_NAME/public"
 cd "$HOME/$DIR_NAME"
 
-# File package.json (Gunakan Baileys websocket)
 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
   "version": "1.0.0",
-  "description": "Aplikasi PPOB DIGITAL FIKY STORE (Baileys WebSocket)",
+  "description": "Aplikasi PPOB DIGITAL FIKY STORE",
   "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
-  },
+  "scripts": { "start": "node index.js" },
   "dependencies": {
     "@hapi/boom": "^10.0.1",
     "@whiskeysockets/baileys": "^6.7.5",
@@ -64,15 +49,13 @@ cat << 'EOF' > package.json
 EOF
 
 # ==========================================
-# MEMBUAT TAMPILAN WEB (UI DESAIN BARU)
+# MEMBUAT TAMPILAN WEB (OXFORD BLUE & YELLOW HEADER)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (UI Baru & Logo F)..."
+echo "[3/5] Membangun Antarmuka Website (Desain Oxford Blue)..."
 
-# 1. CSS Global dan CSS untuk Logo F Metalik 3D (Gaya image_4.png)
 cat << 'EOF' > public/style.css
-/* CSS Global */
 body {
-    background-color: #f3f4f6; /* Abu-abu sangat muda */
+    background-color: #f3f4f6; 
     margin: 0;
     display: flex;
     justify-content: center;
@@ -81,109 +64,77 @@ body {
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 }
 
-/* Kotak Modal Centered Compact dengan Background Kuning Penuh */
-.centered-modal-box {
-    background-color: #ffeb3b; /* Kuning cerah gaya image_3.png, penuh semua sisi */
-    padding: 1.5rem; /* p-6 kompak */
-    border-radius: 1rem; /* rounded-2xl */
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+/* Lengkungan Kuning di Atas */
+.yellow-header {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    max-width: 384px; /* text-sm, diperkecil agar kompak */
-    margin: auto; /* Untuk centered di flex body */
+    height: 25vh; 
+    background-color: #fde047; /* Kuning cerah */
+    border-radius: 0 0 50% 50% / 0 0 25% 25%;
+    z-index: -1;
+}
+
+/* Kotak Modal Oxford Blue */
+.centered-modal-box {
+    background-color: #002147; /* Oxford Blue */
+    padding: 2rem 1.5rem; 
+    border-radius: 1rem; 
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1); 
+    width: 90%;
+    max-width: 360px; 
+    margin: auto; 
     text-align: center;
     position: relative;
-    overflow: hidden; /* Pastikan kurva header yang lama tidak muncul */
 }
 
-/* Logo "F" Metalik 3D dengan CSS Murni (Meniru image_4.png) */
-.logo-f-metalik-box {
-    width: 80px; /* Diperkecil agar kompak */
-    height: 80px;
-    margin: 0 auto 1.5rem; /* Center logo dan beri margin bawah */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    background: radial-gradient(circle, #e0e0e0 30%, #a0a0a0 70%); /* Gradasi metalik lingkaran */
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.3), 
-                0 5px 15px rgba(0,0,0,0.4); /* Bayangan metalik dalam dan luar */
-    position: relative;
-    border: 4px solid #808080; /* Garis lingkar luar */
-}
-
-/* Bagian Huruf F */
-.logo-f-metalik-box::before {
-    content: "F";
-    font-size: 50px;
-    font-family: serif;
-    font-weight: bold;
-    color: #404040; /* Warna F serif metalik gelap */
-    text-shadow: 0 3px 5px rgba(0,0,0,0.6); /* Bayangan huruf F serif untuk 3D */
-    position: absolute;
-    top: 55%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-/* Styling Elemen Input diperkecil */
+/* Input Fields */
 .compact-input-box {
     width: 100%;
-    padding: 0.5rem 0.75rem; /* py-2 px-3 */
-    border: 1px solid #d1d5db; /* border-gray-300 */
-    border-radius: 0.5rem; /* rounded-lg */
-    margin-bottom: 0.75rem; /* mb-3 */
-    font-size: 0.875rem; /* text-sm */
+    padding: 0.6rem 0.75rem; 
+    border: 1px solid #334155; 
+    border-radius: 0.5rem; 
+    margin-bottom: 1rem; 
+    font-size: 0.875rem; 
     outline: none;
-    background-color: white; /* Input tetap putih untuk legibilitas */
+    background-color: #ffffff; 
+    color: #0f172a;
 }
 
 .compact-input-box:focus {
-    border-color: #2563eb; /* focus:border-blue-600 */
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2); /* focus:ring-2 focus:ring-blue-200 */
+    border-color: #fde047; 
+    box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3); 
 }
 
-/* Placeholder "Ketik disini" diperkecil */
-::placeholder {
-    font-size: 0.75rem; /* text-xs */
-    color: #a1a1a1;
-}
+::placeholder { color: #94a3b8; font-size: 0.8rem; }
 
-/* Teks dan Link Diperkecil */
-.compact-text-small {
-    font-size: 0.75rem; /* text-xs */
-    color: #404040; /* Teks gelap di atas kuning */
-}
+/* Teks Terang untuk background gelap */
+.compact-text-small { font-size: 0.8rem; color: #cbd5e1; }
+.compact-label { font-size: 0.8rem; font-weight: bold; color: #f8fafc; margin-bottom: 0.25rem; display: block; text-align: left; }
+.compact-link-small { font-size: 0.8rem; color: #fde047; text-decoration: none; font-weight: bold; }
+.compact-link-small:hover { text-decoration: underline; color: #fef08a; }
 
-.compact-link-small {
-    font-size: 0.75rem; /* text-xs */
-    color: #1a237e; /* Biru tua untuk link di atas kuning */
-    text-decoration: none;
+/* Tombol */
+.btn-yellow {
+    width: 100%; padding: 0.625rem 1rem;
+    background-color: #fde047; color: #002147;
+    font-weight: bold; font-size: 0.9rem;
+    border-radius: 0.5rem; cursor: pointer; border: none;
+    transition: all 0.2s;
 }
+.btn-yellow:hover { background-color: #facc15; }
 
-.compact-link-small:hover {
-    text-decoration: underline;
+.btn-green {
+    width: 100%; padding: 0.625rem 1rem;
+    background-color: #16a34a; color: #ffffff;
+    font-weight: bold; font-size: 0.9rem;
+    border-radius: 0.5rem; cursor: pointer; border: none;
+    transition: all 0.2s;
 }
-
-/* Tombol Dark Blue Diperkecil */
-.compact-btn-login {
-    width: 100%;
-    padding: 0.625rem 1rem; /* py-2.5 px-4 */
-    background-color: #171c35; /* Dark Blue gaya image_3.png */
-    color: #ffeb3b; /* Kuning cerah */
-    font-weight: bold;
-    font-size: 0.875rem; /* text-sm */
-    border-radius: 0.75rem; /* rounded-xl */
-    cursor: pointer;
-    border: none;
-    transition: background-color 0.2s;
-}
-
-.compact-btn-login:hover {
-    background-color: #2a3b6d; /* Sedikit lebih terang saat hover */
-}
+.btn-green:hover { background-color: #15803d; }
 EOF
 
-# 2. Halaman Login (Tampilan Desain Baru, Centered, Logo F)
 cat << 'EOF' > public/index.html
 <!DOCTYPE html>
 <html lang="id">
@@ -193,32 +144,32 @@ cat << 'EOF' > public/index.html
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen relative p-4">
-    <div class="centered-modal-box">
-        <div class="logo-f-metalik-box"></div>
+<body class="bg-gray-100 flex items-center justify-center h-screen relative">
+    <div class="yellow-header"></div>
 
-        <h2 class="text-xl font-bold text-center text-blue-950 mb-2">LOGIN</h2>
-        
-        <p class="compact-text-small mb-4 text-center">Silahkan masukkan email/no HP dan password kamu!</p>
+    <div class="centered-modal-box">
+        <h1 class="text-2xl font-extrabold text-yellow-300 mb-2 tracking-wide">DIGITAL FIKY STORE</h1>
+        <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
+        <p class="compact-text-small mb-6">Silahkan masukkan email/no HP dan password kamu!</p>
 
         <form id="loginForm">
-            <div class="mb-1 text-left">
-                <label class="compact-text-small font-bold mb-1 block">Email / No. HP</label>
+            <div>
+                <label class="compact-label">Email / No. HP</label>
                 <input type="text" id="identifier" class="compact-input-box" required placeholder="Ketik disini">
             </div>
-            <div class="mb-2 text-left">
-                <label class="compact-text-small font-bold mb-1 block">Password</label>
+            <div>
+                <label class="compact-label">Password</label>
                 <input type="password" id="password" class="compact-input-box" required placeholder="Ketik disini">
             </div>
-            <div class="text-right mb-4">
+            <div class="text-right mb-5 mt-[-5px]">
                 <a href="/forgot.html" class="compact-link-small">Lupa password?</a>
             </div>
             
-            <button type="submit" class="compact-btn-login">Login</button>
+            <button type="submit" class="btn-yellow">Login Sekarang</button>
         </form>
         
-        <div class="mt-5 text-center compact-text-small">
-            Belum punya akun? <a href="/register.html" class="compact-link-small font-bold">Daftar disini</a>
+        <div class="mt-6 text-center compact-text-small">
+            Belum punya akun? <a href="/register.html" class="compact-link-small">Daftar disini</a>
         </div>
     </div>
     
@@ -227,7 +178,6 @@ cat << 'EOF' > public/index.html
             e.preventDefault();
             const identifier = document.getElementById('identifier').value;
             const password = document.getElementById('password').value;
-
             try {
                 const res = await fetch('/api/auth/login', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -237,9 +187,7 @@ cat << 'EOF' > public/index.html
                 if (res.ok) {
                     localStorage.setItem('user', JSON.stringify(data.user));
                     window.location.href = '/dashboard.html';
-                } else {
-                    alert(data.error);
-                }
+                } else { alert(data.error); }
             } catch (err) { alert('Terjadi kesalahan sistem.'); }
         });
     </script>
@@ -247,7 +195,6 @@ cat << 'EOF' > public/index.html
 </html>
 EOF
 
-# 3. Halaman Register (Tampilan Desain Baru, Centered, Logo F, OTP 4 Digit)
 cat << 'EOF' > public/register.html
 <!DOCTYPE html>
 <html lang="id">
@@ -257,48 +204,50 @@ cat << 'EOF' > public/register.html
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen relative p-4">
+<body class="bg-gray-100 flex items-center justify-center h-screen relative">
+    <div class="yellow-header"></div>
+
     <div class="centered-modal-box" id="box-register">
-        <div class="logo-f-metalik-box"></div>
-        <h2 class="text-xl font-bold text-center text-blue-950 mb-2">DAFTAR AKUN</h2>
-        <p class="compact-text-small mb-4 text-center">Silahkan lengkapi data untuk mendaftar!</p>
+        <h1 class="text-2xl font-extrabold text-yellow-300 mb-2 tracking-wide">DIGITAL FIKY STORE</h1>
+        <h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2>
+        <p class="compact-text-small mb-5">Silahkan lengkapi data untuk mendaftar!</p>
 
         <form id="registerForm">
-            <div class="mb-1 text-left">
-                <label class="compact-text-small font-bold mb-1 block">Nama Lengkap</label>
+            <div>
+                <label class="compact-label">Nama Lengkap</label>
                 <input type="text" id="name" class="compact-input-box" required placeholder="Ketik disini">
             </div>
-            <div class="mb-1 text-left">
-                <label class="compact-text-small font-bold mb-1 block">Nomor WA Aktif</label>
+            <div>
+                <label class="compact-label">Nomor WA Aktif</label>
                 <input type="number" id="phone" class="compact-input-box" required placeholder="Ketik disini (08123...)">
             </div>
-            <div class="mb-1 text-left">
-                <label class="compact-text-small font-bold mb-1 block">Email</label>
+            <div>
+                <label class="compact-label">Email</label>
                 <input type="email" id="email" class="compact-input-box" required placeholder="Ketik disini">
             </div>
-            <div class="mb-3 text-left">
-                <label class="compact-text-small font-bold mb-1 block">Password</label>
+            <div>
+                <label class="compact-label">Password</label>
                 <input type="password" id="password" class="compact-input-box" required placeholder="Ketik disini">
             </div>
             
-            <button type="submit" class="compact-btn-login bg-green-700 hover:bg-green-800 text-white">Daftar Sekarang</button>
+            <button type="submit" class="btn-green mt-2">Daftar Sekarang</button>
         </form>
         
-        <div class="mt-5 text-center compact-text-small">
-            Sudah punya akun? <a href="/" class="compact-link-small font-bold">Login</a>
+        <div class="mt-6 text-center compact-text-small">
+            Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a>
         </div>
     </div>
 
     <div class="centered-modal-box hidden" id="box-otp">
-        <div class="logo-f-metalik-box"></div>
-        <h2 class="text-xl font-bold text-center text-blue-950 mb-2">VERIFIKASI WA</h2>
-        <p class="compact-text-small mb-4 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
+        <h1 class="text-2xl font-extrabold text-yellow-300 mb-2 tracking-wide">DIGITAL FIKY STORE</h1>
+        <h2 class="text-lg font-bold text-white mb-1">VERIFIKASI WA</h2>
+        <p class="compact-text-small mb-5 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
         <form id="otpForm">
-            <div class="mb-4 text-left">
-                <label class="compact-text-small font-bold mb-1 block">Kode OTP (4 Digit)</label>
-                <input type="number" id="otpCode" class="compact-input-box text-center text-lg tracking-widest" required placeholder="XXXX">
+            <div>
+                <label class="compact-label text-center">Kode OTP (4 Digit)</label>
+                <input type="number" id="otpCode" class="compact-input-box text-center text-xl tracking-widest font-bold" required placeholder="XXXX">
             </div>
-            <button type="submit" class="compact-btn-login">Verifikasi OTP</button>
+            <button type="submit" class="btn-yellow mt-2">Verifikasi OTP</button>
         </form>
     </div>
 
@@ -347,7 +296,6 @@ cat << 'EOF' > public/register.html
 </html>
 EOF
 
-# 4. Halaman Forgot Password (Tampilan Desain Baru, Centered, Logo F, OTP 4 Digit)
 cat << 'EOF' > public/forgot.html
 <!DOCTYPE html>
 <html lang="id">
@@ -357,40 +305,41 @@ cat << 'EOF' > public/forgot.html
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen relative p-4">
+<body class="bg-gray-100 flex items-center justify-center h-screen relative">
+    <div class="yellow-header"></div>
+
     <div class="centered-modal-box">
-        <div class="logo-f-metalik-box"></div>
-        <h2 class="text-xl font-bold text-center text-blue-950 mb-2">RESET PASSWORD</h2>
+        <h1 class="text-2xl font-extrabold text-yellow-300 mb-2 tracking-wide">DIGITAL FIKY STORE</h1>
+        <h2 class="text-lg font-bold text-white mb-1">RESET PASSWORD</h2>
         
         <form id="requestOtpForm">
-            <p class="compact-text-small mb-4 text-center">Masukkan Nomor WA Anda untuk reset password.</p>
-            <div class="mb-4 text-left">
+            <p class="compact-text-small mb-5 text-center">Masukkan Nomor WA Anda untuk reset password.</p>
+            <div>
                 <input type="number" id="phone" class="compact-input-box" required placeholder="Ketik disini (08123...)">
             </div>
-            <button type="submit" class="compact-btn-login bg-yellow-500 hover:bg-yellow-600 text-black">Kirim OTP Reset</button>
+            <button type="submit" class="btn-yellow mt-2">Kirim OTP Reset</button>
         </form>
 
         <form id="resetForm" class="hidden mt-4">
-            <hr class="mb-4 border-blue-900">
-            <div class="mb-1 text-left">
-                <label class="compact-text-small font-bold mb-1 block">Kode OTP (4 Digit)</label>
-                <input type="number" id="otp" class="compact-input-box text-center text-lg tracking-widest" required placeholder="XXXX">
+            <hr class="mb-5 border-gray-600">
+            <div>
+                <label class="compact-label">Kode OTP (4 Digit)</label>
+                <input type="number" id="otp" class="compact-input-box text-center text-lg tracking-widest font-bold" required placeholder="XXXX">
             </div>
-            <div class="mb-3 text-left">
-                <label class="compact-text-small font-bold mb-1 block">Password Baru</label>
+            <div>
+                <label class="compact-label">Password Baru</label>
                 <input type="password" id="newPassword" class="compact-input-box" required placeholder="Ketik disini">
             </div>
-            <button type="submit" class="compact-btn-login">Simpan Password Baru</button>
+            <button type="submit" class="btn-green mt-2">Simpan Password Baru</button>
         </form>
         
-        <div class="mt-5 text-center compact-text-small">
-            Kembali ke <a href="/" class="compact-link-small font-bold">Login</a>
+        <div class="mt-6 text-center compact-text-small">
+            Kembali ke <a href="/" class="compact-link-small">Login</a>
         </div>
     </div>
 
     <script>
         let resetPhone = '';
-
         document.getElementById('requestOtpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const phone = document.getElementById('phone').value;
@@ -430,45 +379,37 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
-# 5. Halaman Dashboard (Tempat Referensi PPOB)
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - DIGITAL FIKY STORE</title>
-    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
-    <nav class="bg-blue-600 p-4 text-white flex justify-between items-center shadow-md">
-        <h1 class="font-bold text-xl">DIGITAL FIKY STORE</h1>
+    <nav class="bg-[#002147] p-4 text-white flex justify-between items-center shadow-md border-b-4 border-yellow-400">
+        <h1 class="font-bold text-xl text-yellow-400">DIGITAL FIKY STORE</h1>
         <div class="flex items-center gap-4">
             <span id="userName" class="font-semibold text-sm"></span>
-            <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-xs font-bold">Logout</button>
+            <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-xs font-bold transition">Logout</button>
         </div>
     </nav>
     <div class="container mx-auto mt-8 p-4">
         <div class="bg-white p-6 rounded-lg shadow-md text-center">
-            <h2 class="text-2xl font-bold mb-2">Selamat Datang!</h2>
-            <p class="text-gray-600 mb-4">Nomor WhatsApp Terhubung: <span id="userPhone" class="font-bold text-blue-600"></span></p>
+            <h2 class="text-2xl font-bold mb-2 text-[#002147]">Selamat Datang!</h2>
+            <p class="text-gray-600 mb-4">WhatsApp: <span id="userPhone" class="font-bold text-blue-600"></span></p>
             <div class="p-4 bg-green-100 border-l-4 border-green-500 text-green-700 text-left rounded-md">
-                <strong>Sistem Login Sukses!</strong> Halaman ini siap diintegrasikan dengan UI Pembelian PPOB Anda selanjutnya.
+                <strong>Sistem Selesai!</strong> Halaman ini siap diisi dengan skrip pembelian PPOB.
             </div>
         </div>
     </div>
     <script>
-        // Cek Login
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) window.location.href = '/';
-        
         document.getElementById('userName').innerText = "Halo, " + user.name;
         document.getElementById('userPhone').innerText = user.phone;
-
-        function logout() {
-            localStorage.removeItem('user');
-            window.location.href = '/';
-        }
+        function logout() { localStorage.removeItem('user'); window.location.href = '/'; }
     </script>
 </body>
 </html>
@@ -494,14 +435,13 @@ const app = express();
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
-// MENJADIKAN FOLDER 'public' SEBAGAI TAMPILAN WEB UTAMA
 app.use(express.static(path.join(__dirname, 'public')));
 
 const configFile = './config.json';
 const dbFile = './database.json';
 const produkFile = './produk.json';
 const trxFile = './trx.json';
-const webUsersFile = './web_users.json'; // Database pengguna Web Aplikasi
+const webUsersFile = './web_users.json'; 
 
 const loadJSON = (file) => fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
 const saveJSON = (file, data) => fs.writeFileSync(file, JSON.stringify(data, null, 2));
@@ -574,11 +514,6 @@ const sendWhatsAppMessage = async (phone, message) => {
     } catch (error) { return false; }
 };
 
-// ==========================================
-// BACKEND API - SISTEM AUTENTIKASI SUNGGUHAN (4 DIGIT OTP)
-// ==========================================
-
-// 1. REGISTER
 app.post('/api/auth/register', async (req, res) => {
     const { name, phone, email, password } = req.body;
     let webUsers = loadJSON(webUsersFile);
@@ -588,7 +523,7 @@ app.post('/api/auth/register', async (req, res) => {
         return res.status(400).json({ error: 'Nomor HP sudah terdaftar dan terverifikasi.' });
     }
 
-    const otp = Math.floor(1000 + Math.random() * 9000).toString(); // 4 Digit
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
     webUsers[formattedPhone] = { name, email, password, isVerified: false, otp };
     saveJSON(webUsersFile, webUsers);
 
@@ -599,7 +534,6 @@ app.post('/api/auth/register', async (req, res) => {
     else res.status(500).json({ error: 'Gagal mengirim WA. Pastikan Bot Aktif.' });
 });
 
-// 2. VERIFY OTP
 app.post('/api/auth/verify', (req, res) => {
     const { phone, otp } = req.body;
     let webUsers = loadJSON(webUsersFile);
@@ -609,20 +543,17 @@ app.post('/api/auth/verify', (req, res) => {
         webUsers[phone].otp = null; 
         saveJSON(webUsersFile, webUsers);
         
-        // Sinkronisasi ke Database Saldo Bot WA
         let db = loadJSON(dbFile);
         if (!db[phone]) {
             db[phone] = { saldo: 0, tanggal_daftar: new Date().toLocaleDateString('id-ID'), jid: phone + '@s.whatsapp.net' };
             saveJSON(dbFile, db);
         }
-
         res.json({ message: 'Verifikasi sukses!' });
     } else {
         res.status(400).json({ error: 'OTP Salah.' });
     }
 });
 
-// 3. LOGIN (CEK VERIFIKASI)
 app.post('/api/auth/login', (req, res) => {
     const { identifier, password } = req.body;
     let webUsers = loadJSON(webUsersFile);
@@ -635,7 +566,6 @@ app.post('/api/auth/login', (req, res) => {
 
     if (foundPhone) {
         if (!webUsers[foundPhone].isVerified) return res.status(400).json({ error: 'Akun belum diverifikasi OTP. Silakan Daftar Ulang.' });
-        // Sembunyikan password saat dikirim ke frontend
         let userData = { phone: foundPhone, name: webUsers[foundPhone].name, email: webUsers[foundPhone].email };
         res.json({ message: 'Login sukses', user: userData });
     } else {
@@ -643,7 +573,6 @@ app.post('/api/auth/login', (req, res) => {
     }
 });
 
-// 4. MINTA OTP LUPA PASSWORD
 app.post('/api/auth/forgot', async (req, res) => {
     const { phone } = req.body;
     let webUsers = loadJSON(webUsersFile);
@@ -653,7 +582,7 @@ app.post('/api/auth/forgot', async (req, res) => {
         return res.status(400).json({ error: 'Nomor belum terdaftar / belum diverifikasi.' });
     }
 
-    const otp = Math.floor(1000 + Math.random() * 9000).toString(); // 4 Digit
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
     webUsers[formattedPhone].otp = otp;
     saveJSON(webUsersFile, webUsers);
 
@@ -664,7 +593,6 @@ app.post('/api/auth/forgot', async (req, res) => {
     else res.status(500).json({ error: 'Gagal mengirim WA. Pastikan Bot Aktif.' });
 });
 
-// 5. EKSEKUSI RESET PASSWORD
 app.post('/api/auth/reset', (req, res) => {
     const { phone, otp, newPassword } = req.body;
     let webUsers = loadJSON(webUsersFile);
@@ -685,14 +613,10 @@ if (require.main === module) {
 }
 EOF
 
-# Instal modul Node.js (Library)
 npm install --silent
 npm install -g pm2 > /dev/null 2>&1
 
-# ==========================================
-# 4. SETUP SHORTCUT MENU & PM2
-# ==========================================
-echo "[5/5] Membuat Panel Manajemen 'menu'..."
+echo "[5/5] Memperbarui Panel Manajemen..."
 cat << 'EOF' > /usr/bin/menu
 #!/bin/bash
 DIR_NAME="digital-fiky-store"
@@ -700,7 +624,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V10) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V11) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
