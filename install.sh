@@ -128,8 +128,6 @@ body {
 
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-.tab-active { border-bottom: 3px solid #001229; color: #001229; font-weight: bold; }
-.dark .tab-active { border-bottom: 3px solid #fde047; color: #fde047; }
 
 /* Custom SweetAlert2 Styling */
 .swal2-popup {
@@ -496,7 +494,7 @@ cat << 'EOF' > public/dashboard.html
         applyDarkMode();
 
         fetch('/api/banners').then(res => res.json()).then(data => {
-            if(data.banners && data.banners.length > 0) {
+            if(data.banners && data.banners.length > 0 && data.banners[0] !== "") {
                 const slider = document.getElementById('promoSlider');
                 const dotsContainer = document.getElementById('promoDots');
                 slider.innerHTML = data.banners.map(url => `<div class="w-full h-full shrink-0 snap-center relative"><img src="${url}" class="absolute inset-0 w-full h-full object-cover"></div>`).join('');
@@ -519,7 +517,7 @@ cat << 'EOF' > public/dashboard.html
 </html>
 EOF
 
-# HTML PROFIL BARU
+# HTML PROFIL PREMIUM DARK (SESUAI GAMBAR)
 cat << 'EOF' > public/profile.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -530,56 +528,55 @@ cat << 'EOF' > public/profile.html
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>tailwind.config = { darkMode: 'class' }</script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 font-sans transition-colors duration-300">
-    <div class="max-w-md mx-auto bg-white dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl transition-colors duration-300 overflow-x-hidden">
+<body class="bg-[#0b1320] font-sans">
+    <div class="max-w-md mx-auto bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden text-white">
         
-        <div class="bg-black text-white p-8 pb-10 flex flex-col items-center relative rounded-b-3xl shadow-lg">
-            <div class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-300 rounded-full flex justify-center items-center text-black font-extrabold text-4xl mb-2 border-4 border-yellow-400 shadow-xl" id="profileCircle">U</div>
-            <div class="flex items-center gap-3 mt-2">
-                <h2 class="text-2xl font-bold tracking-wide" id="profileName">User Name</h2>
-                <i class="fas fa-pencil-alt text-gray-400 hover:text-yellow-400 cursor-pointer transition text-lg" onclick="Swal.fire({icon:'info', title:'Coming Soon', text:'Menu Edit Profil akan segera hadir!'})"></i>
+        <div class="bg-[#050b14] p-8 pb-10 flex flex-col items-center relative rounded-b-[2rem] shadow-lg">
+            <div class="absolute top-6 right-6 text-xl cursor-pointer hover:text-yellow-400 transition" onclick="Swal.fire({icon:'info', title:'Coming Soon', text:'Menu Edit Profil akan segera hadir!'})">
+                <i class="fas fa-pencil-alt text-gray-300"></i>
+            </div>
+            
+            <div class="w-24 h-24 bg-gray-200 rounded-full flex justify-center items-center text-black font-extrabold text-4xl mt-2 mb-3 shadow-xl" id="profileCircle">
+                U
+            </div>
+            
+            <h2 class="text-2xl font-bold tracking-wide text-gray-100" id="profileName">User Name</h2>
+        </div>
+
+        <div class="mt-4 px-2">
+            <div class="flex items-center px-4 py-5 border-b border-gray-800">
+                <i class="fas fa-envelope text-gray-400 w-10 text-xl text-center"></i>
+                <div class="flex-1 text-[15px] font-bold text-gray-200 ml-2">Email</div>
+                <div class="text-sm text-gray-400" id="profileEmail">-</div>
+            </div>
+            <div class="flex items-center px-4 py-5 border-b border-gray-800">
+                <i class="fas fa-phone-alt text-gray-400 w-10 text-xl text-center"></i>
+                <div class="flex-1 text-[15px] font-bold text-gray-200 ml-2">No. Telp</div>
+                <div class="text-sm text-gray-400" id="profilePhoneData">08...</div>
+            </div>
+            <div class="flex items-center px-4 py-5 border-b border-gray-800">
+                <i class="fas fa-wallet text-gray-400 w-10 text-xl text-center"></i>
+                <div class="flex-1 text-[15px] font-bold text-gray-200 ml-2">Saldo Akun</div>
+                <div class="text-sm font-bold text-yellow-400" id="profileSaldo">Rp 0</div>
+            </div>
+            <div class="flex items-center px-4 py-5 border-b border-gray-800">
+                <i class="fas fa-shopping-cart text-gray-400 w-10 text-xl text-center"></i>
+                <div class="flex-1 text-[15px] font-bold text-gray-200 ml-2">Jumlah Transaksi</div>
+                <div class="text-sm text-gray-400">0 Trx</div>
+            </div>
+            <div class="flex items-center px-4 py-5 border-b border-gray-800 cursor-pointer hover:bg-gray-800/50 transition" onclick="location.href='/forgot.html'">
+                <i class="fas fa-lock text-gray-400 w-10 text-xl text-center"></i>
+                <div class="flex-1 text-[15px] font-bold text-gray-200 ml-2">Ubah Password</div>
+                <i class="fas fa-chevron-right text-gray-500 text-sm"></i>
+            </div>
+            <div class="flex items-center px-4 py-5 cursor-pointer hover:bg-gray-800/50 transition" onclick="logout()">
+                <i class="fas fa-sign-out-alt text-red-600 w-10 text-xl text-center"></i>
+                <div class="flex-1 text-[15px] font-bold text-red-600 ml-2">Keluar Akun</div>
             </div>
         </div>
 
-        <div class="mt-4">
-            <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800">
-                <i class="fas fa-envelope text-[#002147] dark:text-yellow-400 w-10 text-xl"></i>
-                <div class="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">Email</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400" id="profileEmail">-</div>
-            </div>
-            <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800">
-                <i class="fas fa-phone-alt text-[#002147] dark:text-yellow-400 w-10 text-xl"></i>
-                <div class="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">No. Telp</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400" id="profilePhoneData">08...</div>
-            </div>
-            <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800">
-                <i class="fas fa-wallet text-[#002147] dark:text-yellow-400 w-10 text-xl"></i>
-                <div class="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">Saldo Akun</div>
-                <div class="text-sm font-bold text-blue-600 dark:text-blue-400" id="profileSaldo">Rp 0</div>
-            </div>
-            <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800">
-                <i class="fas fa-shopping-cart text-[#002147] dark:text-yellow-400 w-10 text-xl"></i>
-                <div class="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">Jumlah Transaksi</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">0 Trx</div>
-            </div>
-            <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition" onclick="location.href='/forgot.html'">
-                <i class="fas fa-key text-[#002147] dark:text-yellow-400 w-10 text-xl"></i>
-                <div class="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">Reset Password</div>
-                <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
-            </div>
-            <div class="flex items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800 cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 transition" onclick="logout()">
-                <i class="fas fa-sign-out-alt text-red-600 w-10 text-xl"></i>
-                <div class="flex-1 text-sm font-bold text-red-600">Keluar Akun</div>
-            </div>
-        </div>
-
-        <div class="mt-8 text-center text-[10px] text-gray-400 dark:text-gray-500">
-            Powered by<br><span class="font-bold text-gray-600 dark:text-gray-400 text-xs">DIGITAL FIKY STORE</span>
-        </div>
-
-        <div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40">
+        <div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.5)] z-40">
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div>
@@ -614,15 +611,13 @@ cat << 'EOF' > public/profile.html
 
         fetch('/api/user/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) })
         .then(res => res.json()).then(data => { document.getElementById('profileSaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); });
-
-        if(localStorage.getItem('darkMode') === 'true') document.getElementById('html-root').classList.add('dark');
     </script>
 </body>
 </html>
 EOF
 
 # ==========================================
-# FILE NODE.JS (LOGIK BOT + API BANNERS)
+# FILE NODE.JS (LOGIK BOT + API)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -673,7 +668,7 @@ app.post('/api/auth/register', async (req, res) => {
     const { name, phone, email, password } = req.body;
     let webUsers = loadJSON(webUsersFile);
     let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
-    if (webUsers[fPhone] && webUsers[fPhone].isVerified) return res.status(400).json({ error: 'Nomor terdaftar.' });
+    if (webUsers[fPhone] && webUsers[fPhone].isVerified) return res.status(400).json({ error: 'Nomor sudah terdaftar.' });
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
     webUsers[fPhone] = { name, email, password, isVerified: false, otp };
     saveJSON(webUsersFile, webUsers);
@@ -766,7 +761,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V32) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V33) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
