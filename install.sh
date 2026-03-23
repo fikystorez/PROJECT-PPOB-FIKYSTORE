@@ -14,27 +14,12 @@ DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 PORT=3000
 
-C_RED="\e[31m"
-C_GREEN="\e[32m"
-C_YELLOW="\e[33m"
-C_CYAN="\e[36m"
-C_MAG="\e[35m"
-C_RST="\e[0m"
-C_BOLD="\e[1m"
-
-# Buka Port
-sudo ufw allow 3000/tcp > /dev/null 2>&1 || true
-sudo ufw allow 80/tcp > /dev/null 2>&1 || true
-sudo ufw allow 443/tcp > /dev/null 2>&1 || true
-
-echo -e "${C_CYAN}${C_BOLD}==========================================================${C_RST}"
-echo -e "${C_YELLOW}${C_BOLD} MENGINSTAL DIGITAL FIKY STORE - V57 (STABLE CLEAN CODE)  ${C_RST}"
-echo -e "${C_CYAN}${C_BOLD}==========================================================${C_RST}"
+echo "=========================================================="
+echo " MENGINSTAL DIGITAL FIKY STORE - V58 (STABLE CODEBASE)    "
+echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
-export DEBIAN_FRONTEND=noninteractive
-apt update -y > /dev/null 2>&1
-apt install curl wget gnupg git dos2unix psmisc zip unzip -y > /dev/null 2>&1
+apt update -y && apt install curl wget gnupg git dos2unix psmisc zip unzip -y > /dev/null 2>&1
 
 if ! command -v node > /dev/null 2>&1; then
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - > /dev/null 2>&1
@@ -45,13 +30,13 @@ echo "[2/5] Membuat direktori aplikasi dan web..."
 mkdir -p "$HOME/$DIR_NAME/public"
 cd "$HOME/$DIR_NAME"
 
-# Bersihkan file enkripsi jika sebelumnya ada (Clean Up)
+# Bersihkan sisa-sisa module dari versi sebelumnya jika ada
 rm -f fiky_crypt.js tendo_crypt.js
 
 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
-  "version": "5.7.0",
+  "version": "1.0.0",
   "description": "Aplikasi PPOB DIGITAL FIKY STORE",
   "main": "index.js",
   "scripts": { "start": "node index.js" },
@@ -92,7 +77,7 @@ body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-
 EOF
 
 cat << 'EOF' > public/index.html
-<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Login - DIGITAL FIKY STORE</title><link rel="stylesheet" href="style.css"><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></head><body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]"><div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div><div class="centered-modal-box pt-14"><div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4"><h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1></div><h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2><form id="loginForm"><div><label class="compact-label">Email / No. HP</label><input type="text" id="identifier" class="compact-input-box" required placeholder="Ketik disini"></div><div><label class="compact-label">Password</label><div class="relative mb-[0.85rem]"><input type="password" id="password" class="compact-input-box !mb-0 pr-10" required placeholder="Ketik disini"><i class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-gray-700 transition" onclick="togglePassword('password', this)"></i></div></div><div class="text-right mb-5 mt-[-5px]"><a href="/forgot.html" class="compact-link-small">Lupa password?</a></div><button type="submit" class="btn-yellow" id="btnLogin">Login Sekarang</button></form><div class="mt-6 text-center compact-text-small">Belum punya akun? <a href="/register.html" class="compact-link-small">Daftar disini</a></div></div>
+<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Login - DIGITAL FIKY STORE</title><link rel="stylesheet" href="style.css"><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></head><body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]"><div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div><div class="centered-modal-box pt-14"><div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4"><h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1></div><h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2><form id="loginForm"><div><label class="compact-label">Email / No. HP</label><input type="text" id="identifier" class="compact-input-box" required placeholder="Ketik disini"></div><div><label class="compact-label">Password</label><div class="relative mb-[0.85rem]"><input type="password" id="password" class="compact-input-box !mb-0 pr-10" required placeholder="Ketik disini"><i class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-gray-700 transition" onclick="togglePassword('password', this)"></i></div></div><div class="text-right mb-5 mt-[-5px]"><a href="/forgot.html" class="compact-link-small">Lupa password?</a></div><button type="submit" class="btn-yellow">Login Sekarang</button></form><div class="mt-6 text-center compact-text-small">Belum punya akun? <a href="/register.html" class="compact-link-small">Daftar disini</a></div></div>
 <div id="customAlert" class="fixed inset-0 z-[999] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-700 transform transition-transform scale-100"><div id="alertIcon" class="mb-4 text-6xl"></div><h3 class="text-xl font-bold text-white mb-2 tracking-wide" id="alertTitle">Pemberitahuan</h3><p class="text-sm text-gray-300 mb-6" id="alertMessage">Pesan</p><button onclick="closeAlert()" class="bg-[#001229] dark:bg-[#facc15] text-yellow-400 dark:text-[#0f172a] w-full py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-[#002147] dark:hover:bg-yellow-500 transition">OKE</button></div></div>
 <script>
     function togglePassword(id, icon) { const el = document.getElementById(id); if(el.type === 'password') { el.type = 'text'; icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash'); } else { el.type = 'password'; icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); } }
@@ -100,20 +85,18 @@ cat << 'EOF' > public/index.html
     function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check text-green-500"></i>' : '<i class="fas fa-times text-red-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; }
     function closeAlert() { document.getElementById('customAlert').classList.add('hidden'); if(alertCallback) alertCallback(); }
     document.getElementById('loginForm').addEventListener('submit', async (e) => { 
-        e.preventDefault(); document.getElementById('btnLogin').innerText = 'Memproses...'; const identifier = document.getElementById('identifier').value; const password = document.getElementById('password').value; 
+        e.preventDefault(); const identifier = document.getElementById('identifier').value; const password = document.getElementById('password').value; 
         try { 
             const res = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password }) }); 
             const data = await res.json(); 
-            if (res.ok && data.success !== false) { 
-                localStorage.setItem('user', JSON.stringify(data.user || data.data)); window.location.href = '/dashboard.html'; 
-            } else { showAlert('Login Gagal', data.error || data.message || 'Terjadi kesalahan.', false); document.getElementById('btnLogin').innerText = 'Login Sekarang'; } 
-        } catch (err) { showAlert('Error', 'Gagal terhubung ke server.', false); document.getElementById('btnLogin').innerText = 'Login Sekarang'; } 
+            if (res.ok) { localStorage.setItem('user', JSON.stringify(data.user)); window.location.href = '/dashboard.html'; } else { showAlert('Login Gagal', data.error, false); } 
+        } catch (err) { showAlert('Error', 'Gagal terhubung ke server.', false); } 
     });
 </script></body></html>
 EOF
 
 cat << 'EOF' > public/register.html
-<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Daftar - DIGITAL FIKY STORE</title><link rel="stylesheet" href="style.css"><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></head><body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]"><div class="z-20 mb-[-42px]" id="logo-header"><div class="logo-f-metalik-box"></div></div><div class="centered-modal-box pt-14" id="box-register"><div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-2"><h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1></div><h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2><form id="registerForm"><div><label class="compact-label">Nama Lengkap</label><input type="text" id="name" class="compact-input-box" required placeholder="Ketik disini"></div><div><label class="compact-label">Nomor WA Aktif</label><input type="number" id="phone" class="compact-input-box" required placeholder="08123..."></div><div><label class="compact-label">Email</label><input type="email" id="email" class="compact-input-box" required placeholder="Ketik disini"></div><div><label class="compact-label">Password</label><div class="relative mb-[0.85rem]"><input type="password" id="password" class="compact-input-box !mb-0 pr-10" required placeholder="Ketik disini"><i class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-gray-700 transition" onclick="togglePassword('password', this)"></i></div></div><button type="submit" class="btn-yellow mt-1" id="btnRegister">Daftar Sekarang</button></form><div class="mt-4 text-center compact-text-small">Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a></div></div><div class="centered-modal-box pt-14 hidden" id="box-otp"><h2 class="text-lg font-bold text-white mb-1">VERIFIKASI WA</h2><p class="compact-text-small mb-5 text-center">4 Digit OTP dikirim ke WA Anda.</p><form id="otpForm"><div><label class="compact-label text-center">Kode OTP</label><input type="number" id="otpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX"></div><button type="submit" class="btn-yellow mt-4" id="btnVerify">Verifikasi OTP</button></form></div>
+<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Daftar - DIGITAL FIKY STORE</title><link rel="stylesheet" href="style.css"><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></head><body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]"><div class="z-20 mb-[-42px]" id="logo-header"><div class="logo-f-metalik-box"></div></div><div class="centered-modal-box pt-14" id="box-register"><div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-2"><h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1></div><h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2><form id="registerForm"><div><label class="compact-label">Nama Lengkap</label><input type="text" id="name" class="compact-input-box" required placeholder="Ketik disini"></div><div><label class="compact-label">Nomor WA Aktif</label><input type="number" id="phone" class="compact-input-box" required placeholder="08123..."></div><div><label class="compact-label">Email</label><input type="email" id="email" class="compact-input-box" required placeholder="Ketik disini"></div><div><label class="compact-label">Password</label><div class="relative mb-[0.85rem]"><input type="password" id="password" class="compact-input-box !mb-0 pr-10" required placeholder="Ketik disini"><i class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-gray-700 transition" onclick="togglePassword('password', this)"></i></div></div><button type="submit" class="btn-yellow mt-1">Daftar Sekarang</button></form><div class="mt-4 text-center compact-text-small">Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a></div></div><div class="centered-modal-box pt-14 hidden" id="box-otp"><h2 class="text-lg font-bold text-white mb-1">VERIFIKASI WA</h2><p class="compact-text-small mb-5 text-center">4 Digit OTP dikirim ke WA Anda.</p><form id="otpForm"><div><label class="compact-label text-center">Kode OTP</label><input type="number" id="otpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX"></div><button type="submit" class="btn-yellow mt-4">Verifikasi OTP</button></form></div>
 <div id="customAlert" class="fixed inset-0 z-[999] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-700"><div id="alertIcon" class="mb-4 text-6xl"></div><h3 class="text-xl font-bold text-white mb-2 tracking-wide" id="alertTitle">Pemberitahuan</h3><p class="text-sm text-gray-300 mb-6" id="alertMessage">Pesan</p><button onclick="closeAlert()" class="bg-[#001229] dark:bg-[#facc15] text-yellow-400 dark:text-[#0f172a] w-full py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-[#002147] dark:hover:bg-yellow-500 transition">OKE</button></div></div>
 <script>
     function togglePassword(id, icon) { const el = document.getElementById(id); if(el.type === 'password') { el.type = 'text'; icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash'); } else { el.type = 'password'; icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); } }
@@ -123,50 +106,52 @@ cat << 'EOF' > public/register.html
 
     let registeredPhone = ''; 
     document.getElementById('registerForm').addEventListener('submit', async (e) => { 
-        e.preventDefault(); document.getElementById('btnRegister').innerText = 'Memproses...'; const name = document.getElementById('name').value; const phone = document.getElementById('phone').value; const email = document.getElementById('email').value; const password = document.getElementById('password').value; 
+        e.preventDefault(); const name = document.getElementById('name').value; const phone = document.getElementById('phone').value; const email = document.getElementById('email').value; const password = document.getElementById('password').value; 
         try { 
             const res = await fetch('/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, email, password }) }); 
             const data = await res.json(); 
-            if (res.ok && data.success !== false) { registeredPhone = data.phone; document.getElementById('box-register').classList.add('hidden'); document.getElementById('box-otp').classList.remove('hidden'); showAlert('Berhasil', 'OTP Terkirim ke WhatsApp Anda!', true); } 
-            else { showAlert('Pendaftaran Gagal', data.error || data.message || 'Terjadi kesalahan.', false); document.getElementById('btnRegister').innerText = 'Daftar Sekarang'; } 
-        } catch (err) { showAlert('Error', 'Sistem sedang sibuk.', false); document.getElementById('btnRegister').innerText = 'Daftar Sekarang'; } 
+            if (res.ok) { registeredPhone = data.phone; document.getElementById('box-register').classList.add('hidden'); document.getElementById('box-otp').classList.remove('hidden'); showAlert('Berhasil', 'OTP Terkirim ke WhatsApp Anda!', true); } 
+            else { showAlert('Pendaftaran Gagal', data.error || 'Terjadi kesalahan.', false); } 
+        } catch (err) { showAlert('Error', 'Sistem sedang sibuk atau offline.', false); } 
     }); 
     document.getElementById('otpForm').addEventListener('submit', async (e) => { 
-        e.preventDefault(); document.getElementById('btnVerify').innerText = 'Memproses...'; const otp = document.getElementById('otpCode').value; 
+        e.preventDefault(); const otp = document.getElementById('otpCode').value; 
         try { 
             const res = await fetch('/api/auth/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: registeredPhone, otp }) }); 
             const data = await res.json();
-            if (res.ok && data.success !== false) { showAlert('Verifikasi Sukses!', 'Pendaftaran Selesai. Silakan Login.', true, () => { window.location.href = '/'; }); } 
-            else { showAlert('Verifikasi Gagal', data.error || data.message || 'OTP Salah.', false); document.getElementById('btnVerify').innerText = 'Verifikasi OTP'; } 
-        } catch (err) { showAlert('Error', 'Sistem sedang sibuk.', false); document.getElementById('btnVerify').innerText = 'Verifikasi OTP'; } 
+            if (res.ok) { showAlert('Verifikasi Sukses!', 'OTP Berhasil! Pendaftaran Selesai.', true, () => { window.location.href = '/'; }); } 
+            else { showAlert('Verifikasi Gagal', data.error || 'OTP Salah / Expired.', false); } 
+        } catch (err) { showAlert('Error', 'Sistem sedang sibuk.', false); } 
     });
 </script></body></html>
 EOF
 
 cat << 'EOF' > public/forgot.html
-<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Lupa Password - DIGITAL FIKY STORE</title><link rel="stylesheet" href="style.css"><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></head><body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]"><div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div><div class="centered-modal-box pt-14"><h2 class="text-lg font-bold text-white mb-1">RESET PASSWORD</h2><form id="requestOtpForm"><p class="compact-text-small mb-5 text-center">Masukkan Nomor WA.</p><input type="number" id="phone" class="compact-input-box text-center" required placeholder="08123..."><button type="submit" class="btn-yellow mt-2" id="btnReq">Kirim OTP</button></form><form id="resetForm" class="hidden mt-4"><input type="number" id="otp" class="compact-input-box text-center font-bold" required placeholder="OTP 4 Digit"><div><label class="compact-label mt-2 text-left">Password Baru</label><div class="relative mb-[0.85rem]"><input type="password" id="newPassword" class="compact-input-box !mb-0 pr-10" required placeholder="Ketik disini"><i class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-gray-700 transition" onclick="togglePassword('newPassword', this)"></i></div></div><button type="submit" class="btn-yellow mt-3" id="btnReset">Simpan</button></form><div class="mt-6 text-center compact-text-small"><a href="/" class="compact-link-small">Kembali ke Login</a></div></div>
+<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Lupa Password - DIGITAL FIKY STORE</title><link rel="stylesheet" href="style.css"><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></head><body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]"><div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div><div class="centered-modal-box pt-14"><h2 class="text-lg font-bold text-white mb-1">RESET PASSWORD</h2><form id="requestOtpForm"><p class="compact-text-small mb-5 text-center">Masukkan Nomor WA.</p><input type="number" id="phone" class="compact-input-box text-center" required placeholder="08123..."><button type="submit" class="btn-yellow mt-2">Kirim OTP</button></form><form id="resetForm" class="hidden mt-4"><input type="number" id="otp" class="compact-input-box text-center font-bold" required placeholder="OTP 4 Digit"><div><label class="compact-label mt-2 text-left">Password Baru</label><div class="relative mb-[0.85rem]"><input type="password" id="newPassword" class="compact-input-box !mb-0 pr-10" required placeholder="Ketik disini"><i class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-gray-700 transition" onclick="togglePassword('newPassword', this)"></i></div></div><button type="submit" class="btn-yellow mt-3">Simpan</button></form><div class="mt-6 text-center compact-text-small"><a href="/" class="compact-link-small">Kembali ke Login</a></div></div>
 <div id="customAlert" class="fixed inset-0 z-[999] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-700"><div id="alertIcon" class="mb-4 text-6xl"></div><h3 class="text-xl font-bold text-white mb-2 tracking-wide" id="alertTitle">Pemberitahuan</h3><p class="text-sm text-gray-300 mb-6" id="alertMessage">Pesan</p><button onclick="closeAlert()" class="bg-[#001229] dark:bg-[#facc15] text-yellow-400 dark:text-[#0f172a] w-full py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-[#002147] dark:hover:bg-yellow-500 transition">OKE</button></div></div>
 <script>
     function togglePassword(id, icon) { const el = document.getElementById(id); if(el.type === 'password') { el.type = 'text'; icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash'); } else { el.type = 'password'; icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); } }
-    let alertCallback = null; function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check text-green-500"></i>' : '<i class="fas fa-times text-red-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; } function closeAlert() { document.getElementById('customAlert').classList.add('hidden'); if(alertCallback) alertCallback(); }
+    let alertCallback = null;
+    function showAlert(title, msg, isSuccess, cb) { document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = msg; document.getElementById('alertIcon').innerHTML = isSuccess ? '<i class="fas fa-check text-green-500"></i>' : '<i class="fas fa-times text-red-500"></i>'; document.getElementById('customAlert').classList.remove('hidden'); alertCallback = cb; }
+    function closeAlert() { document.getElementById('customAlert').classList.add('hidden'); if(alertCallback) alertCallback(); }
     let resetPhone=''; 
     document.getElementById('requestOtpForm').addEventListener('submit', async(e)=>{
-        e.preventDefault(); document.getElementById('btnReq').innerText = 'Memproses...'; resetPhone=document.getElementById('phone').value; 
+        e.preventDefault(); resetPhone=document.getElementById('phone').value; 
         try { 
             const res=await fetch('/api/auth/forgot', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({phone:resetPhone})}); 
             const data = await res.json(); 
-            if(res.ok && data.success !== false){ resetPhone = data.phone; document.getElementById('requestOtpForm').classList.add('hidden'); document.getElementById('resetForm').classList.remove('hidden'); showAlert('Berhasil', 'OTP Terkirim ke WhatsApp Anda!', true); }
-            else{ showAlert('Gagal', data.error || data.message || 'Gagal mengirim OTP.', false); document.getElementById('btnReq').innerText = 'Kirim OTP'; } 
-        } catch(err) { showAlert('Error', 'Gagal terhubung ke server.', false); document.getElementById('btnReq').innerText = 'Kirim OTP'; } 
+            if(res.ok){ resetPhone = data.phone; document.getElementById('requestOtpForm').classList.add('hidden'); document.getElementById('resetForm').classList.remove('hidden'); showAlert('Berhasil', 'OTP Terkirim ke WhatsApp Anda!', true); }
+            else{ showAlert('Gagal', data.error || 'Gagal mengirim OTP.', false); } 
+        } catch(err) { showAlert('Error', 'Gagal terhubung ke server.', false); } 
     }); 
     document.getElementById('resetForm').addEventListener('submit', async(e)=>{
-        e.preventDefault(); document.getElementById('btnReset').innerText = 'Memproses...'; const otp=document.getElementById('otp').value; const newPassword=document.getElementById('newPassword').value; 
+        e.preventDefault(); const otp=document.getElementById('otp').value; const newPassword=document.getElementById('newPassword').value; 
         try { 
             const res=await fetch('/api/auth/reset', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({phone:resetPhone, otp, newPassword})}); 
             const data = await res.json();
-            if(res.ok && data.success !== false){ showAlert('Berhasil', 'Password diubah! Silakan Login.', true, () => { window.location.href='/'; }); }
-            else{ showAlert('Gagal', data.error || data.message || 'Kode OTP Salah.', false); document.getElementById('btnReset').innerText = 'Simpan'; } 
-        } catch(err) { showAlert('Error', 'Gagal terhubung ke server.', false); document.getElementById('btnReset').innerText = 'Simpan'; } 
+            if(res.ok){ showAlert('Berhasil', 'Password berhasil diubah!', true, () => { window.location.href='/'; }); }
+            else{ showAlert('Gagal', data.error || 'Kode OTP Salah.', false); } 
+        } catch(err) { showAlert('Error', 'Gagal terhubung ke server.', false); } 
     });
 </script></body></html>
 EOF
@@ -264,10 +249,10 @@ cat << 'EOF' > public/dashboard.html
         </div>
     </div>
 
-    <div id="customAlert" class="fixed inset-0 z-[1001] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-white dark:bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-2xl border border-gray-700 transform transition-transform scale-100"><div id="alertIcon" class="mb-4 text-6xl"></div><h3 class="text-xl font-bold text-[#001229] dark:text-white mb-2 tracking-wide" id="alertTitle">Pemberitahuan</h3><p class="text-sm text-gray-500 dark:text-gray-300 mb-6" id="alertMessage">Pesan</p><button onclick="closeAlert()" class="bg-[#001229] dark:bg-[#facc15] text-yellow-400 dark:text-[#0f172a] w-full py-3 rounded-xl font-bold tracking-widest shadow-md hover:bg-[#002147] dark:hover:bg-yellow-500 transition">OKE</button></div></div>
+    <div id="customAlert" class="fixed inset-0 z-[1001] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-white dark:bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-700 transform transition-transform scale-100"><div id="alertIcon" class="mb-4 text-6xl"></div><h3 class="text-xl font-bold text-[#001229] dark:text-white mb-2 tracking-wide" id="alertTitle">Pemberitahuan</h3><p class="text-sm text-gray-500 dark:text-gray-300 mb-6" id="alertMessage">Pesan</p><button onclick="closeAlert()" class="bg-[#001229] dark:bg-[#facc15] text-yellow-400 dark:text-[#0f172a] w-full py-3 rounded-xl font-bold tracking-widest shadow-md">OKE</button></div></div>
     
     <div id="topupModal" class="fixed inset-0 z-[998] hidden flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm transition-all duration-300"><div class="bg-white dark:bg-[#0f172a] w-full max-w-md rounded-t-[2rem] sm:rounded-[1.5rem] p-6 shadow-2xl border-t border-gray-200 dark:border-gray-700 transform transition-transform duration-300 translate-y-full" id="topupModalContent"><div class="flex justify-between items-center mb-5"><h3 class="text-lg font-extrabold text-[#001229] dark:text-white">Isi Saldo</h3><button onclick="closeTopupModal()" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button></div><div class="mb-4"><label class="text-[11px] font-bold text-gray-500 block mb-2 ml-1">Nominal Top Up</label><div class="relative"><span class="absolute left-4 top-1/2 transform -translate-y-1/2 font-bold text-[#001229] dark:text-gray-300">Rp</span><input type="number" id="topupNominal" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-3 pl-12 pr-4 text-lg font-bold text-[#001229] dark:text-white outline-none focus:border-yellow-400 transition" placeholder="0"></div></div><div class="grid grid-cols-4 gap-2 mb-6"><button onclick="setNominal(10000)" class="bg-gray-100 dark:bg-gray-800 text-xs font-bold py-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-yellow-50 hover:border-yellow-400 transition">10k</button><button onclick="setNominal(20000)" class="bg-gray-100 dark:bg-gray-800 text-xs font-bold py-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-yellow-50 hover:border-yellow-400 transition">20k</button><button onclick="setNominal(50000)" class="bg-gray-100 dark:bg-gray-800 text-xs font-bold py-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-yellow-50 hover:border-yellow-400 transition">50k</button><button onclick="setNominal(100000)" class="bg-gray-100 dark:bg-gray-800 text-xs font-bold py-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-yellow-50 hover:border-yellow-400 transition">100k</button></div><label class="text-[11px] font-bold text-gray-500 block mb-2 ml-1">Metode Pembayaran</label><div class="space-y-3 mb-6"><label class="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition method-label" id="lbl-qris"><div class="flex items-center gap-3"><div class="w-10 h-10 bg-blue-50 dark:bg-blue-900/30 rounded-full flex items-center justify-center"><i class="fas fa-qrcode text-xl text-blue-500 dark:text-yellow-400"></i></div><div><p class="text-sm font-bold text-[#001229] dark:text-white">QRIS Otomatis</p><p class="text-[10px] text-gray-500">Bebas biaya admin</p></div></div><input type="radio" name="paymentMethod" value="qris" class="hidden" onchange="selectMethod('qris')"><div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center radio-indicator" id="radio-qris"><div class="w-2.5 h-2.5 bg-yellow-400 rounded-full hidden inner-dot"></div></div></label><label class="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition method-label" id="lbl-manual"><div class="flex items-center gap-3"><div class="w-10 h-10 bg-green-50 dark:bg-green-900/30 rounded-full flex items-center justify-center"><i class="fab fa-whatsapp text-xl text-green-500"></i></div><div><p class="text-sm font-bold text-[#001229] dark:text-white">Transfer Manual (WA)</p><p class="text-[10px] text-gray-500">Konfirmasi ke Admin</p></div></div><input type="radio" name="paymentMethod" value="manual" class="hidden" onchange="selectMethod('manual')"><div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center radio-indicator" id="radio-manual"><div class="w-2.5 h-2.5 bg-yellow-400 rounded-full hidden inner-dot"></div></div></label></div><button onclick="processTopup()" class="w-full bg-[#001229] dark:bg-yellow-400 text-yellow-400 dark:text-[#001229] py-3.5 rounded-xl font-bold tracking-wide shadow-lg">Lanjutkan Pembayaran</button></div></div>
-    <div id="qrisModal" class="fixed inset-0 z-[999] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-white dark:bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-2xl border border-gray-700 relative"><button onclick="closeQrisModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fas fa-times text-xl"></i></button><h3 class="text-lg font-extrabold text-[#001229] dark:text-white mb-1">Pembayaran QRIS</h3><p class="text-[11px] text-gray-500 dark:text-gray-400 mb-4">Scan kode QR di bawah ini</p><div class="bg-white p-2 rounded-xl inline-block mb-4 shadow-sm border border-gray-200"><img id="qrisImg" src="" class="w-48 h-48 object-cover rounded-lg"></div><p class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">Total Pembayaran</p><h2 class="text-2xl font-extrabold text-blue-600 dark:text-yellow-400 mb-5 tracking-wide" id="qrisAmountDisplay">Rp 0</h2><button onclick="confirmQris()" class="w-full bg-[#001229] dark:bg-yellow-400 text-yellow-400 dark:text-[#001229] py-3 rounded-xl font-bold shadow-md">Saya Sudah Bayar</button></div></div>
+    <div id="qrisModal" class="fixed inset-0 z-[999] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="bg-white dark:bg-[#0f172a] rounded-[1.5rem] p-6 w-full max-w-[320px] text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-gray-100 dark:border-gray-700 relative"><button onclick="closeQrisModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fas fa-times text-xl"></i></button><h3 class="text-lg font-extrabold text-[#001229] dark:text-white mb-1">Pembayaran QRIS</h3><p class="text-[11px] text-gray-500 dark:text-gray-400 mb-4">Scan kode QR di bawah ini</p><div class="bg-white p-2 rounded-xl inline-block mb-4 shadow-sm border border-gray-200"><img id="qrisImg" src="" class="w-48 h-48 object-cover rounded-lg"></div><p class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">Total Pembayaran</p><h2 class="text-2xl font-extrabold text-blue-600 dark:text-yellow-400 mb-5 tracking-wide" id="qrisAmountDisplay">Rp 0</h2><button onclick="confirmQris()" class="w-full bg-[#001229] dark:bg-yellow-400 text-yellow-400 dark:text-[#001229] py-3 rounded-xl font-bold shadow-md">Saya Sudah Bayar</button></div></div>
 
     <script>
         const user = JSON.parse(localStorage.getItem('user'));
@@ -382,112 +367,35 @@ cat << 'EOF' > public/info.html
 <!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Pusat Info - DIGITAL FIKY STORE</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-[#f4f6f9] dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl overflow-x-hidden"><div class="flex items-center p-4 bg-[#001229] text-white shadow-md sticky top-0 z-40"><i class="fas fa-arrow-left text-xl cursor-pointer text-gray-300 hover:text-white mr-4" onclick="location.href='/dashboard.html'"></i><h1 class="font-bold text-[17px] tracking-wide flex-1">Pusat Informasi</h1></div><div id="infoContainer" class="mx-4 mt-5 pb-8"><div class="flex items-center justify-center h-40"><i class="fas fa-circle-notch fa-spin text-3xl text-gray-400"></i></div></div><div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40"><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">HOME</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">RIWAYAT</span></div><div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">INFO</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold tracking-wide">PROFIL</span></div></div></div><script>const user = JSON.parse(localStorage.getItem('user')); if (!user) window.location.href = '/'; if(localStorage.getItem('darkMode') === 'true') document.getElementById('html-root').classList.add('dark'); fetch('/api/info').then(res => res.json()).then(data => { const container = document.getElementById('infoContainer'); if (data.data.length === 0) { container.innerHTML = `<div class="flex flex-col items-center justify-center mt-12"><div class="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4 shadow-inner"><i class="fas fa-bell-slash text-4xl text-gray-400"></i></div><h3 class="font-bold text-[#001229] dark:text-gray-100 text-lg">Belum Ada Informasi</h3><p class="text-xs text-gray-500 mt-2 text-center max-w-[200px]">Saat ini belum ada pengumuman atau informasi terbaru.</p></div>`; } else { let html = ''; data.data.forEach(info => { html += `<div class="bg-white dark:bg-[#0f172a] rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mb-4 flex gap-4 transition-transform hover:-translate-y-1 cursor-pointer"><div class="w-12 h-12 rounded-full bg-blue-50 dark:bg-black flex items-center justify-center text-blue-600 dark:text-yellow-400 shrink-0 border border-transparent dark:border-gray-700"><i class="fas fa-bullhorn text-xl"></i></div><div class="flex-1"><div class="flex justify-between items-start mb-1"><h4 class="font-bold text-[#001229] dark:text-gray-100 text-sm leading-tight pr-2">${info.title}</h4><span class="text-[9px] font-bold text-gray-400 shrink-0 mt-0.5">${info.date}</span></div><p class="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed">${info.content}</p></div></div>`; }); container.innerHTML = html; } }).catch(err => { document.getElementById('infoContainer').innerHTML = `<p class="text-center text-sm text-red-500 mt-10">Gagal memuat informasi.</p>`; });</script></body></html>
 EOF
 
-echo "[4/5] Mengatur sistem Backend (index.js)..."
+echo "[4/5] Mengatur sistem Backend Server..."
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, Browsers, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
-const fs = require('fs');
-const pino = require('pino');
-const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
-const axios = require('axios');
-
-const app = express();
-app.use(bodyParser.json({ limit: '10mb' })); 
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use((req, res, next) => {
-    if (req.path.endsWith('.json')) return res.status(403).json({success: false, message: 'Akses Ditolak'});
-    next();
-});
-
-const configFile = './config.json';
-const dbFile = './database.json';
-const infoFile = './info.json'; 
-const trxFile = './trx.json';
-const produkFile = './produk.json';
-const topupFile = './topup.json';
+const fs = require('fs'); const pino = require('pino'); const express = require('express'); const bodyParser = require('body-parser'); const path = require('path'); const axios = require('axios');
+const app = express(); app.use(bodyParser.json({ limit: '10mb' })); app.use(express.static(path.join(__dirname, 'public')));
+const configFile = './config.json'; const dbFile = './database.json'; const infoFile = './info.json'; const trxFile = './trx.json'; const topupFile = './topup.json';
 
 const loadJSON = (file) => fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : (file === infoFile ? [] : {});
 const saveJSON = (file, data) => fs.writeFileSync(file, JSON.stringify(data, null, 2));
 
-if (!fs.existsSync(dbFile)) saveJSON(dbFile, {});
-if (!fs.existsSync(infoFile)) saveJSON(infoFile, []);
-if (!fs.existsSync(trxFile)) saveJSON(trxFile, {});
-if (!fs.existsSync(produkFile)) saveJSON(produkFile, {});
-if (!fs.existsSync(topupFile)) saveJSON(topupFile, {});
+if (!fs.existsSync(dbFile)) saveJSON(dbFile, {}); if (!fs.existsSync(infoFile)) saveJSON(infoFile, []); if (!fs.existsSync(trxFile)) saveJSON(trxFile, {}); if (!fs.existsSync(topupFile)) saveJSON(topupFile, {});
 
 let configAwal = loadJSON(configFile);
-configAwal.botName = configAwal.botName || "DIGITAL FIKY STORE";
-configAwal.botNumber = configAwal.botNumber || "";
-configAwal.digiflazzUsername = configAwal.digiflazzUsername || ""; 
-configAwal.digiflazzApiKey = configAwal.digiflazzApiKey || "";     
-configAwal.banners = configAwal.banners || ["https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80", "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=600&q=80"];
+configAwal.botName = configAwal.botName || "DIGITAL FIKY STORE"; configAwal.botNumber = configAwal.botNumber || ""; configAwal.digiUsername = configAwal.digiUsername || ""; configAwal.digiApiKey = configAwal.digiApiKey || ""; configAwal.banners = configAwal.banners || ["https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80", "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=600&q=80"];
 saveJSON(configFile, configAwal);
 
 let globalSock = null;
 
-const sendWhatsAppMessage = async (phone, message) => {
-    try {
-        if (!globalSock) return false;
-        const jid = phone + '@s.whatsapp.net';
-        await globalSock.sendMessage(jid, { text: message });
-        return true;
-    } catch (error) { return false; }
-};
+const sendWhatsAppMessage = async (phone, message) => { try { if (!globalSock) return false; await globalSock.sendMessage(phone + '@s.whatsapp.net', { text: message }); return true; } catch (error) { return false; } };
 
 app.get('/api/banners', (req, res) => res.json({ success: true, data: loadJSON(configFile).banners }));
 app.get('/api/info', (req, res) => res.json({ data: loadJSON(infoFile).reverse() }));
-app.post('/api/user/balance', (req, res) => {
-    let db = loadJSON(dbFile); let p = req.body.phone;
-    if(db[p]) { res.json({saldo: db[p].saldo || 0, trx_count: db[p].trx_count || 0}); } else { res.json({saldo:0, trx_count:0}); }
-});
+app.post('/api/user/balance', (req, res) => { let db = loadJSON(dbFile); let p = req.body.phone; if(db[p]) { res.json({saldo: db[p].saldo || 0, trx_count: db[p].trx_count || 0}); } else { res.json({saldo:0, trx_count:0}); } });
 
-app.post('/api/auth/login', (req, res) => {
-    let { identifier, password } = req.body; let db = loadJSON(dbFile);
-    let fPhone = identifier.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1);
-    let foundPhone = Object.keys(db).find(k => (k === fPhone || db[k].email === identifier) && db[k].password === password);
-    if (foundPhone) {
-        if (!db[foundPhone].isVerified && db[foundPhone].otp) return res.status(400).json({ success: false, message: 'Akun belum diverifikasi OTP.' });
-        let safeData = {...db[foundPhone]}; delete safeData.password;
-        res.json({ success: true, data: safeData });
-    } else { res.status(400).json({ success: false, message: 'Email/No HP atau Password salah.' }); }
-});
-
-app.post('/api/auth/register', async (req, res) => {
-    const { name, phone, email, password } = req.body; let db = loadJSON(dbFile);
-    let fPhone = phone.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1);
-    if (db[fPhone] && (!db[fPhone].otp || db[fPhone].isVerified)) return res.status(400).json({ success:false, error: 'Nomor WA sudah terdaftar.' });
-    
-    const otp = Math.floor(1000 + Math.random() * 9000).toString();
-    db[fPhone] = { name: name, email: email, password: password, isVerified: false, otp: otp, photo: '', saldo: 0, trx_count: 0, history: [] }; 
-    saveJSON(dbFile, db);
-    const sent = await sendWhatsAppMessage(fPhone, `Halo *${name}*!\nSelamat datang di DIGITAL FIKY STORE.\n\nKode OTP Pendaftaran Anda: *${otp}*`);
-    if(sent) res.json({ success: true, phone: fPhone }); else res.status(500).json({ success:false, error: 'Gagal mengirim OTP.' });
-});
-
-app.post('/api/auth/verify', (req, res) => {
-    const { phone, otp } = req.body; let db = loadJSON(dbFile); 
-    let fPhone = phone.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1);
-    if (db[fPhone] && db[fPhone].otp === otp.toString().trim()) {
-        db[fPhone].isVerified = true; delete db[fPhone].otp; saveJSON(dbFile, db); res.json({ success: true });
-    } else { res.status(400).json({ success:false, error: 'Kode OTP Salah.' }); }
-});
-
-app.post('/api/auth/forgot', async (req, res) => {
-    const { phone } = req.body; let db = loadJSON(dbFile); let fPhone = phone.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1);
-    if (!db[fPhone]) return res.status(400).json({ error: 'Nomor HP tidak terdaftar.' });
-    const otp = Math.floor(1000 + Math.random() * 9000).toString(); db[fPhone].otp = otp; saveJSON(dbFile, db);
-    const sent = await sendWhatsAppMessage(fPhone, `Kode OTP Reset Password: *${otp}*`);
-    if(sent) res.json({ success: true, phone: fPhone }); else res.status(500).json({ error: 'Gagal mengirim OTP.' });
-});
-
-app.post('/api/auth/reset', (req, res) => {
-    const { phone, otp, newPassword } = req.body; let db = loadJSON(dbFile); let fPhone = phone.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1);
-    if (db[fPhone] && db[fPhone].otp === otp.toString().trim()) {
-        db[fPhone].password = newPassword; db[fPhone].otp = null; saveJSON(dbFile, db); res.json({ success: true });
-    } else { res.status(400).json({ error: 'Kode OTP Salah.' }); }
-});
+app.post('/api/auth/login', (req, res) => { let { identifier, password } = req.body; let db = loadJSON(dbFile); let fPhone = identifier.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1); let foundPhone = Object.keys(db).find(k => (k === fPhone || db[k].email === identifier) && db[k].password === password); if (foundPhone) { if (!db[foundPhone].isVerified && db[foundPhone].otp) return res.status(400).json({ success: false, message: 'Akun belum diverifikasi OTP.' }); let safeData = {...db[foundPhone]}; delete safeData.password; res.json({ success: true, data: safeData }); } else { res.status(400).json({ success: false, message: 'Email/No HP atau Password salah.' }); } });
+app.post('/api/auth/register', async (req, res) => { const { name, phone, email, password } = req.body; let db = loadJSON(dbFile); let fPhone = phone.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1); if (db[fPhone] && (!db[fPhone].otp || db[fPhone].isVerified)) return res.status(400).json({ success:false, error: 'Nomor WA sudah terdaftar.' }); const otp = Math.floor(1000 + Math.random() * 9000).toString(); db[fPhone] = { name: name, email: email, password: password, isVerified: false, otp: otp, photo: '', saldo: 0, trx_count: 0, history: [] }; saveJSON(dbFile, db); const sent = await sendWhatsAppMessage(fPhone, `Halo *${name}*!\nSelamat datang di DIGITAL FIKY STORE.\n\nKode OTP Pendaftaran Anda: *${otp}*`); if(sent) res.json({ success: true, phone: fPhone }); else res.status(500).json({ success:false, error: 'Gagal mengirim OTP.' }); });
+app.post('/api/auth/verify', (req, res) => { const { phone, otp } = req.body; let db = loadJSON(dbFile); let fPhone = phone.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1); if (db[fPhone] && db[fPhone].otp === otp.toString().trim()) { db[fPhone].isVerified = true; delete db[fPhone].otp; saveJSON(dbFile, db); res.json({ success: true }); } else { res.status(400).json({ success:false, error: 'Kode OTP Salah.' }); } });
+app.post('/api/auth/forgot', async (req, res) => { const { phone } = req.body; let db = loadJSON(dbFile); let fPhone = phone.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1); if (!db[fPhone]) return res.status(400).json({ error: 'Nomor HP tidak terdaftar.' }); const otp = Math.floor(1000 + Math.random() * 9000).toString(); db[fPhone].otp = otp; saveJSON(dbFile, db); const sent = await sendWhatsAppMessage(fPhone, `Kode OTP Reset Password: *${otp}*`); if(sent) res.json({ success: true, phone: fPhone }); else res.status(500).json({ error: 'Gagal mengirim OTP.' }); });
+app.post('/api/auth/reset', (req, res) => { const { phone, otp, newPassword } = req.body; let db = loadJSON(dbFile); let fPhone = phone.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1); if (db[fPhone] && db[fPhone].otp === otp.toString().trim()) { db[fPhone].password = newPassword; db[fPhone].otp = null; saveJSON(dbFile, db); res.json({ success: true }); } else { res.status(400).json({ error: 'Kode OTP Salah.' }); } });
 
 app.post('/api/user/update', async (req, res) => {
     const { oldPhone, name, newPhone, photo, otp } = req.body; let db = loadJSON(dbFile);
@@ -506,8 +414,7 @@ app.post('/api/user/update', async (req, res) => {
             db[fNew] = { ...db[fOld], name: name, photo: photo !== undefined ? photo : db[fOld].photo }; delete db[fNew].updateOtp; delete db[fOld];
         }
     } else { db[fOld].name = name; if (photo !== undefined) db[fOld].photo = photo; }
-    saveJSON(dbFile, db);
-    res.json({ success: true, user: { phone: fNew, name: name, email: db[fNew].email, photo: db[fNew].photo }});
+    saveJSON(dbFile, db); res.json({ success: true, user: { phone: fNew, name: name, email: db[fNew].email, photo: db[fNew].photo }});
 });
 
 app.post('/api/user/change-password', async (req, res) => {
@@ -525,18 +432,27 @@ app.post('/api/user/change-password', async (req, res) => {
     }
 });
 
-app.post('/api/user/delete', (req, res) => {
-    const { phone } = req.body; let db = loadJSON(dbFile);
-    let fPhone = phone.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1);
-    if (db[fPhone]) delete db[fPhone];
-    saveJSON(dbFile, db); res.json({ success: true });
+app.post('/api/user/delete', (req, res) => { const { phone } = req.body; let db = loadJSON(dbFile); let fPhone = phone.toString().replace(/[^0-9]/g, ''); if (fPhone.startsWith('0')) fPhone = '62' + fPhone.slice(1); if (db[fPhone]) delete db[fPhone]; saveJSON(dbFile, db); res.json({ success: true }); });
+
+// API Top Up (Manual WA / Dummy QRIS)
+app.post('/api/topup', async (req, res) => {
+    try {
+        let { phone, nominal } = req.body; let db = loadJSON(dbFile);
+        if(!db[phone]) return res.json({success: false, message: "User tidak ditemukan."});
+        let nominalAsli = parseInt(nominal); let uniqueCode = Math.floor(Math.random() * 99) + 1; let totalPay = nominalAsli + uniqueCode;
+        let finalQrisUrl = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=15&format=jpeg&data=QRIS_BELUM_DIATUR_OLEH_ADMIN";
+        let topups = loadJSON(topupFile); let trxId = "TP-" + Date.now(); let expiredAt = Date.now() + 10 * 60 * 1000; 
+        topups[trxId] = { phone, trx_id: trxId, amount_to_pay: totalPay, saldo_to_add: totalPay, status: 'pending', expired_at: expiredAt }; saveJSON(topupFile, topups);
+        db[phone].history = db[phone].history || []; db[phone].history.unshift({ ts: Date.now(), tanggal: new Date().toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }), type: 'Topup', nama: 'Topup Saldo', tujuan: 'Sistem Pembayaran', status: 'Pending', sn: trxId, amount: totalPay, qris_url: finalQrisUrl, expired_at: expiredAt });
+        if(db[phone].history.length > 20) db[phone].history.pop(); saveJSON(dbFile, db);
+        res.json({success: true, total: totalPay, qris: finalQrisUrl});
+    } catch(e) { res.json({success: false, message: "Gagal memproses Top Up."}); }
 });
 
 async function startBot() {
     const { state, saveCreds } = await useMultiFileAuthState('sesi_bot');
     const { version } = await fetchLatestBaileysVersion();
     const sock = makeWASocket({ version, auth: state, logger: pino({ level: 'silent' }), browser: Browsers.ubuntu('Chrome'), printQRInTerminal: false });
-    
     if (!sock.authState.creds.registered) {
         let config = loadJSON(configFile);
         if (config.botNumber) {
@@ -549,26 +465,18 @@ async function startBot() {
         }
     }
     sock.ev.on('creds.update', saveCreds);
-    sock.ev.on('connection.update', (update) => {
-        const { connection } = update;
-        if(connection === 'close') { startBot(); } else if(connection === 'open') { console.log("✅ BOT WHATSAPP TERHUBUNG!"); }
-    });
+    sock.ev.on('connection.update', (update) => { const { connection } = update; if(connection === 'close') { startBot(); } else if(connection === 'open') { console.log("✅ BOT WHATSAPP TERHUBUNG!"); } });
     globalSock = sock; 
 }
-
-if (require.main === module) {
-    app.listen(3000, () => { console.log('🌐 Web Server berjalan di port 3000'); });
-    startBot();
-}
+if (require.main === module) { app.listen(3000, () => { console.log('🌐 Web Server berjalan di port 3000'); }); startBot(); }
 EOF
 
-echo "[5/5] Memperbarui Panel Manajemen Terminal..."
-cat << 'EOF_MENU' > /usr/bin/menu
+echo "[5/5] Membuat Script Menu Panel Terminal VPS Sederhana..."
+cat << 'EOF' > /usr/bin/menu
 #!/bin/bash
 DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 PORT=3000
-PROJECT_DIR="$HOME/$DIR_NAME"
 
 C_RED="\e[31m"
 C_GREEN="\e[32m"
@@ -583,27 +491,26 @@ while true; do
     echo -e "${C_CYAN}${C_BOLD}======================================================${C_RST}"
     echo -e "${C_YELLOW}${C_BOLD}             🤖 PANEL ADMIN FIKY STORE 🤖             ${C_RST}"
     echo -e "${C_CYAN}${C_BOLD}======================================================${C_RST}"
-    echo -e "${C_MAG}▶ MANAJEMEN BOT & WEB APP${C_RST}"
     echo -e "  ${C_GREEN}[1]${C_RST}  Mulai Bot (Terminal / Scan QR)"
     echo -e "  ${C_GREEN}[2]${C_RST}  Jalankan Sistem Latar Belakang (PM2)"
     echo -e "  ${C_GREEN}[3]${C_RST}  Hentikan Sistem (PM2)"
     echo -e "  ${C_GREEN}[4]${C_RST}  Lihat Log Error Server"
-    echo ""
-    echo -e "${C_MAG}▶ MANAJEMEN TOKO & SISTEM${C_RST}"
+    echo -e "${C_CYAN}------------------------------------------------------${C_RST}"
     echo -e "  ${C_GREEN}[5]${C_RST}  👥 Tambah/Ubah Saldo Member"
     echo -e "  ${C_GREEN}[6]${C_RST}  🖼️ Ganti Foto Banner Promo"
     echo -e "  ${C_GREEN}[7]${C_RST}  📢 Kirim Pemberitahuan ke Web (Info)"
-    echo -e "  ${C_GREEN}[8]${C_RST}  🔌 Ganti API Digiflazz"
+    echo -e "  ${C_GREEN}[8]${C_RST}  🔌 Setup API Digiflazz"
     echo -e "  ${C_GREEN}[9]${C_RST}  🔄 Ganti Akun Bot WA (Reset Sesi)"
+    echo -e "  ${C_GREEN}[10]${C_RST} 🚀 Update Script dari GitHub"
     echo -e "${C_CYAN}======================================================${C_RST}"
     echo -e "  ${C_RED}[0]${C_RST}  Keluar dari Panel"
     echo -e "${C_CYAN}======================================================${C_RST}"
-    echo -ne "${C_YELLOW}Pilih menu [0-9]: ${C_RST}"
+    echo -ne "${C_YELLOW}Pilih menu [0-10]: ${C_RST}"
     read choice
 
     case $choice in
         1) 
-            cd "$PROJECT_DIR"
+            cd "$HOME/$DIR_NAME"
             if [ ! -d "sesi_bot" ]; then
                 read -p "📲 Masukkan Nomor WA Bot (Awali 628...): " nomor_bot
                 if [ ! -z "$nomor_bot" ]; then node -e "const fs=require('fs');let cfg=fs.existsSync('config.json')?JSON.parse(fs.readFileSync('config.json')):{};cfg.botNumber='$nomor_bot';fs.writeFileSync('config.json',JSON.stringify(cfg,null,2));"; fi
@@ -613,7 +520,7 @@ while true; do
             node index.js
             read -p "Tekan Enter untuk kembali..." ;;
         2) 
-            cd "$PROJECT_DIR"
+            cd "$HOME/$DIR_NAME"
             pm2 delete $BOT_NAME 2>/dev/null; pm2 start index.js --name "$BOT_NAME" && pm2 save
             echo -e "\n${C_GREEN}✅ Sistem berjalan 24 jam!${C_RST}"
             read -p "Tekan Enter..." ;;
@@ -626,38 +533,31 @@ while true; do
             echo -e "\n${C_MAG}--- TAMBAH / UBAH SALDO MEMBER ---${C_RST}"
             read -p "ID Member (No WA / Email): " nomor
             read -p "Jumlah Saldo (Gunakan minus '-' untuk mengurangi): " jumlah
-            cd "$PROJECT_DIR"
+            cd "$HOME/$DIR_NAME"
             node -e "
-                const fs=require('fs'); 
-                let db=fs.existsSync('database.json')?JSON.parse(fs.readFileSync('database.json')):{};
+                const fs = require('fs');
+                let db = fs.existsSync('database.json') ? JSON.parse(fs.readFileSync('database.json')) : {};
                 let target = Object.keys(db).find(k => k === '$nomor' || (db[k].email === '$nomor'));
-                if(!target) { console.log('❌ Akun tidak ditemukan!'); }
+                if(!target) { console.log('\x1b[31m❌ Akun tidak ditemukan!\x1b[0m'); }
                 else { 
-                    db[target].saldo += parseInt('$jumlah'); 
-                    if(db[target].saldo < 0) db[target].saldo = 0;
-                    fs.writeFileSync('database.json',JSON.stringify(db,null,2)); 
-                    console.log('✅ Saldo berhasil diubah!'); 
+                    db[target].saldo += parseInt('$jumlah'); if(db[target].saldo < 0) db[target].saldo = 0;
+                    fs.writeFileSync('database.json', JSON.stringify(db, null, 2)); console.log('\x1b[32m✅ Saldo berhasil diubah!\x1b[0m'); 
                 }
             "
             read -p "Tekan Enter..." ;;
         6)
             echo -e "\n${C_MAG}--- GANTI FOTO BANNER PROMO ---${C_RST}"
             echo -e "${C_YELLOW}Note: Biarkan kosong jika tidak ingin mengubah slide tersebut.${C_RST}"
-            read -p "Link Slide 1: " b1
-            read -p "Link Slide 2: " b2
-            read -p "Link Slide 3: " b3
-            read -p "Link Slide 4: " b4
-            cd "$PROJECT_DIR"
+            read -p "Link Slide 1: " b1; read -p "Link Slide 2: " b2; read -p "Link Slide 3: " b3; read -p "Link Slide 4: " b4
+            cd "$HOME/$DIR_NAME"
             node -e "
-                const fs=require('fs'); let cfg=fs.existsSync('config.json')?JSON.parse(fs.readFileSync('config.json')):{};
+                const fs = require('fs'); let cfg = fs.existsSync('config.json') ? JSON.parse(fs.readFileSync('config.json')) : {};
                 if (!cfg.banners) cfg.banners = ['','','',''];
-                if ('$b1'.trim()) cfg.banners[0] = '$b1'.trim();
-                if ('$b2'.trim()) cfg.banners[1] = '$b2'.trim();
-                if ('$b3'.trim()) cfg.banners[2] = '$b3'.trim();
-                if ('$b4'.trim()) cfg.banners[3] = '$b4'.trim();
+                if ('$b1'.trim()) cfg.banners[0] = '$b1'.trim(); if ('$b2'.trim()) cfg.banners[1] = '$b2'.trim();
+                if ('$b3'.trim()) cfg.banners[2] = '$b3'.trim(); if ('$b4'.trim()) cfg.banners[3] = '$b4'.trim();
                 cfg.banners = cfg.banners.filter(b => b.trim() !== '');
                 if(cfg.banners.length === 0) cfg.banners = ['https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80'];
-                fs.writeFileSync('config.json',JSON.stringify(cfg,null,2)); console.log('\n✅ Foto banner diperbarui!');
+                fs.writeFileSync('config.json', JSON.stringify(cfg, null, 2)); console.log('\n✅ Foto banner diperbarui!');
             "
             read -p "Tekan Enter..."
             ;;
@@ -665,14 +565,12 @@ while true; do
             echo -e "\n${C_MAG}--- KIRIM PEMBERITAHUAN APLIKASI WEB ---${C_RST}"
             read -p "Judul Pemberitahuan: " notif_title
             read -p "Isi / Deskripsi: " notif_msg
-            cd "$PROJECT_DIR"
+            cd "$HOME/$DIR_NAME"
             node -e "
-                const fs = require('fs');
-                let infos = fs.existsSync('info.json') ? JSON.parse(fs.readFileSync('info.json')) : [];
+                const fs = require('fs'); let infos = fs.existsSync('info.json') ? JSON.parse(fs.readFileSync('info.json')) : [];
                 const tgl = new Date().toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
                 infos.push({ title: \`$notif_title\`, content: \`$notif_msg\`, date: tgl });
-                fs.writeFileSync('info.json', JSON.stringify(infos, null, 2));
-                console.log('\x1b[32m✅ Info berhasil ditambahkan dan langsung tampil di Web!\x1b[0m');
+                fs.writeFileSync('info.json', JSON.stringify(infos, null, 2)); console.log('\x1b[32m✅ Info berhasil ditambahkan!\x1b[0m');
             "
             read -p "Tekan Enter untuk kembali..."
             ;;
@@ -680,12 +578,11 @@ while true; do
             echo -e "\n${C_MAG}--- GANTI API DIGIFLAZZ ---${C_RST}"
             read -p "Username Digiflazz Baru: " user_api
             read -p "API Key Digiflazz Baru: " key_api
-            cd "$PROJECT_DIR"
+            cd "$HOME/$DIR_NAME"
             node -e "
-                const fs = require('fs');
-                let config = fs.existsSync('config.json') ? JSON.parse(fs.readFileSync('config.json')) : {};
-                if('$user_api' !== '') config.digiflazzUsername = '$user_api'.trim();
-                if('$key_api' !== '') config.digiflazzApiKey = '$key_api'.trim();
+                const fs = require('fs'); let config = fs.existsSync('config.json') ? JSON.parse(fs.readFileSync('config.json')) : {};
+                if('$user_api' !== '') config.digiUsername = '$user_api'.trim();
+                if('$key_api' !== '') config.digiApiKey = '$key_api'.trim();
                 fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
                 console.log('\x1b[32m\n✅ Konfigurasi Digiflazz berhasil disimpan!\x1b[0m');
             "
@@ -694,20 +591,23 @@ while true; do
         9)
             echo -e "\n${C_RED}⚠️ Reset Sesi akan mengeluarkan bot dari WhatsApp saat ini.${C_RST}"
             read -p "Yakin ingin mereset sesi? (y/n): " reset_sesi
-            if [ "$reset_sesi" == "y" ]; then
-                pm2 stop $BOT_NAME >/dev/null 2>&1
-                rm -rf "$PROJECT_DIR/sesi_bot"
-                echo -e "${C_GREEN}✅ Sesi berhasil dihapus. Silakan jalankan bot kembali (Menu 1).${C_RST}"
-            fi
+            if [ "$reset_sesi" == "y" ]; then pm2 stop $BOT_NAME >/dev/null 2>&1; rm -rf "$HOME/$DIR_NAME/sesi_bot"; echo -e "${C_GREEN}✅ Sesi berhasil dihapus. Silakan jalankan bot kembali (Menu 1).${C_RST}"; fi
             read -p "Tekan Enter untuk kembali..."
+            ;;
+        10)
+            echo -e "\n${C_MAG}--- UPDATE SCRIPT DARI GITHUB ---${C_RST}"
+            cd "$HOME"
+            wget -qO- https://raw.githubusercontent.com/fikystorez/PROJECT-PPOB-FIKYSTORE/main/install.sh | tr -d '\r' > install.sh
+            chmod +x install.sh && ./install.sh
+            exit 0
             ;;
         0) exit 0 ;;
         *) echo -e "${C_RED}❌ Pilihan tidak valid!${C_RST}"; sleep 1 ;;
     esac
 done
-EOF_MENU
+EOF
 
 chmod +x /usr/bin/menu
 echo "=========================================================="
-echo "  SUKSES V57 STABLE! Silakan ketik 'menu' di terminal."
+echo "  SUKSES V58 STABLE! Silakan ketik 'menu' di terminal."
 echo "=========================================================="
