@@ -15,7 +15,7 @@ BOT_NAME="digital-fiky-bot"
 PORT=3000
 
 echo "=========================================================="
-echo "      MENGINSTAL DIGITAL FIKY STORE - THEME OXFORD BLUE   "
+echo "      MENGINSTAL DIGITAL FIKY STORE - PREMIUM THEME       "
 echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
@@ -51,28 +51,30 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (OXFORD BLUE & YELLOW HEADER)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Desain Oxford Blue)..."
+echo "[3/5] Membangun Antarmuka Website (Logo Custom & Lingkaran)..."
 
 cat << 'EOF' > public/style.css
 body {
     background-color: #f3f4f6; 
     margin: 0;
+    /* Flex-col agar Logo dan Modal tersusun rapi dari atas ke bawah */
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 }
 
-/* Lengkungan Kuning di Atas */
+/* Lengkungan Kuning di Atas (Diperbesar agar logo muat) */
 .yellow-header {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 25vh; 
+    height: 38vh; 
     background-color: #fde047; /* Kuning cerah */
-    border-radius: 0 0 50% 50% / 0 0 25% 25%;
+    border-radius: 0 0 50% 50% / 0 0 10% 10%;
     z-index: -1;
 }
 
@@ -80,13 +82,13 @@ body {
 .centered-modal-box {
     background-color: #002147; /* Oxford Blue */
     padding: 2rem 1.5rem; 
-    border-radius: 1rem; 
+    border-radius: 1.2rem; 
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1); 
     width: 90%;
     max-width: 360px; 
-    margin: auto; 
     text-align: center;
     position: relative;
+    z-index: 10;
 }
 
 /* Input Fields */
@@ -95,7 +97,7 @@ body {
     padding: 0.6rem 0.75rem; 
     border: 1px solid #334155; 
     border-radius: 0.5rem; 
-    margin-bottom: 1rem; 
+    margin-bottom: 0.85rem; 
     font-size: 0.875rem; 
     outline: none;
     background-color: #ffffff; 
@@ -135,6 +137,7 @@ body {
 .btn-green:hover { background-color: #15803d; }
 EOF
 
+# HTML LOGIN
 cat << 'EOF' > public/index.html
 <!DOCTYPE html>
 <html lang="id">
@@ -144,11 +147,23 @@ cat << 'EOF' > public/index.html
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen relative">
+<body class="bg-gray-100 flex flex-col items-center justify-center h-screen relative">
     <div class="yellow-header"></div>
 
+    <div class="z-10 mb-6 mt-[-6vh]">
+        <div class="bg-[#002147] w-24 h-24 rounded-full flex justify-center items-center shadow-2xl border-4 border-white">
+            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#fde047" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                <path d="M13 7l-3 5h4l-3 5"></path>
+            </svg>
+        </div>
+    </div>
+
     <div class="centered-modal-box">
-        <h1 class="text-2xl font-extrabold text-yellow-300 mb-2 tracking-wide">DIGITAL FIKY STORE</h1>
+        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
+            <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
+        </div>
+        
         <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
         <p class="compact-text-small mb-6">Silahkan masukkan email/no HP dan password kamu!</p>
 
@@ -195,6 +210,7 @@ cat << 'EOF' > public/index.html
 </html>
 EOF
 
+# HTML REGISTER
 cat << 'EOF' > public/register.html
 <!DOCTYPE html>
 <html lang="id">
@@ -204,13 +220,25 @@ cat << 'EOF' > public/register.html
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen relative">
+<body class="bg-gray-100 flex flex-col items-center justify-center h-screen relative">
     <div class="yellow-header"></div>
 
+    <div class="z-10 mb-4 mt-[-6vh]" id="logo-header">
+        <div class="bg-[#002147] w-20 h-20 rounded-full flex justify-center items-center shadow-2xl border-4 border-white">
+            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#fde047" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                <path d="M13 7l-3 5h4l-3 5"></path>
+            </svg>
+        </div>
+    </div>
+
     <div class="centered-modal-box" id="box-register">
-        <h1 class="text-2xl font-extrabold text-yellow-300 mb-2 tracking-wide">DIGITAL FIKY STORE</h1>
+        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-2">
+            <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
+        </div>
+        
         <h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2>
-        <p class="compact-text-small mb-5">Silahkan lengkapi data untuk mendaftar!</p>
+        <p class="compact-text-small mb-4">Silahkan lengkapi data untuk mendaftar!</p>
 
         <form id="registerForm">
             <div>
@@ -230,24 +258,26 @@ cat << 'EOF' > public/register.html
                 <input type="password" id="password" class="compact-input-box" required placeholder="Ketik disini">
             </div>
             
-            <button type="submit" class="btn-green mt-2">Daftar Sekarang</button>
+            <button type="submit" class="btn-green mt-1">Daftar Sekarang</button>
         </form>
         
-        <div class="mt-6 text-center compact-text-small">
+        <div class="mt-4 text-center compact-text-small">
             Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a>
         </div>
     </div>
 
     <div class="centered-modal-box hidden" id="box-otp">
-        <h1 class="text-2xl font-extrabold text-yellow-300 mb-2 tracking-wide">DIGITAL FIKY STORE</h1>
+        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
+            <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
+        </div>
         <h2 class="text-lg font-bold text-white mb-1">VERIFIKASI WA</h2>
         <p class="compact-text-small mb-5 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
         <form id="otpForm">
             <div>
                 <label class="compact-label text-center">Kode OTP (4 Digit)</label>
-                <input type="number" id="otpCode" class="compact-input-box text-center text-xl tracking-widest font-bold" required placeholder="XXXX">
+                <input type="number" id="otpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX">
             </div>
-            <button type="submit" class="btn-yellow mt-2">Verifikasi OTP</button>
+            <button type="submit" class="btn-yellow mt-4">Verifikasi OTP</button>
         </form>
     </div>
 
@@ -296,6 +326,7 @@ cat << 'EOF' > public/register.html
 </html>
 EOF
 
+# HTML FORGOT
 cat << 'EOF' > public/forgot.html
 <!DOCTYPE html>
 <html lang="id">
@@ -305,17 +336,28 @@ cat << 'EOF' > public/forgot.html
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen relative">
+<body class="bg-gray-100 flex flex-col items-center justify-center h-screen relative">
     <div class="yellow-header"></div>
 
+    <div class="z-10 mb-6 mt-[-6vh]">
+        <div class="bg-[#002147] w-24 h-24 rounded-full flex justify-center items-center shadow-2xl border-4 border-white">
+            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#fde047" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                <path d="M13 7l-3 5h4l-3 5"></path>
+            </svg>
+        </div>
+    </div>
+
     <div class="centered-modal-box">
-        <h1 class="text-2xl font-extrabold text-yellow-300 mb-2 tracking-wide">DIGITAL FIKY STORE</h1>
+        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
+            <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
+        </div>
         <h2 class="text-lg font-bold text-white mb-1">RESET PASSWORD</h2>
         
         <form id="requestOtpForm">
             <p class="compact-text-small mb-5 text-center">Masukkan Nomor WA Anda untuk reset password.</p>
             <div>
-                <input type="number" id="phone" class="compact-input-box" required placeholder="Ketik disini (08123...)">
+                <input type="number" id="phone" class="compact-input-box text-center" required placeholder="Ketik disini (08123...)">
             </div>
             <button type="submit" class="btn-yellow mt-2">Kirim OTP Reset</button>
         </form>
@@ -324,13 +366,13 @@ cat << 'EOF' > public/forgot.html
             <hr class="mb-5 border-gray-600">
             <div>
                 <label class="compact-label">Kode OTP (4 Digit)</label>
-                <input type="number" id="otp" class="compact-input-box text-center text-lg tracking-widest font-bold" required placeholder="XXXX">
+                <input type="number" id="otp" class="compact-input-box text-center text-xl tracking-[0.5em] font-bold" required placeholder="XXXX">
             </div>
             <div>
                 <label class="compact-label">Password Baru</label>
                 <input type="password" id="newPassword" class="compact-input-box" required placeholder="Ketik disini">
             </div>
-            <button type="submit" class="btn-green mt-2">Simpan Password Baru</button>
+            <button type="submit" class="btn-green mt-3">Simpan Password Baru</button>
         </form>
         
         <div class="mt-6 text-center compact-text-small">
@@ -624,7 +666,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V11) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V12) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
