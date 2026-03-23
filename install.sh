@@ -51,74 +51,23 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Custom SweetAlert UI & Edit Profile)..."
+echo "[3/5] Membangun Antarmuka Website (Edit Profile Fix)..."
 
 cat << 'EOF' > public/style.css
-body {
-    background-color: #fde047; 
-    margin: 0;
-    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-}
-.centered-modal-box {
-    background-color: #002147; 
-    padding: 3rem 1.5rem 2rem 1.5rem; 
-    border-radius: 1.2rem; 
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); 
-    width: 90%;
-    max-width: 360px; 
-    text-align: center;
-    position: relative;
-    z-index: 10;
-}
-.logo-f-metalik-box {
-    width: 85px; height: 85px; margin: 0 auto; 
-    display: flex; justify-content: center; align-items: center;
-    border-radius: 50%; border: 3px solid #94a3b8;
-    background: radial-gradient(circle, #333333 0%, #000000 100%); 
-    box-shadow: inset 0 0 10px rgba(255,255,255,0.2), 0 10px 20px rgba(0,0,0,0.5); 
-    position: relative;
-}
-.logo-f-metalik-box::before {
-    content: "F"; font-size: 55px; font-family: "Times New Roman", Times, serif;
-    font-weight: bold; color: #e2e8f0; 
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.9), -1px -1px 1px rgba(255,255,255,0.3); 
-    position: absolute; top: 52%; left: 50%; transform: translate(-50%, -50%);
-}
-.logo-f-small {
-    width: 45px; height: 45px; margin: 0 auto 10px auto; 
-    display: flex; justify-content: center; align-items: center;
-    border-radius: 50%; border: 2px solid #cbd5e1;
-    background: radial-gradient(circle, #333333 0%, #000000 100%); 
-    box-shadow: inset 0 0 5px rgba(255,255,255,0.2), 0 5px 10px rgba(0,0,0,0.5); 
-    position: relative; z-index: 2;
-}
-.logo-f-small::before {
-    content: "F"; font-size: 28px; font-family: "Times New Roman", Times, serif;
-    font-weight: bold; color: #e2e8f0; 
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.9); 
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-}
-.compact-input-box {
-    width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #334155; 
-    border-radius: 0.5rem; margin-bottom: 0.85rem; font-size: 0.875rem; 
-    outline: none; background-color: #ffffff; color: #0f172a;
-}
+body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
+.centered-modal-box { background-color: #002147; padding: 3rem 1.5rem 2rem 1.5rem; border-radius: 1.2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); width: 90%; max-width: 360px; text-align: center; position: relative; z-index: 10; }
+.logo-f-metalik-box { width: 85px; height: 85px; margin: 0 auto; display: flex; justify-content: center; align-items: center; border-radius: 50%; border: 3px solid #94a3b8; background: radial-gradient(circle, #333333 0%, #000000 100%); box-shadow: inset 0 0 10px rgba(255,255,255,0.2), 0 10px 20px rgba(0,0,0,0.5); position: relative; }
+.logo-f-metalik-box::before { content: "F"; font-size: 55px; font-family: "Times New Roman", Times, serif; font-weight: bold; color: #e2e8f0; text-shadow: 2px 2px 4px rgba(0,0,0,0.9), -1px -1px 1px rgba(255,255,255,0.3); position: absolute; top: 52%; left: 50%; transform: translate(-50%, -50%); }
+.compact-input-box { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #334155; border-radius: 0.5rem; margin-bottom: 0.85rem; font-size: 0.875rem; outline: none; background-color: #ffffff; color: #0f172a; }
 .compact-input-box:focus { border-color: #fde047; box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3); }
 ::placeholder { color: #94a3b8; font-size: 0.8rem; }
 .compact-text-small { font-size: 0.8rem; color: #cbd5e1; }
 .compact-label { font-size: 0.8rem; font-weight: bold; color: #f8fafc; margin-bottom: 0.25rem; display: block; text-align: left; }
 .compact-link-small { font-size: 0.8rem; color: #fde047; text-decoration: none; font-weight: bold; }
 .compact-link-small:hover { text-decoration: underline; color: #fef08a; }
-.btn-yellow {
-    width: 100%; padding: 0.625rem 1rem; background-color: #fde047; color: #002147;
-    font-weight: bold; font-size: 0.9rem; border-radius: 0.5rem; cursor: pointer; border: none; transition: all 0.2s;
-}
+.btn-yellow { width: 100%; padding: 0.625rem 1rem; background-color: #fde047; color: #002147; font-weight: bold; font-size: 0.9rem; border-radius: 0.5rem; cursor: pointer; border: none; transition: all 0.2s; }
 .btn-yellow:hover { background-color: #facc15; }
-.tech-bg {
-    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5'%3E%3Cpath d='M0 40h20l10-10h20l10 10h20'/%3E%3Cpath d='M20 40v20l10 10'/%3E%3Cpath d='M60 40V20L50 10'/%3E%3Ccircle cx='30' cy='30' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='50' cy='50' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='10' cy='40' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='70' cy='40' r='2' fill='rgba(255,255,255,0.1)'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 80px 80px; pointer-events: none; z-index: 1; border-radius: 1rem;
-}
+.tech-bg { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5'%3E%3Cpath d='M0 40h20l10-10h20l10 10h20'/%3E%3Cpath d='M20 40v20l10 10'/%3E%3Cpath d='M60 40V20L50 10'/%3E%3Ccircle cx='30' cy='30' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='50' cy='50' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='10' cy='40' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='70' cy='40' r='2' fill='rgba(255,255,255,0.1)'/%3E%3C/g%3E%3C/svg%3E"); background-size: 80px 80px; pointer-events: none; z-index: 1; border-radius: 1rem; }
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -130,10 +79,9 @@ body {
 .swal2-cancel { background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important; color: #ffffff !important; border-radius: 0.5rem !important; font-weight: 800 !important; padding: 0.6rem 1.5rem !important; font-size: 0.85rem !important; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3) !important; letter-spacing: 0.5px !important; }
 .swal2-icon { transform: scale(0.7) !important; margin: 0 auto 0.5em !important; border-width: 3px !important; }
 
-/* Animasi untuk kotak modal / ubah password */
+/* Animasi untuk kotak dropdown ubah password & Edit Profile */
 .slide-down { animation: slideDown 0.3s ease-out forwards; }
 @keyframes slideDown { 0% { opacity: 0; transform: translateY(-10px); } 100% { opacity: 1; transform: translateY(0); } }
-
 .animate-slide-up { animation: slideUp 0.3s ease-out forwards; }
 @keyframes slideUp { 0% { opacity: 0; transform: scale(0.95) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 EOF
@@ -151,9 +99,7 @@ cat << 'EOF' > public/index.html
 <body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
     <div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div>
     <div class="centered-modal-box pt-14">
-        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
-            <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
-        </div>
+        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4"><h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1></div>
         <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
         <p class="compact-text-small mb-6">Silahkan masukkan email/no HP dan password kamu!</p>
         <form id="loginForm">
@@ -172,169 +118,9 @@ cat << 'EOF' > public/index.html
             try {
                 const res = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password }) });
                 const data = await res.json();
-                if (res.ok) { 
-                    localStorage.setItem('user', JSON.stringify(data.user)); 
-                    window.location.href = '/dashboard.html'; 
-                } else { 
-                    Swal.fire({ icon: 'error', title: 'Gagal Login', text: data.error }); 
-                }
-            } catch (err) { 
-                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Terjadi kesalahan sistem.' }); 
-            }
-        });
-    </script>
-</body>
-</html>
-EOF
-
-cat << 'EOF' > public/register.html
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar - DIGITAL FIKY STORE</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
-    <div class="z-20 mb-[-42px]" id="logo-header"><div class="logo-f-metalik-box"></div></div>
-    <div class="centered-modal-box pt-14" id="box-register">
-        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-2">
-            <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
-        </div>
-        <h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2>
-        <p class="compact-text-small mb-4">Silahkan lengkapi data untuk mendaftar!</p>
-        <form id="registerForm">
-            <div><label class="compact-label">Nama Lengkap</label><input type="text" id="name" class="compact-input-box" required placeholder="Ketik disini"></div>
-            <div><label class="compact-label">Nomor WA Aktif</label><input type="number" id="phone" class="compact-input-box" required placeholder="Ketik disini (08123...)"></div>
-            <div><label class="compact-label">Email</label><input type="email" id="email" class="compact-input-box" required placeholder="Ketik disini"></div>
-            <div><label class="compact-label">Password</label><input type="password" id="password" class="compact-input-box" required placeholder="Ketik disini"></div>
-            <button type="submit" class="btn-yellow mt-1">Daftar Sekarang</button>
-        </form>
-        <div class="mt-4 text-center compact-text-small">Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a></div>
-    </div>
-    <div class="centered-modal-box pt-14 hidden" id="box-otp">
-        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
-            <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
-        </div>
-        <h2 class="text-lg font-bold text-white mb-1">VERIFIKASI WA</h2>
-        <p class="compact-text-small mb-5 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
-        <form id="otpForm">
-            <div><label class="compact-label text-center">Kode OTP (4 Digit)</label><input type="number" id="otpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX"></div>
-            <button type="submit" class="btn-yellow mt-4">Verifikasi OTP</button>
-        </form>
-    </div>
-    <script>
-        let registeredPhone = '';
-        document.getElementById('registerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('name').value;
-            const phone = document.getElementById('phone').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            try {
-                const res = await fetch('/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, email, password }) });
-                const data = await res.json();
-                if (res.ok) {
-                    registeredPhone = data.phone;
-                    document.getElementById('box-register').classList.add('hidden');
-                    document.getElementById('box-otp').classList.remove('hidden');
-                    Swal.fire({ icon: 'success', title: 'OTP Terkirim!', text: 'Silakan cek pesan WhatsApp Anda.' });
-                } else { 
-                    Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error }); 
-                }
-            } catch (err) { 
-                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses pendaftaran.' }); 
-            }
-        });
-        
-        document.getElementById('otpForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const otp = document.getElementById('otpCode').value;
-            try {
-                const res = await fetch('/api/auth/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: registeredPhone, otp }) });
-                if (res.ok) { 
-                    Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun terverifikasi. Silakan Login.' }).then(() => { window.location.href = '/'; });
-                } else { 
-                    const data = await res.json();
-                    Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error }); 
-                }
-            } catch (err) { 
-                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi OTP.' }); 
-            }
-        });
-    </script>
-</body>
-</html>
-EOF
-
-cat << 'EOF' > public/forgot.html
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lupa Password - DIGITAL FIKY STORE</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
-    <div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div>
-    <div class="centered-modal-box pt-14">
-        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
-            <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
-        </div>
-        <h2 class="text-lg font-bold text-white mb-1">RESET PASSWORD</h2>
-        <form id="requestOtpForm">
-            <p class="compact-text-small mb-5 text-center">Masukkan Nomor WA Anda untuk reset password.</p>
-            <div><input type="number" id="phone" class="compact-input-box text-center" required placeholder="Ketik disini (08123...)"></div>
-            <button type="submit" class="btn-yellow mt-2">Kirim OTP Reset</button>
-        </form>
-        <form id="resetForm" class="hidden mt-4">
-            <hr class="mb-5 border-gray-600">
-            <div><label class="compact-label text-center">Kode OTP (4 Digit)</label><input type="number" id="otp" class="compact-input-box text-center text-xl tracking-[0.5em] font-bold" required placeholder="XXXX"></div>
-            <div><label class="compact-label text-center mt-2">Password Baru</label><input type="password" id="newPassword" class="compact-input-box" required placeholder="Ketik disini"></div>
-            <button type="submit" class="btn-yellow mt-3">Simpan Password Baru</button>
-        </form>
-        <div class="mt-6 text-center compact-text-small">Kembali ke <a href="/" class="compact-link-small">Login</a></div>
-    </div>
-    <script>
-        let resetPhone = '';
-        document.getElementById('requestOtpForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const phone = document.getElementById('phone').value;
-            try {
-                const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
-                const data = await res.json();
-                if (res.ok) {
-                    resetPhone = data.phone;
-                    document.getElementById('requestOtpForm').classList.add('hidden');
-                    document.getElementById('resetForm').classList.remove('hidden');
-                    Swal.fire({ icon: 'success', title: 'OTP Terkirim!', text: 'Silakan cek pesan WhatsApp Anda.' });
-                } else { 
-                    Swal.fire({ icon: 'error', title: 'Gagal', text: data.error }); 
-                }
-            } catch (err) { 
-                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Terjadi kesalahan sistem.' }); 
-            }
-        });
-        
-        document.getElementById('resetForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const otp = document.getElementById('otp').value;
-            const newPassword = document.getElementById('newPassword').value;
-            try {
-                const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) });
-                if (res.ok) { 
-                    Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password berhasil diubah. Silakan Login.' }).then(() => { window.location.href = '/'; });
-                } else { 
-                    const data = await res.json();
-                    Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error }); 
-                }
-            } catch (err) { 
-                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal mereset password.' }); 
-            }
+                if (res.ok) { localStorage.setItem('user', JSON.stringify(data.user)); window.location.href = '/dashboard.html'; } 
+                else { Swal.fire({ icon: 'error', title: 'Gagal Login', text: data.error }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Terjadi kesalahan sistem.' }); }
         });
     </script>
 </body>
@@ -427,17 +213,10 @@ cat << 'EOF' > public/dashboard.html
         
         function logout() { 
             Swal.fire({
-                title: 'Keluar Akun?',
-                text: "Apakah Anda yakin ingin keluar?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, Keluar',
-                cancelButtonText: 'Batal'
+                title: 'Keluar Akun?', text: "Apakah Anda yakin ingin keluar?", icon: 'warning',
+                showCancelButton: true, confirmButtonText: 'Ya, Keluar', cancelButtonText: 'Batal'
             }).then((result) => {
-                if (result.isConfirmed) {
-                    localStorage.removeItem('user'); 
-                    window.location.href = '/';
-                }
+                if (result.isConfirmed) { localStorage.removeItem('user'); window.location.href = '/'; }
             });
         }
 
@@ -476,7 +255,7 @@ cat << 'EOF' > public/dashboard.html
 </html>
 EOF
 
-# HTML PROFIL PREMIUM DARK (SESUAI GAMBAR + MODAL UBAH PROFIL)
+# HTML PROFIL PREMIUM DARK (DENGAN MODAL EDIT)
 cat << 'EOF' > public/profile.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -492,11 +271,15 @@ cat << 'EOF' > public/profile.html
     <div class="max-w-md mx-auto bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden text-white">
         
         <div class="bg-[#050b14] p-8 pb-10 flex flex-col items-center relative rounded-b-[2rem] shadow-lg">
-            <div class="w-24 h-24 bg-gray-200 rounded-full flex justify-center items-center text-black font-extrabold text-4xl mt-2 mb-3 shadow-xl" id="profileCircle">U</div>
-            <div class="flex items-center gap-3">
-                <h2 class="text-2xl font-bold tracking-wide text-gray-100" id="profileName">User Name</h2>
-                <i class="fas fa-pencil-alt text-gray-400 hover:text-yellow-400 cursor-pointer transition text-lg" onclick="openEditModal()"></i>
+            <div class="absolute top-6 right-6 text-xl cursor-pointer hover:text-yellow-400 transition" onclick="openEditModal()">
+                <i class="fas fa-pencil-alt text-gray-300"></i>
             </div>
+            
+            <div class="w-24 h-24 bg-gray-200 rounded-full flex justify-center items-center text-black font-extrabold text-4xl mt-2 mb-3 shadow-xl" id="profileCircle">
+                U
+            </div>
+            
+            <h2 class="text-2xl font-bold tracking-wide text-gray-100" id="profileName">User Name</h2>
         </div>
 
         <div class="mt-4 px-2">
@@ -526,6 +309,7 @@ cat << 'EOF' > public/profile.html
                 <div class="flex-1 text-[15px] font-bold text-gray-200 ml-2">Ubah Password</div>
                 <i class="fas fa-chevron-down text-gray-500 text-sm transition-transform duration-300" id="cpwIcon"></i>
             </div>
+            
             <div id="changePasswordBox" class="hidden px-6 py-5 border-b border-gray-800 bg-[#070e18] slide-down">
                 <div id="step1Cp">
                     <p class="text-xs text-gray-400 mb-3 text-center">Klik tombol di bawah untuk menerima kode OTP ke nomor WA Anda.</p>
@@ -562,7 +346,7 @@ cat << 'EOF' > public/profile.html
             
             <div class="relative w-20 h-20 mx-auto mb-8">
                 <div class="w-full h-full rounded-full border-2 border-yellow-400 flex items-center justify-center text-white text-3xl font-bold bg-[#1e293b]" id="editModalInitial">U</div>
-                <div class="absolute bottom-0 right-0 bg-yellow-400 rounded-full w-7 h-7 flex items-center justify-center text-[#0b1320] border-[3px] border-[#0b1320] cursor-pointer" onclick="Swal.fire({icon:'info', title:'Coming Soon', text:'Fitur ganti foto menyusul.'})">
+                <div class="absolute bottom-0 right-0 bg-yellow-400 rounded-full w-7 h-7 flex items-center justify-center text-[#0b1320] border-[3px] border-[#0b1320] cursor-pointer" onclick="Swal.fire({icon:'info', title:'Coming Soon', text:'Fitur ganti foto menyusul.', confirmButtonColor: '#002147'})">
                     <i class="fas fa-camera text-[10px]"></i>
                 </div>
             </div>
@@ -657,11 +441,10 @@ cat << 'EOF' > public/profile.html
             Swal.fire({title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
             try {
                 const res = await fetch('/api/auth/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ oldPhone, newName, newPhone }) });
-                const data = await res.json();
                 if(res.ok) {
                     user.name = newName; user.phone = newPhone; localStorage.setItem('user', JSON.stringify(user));
                     Swal.fire({icon:'success', title:'Berhasil', text:'Profil diperbarui!'}).then(() => { location.reload(); });
-                } else { Swal.fire({icon:'error', title:'Gagal', text: data.error}); }
+                } else { Swal.fire({icon:'error', title:'Gagal', text: (await res.json()).error}); }
             } catch(e) { Swal.fire({icon:'error', title:'Oops', text:'Kesalahan jaringan.'}); }
         }
 
@@ -685,7 +468,7 @@ cat << 'EOF' > public/profile.html
 EOF
 
 # ==========================================
-# FILE NODE.JS (UPDATE API)
+# FILE NODE.JS (API UPDATE & DELETE)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -723,6 +506,7 @@ if (!fs.existsSync(dbFile)) saveJSON(dbFile, {});
 if (!fs.existsSync(webUsersFile)) saveJSON(webUsersFile, {});
 
 app.get('/api/banners', (req, res) => res.json({ banners: loadJSON(configFile).banners }));
+
 app.post('/api/user/balance', (req, res) => res.json({ saldo: loadJSON(dbFile)[req.body.phone]?.saldo || 0 }));
 
 app.post('/api/auth/register', async (req, res) => {
@@ -733,7 +517,7 @@ app.post('/api/auth/register', async (req, res) => {
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
     webUsers[fPhone] = { name, email, password, isVerified: false, otp };
     saveJSON(webUsersFile, webUsers);
-    try { await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Halo *${name}*!\n\nOTP DIGITAL FIKY STORE: *${otp}*` }); res.json({ message: 'OTP Terkirim', phone: fPhone }); } catch(e) { res.status(500).json({ error: 'Gagal mengirim WA.' }); }
+    try { await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Halo *${name}*!\n\nKode OTP Pendaftaran Akun DIGITAL FIKY STORE Anda adalah: *${otp}*\n\n_Jangan berikan kode ini kepada siapapun._` }); res.json({ message: 'OTP Terkirim', phone: fPhone }); } catch(e) { res.status(500).json({ error: 'Gagal mengirim WA.' }); }
 });
 
 app.post('/api/auth/verify', (req, res) => {
@@ -814,6 +598,7 @@ async function startBot() {
 if (require.main === module) { app.listen(3000, () => { console.log('🌐 Web Server berjalan.'); }); startBot(); }
 EOF
 
+echo "Menginstal modul Node.js (harap tunggu sebentar)..."
 npm install --silent
 npm install -g pm2 > /dev/null 2>&1
 
@@ -825,75 +610,34 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V35) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V36) 🤖     "
     echo "==============================================="
-    echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
     echo "2. Jalankan Bot (Latar Belakang/PM2)"
     echo "3. Hentikan Bot (PM2)"
     echo "4. Lihat Log / Error Bot"
-    echo "5. 👥 Tambah Saldo Member"
-    echo "6. 🖼️ Ganti Foto Banner Promo"
-    echo "7. Update Sistem (Tarik Kode Terbaru)"
+    echo "5. Reset Sesi WhatsApp"
+    echo "6. 👥 Tambah Saldo Member"
+    echo "7. 🖼️ Ganti Foto Banner Promo"
+    echo "8. Update Sistem (Tarik Kode Terbaru)"
     echo "0. Keluar"
-    echo "==============================================="
-    read -p "Pilih menu [0-7]: " choice
+    read -p "Pilih menu [0-8]: " choice
 
     case $choice in
-        1) 
-            cd "$HOME/$DIR_NAME"
-            if [ ! -d "sesi_bot" ]; then
-                read -p "📲 Masukkan Nomor WA Bot (Awali 628...): " nomor_bot
-                if [ ! -z "$nomor_bot" ]; then node -e "const fs=require('fs');let cfg=fs.existsSync('config.json')?JSON.parse(fs.readFileSync('config.json')):{};cfg.botNumber='$nomor_bot';fs.writeFileSync('config.json',JSON.stringify(cfg,null,2));"; fi
-            fi
-            pm2 stop all > /dev/null 2>&1; fuser -k 3000/tcp > /dev/null 2>&1
-            node index.js
-            read -p "Tekan Enter untuk kembali..." ;;
-        2) 
-            cd "$HOME/$DIR_NAME"
-            pm2 delete $BOT_NAME 2>/dev/null; pm2 start index.js --name "$BOT_NAME" && pm2 save
-            echo "✅ Bot dan Web berjalan 24 jam!"
-            read -p "Tekan Enter..." ;;
-        3) pm2 stop $BOT_NAME; read -p "Tekan Enter..." ;;
+        1) cd "$HOME/$DIR_NAME" && node index.js ;;
+        2) cd "$HOME/$DIR_NAME" && pm2 delete $BOT_NAME 2>/dev/null; pm2 start index.js --name "$BOT_NAME" && pm2 save ;;
+        3) pm2 stop $BOT_NAME ;;
         4) pm2 logs $BOT_NAME ;;
-        5) 
-            read -p "ID Member (No WA): " nomor
-            read -p "Jumlah Saldo: " jumlah
-            node -e "const fs=require('fs');let db=fs.existsSync('$HOME/$DIR_NAME/database.json')?JSON.parse(fs.readFileSync('$HOME/$DIR_NAME/database.json')):{};if(!db['$nomor']) db['$nomor']={saldo:0};db['$nomor'].saldo+=parseInt('$jumlah');fs.writeFileSync('$HOME/$DIR_NAME/database.json',JSON.stringify(db,null,2));console.log('✅ Saldo ditambah!');"
-            read -p "Tekan Enter..." ;;
-        6)
-            echo "--- GANTI FOTO BANNER PROMO ---"
-            echo "Masukkan Link URL langsung gambar (diakhiri .jpg atau .png)"
-            echo "Tekan Enter saja jika tidak ingin mengubah slide tersebut."
-            read -p "Link Slide 1: " b1
-            read -p "Link Slide 2: " b2
-            read -p "Link Slide 3: " b3
-            read -p "Link Slide 4: " b4
-            node -e "
-                const fs = require('fs');
-                let file = '$HOME/$DIR_NAME/config.json';
-                let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
-                if (!cfg.banners) cfg.banners = ['','','',''];
-                if ('$b1'.trim()) cfg.banners[0] = '$b1'.trim();
-                if ('$b2'.trim()) cfg.banners[1] = '$b2'.trim();
-                if ('$b3'.trim()) cfg.banners[2] = '$b3'.trim();
-                if ('$b4'.trim()) cfg.banners[3] = '$b4'.trim();
-                fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
-                console.log('\n✅ Foto banner berhasil diperbarui! Silakan restart (Menu 2).');
-            "
-            read -p "Tekan Enter untuk kembali..." ;;
-        7)
-            cd "$HOME"
-            wget -qO- https://raw.githubusercontent.com/fikystorez/PROJECT-PPOB-FIKYSTORE/main/install.sh | tr -d '\r' > install.sh
-            chmod +x install.sh && ./install.sh
-            exit 0 ;;
+        5) pm2 stop $BOT_NAME 2>/dev/null; rm -rf "$HOME/$DIR_NAME/sesi_bot"; echo "Sesi dihapus!" ;;
+        6) read -p "ID Member (No WA): " nomor && read -p "Jumlah Tambah Saldo: " jumlah && node -e "const fs=require('fs');let db=fs.existsSync('$HOME/$DIR_NAME/database.json')?JSON.parse(fs.readFileSync('$HOME/$DIR_NAME/database.json')):{};if(!db['$nomor']) db['$nomor']={saldo:0};db['$nomor'].saldo+=parseInt('$jumlah');fs.writeFileSync('$HOME/$DIR_NAME/database.json',JSON.stringify(db,null,2));" ;;
+        7) echo "Silakan ganti di file config.json" ;;
+        8) cd "$HOME" && wget -qO- https://raw.githubusercontent.com/fikystorez/PROJECT-PPOB-FIKYSTORE/main/install.sh | tr -d '\r' > install.sh && chmod +x install.sh && ./install.sh && exit 0 ;;
         0) exit 0 ;;
     esac
 done
 EOF
 
 chmod +x /usr/bin/menu
-
 echo "=========================================================="
-echo "  SISTEM WEB & BOT BERHASIL DIPERBARUI!                   "
+echo "  SISTEM WEB & BOT BERHASIL DIPERBARUI SECARA PENUH!      "
 echo "=========================================================="
