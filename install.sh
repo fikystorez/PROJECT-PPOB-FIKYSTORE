@@ -51,7 +51,7 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website..."
+echo "[3/5] Membangun Antarmuka Website (Inline Change Password)..."
 
 cat << 'EOF' > public/style.css
 body {
@@ -59,7 +59,6 @@ body {
     margin: 0;
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 }
-
 .centered-modal-box {
     background-color: #002147; 
     padding: 3rem 1.5rem 2rem 1.5rem; 
@@ -71,7 +70,6 @@ body {
     position: relative;
     z-index: 10;
 }
-
 .logo-f-metalik-box {
     width: 85px; height: 85px; margin: 0 auto; 
     display: flex; justify-content: center; align-items: center;
@@ -86,7 +84,6 @@ body {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.9), -1px -1px 1px rgba(255,255,255,0.3); 
     position: absolute; top: 52%; left: 50%; transform: translate(-50%, -50%);
 }
-
 .logo-f-small {
     width: 45px; height: 45px; margin: 0 auto 10px auto; 
     display: flex; justify-content: center; align-items: center;
@@ -101,7 +98,6 @@ body {
     text-shadow: 1px 1px 2px rgba(0,0,0,0.9); 
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
 }
-
 .compact-input-box {
     width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #334155; 
     border-radius: 0.5rem; margin-bottom: 0.85rem; font-size: 0.875rem; 
@@ -113,19 +109,16 @@ body {
 .compact-label { font-size: 0.8rem; font-weight: bold; color: #f8fafc; margin-bottom: 0.25rem; display: block; text-align: left; }
 .compact-link-small { font-size: 0.8rem; color: #fde047; text-decoration: none; font-weight: bold; }
 .compact-link-small:hover { text-decoration: underline; color: #fef08a; }
-
 .btn-yellow {
     width: 100%; padding: 0.625rem 1rem; background-color: #fde047; color: #002147;
     font-weight: bold; font-size: 0.9rem; border-radius: 0.5rem; cursor: pointer; border: none; transition: all 0.2s;
 }
 .btn-yellow:hover { background-color: #facc15; }
-
 .tech-bg {
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5'%3E%3Cpath d='M0 40h20l10-10h20l10 10h20'/%3E%3Cpath d='M20 40v20l10 10'/%3E%3Cpath d='M60 40V20L50 10'/%3E%3Ccircle cx='30' cy='30' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='50' cy='50' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='10' cy='40' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='70' cy='40' r='2' fill='rgba(255,255,255,0.1)'/%3E%3C/g%3E%3C/svg%3E");
     background-size: 80px 80px; pointer-events: none; z-index: 1; border-radius: 1rem;
 }
-
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -176,6 +169,15 @@ body {
     transform: scale(0.7) !important; 
     margin: 0 auto 0.5em !important;
     border-width: 3px !important;
+}
+
+/* Animasi untuk kotak dropdown ubah password */
+.slide-down {
+    animation: slideDown 0.3s ease-out forwards;
+}
+@keyframes slideDown {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 EOF
 
@@ -517,7 +519,7 @@ cat << 'EOF' > public/dashboard.html
 </html>
 EOF
 
-# HTML PROFIL PREMIUM DARK (SESUAI GAMBAR)
+# HTML PROFIL BARU DENGAN UBAH PASSWORD INLINE
 cat << 'EOF' > public/profile.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -533,15 +535,11 @@ cat << 'EOF' > public/profile.html
     <div class="max-w-md mx-auto bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden text-white">
         
         <div class="bg-[#050b14] p-8 pb-10 flex flex-col items-center relative rounded-b-[2rem] shadow-lg">
-            <div class="absolute top-6 right-6 text-xl cursor-pointer hover:text-yellow-400 transition" onclick="Swal.fire({icon:'info', title:'Coming Soon', text:'Menu Edit Profil akan segera hadir!'})">
-                <i class="fas fa-pencil-alt text-gray-300"></i>
+            <div class="w-24 h-24 bg-gray-200 rounded-full flex justify-center items-center text-black font-extrabold text-4xl mt-2 mb-3 shadow-xl" id="profileCircle">U</div>
+            <div class="flex items-center gap-3">
+                <h2 class="text-2xl font-bold tracking-wide text-gray-100" id="profileName">User Name</h2>
+                <i class="fas fa-pencil-alt text-gray-400 hover:text-yellow-400 cursor-pointer transition text-lg" onclick="Swal.fire({icon:'info', title:'Coming Soon', text:'Menu Edit Profil akan segera hadir!'})"></i>
             </div>
-            
-            <div class="w-24 h-24 bg-gray-200 rounded-full flex justify-center items-center text-black font-extrabold text-4xl mt-2 mb-3 shadow-xl" id="profileCircle">
-                U
-            </div>
-            
-            <h2 class="text-2xl font-bold tracking-wide text-gray-100" id="profileName">User Name</h2>
         </div>
 
         <div class="mt-4 px-2">
@@ -565,14 +563,33 @@ cat << 'EOF' > public/profile.html
                 <div class="flex-1 text-[15px] font-bold text-gray-200 ml-2">Jumlah Transaksi</div>
                 <div class="text-sm text-gray-400">0 Trx</div>
             </div>
-            <div class="flex items-center px-4 py-5 border-b border-gray-800 cursor-pointer hover:bg-gray-800/50 transition" onclick="location.href='/forgot.html'">
+            
+            <div class="flex items-center px-4 py-5 border-b border-gray-800 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleChangePassword()">
                 <i class="fas fa-lock text-gray-400 w-10 text-xl text-center"></i>
                 <div class="flex-1 text-[15px] font-bold text-gray-200 ml-2">Ubah Password</div>
-                <i class="fas fa-chevron-right text-gray-500 text-sm"></i>
+                <i class="fas fa-chevron-down text-gray-500 text-sm transition-transform duration-300" id="cpwIcon"></i>
             </div>
+            
+            <div id="changePasswordBox" class="hidden px-6 py-5 border-b border-gray-800 bg-[#070e18] slide-down">
+                <div id="step1Cp">
+                    <p class="text-xs text-gray-400 mb-3 text-center">Kami perlu memverifikasi identitas Anda. Klik tombol di bawah untuk menerima kode OTP via WhatsApp.</p>
+                    <button class="w-full py-2.5 bg-gray-800 hover:bg-gray-700 text-yellow-400 font-bold rounded-lg text-sm border border-gray-700 transition" onclick="requestOtpCp()"><i class="fab fa-whatsapp mr-2"></i>Kirim OTP ke WA</button>
+                </div>
+                <div id="step2Cp" class="hidden">
+                    <p class="text-xs text-green-400 mb-4 text-center"><i class="fas fa-check-circle mr-1"></i>OTP berhasil terkirim ke WhatsApp Anda.</p>
+                    <label class="block text-xs font-bold text-gray-400 mb-1">Kode OTP (4 Digit)</label>
+                    <input type="number" id="cpOtp" class="w-full bg-[#0b1320] border border-gray-700 rounded-lg px-3 py-2 text-white text-lg mb-3 focus:outline-none focus:border-yellow-400 text-center tracking-[0.5em] font-bold" placeholder="XXXX">
+                    
+                    <label class="block text-xs font-bold text-gray-400 mb-1">Password Baru</label>
+                    <input type="password" id="cpNewPassword" class="w-full bg-[#0b1320] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm mb-5 focus:outline-none focus:border-yellow-400 text-center" placeholder="Ketik password baru">
+                    
+                    <button class="w-full py-2.5 bg-gradient-to-r from-yellow-400 to-yellow-500 text-[#001229] font-extrabold rounded-lg text-sm shadow-[0_4px_10px_rgba(253,224,71,0.2)]" onclick="submitChangePassword()">Simpan Password Baru</button>
+                </div>
+            </div>
+
             <div class="flex items-center px-4 py-5 cursor-pointer hover:bg-gray-800/50 transition" onclick="logout()">
-                <i class="fas fa-sign-out-alt text-red-600 w-10 text-xl text-center"></i>
-                <div class="flex-1 text-[15px] font-bold text-red-600 ml-2">Keluar Akun</div>
+                <i class="fas fa-sign-out-alt text-red-500 w-10 text-xl text-center"></i>
+                <div class="flex-1 text-[15px] font-bold text-red-500 ml-2">Keluar Akun</div>
             </div>
         </div>
 
@@ -593,6 +610,7 @@ cat << 'EOF' > public/profile.html
         document.getElementById('profileCircle').innerText = user.name.charAt(0).toUpperCase();
         document.getElementById('profileEmail').innerText = user.email || 'fikyshoto@gmail.com';
 
+        // Fungsi Logout dengan SweetAlert
         function logout() { 
             Swal.fire({
                 title: 'Keluar Akun?',
@@ -609,15 +627,67 @@ cat << 'EOF' > public/profile.html
             });
         }
 
+        // Tampilkan Saldo
         fetch('/api/user/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) })
         .then(res => res.json()).then(data => { document.getElementById('profileSaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); });
+
+        // LOGIKA UBAH PASSWORD INLINE
+        function toggleChangePassword() {
+            const box = document.getElementById('changePasswordBox');
+            const icon = document.getElementById('cpwIcon');
+            if(box.classList.contains('hidden')) {
+                box.classList.remove('hidden');
+                icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
+            } else {
+                box.classList.add('hidden');
+                icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
+                document.getElementById('step1Cp').classList.remove('hidden');
+                document.getElementById('step2Cp').classList.add('hidden');
+            }
+        }
+
+        async function requestOtpCp() {
+            try {
+                Swal.fire({title: 'Mengirim...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+                const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) });
+                const data = await res.json();
+                if (res.ok) {
+                    Swal.fire({ icon: 'success', title: 'Terkirim', text: 'OTP berhasil dikirim ke WA!', timer: 1500, showConfirmButton: false });
+                    document.getElementById('step1Cp').classList.add('hidden');
+                    document.getElementById('step2Cp').classList.remove('hidden');
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Gagal', text: data.error });
+                }
+            } catch(e) { Swal.fire({ icon: 'error', title: 'Error', text: 'Kesalahan jaringan.' }); }
+        }
+
+        async function submitChangePassword() {
+            const otp = document.getElementById('cpOtp').value;
+            const newPassword = document.getElementById('cpNewPassword').value;
+            if(!otp || !newPassword) return Swal.fire({ icon: 'warning', title: 'Lengkapi Data', text: 'OTP dan Password baru wajib diisi.' });
+            
+            try {
+                Swal.fire({title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+                const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone, otp, newPassword }) });
+                const data = await res.json();
+                if (res.ok) {
+                    Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password berhasil diubah.' }).then(() => {
+                        toggleChangePassword(); // tutup kotak
+                        document.getElementById('cpOtp').value = '';
+                        document.getElementById('cpNewPassword').value = '';
+                    });
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Gagal', text: data.error });
+                }
+            } catch(e) { Swal.fire({ icon: 'error', title: 'Error', text: 'Kesalahan jaringan.' }); }
+        }
     </script>
 </body>
 </html>
 EOF
 
 # ==========================================
-# FILE NODE.JS (LOGIK BOT + API)
+# FILE NODE.JS (LOGIK BOT + API BANNERS)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -761,7 +831,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V33) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V34) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
