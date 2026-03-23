@@ -361,7 +361,7 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
-# HTML DASHBOARD PPOB PREMIUM DENGAN SIDEBAR & DARK MODE
+# HTML DASHBOARD PPOB PREMIUM (GRID 3 KOLOM)
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -376,12 +376,12 @@ cat << 'EOF' > public/dashboard.html
     </script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 font-sans transition-colors duration-300">
-    <div class="max-w-md mx-auto bg-[#f8fafc] dark:bg-gray-900 min-h-screen relative pb-20 shadow-2xl transition-colors duration-300 overflow-x-hidden">
+    <div class="max-w-md mx-auto bg-[#f4f6f9] dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl transition-colors duration-300 overflow-x-hidden">
         
         <div class="flex justify-between items-center p-4 bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-40 transition-colors">
             <i class="fas fa-bars text-2xl text-[#002147] dark:text-gray-100 cursor-pointer" onclick="toggleSidebar()"></i>
-            <h1 class="font-extrabold text-[#002147] dark:text-gray-100 tracking-wider text-sm">DIGITAL FIKY STORE</h1>
-            <div class="bg-gray-100 dark:bg-gray-700 text-[10px] font-bold px-3 py-1 rounded-full text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600">
+            <h1 class="font-extrabold text-[#002147] dark:text-gray-100 tracking-widest text-sm">DIGITAL FIKY STORE</h1>
+            <div class="bg-gray-100 dark:bg-gray-700 text-[10px] font-bold px-3 py-1 rounded-full text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 shadow-sm">
                 0 Trx
             </div>
         </div>
@@ -392,7 +392,7 @@ cat << 'EOF' > public/dashboard.html
                 <div class="bg-[#002147] p-8 flex flex-col items-center justify-center text-white relative">
                     <button class="absolute top-3 right-4 text-gray-300 hover:text-white" onclick="toggleSidebar()"><i class="fas fa-times text-xl"></i></button>
                     <div class="w-20 h-20 bg-white rounded-full flex justify-center items-center text-[#002147] font-bold text-3xl mb-3 shadow-inner" id="sidebarInitial">U</div>
-                    <h3 class="font-bold text-lg" id="sidebarName">User Name</h3>
+                    <h3 class="font-bold text-lg tracking-wide" id="sidebarName">User Name</h3>
                     <p class="text-sm text-gray-300" id="sidebarPhone">08...</p>
                 </div>
                 <div class="flex-1 overflow-y-auto py-2">
@@ -406,10 +406,7 @@ cat << 'EOF' > public/dashboard.html
                         <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition">
                             <i class="far fa-bell text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Pemberitahuan</span>
                         </li>
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition">
-                            <i class="fas fa-headset text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Hubungi Admin</span>
-                        </li>
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition" onclick="toggleDarkMode()">
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition" onclick="toggleDarkMode()">
                             <div class="flex items-center gap-4">
                                 <i class="far fa-moon text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Mode Gelap</span>
                             </div>
@@ -425,57 +422,63 @@ cat << 'EOF' > public/dashboard.html
             </div>
         </div>
 
-        <div class="mx-4 mt-4 bg-[#002147] rounded-2xl p-5 text-white relative overflow-hidden shadow-xl">
-            <div class="tech-bg"></div> 
+        <div class="mx-4 mt-5 bg-[#002147] rounded-3xl p-6 text-white relative overflow-hidden shadow-lg border-b-[5px] border-yellow-400">
+            <div class="tech-bg opacity-70"></div> 
             
-            <div class="logo-f-small"></div>
-
             <div class="text-center relative z-10">
                 <p class="text-xs text-gray-300 mb-1">Sisa Saldo Anda</p>
-                <h2 class="text-3xl font-extrabold mb-5 tracking-tight" id="displaySaldo">Rp 0</h2>
+                <h2 class="text-4xl font-extrabold mb-6 tracking-tight drop-shadow-md" id="displaySaldo">Rp 0</h2>
                 
                 <div class="flex gap-4">
-                    <button class="flex-1 border border-white text-white rounded-full py-2 text-xs font-bold hover:bg-white hover:text-[#002147] transition">ISI SALDO</button>
-                    <button class="flex-1 border border-white text-white rounded-full py-2 text-xs font-bold hover:bg-white hover:text-[#002147] transition">BANTUAN</button>
+                    <button class="flex-1 border border-gray-500 text-white rounded-full py-2.5 text-xs font-bold hover:bg-white hover:text-[#002147] transition">ISI SALDO</button>
+                    <button class="flex-1 border border-gray-500 text-white rounded-full py-2.5 text-xs font-bold hover:bg-white hover:text-[#002147] transition">BANTUAN</button>
                 </div>
             </div>
         </div>
 
-        <div class="mx-4 mt-6 bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
-            <h3 class="font-bold text-[#002147] dark:text-gray-100 mb-5 text-sm border-b dark:border-gray-700 pb-2">Layanan Produk</h3>
+        <div class="mx-4 mt-6 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-gray-800 dark:to-gray-700 rounded-2xl h-28 overflow-hidden shadow-sm relative flex items-center justify-center border border-gray-200 dark:border-gray-700 cursor-pointer">
+            <h2 class="z-10 text-2xl font-extrabold text-[#002147] dark:text-gray-200 tracking-widest drop-shadow-sm">BANNER PROMO</h2>
+        </div>
+
+        <div class="mx-4 mt-6">
+            <h3 class="font-extrabold text-[#002147] dark:text-gray-100 mb-4 text-[15px] ml-1 tracking-wide">Layanan Produk</h3>
             
-            <div class="grid grid-cols-4 gap-y-6 gap-x-2">
-                <div class="flex flex-col items-center cursor-pointer hover:opacity-80 transition">
-                    <div class="w-12 h-12 bg-yellow-100 text-yellow-500 rounded-2xl flex items-center justify-center text-2xl mb-2 shadow-sm"><i class="fas fa-mobile-alt"></i></div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200">Pulsa</span>
+            <div class="grid grid-cols-3 gap-3">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl aspect-square flex flex-col items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-700 cursor-pointer hover:scale-95 transition-transform">
+                    <div class="text-blue-500 mb-2"><i class="fas fa-mobile-screen text-3xl"></i></div>
+                    <span class="text-[10px] font-extrabold text-[#002147] dark:text-gray-200 tracking-wider">PULSA</span>
                 </div>
-                <div class="flex flex-col items-center cursor-pointer hover:opacity-80 transition">
-                    <div class="w-12 h-12 bg-blue-100 text-blue-500 rounded-2xl flex items-center justify-center text-xl mb-2 shadow-sm"><i class="fas fa-wifi"></i></div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center leading-tight">Paket<br>Data</span>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl aspect-square flex flex-col items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-700 cursor-pointer hover:scale-95 transition-transform">
+                    <div class="text-teal-500 mb-2"><i class="fas fa-globe text-3xl"></i></div>
+                    <span class="text-[10px] font-extrabold text-[#002147] dark:text-gray-200 tracking-wider">DATA</span>
                 </div>
-                <div class="flex flex-col items-center cursor-pointer hover:opacity-80 transition">
-                    <div class="w-12 h-12 bg-green-100 text-green-500 rounded-2xl flex items-center justify-center text-xl mb-2 shadow-sm"><i class="fas fa-phone-volume"></i></div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center leading-tight">Paket<br>Telp</span>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl aspect-square flex flex-col items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-700 cursor-pointer hover:scale-95 transition-transform">
+                    <div class="text-pink-500 mb-2"><i class="fas fa-gamepad text-3xl"></i></div>
+                    <span class="text-[10px] font-extrabold text-[#002147] dark:text-gray-200 tracking-wider">GAME</span>
                 </div>
-                <div class="flex flex-col items-center cursor-pointer hover:opacity-80 transition">
-                    <div class="w-12 h-12 bg-pink-100 text-pink-500 rounded-2xl flex items-center justify-center text-xl mb-2 shadow-sm"><i class="fas fa-comment-dots"></i></div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center leading-tight">Paket<br>SMS</span>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl aspect-square flex flex-col items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-700 cursor-pointer hover:scale-95 transition-transform">
+                    <div class="text-yellow-500 mb-2"><i class="fas fa-ticket-alt text-3xl"></i></div>
+                    <span class="text-[10px] font-extrabold text-[#002147] dark:text-gray-200 tracking-wider">VOUCHER</span>
                 </div>
-                <div class="flex flex-col items-center cursor-pointer hover:opacity-80 transition">
-                    <div class="w-12 h-12 bg-orange-100 text-orange-500 rounded-2xl flex items-center justify-center text-xl mb-2 shadow-sm"><i class="fas fa-lightbulb"></i></div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center leading-tight">Token<br>PLN</span>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl aspect-square flex flex-col items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-700 cursor-pointer hover:scale-95 transition-transform">
+                    <div class="text-indigo-500 mb-2"><i class="fas fa-wallet text-3xl"></i></div>
+                    <span class="text-[10px] font-extrabold text-[#002147] dark:text-gray-200 tracking-wider">E-WALLET</span>
                 </div>
-                <div class="flex flex-col items-center cursor-pointer hover:opacity-80 transition">
-                    <div class="w-12 h-12 bg-teal-100 text-teal-500 rounded-2xl flex items-center justify-center text-xl mb-2 shadow-sm"><i class="far fa-calendar-check"></i></div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center leading-tight">Masa<br>Aktif</span>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl aspect-square flex flex-col items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-700 cursor-pointer hover:scale-95 transition-transform">
+                    <div class="text-yellow-400 mb-2"><i class="fas fa-bolt text-3xl"></i></div>
+                    <span class="text-[10px] font-extrabold text-[#002147] dark:text-gray-200 tracking-wider">PLN</span>
                 </div>
-                <div class="flex flex-col items-center cursor-pointer hover:opacity-80 transition">
-                    <div class="w-12 h-12 bg-gray-200 text-gray-600 rounded-2xl flex items-center justify-center text-xl mb-2 shadow-sm"><i class="fas fa-sim-card"></i></div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center leading-tight">Info<br>Kartu</span>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl aspect-square flex flex-col items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-700 cursor-pointer hover:scale-95 transition-transform">
+                    <div class="text-purple-500 mb-2"><i class="fas fa-phone-volume text-3xl"></i></div>
+                    <span class="text-[10px] font-extrabold text-[#002147] dark:text-gray-200 tracking-wider">SMS TELP</span>
                 </div>
-                <div class="flex flex-col items-center cursor-pointer hover:opacity-80 transition">
-                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-xl mb-2 shadow-sm"><i class="fas fa-ellipsis-h"></i></div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center leading-tight">Lainnya</span>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl aspect-square flex flex-col items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-700 cursor-pointer hover:scale-95 transition-transform">
+                    <div class="text-orange-500 mb-2"><i class="fas fa-calendar-check text-3xl"></i></div>
+                    <span class="text-[10px] font-extrabold text-[#002147] dark:text-gray-200 tracking-wider">MASA AKTIF</span>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl aspect-square flex flex-col items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-700 cursor-pointer hover:scale-95 transition-transform">
+                    <div class="text-cyan-500 mb-2"><i class="fas fa-sim-card text-3xl"></i></div>
+                    <span class="text-[10px] font-extrabold text-[#002147] dark:text-gray-200 tracking-wider">PERDANA</span>
                 </div>
             </div>
         </div>
@@ -502,18 +505,15 @@ cat << 'EOF' > public/dashboard.html
     </div>
 
     <script>
-        // Inisialisasi User
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) window.location.href = '/';
         
-        // Update data Sidebar
         document.getElementById('sidebarName').innerText = user.name;
         document.getElementById('sidebarPhone').innerText = user.phone;
         document.getElementById('sidebarInitial').innerText = user.name.charAt(0).toUpperCase();
 
         function logout() { localStorage.removeItem('user'); window.location.href = '/'; }
 
-        // Fetch Saldo
         fetch('/api/user/balance', {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ phone: user.phone })
@@ -522,37 +522,19 @@ cat << 'EOF' > public/dashboard.html
         .then(data => { document.getElementById('displaySaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); })
         .catch(err => { document.getElementById('displaySaldo').innerText = 'Rp 0'; });
 
-        // Fungsi Toggle Sidebar
-        function toggleSidebar() {
-            const sb = document.getElementById('sidebar');
-            sb.classList.toggle('-translate-x-full');
-        }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
 
-        // Fungsi Dark Mode
         let isDark = localStorage.getItem('darkMode') === 'true';
         const htmlRoot = document.getElementById('html-root');
         const dot = document.getElementById('darkModeToggleDot');
         const bg = document.getElementById('darkModeToggleBg');
 
         function applyDarkMode() {
-            if (isDark) {
-                htmlRoot.classList.add('dark');
-                dot.classList.add('translate-x-5');
-                bg.classList.add('bg-blue-500');
-            } else {
-                htmlRoot.classList.remove('dark');
-                dot.classList.remove('translate-x-5');
-                bg.classList.remove('bg-blue-500');
-            }
+            if (isDark) { htmlRoot.classList.add('dark'); dot.classList.add('translate-x-5'); bg.classList.add('bg-blue-500'); } 
+            else { htmlRoot.classList.remove('dark'); dot.classList.remove('translate-x-5'); bg.classList.remove('bg-blue-500'); }
         }
 
-        function toggleDarkMode() {
-            isDark = !isDark;
-            localStorage.setItem('darkMode', isDark);
-            applyDarkMode();
-        }
-
-        // Terapkan saat halaman dimuat
+        function toggleDarkMode() { isDark = !isDark; localStorage.setItem('darkMode', isDark); applyDarkMode(); }
         applyDarkMode();
     </script>
 </body>
@@ -740,7 +722,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V16) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V17) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
