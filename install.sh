@@ -359,7 +359,7 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
-# HTML DASHBOARD DENGAN DINAMIS BANNER CLEAN (NO TEXT) & 4 BOTTOM NAV
+# HTML DASHBOARD PPOB PREMIUM DENGAN BANNER DIPERBESAR (h-[170px])
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -431,10 +431,10 @@ cat << 'EOF' > public/dashboard.html
             </div>
         </div>
 
-        <div class="mx-4 mt-6 relative rounded-2xl h-[120px] overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 group bg-gray-200 dark:bg-gray-800">
+        <div class="mx-4 mt-6 relative rounded-2xl h-[170px] overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 group bg-gray-200 dark:bg-gray-800">
             <div id="promoSlider" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth">
                 </div>
-            <div class="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-20" id="promoDots">
+            <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20" id="promoDots">
             </div>
         </div>
 
@@ -515,7 +515,7 @@ cat << 'EOF' > public/dashboard.html
         function toggleDarkMode() { isDark = !isDark; localStorage.setItem('darkMode', isDark); applyDarkMode(); }
         applyDarkMode();
 
-        // LOGIKA DINAMIS BANNER (CLEAN IMAGE ONLY)
+        // LOGIKA DINAMIS BANNER
         fetch('/api/banners')
         .then(res => res.json())
         .then(data => {
@@ -523,7 +523,6 @@ cat << 'EOF' > public/dashboard.html
                 const slider = document.getElementById('promoSlider');
                 const dotsContainer = document.getElementById('promoDots');
                 
-                // Menghapus elemen teks dan opacity agar gambar tampil 100% terang dan bersih
                 slider.innerHTML = data.banners.map((url, i) => `
                     <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#002147]">
                         <img src="${url}" class="absolute inset-0 w-full h-full object-cover">
@@ -532,7 +531,7 @@ cat << 'EOF' > public/dashboard.html
 
                 let dotsHTML = '';
                 for(let i=0; i<data.banners.length; i++){
-                    dotsHTML += `<div class="w-2 h-2 rounded-full bg-white opacity-${i===0?'100':'40'} transition-opacity duration-300 dot-indicator shadow-sm"></div>`;
+                    dotsHTML += `<div class="w-2 h-2 rounded-full bg-white opacity-${i===0?'100':'40'} transition-opacity duration-300 dot-indicator shadow-[0_1px_3px_rgba(0,0,0,0.5)]"></div>`;
                 }
                 dotsContainer.innerHTML = dotsHTML;
             }
@@ -707,7 +706,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V22) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V23) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
