@@ -12,9 +12,10 @@ fi
 
 DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
+PORT=3000
 
 echo "=========================================================="
-echo "      MENGINSTAL DIGITAL FIKY STORE - NEON PREMIUM        "
+echo "      MENGINSTAL DIGITAL FIKY STORE - TECH DASHBOARD      "
 echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
@@ -50,37 +51,28 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Desain Dashboard, Sidebar & Neon)..."
+echo "[3/5] Membangun Antarmuka Website (Desain Dashboard & Dark Mode)..."
 
 cat << 'EOF' > public/style.css
 body {
-    background-color: #f3f4f6; 
+    background-color: #fde047; 
     margin: 0;
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-    transition: background-color 0.3s;
-}
-
-/* Latar Belakang Sirkuit Biru Neon */
-.circuit-header {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 40vh; 
-    background: linear-gradient(135deg, #020617 0%, #1e3a8a 100%);
-    background-image: radial-gradient(circle, rgba(56, 189, 248, 0.4) 1px, transparent 1px);
-    background-size: 25px 25px;
-    border-radius: 0 0 50% 50% / 0 0 10% 10%;
-    z-index: -1;
-    box-shadow: 0 10px 30px -10px rgba(30, 58, 138, 0.5);
 }
 
 .centered-modal-box {
     background-color: #002147; 
     padding: 3rem 1.5rem 2rem 1.5rem; 
     border-radius: 1.2rem; 
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2); 
-    width: 90%; max-width: 360px; 
-    text-align: center; position: relative; z-index: 10;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); 
+    width: 90%;
+    max-width: 360px; 
+    text-align: center;
+    position: relative;
+    z-index: 10;
 }
 
+/* Logo "F" Metalik 3D dengan CSS Murni */
 .logo-f-metalik-box {
     width: 85px; height: 85px; margin: 0 auto; 
     display: flex; justify-content: center; align-items: center;
@@ -97,8 +89,9 @@ body {
     position: absolute; top: 52%; left: 50%; transform: translate(-50%, -50%);
 }
 
+/* Logo F Versi Kecil untuk Dashboard */
 .logo-f-small {
-    width: 50px; height: 50px; margin: 0 auto 10px auto; 
+    width: 45px; height: 45px; margin: 0 auto 10px auto; 
     display: flex; justify-content: center; align-items: center;
     border-radius: 50%; border: 2px solid #cbd5e1;
     background: radial-gradient(circle, #333333 0%, #000000 100%); 
@@ -106,7 +99,7 @@ body {
     position: relative; z-index: 2;
 }
 .logo-f-small::before {
-    content: "F"; font-size: 30px; font-family: "Times New Roman", Times, serif;
+    content: "F"; font-size: 28px; font-family: "Times New Roman", Times, serif;
     font-weight: bold; color: #e2e8f0; 
     text-shadow: 1px 1px 2px rgba(0,0,0,0.9); 
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -117,8 +110,10 @@ body {
     border-radius: 0.5rem; margin-bottom: 0.85rem; font-size: 0.875rem; 
     outline: none; background-color: #ffffff; color: #0f172a;
 }
-.compact-input-box:focus { border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3); }
+.compact-input-box:focus { border-color: #fde047; box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3); }
+
 ::placeholder { color: #94a3b8; font-size: 0.8rem; }
+.compact-text-small { font-size: 0.8rem; color: #cbd5e1; }
 .compact-label { font-size: 0.8rem; font-weight: bold; color: #f8fafc; margin-bottom: 0.25rem; display: block; text-align: left; }
 .compact-link-small { font-size: 0.8rem; color: #fde047; text-decoration: none; font-weight: bold; }
 .compact-link-small:hover { text-decoration: underline; color: #fef08a; }
@@ -128,21 +123,18 @@ body {
     font-weight: bold; font-size: 0.9rem; border-radius: 0.5rem; cursor: pointer; border: none; transition: all 0.2s;
 }
 .btn-yellow:hover { background-color: #facc15; }
+
 .btn-green {
     width: 100%; padding: 0.625rem 1rem; background-color: #16a34a; color: #ffffff;
     font-weight: bold; font-size: 0.9rem; border-radius: 0.5rem; cursor: pointer; border: none; transition: all 0.2s;
 }
 
-.wave-bg {
+/* Background Robotik (Tech-Grid/Sirkuit) Baru */
+.tech-bg {
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40 Q 50 10, 100 40 T 200 40 T 300 40 T 400 40' fill='none' stroke='rgba(255,255,255,0.05)' stroke-width='2'/%3E%3Cpath d='M0 80 Q 50 50, 100 80 T 200 80 T 300 80 T 400 80' fill='none' stroke='rgba(255,255,255,0.03)' stroke-width='2'/%3E%3Cpath d='M0 120 Q 50 90, 100 120 T 200 120 T 300 120 T 400 120' fill='none' stroke='rgba(255,255,255,0.05)' stroke-width='2'/%3E%3C/svg%3E");
-    background-size: cover; pointer-events: none; z-index: 1; border-radius: 1rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5'%3E%3Cpath d='M0 40h20l10-10h20l10 10h20'/%3E%3Cpath d='M20 40v20l10 10'/%3E%3Cpath d='M60 40V20L50 10'/%3E%3Ccircle cx='30' cy='30' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='50' cy='50' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='10' cy='40' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='70' cy='40' r='2' fill='rgba(255,255,255,0.1)'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 80px 80px; pointer-events: none; z-index: 1; border-radius: 1rem;
 }
-
-/* Toggle Switch CSS */
-.toggle-checkbox:checked { right: 0; border-color: #fde047; }
-.toggle-checkbox:checked + .toggle-label { background-color: #fde047; }
-.toggle-checkbox { right: 50%; z-index: 1; transition: all 0.3s ease; }
 EOF
 
 cat << 'EOF' > public/index.html
@@ -154,15 +146,16 @@ cat << 'EOF' > public/index.html
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="flex flex-col items-center justify-center h-screen relative bg-gray-50">
-    <div class="circuit-header"></div>
-    <div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div>
+<body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
+    <div class="z-20 mb-[-42px]">
+        <div class="logo-f-metalik-box"></div>
+    </div>
     <div class="centered-modal-box pt-14">
         <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
             <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
         </div>
         <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
-        <p class="text-xs text-gray-300 mb-6">Silahkan masukkan email/no HP dan password kamu!</p>
+        <p class="compact-text-small mb-6">Silahkan masukkan email/no HP dan password kamu!</p>
         <form id="loginForm">
             <div>
                 <label class="compact-label">Email / No. HP</label>
@@ -177,7 +170,7 @@ cat << 'EOF' > public/index.html
             </div>
             <button type="submit" class="btn-yellow">Login Sekarang</button>
         </form>
-        <div class="mt-6 text-center text-xs text-gray-300">
+        <div class="mt-6 text-center compact-text-small">
             Belum punya akun? <a href="/register.html" class="compact-link-small">Daftar disini</a>
         </div>
     </div>
@@ -212,16 +205,16 @@ cat << 'EOF' > public/register.html
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="flex flex-col items-center justify-center h-screen relative bg-gray-50">
-    <div class="circuit-header"></div>
-    <div class="z-20 mb-[-42px]" id="logo-header"><div class="logo-f-metalik-box"></div></div>
-    
+<body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
+    <div class="z-20 mb-[-42px]" id="logo-header">
+        <div class="logo-f-metalik-box"></div>
+    </div>
     <div class="centered-modal-box pt-14" id="box-register">
         <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-2">
             <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
         </div>
         <h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2>
-        <p class="text-xs text-gray-300 mb-4">Silahkan lengkapi data untuk mendaftar!</p>
+        <p class="compact-text-small mb-4">Silahkan lengkapi data untuk mendaftar!</p>
         <form id="registerForm">
             <div>
                 <label class="compact-label">Nama Lengkap</label>
@@ -239,19 +232,18 @@ cat << 'EOF' > public/register.html
                 <label class="compact-label">Password</label>
                 <input type="password" id="password" class="compact-input-box" required placeholder="Ketik disini">
             </div>
-            <button type="submit" class="btn-green mt-1">Daftar Sekarang</button>
+            <button type="submit" class="btn-yellow mt-1">Daftar Sekarang</button>
         </form>
-        <div class="mt-4 text-center text-xs text-gray-300">
+        <div class="mt-4 text-center compact-text-small">
             Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a>
         </div>
     </div>
-    
     <div class="centered-modal-box pt-14 hidden" id="box-otp">
         <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
             <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
         </div>
         <h2 class="text-lg font-bold text-white mb-1">VERIFIKASI WA</h2>
-        <p class="text-xs text-gray-300 mb-5 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
+        <p class="compact-text-small mb-5 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
         <form id="otpForm">
             <div>
                 <label class="compact-label text-center">Kode OTP (4 Digit)</label>
@@ -311,8 +303,7 @@ cat << 'EOF' > public/forgot.html
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="flex flex-col items-center justify-center h-screen relative bg-gray-50">
-    <div class="circuit-header"></div>
+<body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
     <div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div>
     <div class="centered-modal-box pt-14">
         <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
@@ -320,7 +311,7 @@ cat << 'EOF' > public/forgot.html
         </div>
         <h2 class="text-lg font-bold text-white mb-1">RESET PASSWORD</h2>
         <form id="requestOtpForm">
-            <p class="text-xs text-gray-300 mb-5 text-center">Masukkan Nomor WA Anda untuk reset password.</p>
+            <p class="compact-text-small mb-5 text-center">Masukkan Nomor WA Anda untuk reset password.</p>
             <div><input type="number" id="phone" class="compact-input-box text-center" required placeholder="Ketik disini (08123...)"></div>
             <button type="submit" class="btn-yellow mt-2">Kirim OTP Reset</button>
         </form>
@@ -334,9 +325,9 @@ cat << 'EOF' > public/forgot.html
                 <label class="compact-label text-center mt-2">Password Baru</label>
                 <input type="password" id="newPassword" class="compact-input-box" required placeholder="Ketik disini">
             </div>
-            <button type="submit" class="btn-green mt-3">Simpan Password Baru</button>
+            <button type="submit" class="btn-yellow mt-3">Simpan Password Baru</button>
         </form>
-        <div class="mt-6 text-center text-xs text-gray-300">
+        <div class="mt-6 text-center compact-text-small">
             Kembali ke <a href="/" class="compact-link-small">Login</a>
         </div>
     </div>
@@ -370,152 +361,155 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
-# HTML DASHBOARD PPOB PREMIUM + SIDEBAR HAMBURGER MENU
+# HTML DASHBOARD PPOB PREMIUM DENGAN SIDEBAR & DARK MODE
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
-<html lang="id" class="transition-colors duration-300">
+<html lang="id" id="html-root">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - DIGITAL FIKY STORE</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = { darkMode: 'class', }
-    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
 </head>
-<body class="bg-gray-200 dark:bg-gray-900 font-sans transition-colors duration-300">
-
-    <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-60 z-[60] hidden transition-opacity" onclick="toggleSidebar()"></div>
-    
-    <div id="sidebar" class="fixed top-0 left-0 w-4/5 max-w-[320px] h-full bg-white dark:bg-gray-800 z-[70] transform -translate-x-full transition-transform duration-300 flex flex-col shadow-2xl">
-        <div class="bg-[#002147] p-8 flex flex-col items-center justify-center text-white rounded-br-3xl">
-            <div class="w-20 h-20 bg-white text-[#002147] rounded-full flex items-center justify-center text-3xl font-extrabold mb-3 shadow-lg" id="sidebarInitial">F</div>
-            <h3 class="font-bold text-lg tracking-wide" id="sidebarName">Memuat...</h3>
-            <p class="text-sm text-yellow-300 font-semibold mt-1" id="sidebarPhone">081xxx</p>
-        </div>
+<body class="bg-gray-100 dark:bg-gray-900 font-sans transition-colors duration-300">
+    <div class="max-w-md mx-auto bg-[#f8fafc] dark:bg-gray-900 min-h-screen relative pb-20 shadow-2xl transition-colors duration-300 overflow-x-hidden">
         
-        <div class="flex-1 overflow-y-auto py-4">
-            <a href="#" class="flex items-center px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                <i class="fas fa-user-circle w-8 text-xl text-blue-500"></i> <span class="font-semibold">Profil Akun</span>
-            </a>
-            <a href="#" class="flex items-center px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                <i class="fas fa-history w-8 text-xl text-green-500"></i> <span class="font-semibold">Transaksi Saya</span>
-            </a>
-            <a href="#" class="flex items-center px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                <i class="fas fa-bell w-8 text-xl text-yellow-500"></i> <span class="font-semibold">Pemberitahuan</span>
-            </a>
-            <a href="#" class="flex items-center px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition border-b border-gray-200 dark:border-gray-700">
-                <i class="fas fa-headset w-8 text-xl text-purple-500"></i> <span class="font-semibold">Hubungi Admin</span>
-            </a>
-            
-            <div class="flex items-center justify-between px-6 py-5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                <div class="flex items-center font-semibold"><i class="fas fa-moon w-8 text-xl text-indigo-500"></i> Mode Gelap</div>
-                <div class="relative inline-block w-10 align-middle select-none transition duration-200 ease-in">
-                    <input type="checkbox" name="toggle" id="darkModeToggle" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
-                    <label for="darkModeToggle" class="toggle-label block overflow-hidden h-5 rounded-full bg-gray-300 cursor-pointer"></label>
+        <div class="flex justify-between items-center p-4 bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-40 transition-colors">
+            <i class="fas fa-bars text-2xl text-[#002147] dark:text-gray-100 cursor-pointer" onclick="toggleSidebar()"></i>
+            <h1 class="font-extrabold text-[#002147] dark:text-gray-100 tracking-wider text-sm">DIGITAL FIKY STORE</h1>
+            <div class="bg-gray-100 dark:bg-gray-700 text-[10px] font-bold px-3 py-1 rounded-full text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600">
+                0 Trx
+            </div>
+        </div>
+
+        <div id="sidebar" class="fixed inset-0 z-[100] transform -translate-x-full transition-transform duration-300 ease-in-out flex">
+            <div class="w-full bg-black bg-opacity-50" onclick="toggleSidebar()"></div>
+            <div class="absolute top-0 left-0 w-3/4 max-w-[300px] h-full bg-white dark:bg-gray-900 shadow-2xl flex flex-col transition-colors">
+                <div class="bg-[#002147] p-8 flex flex-col items-center justify-center text-white relative">
+                    <button class="absolute top-3 right-4 text-gray-300 hover:text-white" onclick="toggleSidebar()"><i class="fas fa-times text-xl"></i></button>
+                    <div class="w-20 h-20 bg-white rounded-full flex justify-center items-center text-[#002147] font-bold text-3xl mb-3 shadow-inner" id="sidebarInitial">U</div>
+                    <h3 class="font-bold text-lg" id="sidebarName">User Name</h3>
+                    <p class="text-sm text-gray-300" id="sidebarPhone">08...</p>
+                </div>
+                <div class="flex-1 overflow-y-auto py-2">
+                    <ul class="text-gray-700 dark:text-gray-200">
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition">
+                            <i class="far fa-user text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Profil Akun</span>
+                        </li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition">
+                            <i class="far fa-clock text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Transaksi Saya</span>
+                        </li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition">
+                            <i class="far fa-bell text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Pemberitahuan</span>
+                        </li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition">
+                            <i class="fas fa-headset text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Hubungi Admin</span>
+                        </li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition" onclick="toggleDarkMode()">
+                            <div class="flex items-center gap-4">
+                                <i class="far fa-moon text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Mode Gelap</span>
+                            </div>
+                            <div class="w-10 h-5 bg-gray-300 dark:bg-blue-500 rounded-full relative transition-colors duration-300" id="darkModeToggleBg">
+                                <div class="w-5 h-5 bg-white rounded-full absolute left-0 shadow-md transform transition-transform duration-300" id="darkModeToggleDot"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="p-6 border-t border-gray-100 dark:border-gray-800">
+                    <button onclick="logout()" class="w-full py-3 border-2 border-red-500 text-red-500 font-bold rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition">Keluar Akun</button>
                 </div>
             </div>
         </div>
-        
-        <div class="p-6">
-            <button onclick="logout()" class="w-full py-3 border-2 border-red-500 text-red-500 rounded-xl font-bold hover:bg-red-500 hover:text-white transition shadow-sm">Keluar Akun</button>
-        </div>
-    </div>
 
-    <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#121212] min-h-screen relative pb-20 shadow-2xl transition-colors duration-300">
-        
-        <div class="flex justify-between items-center p-4 bg-white dark:bg-[#1e1e1e] shadow-sm sticky top-0 z-50 transition-colors duration-300">
-            <i class="fas fa-bars text-2xl text-[#002147] dark:text-white cursor-pointer hover:scale-110 transition" onclick="toggleSidebar()"></i>
-            <h1 class="font-extrabold text-[#002147] dark:text-white tracking-wider text-sm">DIGITAL FIKY STORE</h1>
-            <div class="bg-gray-100 dark:bg-gray-700 text-[10px] font-bold px-3 py-1.5 rounded-full text-[#002147] dark:text-white shadow-inner">
-                1 Trx
-            </div>
-        </div>
-
-        <div class="absolute top-0 left-0 w-full h-64 circuit-header" style="top: 60px;"></div>
-
-        <div class="mx-4 mt-6 bg-[#002147] rounded-2xl p-5 text-white relative overflow-hidden shadow-2xl border-b-4 border-yellow-400">
-            <div class="wave-bg"></div>
+        <div class="mx-4 mt-4 bg-[#002147] rounded-2xl p-5 text-white relative overflow-hidden shadow-xl">
+            <div class="tech-bg"></div> 
             
+            <div class="logo-f-small"></div>
+
             <div class="text-center relative z-10">
-                <div class="logo-f-small"></div>
-                <h3 class="text-yellow-400 text-xs font-bold tracking-[0.2em] mb-3 border border-yellow-400 inline-block px-3 py-1 rounded-full">TOP UP SALDO</h3>
-                
                 <p class="text-xs text-gray-300 mb-1">Sisa Saldo Anda</p>
-                <h2 class="text-3xl font-extrabold mb-6 tracking-tight" id="displaySaldo">Rp 0</h2>
+                <h2 class="text-3xl font-extrabold mb-5 tracking-tight" id="displaySaldo">Rp 0</h2>
                 
                 <div class="flex gap-4">
-                    <button class="flex-1 border border-gray-400 text-white rounded-full py-2.5 text-xs font-bold hover:bg-white hover:text-[#002147] transition">ISI SALDO</button>
-                    <button class="flex-1 border border-gray-400 text-white rounded-full py-2.5 text-xs font-bold hover:bg-white hover:text-[#002147] transition">BANTUAN</button>
+                    <button class="flex-1 border border-white text-white rounded-full py-2 text-xs font-bold hover:bg-white hover:text-[#002147] transition">ISI SALDO</button>
+                    <button class="flex-1 border border-white text-white rounded-full py-2 text-xs font-bold hover:bg-white hover:text-[#002147] transition">BANTUAN</button>
                 </div>
             </div>
         </div>
 
-        <div class="mx-4 mt-6 bg-white dark:bg-[#1e1e1e] p-5 rounded-2xl shadow-md border border-gray-100 dark:border-gray-800 transition-colors duration-300">
-            <h3 class="font-bold text-[#002147] dark:text-white mb-5 text-sm border-b dark:border-gray-700 pb-2">Layanan Produk</h3>
+        <div class="mx-4 mt-6 bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
+            <h3 class="font-bold text-[#002147] dark:text-gray-100 mb-5 text-sm border-b dark:border-gray-700 pb-2">Layanan Produk</h3>
             
             <div class="grid grid-cols-4 gap-y-6 gap-x-2">
                 <div class="flex flex-col items-center cursor-pointer hover:opacity-80 transition">
                     <div class="w-12 h-12 bg-yellow-100 text-yellow-500 rounded-2xl flex items-center justify-center text-2xl mb-2 shadow-sm"><i class="fas fa-mobile-alt"></i></div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-300">Pulsa</span>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200">Pulsa</span>
                 </div>
                 <div class="flex flex-col items-center cursor-pointer hover:opacity-80 transition">
                     <div class="w-12 h-12 bg-blue-100 text-blue-500 rounded-2xl flex items-center justify-center text-xl mb-2 shadow-sm"><i class="fas fa-wifi"></i></div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-300 text-center leading-tight">Paket<br>Data</span>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center leading-tight">Paket<br>Data</span>
                 </div>
                 <div class="flex flex-col items-center cursor-pointer hover:opacity-80 transition">
                     <div class="w-12 h-12 bg-green-100 text-green-500 rounded-2xl flex items-center justify-center text-xl mb-2 shadow-sm"><i class="fas fa-phone-volume"></i></div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-300 text-center leading-tight">Paket<br>Telp</span>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center leading-tight">Paket<br>Telp</span>
                 </div>
                 <div class="flex flex-col items-center cursor-pointer hover:opacity-80 transition">
                     <div class="w-12 h-12 bg-pink-100 text-pink-500 rounded-2xl flex items-center justify-center text-xl mb-2 shadow-sm"><i class="fas fa-comment-dots"></i></div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-300 text-center leading-tight">Paket<br>SMS</span>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center leading-tight">Paket<br>SMS</span>
                 </div>
                 <div class="flex flex-col items-center cursor-pointer hover:opacity-80 transition">
                     <div class="w-12 h-12 bg-orange-100 text-orange-500 rounded-2xl flex items-center justify-center text-xl mb-2 shadow-sm"><i class="fas fa-lightbulb"></i></div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-300 text-center leading-tight">Token<br>PLN</span>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center leading-tight">Token<br>PLN</span>
                 </div>
                 <div class="flex flex-col items-center cursor-pointer hover:opacity-80 transition">
                     <div class="w-12 h-12 bg-teal-100 text-teal-500 rounded-2xl flex items-center justify-center text-xl mb-2 shadow-sm"><i class="far fa-calendar-check"></i></div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-300 text-center leading-tight">Masa<br>Aktif</span>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center leading-tight">Masa<br>Aktif</span>
                 </div>
                 <div class="flex flex-col items-center cursor-pointer hover:opacity-80 transition">
                     <div class="w-12 h-12 bg-gray-200 text-gray-600 rounded-2xl flex items-center justify-center text-xl mb-2 shadow-sm"><i class="fas fa-sim-card"></i></div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-300 text-center leading-tight">Info<br>Kartu</span>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center leading-tight">Info<br>Kartu</span>
                 </div>
                 <div class="flex flex-col items-center cursor-pointer hover:opacity-80 transition">
                     <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-xl mb-2 shadow-sm"><i class="fas fa-ellipsis-h"></i></div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-300 text-center leading-tight">Lainnya</span>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center leading-tight">Lainnya</span>
                 </div>
             </div>
         </div>
 
-        <div class="fixed bottom-0 w-full max-w-md bg-[#002147] dark:bg-[#0a192f] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.3)] z-50 transition-colors">
+        <div class="fixed bottom-0 w-full max-w-md bg-[#002147] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.1)] z-40">
             <div class="flex flex-col items-center cursor-pointer text-yellow-400">
-                <i class="fas fa-home text-xl mb-1"></i><span class="text-[10px] font-bold">HOME</span>
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-[10px] mt-1 font-bold">HOME</span>
             </div>
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition">
-                <i class="fas fa-file-alt text-xl mb-1"></i><span class="text-[10px] font-bold">RIWAYAT</span>
+                <i class="fas fa-file-alt text-xl"></i>
+                <span class="text-[10px] mt-1 font-bold">RIWAYAT</span>
             </div>
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition">
-                <i class="fas fa-bell text-xl mb-1"></i><span class="text-[10px] font-bold">INFO</span>
+                <i class="fas fa-bell text-xl"></i>
+                <span class="text-[10px] mt-1 font-bold">INFO</span>
             </div>
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition">
-                <i class="fas fa-user text-xl mb-1"></i><span class="text-[10px] font-bold">PROFIL</span>
+                <i class="fas fa-user text-xl"></i>
+                <span class="text-[10px] mt-1 font-bold">PROFIL</span>
             </div>
         </div>
+
     </div>
 
     <script>
+        // Inisialisasi User
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) window.location.href = '/';
         
-        // Inisialisasi Sidebar Data
+        // Update data Sidebar
         document.getElementById('sidebarName').innerText = user.name;
         document.getElementById('sidebarPhone').innerText = user.phone;
-        const initial = user.name ? user.name.charAt(0).toUpperCase() : 'U';
-        document.getElementById('sidebarInitial').innerText = initial;
+        document.getElementById('sidebarInitial').innerText = user.name.charAt(0).toUpperCase();
 
         function logout() { localStorage.removeItem('user'); window.location.href = '/'; }
 
@@ -530,35 +524,36 @@ cat << 'EOF' > public/dashboard.html
 
         // Fungsi Toggle Sidebar
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            if (sidebar.classList.contains('-translate-x-full')) {
-                sidebar.classList.remove('-translate-x-full');
-                overlay.classList.remove('hidden');
+            const sb = document.getElementById('sidebar');
+            sb.classList.toggle('-translate-x-full');
+        }
+
+        // Fungsi Dark Mode
+        let isDark = localStorage.getItem('darkMode') === 'true';
+        const htmlRoot = document.getElementById('html-root');
+        const dot = document.getElementById('darkModeToggleDot');
+        const bg = document.getElementById('darkModeToggleBg');
+
+        function applyDarkMode() {
+            if (isDark) {
+                htmlRoot.classList.add('dark');
+                dot.classList.add('translate-x-5');
+                bg.classList.add('bg-blue-500');
             } else {
-                sidebar.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
+                htmlRoot.classList.remove('dark');
+                dot.classList.remove('translate-x-5');
+                bg.classList.remove('bg-blue-500');
             }
         }
 
-        // Mode Gelap (Dark Mode)
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const htmlElement = document.documentElement;
-
-        if (localStorage.getItem('darkMode') === 'true') {
-            htmlElement.classList.add('dark');
-            darkModeToggle.checked = true;
+        function toggleDarkMode() {
+            isDark = !isDark;
+            localStorage.setItem('darkMode', isDark);
+            applyDarkMode();
         }
 
-        darkModeToggle.addEventListener('change', () => {
-            if (darkModeToggle.checked) {
-                htmlElement.classList.add('dark');
-                localStorage.setItem('darkMode', 'true');
-            } else {
-                htmlElement.classList.remove('dark');
-                localStorage.setItem('darkMode', 'false');
-            }
-        });
+        // Terapkan saat halaman dimuat
+        applyDarkMode();
     </script>
 </body>
 </html>
@@ -606,8 +601,10 @@ if (!fs.existsSync(webUsersFile)) saveJSON(webUsersFile, {});
 let pairingRequested = false; 
 
 async function startBot() {
+    console.log("\n⏳ Sedang menyiapkan mesin bot (Baileys)...");
     const { state, saveCreds } = await useMultiFileAuthState('sesi_bot');
     let config = loadJSON(configFile);
+    
     const { version } = await fetchLatestBaileysVersion();
     const sock = makeWASocket({
         version, auth: state, logger: pino({ level: 'silent' }), browser: Browsers.ubuntu('Chrome'), printQRInTerminal: false
@@ -616,12 +613,17 @@ async function startBot() {
     if (!sock.authState.creds.registered && !pairingRequested) {
         pairingRequested = true;
         let phoneNumber = config.botNumber;
-        if (!phoneNumber) process.exit(0);
+        if (!phoneNumber) {
+            console.log('\n❌ NOMOR BOT BELUM DIATUR! Gunakan Menu 1 di terminal.');
+            process.exit(0);
+        }
         setTimeout(async () => {
             try {
                 let formattedNumber = phoneNumber.replace(/[^0-9]/g, '');
                 const code = await sock.requestPairingCode(formattedNumber);
-                console.log(`\n🔑 KODE PAIRING:  ${code}  \n`);
+                console.log(`\n=======================================================`);
+                console.log(`🔑 KODE PAIRING ANDA :  ${code}  `);
+                console.log(`=======================================================`);
             } catch (error) { pairingRequested = false; }
         }, 3000); 
     }
@@ -654,17 +656,22 @@ app.post('/api/auth/register', async (req, res) => {
     const { name, phone, email, password } = req.body;
     let webUsers = loadJSON(webUsersFile);
     let formattedPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
+
     if (webUsers[formattedPhone] && webUsers[formattedPhone].isVerified) return res.status(400).json({ error: 'Nomor terdaftar.' });
 
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
-    webUsers[formattedPhone] = { name, email, password, isVerified: false, otp }; saveJSON(webUsersFile, webUsers);
-    const sent = await sendWhatsAppMessage(formattedPhone, `Halo *${name}*!\n\nKode OTP Anda: *${otp}*`);
+    webUsers[formattedPhone] = { name, email, password, isVerified: false, otp };
+    saveJSON(webUsersFile, webUsers);
+
+    const message = `Halo *${name}*!\n\nKode OTP Pendaftaran Akun Anda adalah: *${otp}*\n\n_Jangan berikan kode ini kepada siapapun._`;
+    const sent = await sendWhatsAppMessage(formattedPhone, message);
     if(sent) res.json({ message: 'OTP Terkirim', phone: formattedPhone }); else res.status(500).json({ error: 'Gagal WA.' });
 });
 
 app.post('/api/auth/verify', (req, res) => {
     const { phone, otp } = req.body;
     let webUsers = loadJSON(webUsersFile);
+    
     if (webUsers[phone] && webUsers[phone].otp === otp) {
         webUsers[phone].isVerified = true; webUsers[phone].otp = null; saveJSON(webUsersFile, webUsers);
         let db = loadJSON(dbFile);
@@ -709,7 +716,11 @@ app.post('/api/auth/reset', (req, res) => {
 app.post('/api/user/balance', (req, res) => {
     const { phone } = req.body;
     let db = loadJSON(dbFile);
-    if (db[phone]) { res.json({ saldo: db[phone].saldo }); } else { res.json({ saldo: 0 }); }
+    if (db[phone]) {
+        res.json({ saldo: db[phone].saldo });
+    } else {
+        res.json({ saldo: 0 });
+    }
 });
 
 if (require.main === module) {
