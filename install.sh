@@ -76,33 +76,23 @@ body {
     margin: 0;
     display: flex;
     justify-content: center;
-    items-center;
+    align-items: center;
     height: 100vh;
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 }
 
-/* Yellow Curve Header (Gaya image_3.png) */
-.yellow-header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 10vh; /* Sesuaikan tinggi lengkungan */
-    background-color: #ffeb3b; /* Kuning cerah */
-    border-radius: 0 0 50% 50% / 0 0 100% 100%;
-    z-index: -1; /* Letakkan di latar belakang */
-}
-
-/* Kotak Modal Centered Compact */
+/* Kotak Modal Centered Compact dengan Background Kuning Penuh */
 .centered-modal-box {
-    background-color: white;
+    background-color: #ffeb3b; /* Kuning cerah gaya image_3.png, penuh semua sisi */
     padding: 1.5rem; /* p-6 kompak */
     border-radius: 1rem; /* rounded-2xl */
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
     width: 100%;
-    max-w-sm; /* Ukuran diperkecil */
+    max-width: 384px; /* text-sm, diperkecil agar kompak */
     margin: auto; /* Untuk centered di flex body */
     text-align: center;
+    position: relative;
+    overflow: hidden; /* Pastikan kurva header yang lama tidak muncul */
 }
 
 /* Logo "F" Metalik 3D dengan CSS Murni (Meniru image_4.png) */
@@ -112,7 +102,7 @@ body {
     margin: 0 auto 1.5rem; /* Center logo dan beri margin bawah */
     display: flex;
     justify-content: center;
-    items-center;
+    align-items: center;
     border-radius: 50%;
     background: radial-gradient(circle, #e0e0e0 30%, #a0a0a0 70%); /* Gradasi metalik lingkaran */
     box-shadow: inset 0 0 20px rgba(0,0,0,0.3), 
@@ -144,6 +134,7 @@ body {
     margin-bottom: 0.75rem; /* mb-3 */
     font-size: 0.875rem; /* text-sm */
     outline: none;
+    background-color: white; /* Input tetap putih untuk legibilitas */
 }
 
 .compact-input-box:focus {
@@ -160,12 +151,12 @@ body {
 /* Teks dan Link Diperkecil */
 .compact-text-small {
     font-size: 0.75rem; /* text-xs */
-    color: #6b7280; /* text-gray-500 */
+    color: #404040; /* Teks gelap di atas kuning */
 }
 
 .compact-link-small {
     font-size: 0.75rem; /* text-xs */
-    color: #2563eb; /* text-blue-600 */
+    color: #1a237e; /* Biru tua untuk link di atas kuning */
     text-decoration: none;
 }
 
@@ -202,13 +193,11 @@ cat << 'EOF' > public/index.html
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen relative">
-    <div class="yellow-header"></div>
-
+<body class="bg-gray-100 flex items-center justify-center h-screen relative p-4">
     <div class="centered-modal-box">
         <div class="logo-f-metalik-box"></div>
 
-        <h2 class="text-xl font-bold text-center text-blue-800 mb-2">LOGIN</h2>
+        <h2 class="text-xl font-bold text-center text-blue-950 mb-2">LOGIN</h2>
         
         <p class="compact-text-small mb-4 text-center">Silahkan masukkan email/no HP dan password kamu!</p>
 
@@ -268,12 +257,10 @@ cat << 'EOF' > public/register.html
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen relative">
-    <div class="yellow-header"></div>
-
+<body class="bg-gray-100 flex items-center justify-center h-screen relative p-4">
     <div class="centered-modal-box" id="box-register">
         <div class="logo-f-metalik-box"></div>
-        <h2 class="text-xl font-bold text-center text-blue-800 mb-2">DAFTAR AKUN</h2>
+        <h2 class="text-xl font-bold text-center text-blue-950 mb-2">DAFTAR AKUN</h2>
         <p class="compact-text-small mb-4 text-center">Silahkan lengkapi data untuk mendaftar!</p>
 
         <form id="registerForm">
@@ -304,7 +291,7 @@ cat << 'EOF' > public/register.html
 
     <div class="centered-modal-box hidden" id="box-otp">
         <div class="logo-f-metalik-box"></div>
-        <h2 class="text-xl font-bold text-center text-blue-800 mb-2">VERIFIKASI WA</h2>
+        <h2 class="text-xl font-bold text-center text-blue-950 mb-2">VERIFIKASI WA</h2>
         <p class="compact-text-small mb-4 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
         <form id="otpForm">
             <div class="mb-4 text-left">
@@ -370,12 +357,10 @@ cat << 'EOF' > public/forgot.html
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen relative">
-    <div class="yellow-header"></div>
-
+<body class="bg-gray-100 flex items-center justify-center h-screen relative p-4">
     <div class="centered-modal-box">
         <div class="logo-f-metalik-box"></div>
-        <h2 class="text-xl font-bold text-center text-blue-800 mb-2">RESET PASSWORD</h2>
+        <h2 class="text-xl font-bold text-center text-blue-950 mb-2">RESET PASSWORD</h2>
         
         <form id="requestOtpForm">
             <p class="compact-text-small mb-4 text-center">Masukkan Nomor WA Anda untuk reset password.</p>
@@ -386,7 +371,7 @@ cat << 'EOF' > public/forgot.html
         </form>
 
         <form id="resetForm" class="hidden mt-4">
-            <hr class="mb-4 border-gray-300">
+            <hr class="mb-4 border-blue-900">
             <div class="mb-1 text-left">
                 <label class="compact-text-small font-bold mb-1 block">Kode OTP (4 Digit)</label>
                 <input type="number" id="otp" class="compact-input-box text-center text-lg tracking-widest" required placeholder="XXXX">
@@ -455,7 +440,7 @@ cat << 'EOF' > public/dashboard.html
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 h-screen flex flex-col items-stretch justify-start p-0 m-0">
+<body class="bg-gray-100">
     <nav class="bg-blue-600 p-4 text-white flex justify-between items-center shadow-md">
         <h1 class="font-bold text-xl">DIGITAL FIKY STORE</h1>
         <div class="flex items-center gap-4">
