@@ -51,7 +51,7 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Header, Ikon Modern & Slider)..."
+echo "[3/5] Membangun Antarmuka Website (Dynamic Banners)..."
 
 cat << 'EOF' > public/style.css
 body {
@@ -131,7 +131,6 @@ body {
     background-size: 80px 80px; pointer-events: none; z-index: 1; border-radius: 1rem;
 }
 
-/* Sembunyikan scrollbar untuk slider agar rapi */
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 EOF
@@ -360,7 +359,7 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
-# HTML DASHBOARD PPOB PREMIUM DENGAN SLIDER BANNER & IKON MODERN
+# HTML DASHBOARD DENGAN DINAMIS BANNER
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -404,9 +403,6 @@ cat << 'EOF' > public/dashboard.html
                         <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition">
                             <i class="far fa-clock text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Transaksi Saya</span>
                         </li>
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition">
-                            <i class="far fa-bell text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Pemberitahuan</span>
-                        </li>
                         <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition" onclick="toggleDarkMode()">
                             <div class="flex items-center gap-4">
                                 <i class="far fa-moon text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Mode Gelap</span>
@@ -425,11 +421,9 @@ cat << 'EOF' > public/dashboard.html
 
         <div class="mx-4 mt-5 bg-[#002147] rounded-3xl p-6 text-white relative overflow-hidden shadow-lg border-b-[5px] border-yellow-400">
             <div class="tech-bg opacity-70"></div> 
-            
             <div class="text-center relative z-10">
                 <p class="text-xs text-gray-300 mb-1">Sisa Saldo Anda</p>
                 <h2 class="text-4xl font-extrabold mb-6 tracking-tight drop-shadow-md" id="displaySaldo">Rp 0</h2>
-                
                 <div class="flex gap-4">
                     <button class="flex-1 border border-gray-500 text-white rounded-full py-2.5 text-xs font-bold hover:bg-white hover:text-[#002147] transition">ISI SALDO</button>
                     <button class="flex-1 border border-gray-500 text-white rounded-full py-2.5 text-xs font-bold hover:bg-white hover:text-[#002147] transition">BANTUAN</button>
@@ -437,108 +431,40 @@ cat << 'EOF' > public/dashboard.html
             </div>
         </div>
 
-        <div class="mx-4 mt-6 relative rounded-2xl h-[120px] overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 group">
+        <div class="mx-4 mt-6 relative rounded-2xl h-[120px] overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 group bg-gray-200 dark:bg-gray-800">
             <div id="promoSlider" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth">
-                <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#002147]">
-                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-50" alt="Promo 1">
-                    <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">DISKON PULSA</h2>
                 </div>
-                <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-indigo-900">
-                    <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-50" alt="Promo 2">
-                    <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">PROMO SPESIAL</h2>
-                </div>
-                <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-purple-900">
-                    <img src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-50" alt="Promo 3">
-                    <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">CASHBACK 50%</h2>
-                </div>
-                <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-green-900">
-                    <img src="https://images.unsplash.com/photo-1616077168712-fc6c788db4fa?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-50" alt="Promo 4">
-                    <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">MEMBER BARU</h2>
-                </div>
-            </div>
-            
-            <div class="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-20">
-                <div class="w-2 h-2 rounded-full bg-white opacity-100 transition-opacity duration-300 dot-indicator"></div>
-                <div class="w-2 h-2 rounded-full bg-white opacity-40 transition-opacity duration-300 dot-indicator"></div>
-                <div class="w-2 h-2 rounded-full bg-white opacity-40 transition-opacity duration-300 dot-indicator"></div>
-                <div class="w-2 h-2 rounded-full bg-white opacity-40 transition-opacity duration-300 dot-indicator"></div>
+            <div class="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-20" id="promoDots">
             </div>
         </div>
 
         <div class="mx-4 mt-6 bg-white dark:bg-gray-800 p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors mb-8">
             <h3 class="font-extrabold text-[#002147] dark:text-gray-100 mb-5 text-[15px] tracking-wide ml-1">Layanan Pilihan</h3>
-            
             <div class="grid grid-cols-4 gap-y-6 gap-x-2">
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
-                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-cyan-400 to-blue-600 text-white flex items-center justify-center text-xl shadow-lg shadow-blue-500/30 mb-2">
-                        <i class="fas fa-mobile-screen"></i>
-                    </div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center tracking-wide">PULSA</span>
+                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-cyan-400 to-blue-600 text-white flex items-center justify-center text-xl shadow-lg shadow-blue-500/30 mb-2"><i class="fas fa-mobile-screen"></i></div>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide">PULSA</span>
                 </div>
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
-                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-emerald-400 to-green-600 text-white flex items-center justify-center text-xl shadow-lg shadow-green-500/30 mb-2">
-                        <i class="fas fa-globe"></i>
-                    </div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center tracking-wide">DATA</span>
+                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-emerald-400 to-green-600 text-white flex items-center justify-center text-xl shadow-lg shadow-green-500/30 mb-2"><i class="fas fa-globe"></i></div>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide">DATA</span>
                 </div>
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
-                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-amber-400 to-orange-500 text-white flex items-center justify-center text-xl shadow-lg shadow-orange-500/30 mb-2">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center tracking-wide">PLN</span>
+                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-amber-400 to-orange-500 text-white flex items-center justify-center text-xl shadow-lg shadow-orange-500/30 mb-2"><i class="fas fa-bolt"></i></div>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide">PLN</span>
                 </div>
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
-                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-purple-400 to-pink-600 text-white flex items-center justify-center text-xl shadow-lg shadow-pink-500/30 mb-2">
-                        <i class="fas fa-gamepad"></i>
-                    </div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center tracking-wide">GAME</span>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
-                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-indigo-400 to-purple-600 text-white flex items-center justify-center text-xl shadow-lg shadow-indigo-500/30 mb-2">
-                        <i class="fas fa-wallet"></i>
-                    </div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center tracking-wide">E-WALLET</span>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
-                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-rose-400 to-red-500 text-white flex items-center justify-center text-xl shadow-lg shadow-red-500/30 mb-2">
-                        <i class="fas fa-ticket-alt"></i>
-                    </div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center tracking-wide">VOUCHER</span>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
-                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-teal-400 to-cyan-600 text-white flex items-center justify-center text-xl shadow-lg shadow-cyan-500/30 mb-2">
-                        <i class="fas fa-phone-volume"></i>
-                    </div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center tracking-wide leading-tight mt-0.5">SMS<br>TELP</span>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
-                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-gray-400 to-gray-600 text-white flex items-center justify-center text-xl shadow-lg shadow-gray-500/30 mb-2">
-                        <i class="fas fa-th-large"></i>
-                    </div>
-                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 text-center tracking-wide">LAINNYA</span>
+                    <div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-purple-400 to-pink-600 text-white flex items-center justify-center text-xl shadow-lg shadow-pink-500/30 mb-2"><i class="fas fa-gamepad"></i></div>
+                    <span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide">GAME</span>
                 </div>
             </div>
         </div>
 
         <div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40">
-            <div class="flex flex-col items-center cursor-pointer text-yellow-400">
-                <i class="fas fa-home text-xl"></i>
-                <span class="text-[10px] mt-1 font-bold tracking-wide">HOME</span>
-            </div>
-            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition">
-                <i class="fas fa-file-alt text-xl"></i>
-                <span class="text-[10px] mt-1 font-bold tracking-wide">RIWAYAT</span>
-            </div>
-            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition">
-                <i class="fas fa-bell text-xl"></i>
-                <span class="text-[10px] mt-1 font-bold tracking-wide">INFO</span>
-            </div>
-            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition">
-                <i class="fas fa-user text-xl"></i>
-                <span class="text-[10px] mt-1 font-bold tracking-wide">PROFIL</span>
-            </div>
+            <div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
         </div>
-
     </div>
 
     <script>
@@ -547,19 +473,14 @@ cat << 'EOF' > public/dashboard.html
         
         const firstName = user.name.split(' ')[0];
         document.getElementById('headerGreeting').innerText = "Hai, " + firstName;
-        
         document.getElementById('sidebarName').innerText = user.name;
         document.getElementById('sidebarPhone').innerText = user.phone;
         document.getElementById('sidebarInitial').innerText = user.name.charAt(0).toUpperCase();
 
         function logout() { localStorage.removeItem('user'); window.location.href = '/'; }
 
-        fetch('/api/user/balance', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone: user.phone })
-        })
-        .then(res => res.json())
-        .then(data => { document.getElementById('displaySaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); })
+        fetch('/api/user/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) })
+        .then(res => res.json()).then(data => { document.getElementById('displaySaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); })
         .catch(err => { document.getElementById('displaySaldo').innerText = 'Rp 0'; });
 
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
@@ -573,35 +494,51 @@ cat << 'EOF' > public/dashboard.html
             if (isDark) { htmlRoot.classList.add('dark'); dot.classList.add('translate-x-5'); bg.classList.add('bg-blue-500'); } 
             else { htmlRoot.classList.remove('dark'); dot.classList.remove('translate-x-5'); bg.classList.remove('bg-blue-500'); }
         }
-
         function toggleDarkMode() { isDark = !isDark; localStorage.setItem('darkMode', isDark); applyDarkMode(); }
         applyDarkMode();
 
-        // SLIDER LOGIC
-        const slider = document.getElementById('promoSlider');
-        const dots = document.querySelectorAll('.dot-indicator');
-        let currentSlide = 0;
-        
-        slider.addEventListener('scroll', () => {
-            let slideIndex = Math.round(slider.scrollLeft / slider.clientWidth);
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('opacity-100', index === slideIndex);
-                dot.classList.toggle('opacity-40', index !== slideIndex);
-            });
-            currentSlide = slideIndex;
-        });
+        // LOGIKA DINAMIS BANNER
+        fetch('/api/banners')
+        .then(res => res.json())
+        .then(data => {
+            const slider = document.getElementById('promoSlider');
+            const dotsContainer = document.getElementById('promoDots');
+            const banners = data.banners;
+            const titles = ["DISKON SPESIAL", "PROMO MEMBER", "CASHBACK 50%", "FLASH SALE"];
+            
+            slider.innerHTML = banners.map((url, i) => `
+                <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#002147]">
+                    <img src="${url}" class="absolute inset-0 w-full h-full object-cover opacity-60" alt="Promo">
+                    <h2 class="z-10 text-xl font-extrabold text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">${titles[i]}</h2>
+                </div>
+            `).join('');
 
-        setInterval(() => {
-            currentSlide = (currentSlide + 1) % 4;
-            slider.scrollTo({ left: currentSlide * slider.clientWidth, behavior: 'smooth' });
-        }, 3500); // Ganti foto setiap 3.5 detik
+            dotsContainer.innerHTML = banners.map((_, i) => `<div class="w-2 h-2 rounded-full bg-white opacity-${i===0?'100':'40'} transition-opacity duration-300 dot-indicator"></div>`).join('');
+
+            const dots = document.querySelectorAll('.dot-indicator');
+            let currentSlide = 0;
+            
+            slider.addEventListener('scroll', () => {
+                let slideIndex = Math.round(slider.scrollLeft / slider.clientWidth);
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('opacity-100', index === slideIndex);
+                    dot.classList.toggle('opacity-40', index !== slideIndex);
+                });
+                currentSlide = slideIndex;
+            });
+
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % banners.length;
+                slider.scrollTo({ left: currentSlide * slider.clientWidth, behavior: 'smooth' });
+            }, 3500);
+        });
     </script>
 </body>
 </html>
 EOF
 
 # ==========================================
-# FILE NODE.JS (LOGIK BOT + API WEB + GET SALDO)
+# FILE NODE.JS (LOGIK BOT + API BANNERS)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -612,18 +549,13 @@ const pino = require('pino');
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const axios = require('axios'); 
-const crypto = require('crypto'); 
 
 const app = express();
 app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 const configFile = './config.json';
 const dbFile = './database.json';
-const produkFile = './produk.json';
-const trxFile = './trx.json';
 const webUsersFile = './web_users.json'; 
 
 const loadJSON = (file) => fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
@@ -632,87 +564,44 @@ const saveJSON = (file, data) => fs.writeFileSync(file, JSON.stringify(data, nul
 let configAwal = loadJSON(configFile);
 configAwal.botName = configAwal.botName || "DIGITAL FIKY STORE";
 configAwal.botNumber = configAwal.botNumber || "";
+configAwal.banners = configAwal.banners || [
+    "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1616077168712-fc6c788db4fa?auto=format&fit=crop&w=600&q=80"
+];
 saveJSON(configFile, configAwal);
 
 if (!fs.existsSync(dbFile)) saveJSON(dbFile, {});
-if (!fs.existsSync(produkFile)) saveJSON(produkFile, {});
-if (!fs.existsSync(trxFile)) saveJSON(trxFile, {});
 if (!fs.existsSync(webUsersFile)) saveJSON(webUsersFile, {});
 
-let pairingRequested = false; 
+// API BANNER
+app.get('/api/banners', (req, res) => {
+    let cfg = loadJSON(configFile);
+    res.json({ banners: cfg.banners });
+});
 
-async function startBot() {
-    console.log("\n⏳ Sedang menyiapkan mesin bot (Baileys)...");
-    const { state, saveCreds } = await useMultiFileAuthState('sesi_bot');
-    let config = loadJSON(configFile);
-    
-    const { version } = await fetchLatestBaileysVersion();
-    const sock = makeWASocket({
-        version, auth: state, logger: pino({ level: 'silent' }), browser: Browsers.ubuntu('Chrome'), printQRInTerminal: false
-    });
-
-    if (!sock.authState.creds.registered && !pairingRequested) {
-        pairingRequested = true;
-        let phoneNumber = config.botNumber;
-        if (!phoneNumber) {
-            console.log('\n❌ NOMOR BOT BELUM DIATUR! Gunakan Menu 1 di terminal.');
-            process.exit(0);
-        }
-        setTimeout(async () => {
-            try {
-                let formattedNumber = phoneNumber.replace(/[^0-9]/g, '');
-                const code = await sock.requestPairingCode(formattedNumber);
-                console.log(`\n=======================================================`);
-                console.log(`🔑 KODE PAIRING ANDA :  ${code}  `);
-                console.log(`=======================================================`);
-            } catch (error) { pairingRequested = false; }
-        }, 3000); 
-    }
-
-    sock.ev.on('creds.update', saveCreds);
-    sock.ev.on('connection.update', (update) => {
-        const { connection, lastDisconnect } = update;
-        if (connection === 'close') {
-            let reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
-            if (reason === DisconnectReason.loggedOut) process.exit(0);
-            else { pairingRequested = false; setTimeout(startBot, 4000); }
-        } else if (connection === 'open') {
-            console.log('\n✅ BOT WA DIGITAL FIKY STORE BERHASIL TERHUBUNG!');
-        }
-    });
-
-    global.waSocket = sock; 
-}
-
-const sendWhatsAppMessage = async (phone, message) => {
-    try {
-        if (!global.waSocket) return false;
-        const formattedPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
-        await global.waSocket.sendMessage(formattedPhone + '@c.us', { text: message });
-        return true;
-    } catch (error) { return false; }
-};
+// API USER & AUTH (Ringkasan tetap dipertahankan)
+app.post('/api/user/balance', (req, res) => {
+    let db = loadJSON(dbFile);
+    res.json({ saldo: db[req.body.phone]?.saldo || 0 });
+});
 
 app.post('/api/auth/register', async (req, res) => {
     const { name, phone, email, password } = req.body;
     let webUsers = loadJSON(webUsersFile);
-    let formattedPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
-
-    if (webUsers[formattedPhone] && webUsers[formattedPhone].isVerified) return res.status(400).json({ error: 'Nomor terdaftar.' });
-
+    let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
+    if (webUsers[fPhone] && webUsers[fPhone].isVerified) return res.status(400).json({ error: 'Nomor terdaftar.' });
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
-    webUsers[formattedPhone] = { name, email, password, isVerified: false, otp };
+    webUsers[fPhone] = { name, email, password, isVerified: false, otp };
     saveJSON(webUsersFile, webUsers);
-
-    const message = `Halo *${name}*!\n\nKode OTP Pendaftaran Akun Anda adalah: *${otp}*\n\n_Jangan berikan kode ini kepada siapapun._`;
-    const sent = await sendWhatsAppMessage(formattedPhone, message);
-    if(sent) res.json({ message: 'OTP Terkirim', phone: formattedPhone }); else res.status(500).json({ error: 'Gagal WA.' });
+    await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Halo *${name}*!\n\nOTP Anda: *${otp}*` });
+    res.json({ message: 'OTP Terkirim', phone: fPhone });
 });
 
 app.post('/api/auth/verify', (req, res) => {
     const { phone, otp } = req.body;
     let webUsers = loadJSON(webUsersFile);
-    
     if (webUsers[phone] && webUsers[phone].otp === otp) {
         webUsers[phone].isVerified = true; webUsers[phone].otp = null; saveJSON(webUsersFile, webUsers);
         let db = loadJSON(dbFile);
@@ -724,49 +613,37 @@ app.post('/api/auth/verify', (req, res) => {
 app.post('/api/auth/login', (req, res) => {
     const { identifier, password } = req.body;
     let webUsers = loadJSON(webUsersFile);
-    let formattedPhone = identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier;
-    let foundPhone = Object.keys(webUsers).find(p => (p === formattedPhone || webUsers[p].email === identifier) && webUsers[p].password === password);
-
+    let fPhone = identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier;
+    let foundPhone = Object.keys(webUsers).find(p => (p === fPhone || webUsers[p].email === identifier) && webUsers[p].password === password);
     if (foundPhone) {
         if (!webUsers[foundPhone].isVerified) return res.status(400).json({ error: 'Belum verifikasi.' });
         res.json({ message: 'Login sukses', user: { phone: foundPhone, name: webUsers[foundPhone].name } });
     } else res.status(400).json({ error: 'Salah.' });
 });
 
-app.post('/api/auth/forgot', async (req, res) => {
-    const { phone } = req.body;
-    let webUsers = loadJSON(webUsersFile);
-    let formattedPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
-    if (!webUsers[formattedPhone]) return res.status(400).json({ error: 'Nomor tidak terdaftar.' });
-
-    const otp = Math.floor(1000 + Math.random() * 9000).toString();
-    webUsers[formattedPhone].otp = otp; saveJSON(webUsersFile, webUsers);
-    const sent = await sendWhatsAppMessage(formattedPhone, `Kode OTP Reset: *${otp}*`);
-    if(sent) res.json({ message: 'OTP Terkirim', phone: formattedPhone }); else res.status(500).json({ error: 'Gagal WA.' });
-});
-
-app.post('/api/auth/reset', (req, res) => {
-    const { phone, otp, newPassword } = req.body;
-    let webUsers = loadJSON(webUsersFile);
-    if (webUsers[phone] && webUsers[phone].otp === otp) {
-        webUsers[phone].password = newPassword; webUsers[phone].otp = null; saveJSON(webUsersFile, webUsers);
-        res.json({ message: 'Diubah!' });
-    } else res.status(400).json({ error: 'OTP Salah.' });
-});
-
-app.post('/api/user/balance', (req, res) => {
-    const { phone } = req.body;
-    let db = loadJSON(dbFile);
-    if (db[phone]) {
-        res.json({ saldo: db[phone].saldo });
-    } else {
-        res.json({ saldo: 0 });
+async function startBot() {
+    const { state, saveCreds } = await useMultiFileAuthState('sesi_bot');
+    const { version } = await fetchLatestBaileysVersion();
+    const sock = makeWASocket({ version, auth: state, logger: pino({ level: 'silent' }), browser: Browsers.ubuntu('Chrome'), printQRInTerminal: false });
+    
+    if (!sock.authState.creds.registered) {
+        let config = loadJSON(configFile);
+        if (config.botNumber) {
+            setTimeout(async () => {
+                try {
+                    const code = await sock.requestPairingCode(config.botNumber.replace(/[^0-9]/g, ''));
+                    console.log(`\n🔑 KODE PAIRING ANDA :  ${code}  \n`);
+                } catch (error) {}
+            }, 3000); 
+        }
     }
-});
+    sock.ev.on('creds.update', saveCreds);
+    global.waSocket = sock; 
+}
 
 if (require.main === module) {
-    app.listen(3000, () => { console.log('🌐 Web Server berjalan di port 3000.'); });
-    startBot().catch(err => console.error(err));
+    app.listen(3000, () => { console.log('🌐 Web Server berjalan.'); });
+    startBot();
 }
 EOF
 
@@ -781,30 +658,28 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V19) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V20) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
     echo "2. Jalankan Bot (Latar Belakang/PM2)"
     echo "3. Hentikan Bot (PM2)"
     echo "4. Lihat Log / Error Bot"
-    echo "5. 👥 Tambah Saldo Member (Utk Test Dashboard)"
-    echo "6. Update Sistem (Tarik Kode Terbaru)"
+    echo "5. 👥 Tambah Saldo Member"
+    echo "6. 🖼️ Ganti Foto Banner Promo"
+    echo "7. Update Sistem (Tarik Kode Terbaru)"
     echo "0. Keluar"
     echo "==============================================="
-    read -p "Pilih menu [0-6]: " choice
+    read -p "Pilih menu [0-7]: " choice
 
     case $choice in
         1) 
             cd "$HOME/$DIR_NAME"
-            if [ ! -d "sesi_bot" ] || [ -z "$(ls -A sesi_bot 2>/dev/null)" ]; then
+            if [ ! -d "sesi_bot" ]; then
                 read -p "📲 Masukkan Nomor WA Bot (Awali 628...): " nomor_bot
-                if [ ! -z "$nomor_bot" ]; then
-                    node -e "const fs=require('fs');let cfg=fs.existsSync('config.json')?JSON.parse(fs.readFileSync('config.json')):{};cfg.botNumber='$nomor_bot';fs.writeFileSync('config.json',JSON.stringify(cfg,null,2));"
-                fi
+                if [ ! -z "$nomor_bot" ]; then node -e "const fs=require('fs');let cfg=fs.existsSync('config.json')?JSON.parse(fs.readFileSync('config.json')):{};cfg.botNumber='$nomor_bot';fs.writeFileSync('config.json',JSON.stringify(cfg,null,2));"; fi
             fi
             pm2 stop all > /dev/null 2>&1; fuser -k 3000/tcp > /dev/null 2>&1
-            echo -e "\n⏳ Menjalankan proses login... (Tekan CTRL+C bila sudah selesai/ingin keluar)"
             node index.js
             read -p "Tekan Enter untuk kembali..." ;;
         2) 
@@ -815,12 +690,32 @@ while true; do clear
         3) pm2 stop $BOT_NAME; read -p "Tekan Enter..." ;;
         4) pm2 logs $BOT_NAME ;;
         5) 
-            read -p "ID Member (No WA yg dipakai daftar web, cth: 62812...): " nomor
-            read -p "Jumlah Tambah Saldo: " jumlah
-            node -e "const fs=require('fs');let db=fs.existsSync('$HOME/$DIR_NAME/database.json')?JSON.parse(fs.readFileSync('$HOME/$DIR_NAME/database.json')):{};if(!db['$nomor']) db['$nomor']={saldo:0,jid:'$nomor@s.whatsapp.net'};db['$nomor'].saldo+=parseInt('$jumlah');fs.writeFileSync('$HOME/$DIR_NAME/database.json',JSON.stringify(db,null,2));console.log('✅ Saldo ditambah ke database!');"
+            read -p "ID Member (No WA): " nomor
+            read -p "Jumlah Saldo: " jumlah
+            node -e "const fs=require('fs');let db=fs.existsSync('$HOME/$DIR_NAME/database.json')?JSON.parse(fs.readFileSync('$HOME/$DIR_NAME/database.json')):{};if(!db['$nomor']) db['$nomor']={saldo:0};db['$nomor'].saldo+=parseInt('$jumlah');fs.writeFileSync('$HOME/$DIR_NAME/database.json',JSON.stringify(db,null,2));console.log('✅ Saldo ditambah!');"
             read -p "Tekan Enter..." ;;
         6)
-            echo "Mengambil update terbaru dari GitHub..."
+            echo "--- GANTI FOTO BANNER PROMO ---"
+            echo "Masukkan Link URL langsung gambar (diakhiri .jpg atau .png)"
+            echo "Tekan Enter saja jika tidak ingin mengubah slide tersebut."
+            read -p "Link Slide 1: " b1
+            read -p "Link Slide 2: " b2
+            read -p "Link Slide 3: " b3
+            read -p "Link Slide 4: " b4
+            node -e "
+                const fs = require('fs');
+                let file = '$HOME/$DIR_NAME/config.json';
+                let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
+                if (!cfg.banners) cfg.banners = ['','','',''];
+                if ('$b1'.trim()) cfg.banners[0] = '$b1'.trim();
+                if ('$b2'.trim()) cfg.banners[1] = '$b2'.trim();
+                if ('$b3'.trim()) cfg.banners[2] = '$b3'.trim();
+                if ('$b4'.trim()) cfg.banners[3] = '$b4'.trim();
+                fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
+                console.log('\n✅ Foto banner berhasil diperbarui! Silakan restart (Menu 2).');
+            "
+            read -p "Tekan Enter untuk kembali..." ;;
+        7)
             cd "$HOME"
             wget -qO- https://raw.githubusercontent.com/fikystorez/PROJECT-PPOB-FIKYSTORE/main/install.sh | tr -d '\r' > install.sh
             chmod +x install.sh && ./install.sh
@@ -834,6 +729,4 @@ chmod +x /usr/bin/menu
 
 echo "=========================================================="
 echo "  SISTEM WEB & BOT BERHASIL DIPERBARUI!                   "
-echo "  ------------------------------------------------------  "
-echo "  Akses Web (Cek Browser) : http://$(wget -qO- eth0.me):3000"
 echo "=========================================================="
