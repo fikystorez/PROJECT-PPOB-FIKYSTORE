@@ -51,7 +51,7 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (SweetAlert UI)..."
+echo "[3/5] Membangun Antarmuka Website (Custom SweetAlert UI)..."
 
 cat << 'EOF' > public/style.css
 body {
@@ -130,6 +130,37 @@ body {
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 .tab-active { border-bottom: 3px solid #001229; color: #001229; font-weight: bold; }
 .dark .tab-active { border-bottom: 3px solid #fde047; color: #fde047; }
+
+/* ==========================================
+   CUSTOM SWEETALERT2 STYLING (KOTAK, OXFORD BLUE, TOMBOL KUNING)
+========================================== */
+.swal2-popup {
+    background-color: #002147 !important; /* Oxford Blue */
+    border-radius: 0.35rem !important; /* Bentuk lebih kotak */
+    color: #ffffff !important;
+    border: 1px solid #1e3a8a !important; /* Garis tepi tipis agar elegan */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
+}
+.swal2-title {
+    color: #fde047 !important; /* Judul kuning */
+}
+.swal2-html-container {
+    color: #cbd5e1 !important; /* Teks putih keabuan */
+}
+.swal2-confirm {
+    background-color: #fde047 !important; /* Tombol Kuning */
+    color: #002147 !important; /* Teks tombol biru dongker */
+    border-radius: 0.25rem !important; /* Tombol kotak */
+    font-weight: bold !important;
+    padding: 0.625rem 1.5rem !important;
+}
+.swal2-cancel {
+    background-color: #ef4444 !important; /* Tombol batal merah */
+    color: #ffffff !important;
+    border-radius: 0.25rem !important; /* Tombol kotak */
+    font-weight: bold !important;
+    padding: 0.625rem 1.5rem !important;
+}
 EOF
 
 cat << 'EOF' > public/index.html
@@ -170,10 +201,10 @@ cat << 'EOF' > public/index.html
                     localStorage.setItem('user', JSON.stringify(data.user)); 
                     window.location.href = '/dashboard.html'; 
                 } else { 
-                    Swal.fire({ icon: 'error', title: 'Gagal Login', text: data.error, confirmButtonColor: '#002147' }); 
+                    Swal.fire({ icon: 'error', title: 'Gagal Login', text: data.error }); 
                 }
             } catch (err) { 
-                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Terjadi kesalahan sistem.', confirmButtonColor: '#002147' }); 
+                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Terjadi kesalahan sistem.' }); 
             }
         });
     </script>
@@ -234,12 +265,12 @@ cat << 'EOF' > public/register.html
                     registeredPhone = data.phone;
                     document.getElementById('box-register').classList.add('hidden');
                     document.getElementById('box-otp').classList.remove('hidden');
-                    Swal.fire({ icon: 'success', title: 'OTP Terkirim!', text: 'Silakan cek pesan WhatsApp Anda.', confirmButtonColor: '#002147' });
+                    Swal.fire({ icon: 'success', title: 'OTP Terkirim!', text: 'Silakan cek pesan WhatsApp Anda.' });
                 } else { 
-                    Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error, confirmButtonColor: '#002147' }); 
+                    Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error }); 
                 }
             } catch (err) { 
-                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses pendaftaran.', confirmButtonColor: '#002147' }); 
+                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses pendaftaran.' }); 
             }
         });
         
@@ -249,13 +280,13 @@ cat << 'EOF' > public/register.html
             try {
                 const res = await fetch('/api/auth/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: registeredPhone, otp }) });
                 if (res.ok) { 
-                    Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun terverifikasi. Silakan Login.', confirmButtonColor: '#002147' }).then(() => { window.location.href = '/'; });
+                    Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun terverifikasi. Silakan Login.' }).then(() => { window.location.href = '/'; });
                 } else { 
                     const data = await res.json();
-                    Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, confirmButtonColor: '#002147' }); 
+                    Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error }); 
                 }
             } catch (err) { 
-                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi OTP.', confirmButtonColor: '#002147' }); 
+                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi OTP.' }); 
             }
         });
     </script>
@@ -305,12 +336,12 @@ cat << 'EOF' > public/forgot.html
                     resetPhone = data.phone;
                     document.getElementById('requestOtpForm').classList.add('hidden');
                     document.getElementById('resetForm').classList.remove('hidden');
-                    Swal.fire({ icon: 'success', title: 'OTP Terkirim!', text: 'Silakan cek pesan WhatsApp Anda.', confirmButtonColor: '#002147' });
+                    Swal.fire({ icon: 'success', title: 'OTP Terkirim!', text: 'Silakan cek pesan WhatsApp Anda.' });
                 } else { 
-                    Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, confirmButtonColor: '#002147' }); 
+                    Swal.fire({ icon: 'error', title: 'Gagal', text: data.error }); 
                 }
             } catch (err) { 
-                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Terjadi kesalahan sistem.', confirmButtonColor: '#002147' }); 
+                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Terjadi kesalahan sistem.' }); 
             }
         });
         
@@ -321,13 +352,13 @@ cat << 'EOF' > public/forgot.html
             try {
                 const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) });
                 if (res.ok) { 
-                    Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password berhasil diubah. Silakan Login.', confirmButtonColor: '#002147' }).then(() => { window.location.href = '/'; });
+                    Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password berhasil diubah. Silakan Login.' }).then(() => { window.location.href = '/'; });
                 } else { 
                     const data = await res.json();
-                    Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, confirmButtonColor: '#002147' }); 
+                    Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error }); 
                 }
             } catch (err) { 
-                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal mereset password.', confirmButtonColor: '#002147' }); 
+                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal mereset password.' }); 
             }
         });
     </script>
@@ -382,7 +413,7 @@ cat << 'EOF' > public/dashboard.html
             <div class="text-center relative z-10">
                 <p class="text-xs text-gray-300 mb-1">Sisa Saldo Anda</p>
                 <h2 class="text-4xl font-extrabold mb-6 tracking-tight drop-shadow-md" id="displaySaldo">Rp 0</h2>
-                <div class="flex gap-4"><button class="flex-1 border border-gray-500 text-white rounded-full py-2.5 text-xs font-bold hover:bg-white hover:text-[#002147] transition" onclick="Swal.fire({icon: 'info', title: 'Top Up', text: 'Fitur deposit saldo akan segera hadir.', confirmButtonColor: '#002147'})">ISI SALDO</button><button class="flex-1 border border-gray-500 text-white rounded-full py-2.5 text-xs font-bold hover:bg-white hover:text-[#002147] transition" onclick="window.open('https://wa.me/6282231154407', '_blank')">BANTUAN</button></div>
+                <div class="flex gap-4"><button class="flex-1 border border-gray-500 text-white rounded-full py-2.5 text-xs font-bold hover:bg-white hover:text-[#002147] transition" onclick="Swal.fire({icon: 'info', title: 'Top Up', text: 'Fitur deposit saldo akan segera hadir.'})">ISI SALDO</button><button class="flex-1 border border-gray-500 text-white rounded-full py-2.5 text-xs font-bold hover:bg-white hover:text-[#002147] transition" onclick="window.open('https://wa.me/6282231154407', '_blank')">BANTUAN</button></div>
             </div>
         </div>
         <div class="mx-4 mt-6 relative rounded-2xl h-[170px] overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 bg-gray-200 dark:bg-gray-800">
@@ -392,8 +423,8 @@ cat << 'EOF' > public/dashboard.html
         <div class="mx-4 mt-6 bg-white dark:bg-gray-800 p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors mb-8">
             <h3 class="font-extrabold text-[#002147] dark:text-gray-100 mb-5 text-[15px] tracking-wide ml-1">Layanan Pilihan</h3>
             <div class="grid grid-cols-4 gap-y-6 gap-x-2">
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu Pulsa', text: 'Sistem pembelian sedang dibangun.', confirmButtonColor: '#002147'})"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-cyan-400 to-blue-600 text-white flex items-center justify-center text-xl shadow-lg shadow-blue-500/30 mb-2"><i class="fas fa-mobile-screen"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide">PULSA</span></div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu Data', text: 'Sistem pembelian sedang dibangun.', confirmButtonColor: '#002147'})"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-emerald-400 to-green-600 text-white flex items-center justify-center text-xl shadow-lg shadow-green-500/30 mb-2"><i class="fas fa-globe"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide">DATA</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu Pulsa', text: 'Sistem pembelian sedang dibangun.'})"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-cyan-400 to-blue-600 text-white flex items-center justify-center text-xl shadow-lg shadow-blue-500/30 mb-2"><i class="fas fa-mobile-screen"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide">PULSA</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu Data', text: 'Sistem pembelian sedang dibangun.'})"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-emerald-400 to-green-600 text-white flex items-center justify-center text-xl shadow-lg shadow-green-500/30 mb-2"><i class="fas fa-globe"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide">DATA</span></div>
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-amber-400 to-orange-500 text-white flex items-center justify-center text-xl shadow-lg shadow-orange-500/30 mb-2"><i class="fas fa-bolt"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide">PLN</span></div>
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-purple-400 to-pink-600 text-white flex items-center justify-center text-xl shadow-lg shadow-pink-500/30 mb-2"><i class="fas fa-gamepad"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide">GAME</span></div>
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-indigo-400 to-purple-600 text-white flex items-center justify-center text-xl shadow-lg shadow-indigo-500/30 mb-2"><i class="fas fa-wallet"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide text-center">E-WALLET</span></div>
@@ -425,8 +456,6 @@ cat << 'EOF' > public/dashboard.html
                 text: "Apakah Anda yakin ingin keluar?",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#002147',
                 confirmButtonText: 'Ya, Keluar',
                 cancelButtonText: 'Batal'
             }).then((result) => {
@@ -489,7 +518,7 @@ cat << 'EOF' > public/profile.html
     <div class="max-w-md mx-auto bg-white dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl transition-colors duration-300 overflow-x-hidden">
         
         <div class="bg-black text-white p-8 flex flex-col items-center relative rounded-b-3xl shadow-lg">
-            <div class="absolute top-6 right-6 text-xl cursor-pointer hover:text-yellow-400 transition" onclick="Swal.fire({icon:'info', title:'Coming Soon', text:'Menu Edit Profil akan segera hadir!', confirmButtonColor: '#002147'})"><i class="fas fa-pencil-alt"></i></div>
+            <div class="absolute top-6 right-6 text-xl cursor-pointer hover:text-yellow-400 transition" onclick="Swal.fire({icon:'info', title:'Coming Soon', text:'Menu Edit Profil akan segera hadir!'})"><i class="fas fa-pencil-alt"></i></div>
             <div class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-300 rounded-full flex justify-center items-center text-black font-extrabold text-4xl mb-4 border-4 border-yellow-400 shadow-xl" id="profileCircle">U</div>
             <h2 class="text-xl font-bold tracking-wide" id="profileName">User Name</h2>
             <p class="text-sm text-gray-400 mt-1" id="profilePhone">0888...</p>
@@ -555,8 +584,6 @@ cat << 'EOF' > public/profile.html
                 text: "Apakah Anda yakin ingin keluar?",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#002147',
                 confirmButtonText: 'Ya, Keluar',
                 cancelButtonText: 'Batal'
             }).then((result) => {
@@ -628,7 +655,7 @@ app.post('/api/auth/register', async (req, res) => {
     const { name, phone, email, password } = req.body;
     let webUsers = loadJSON(webUsersFile);
     let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
-    if (webUsers[fPhone] && webUsers[fPhone].isVerified) return res.status(400).json({ error: 'Nomor sudah terdaftar.' });
+    if (webUsers[fPhone] && webUsers[fPhone].isVerified) return res.status(400).json({ error: 'Nomor terdaftar.' });
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
     webUsers[fPhone] = { name, email, password, isVerified: false, otp };
     saveJSON(webUsersFile, webUsers);
@@ -721,7 +748,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V28) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V29) 🤖     "
     echo "==============================================="
     echo "--- MANAJEMEN BOT & WEB ---"
     echo "1. Setup No. Bot & Login Pairing"
