@@ -357,7 +357,7 @@ cat << 'EOF' > public/dashboard.html
         <div class="mx-4 mt-8 mb-8">
             <h3 class="font-extrabold text-gray-800 dark:text-white mb-4 text-[16px] tracking-wide ml-1 transition-colors">Produk Digital</h3>
             <div class="grid grid-cols-4 gap-y-6 gap-x-3">
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu', text: 'Fitur sedang dikembangkan.'})"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-file-invoice-dollar"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">TAGIHAN</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=tagihan'"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-file-invoice-dollar"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">TAGIHAN</span></div>
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=etoll'"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-id-card"></i></div><span class="text-[10px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase text-center leading-tight transition-colors">SALDO<br>E-TOLL</span></div>
             </div>
         </div>
@@ -410,7 +410,7 @@ cat << 'EOF' > public/dashboard.html
                             <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center p-2 border border-gray-200 dark:border-none shrink-0"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg" class="w-full object-contain"></div>
                             <div class="flex flex-col">
                                 <span class="font-bold text-gray-800 dark:text-white text-[13px]">Top Up Otomatis QRIS</span>
-                                <span class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight mt-0.5">Penting: Transfer wajib sesuai nominal<br>hingga 2 digit terakhir!</span>
+                                <span class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight mt-0.5">Sistem memverifikasi nominal unik otomatis</span>
                             </div>
                         </div>
                         <div id="radio-qris" class="w-5 h-5 rounded-full border-[3px] border-gray-300 dark:border-gray-600 transition-colors bg-transparent mr-1 shrink-0"></div>
@@ -646,8 +646,10 @@ cat << 'EOF' > public/operator.html
                 <span class="font-bold text-[15px] tracking-wide" id="catSubtitle">Silahkan Di Pilih..</span>
                 <i class="fas fa-home text-lg cursor-pointer hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"></i>
             </div>
-            <div class="bg-white dark:bg-[#111c2e] shadow-sm transition-colors pb-4" id="categoryList">
-                </div>
+            
+            <div class="bg-white dark:bg-[#111c2e] shadow-sm transition-colors pb-4" id="categoryListContainer">
+                <div id="categoryList"></div>
+            </div>
         </div>
 
     </div>
@@ -687,6 +689,19 @@ cat << 'EOF' > public/operator.html
             'mandiri': { name: 'Mandiri Emoney', logo: 'MDR' }
         };
 
+        const tagihanCategories = [
+            { name: 'BPJS', icon: 'fas fa-heartbeat' },
+            { name: 'Gas Negara (PGN)', icon: 'fas fa-fire' },
+            { name: 'Pertagas (GAS)', icon: 'fas fa-fire-alt' },
+            { name: 'PLN', icon: 'fas fa-lightbulb' },
+            { name: 'Telkom/<br>Indihome', icon: 'fas fa-wifi' },
+            { name: 'TV Berbayar', icon: 'fas fa-tv' },
+            { name: 'Tagihan<br>Seluler', icon: 'fas fa-mobile-alt' },
+            { name: 'Cicilan<br>Finance', icon: 'fas fa-hand-holding-usd' },
+            { name: 'Internet<br>Bulanan', icon: 'fas fa-globe' },
+            { name: 'PDAM', icon: 'fas fa-tint' }
+        ];
+
         let currentList = {};
 
         if(type === 'ewallet') {
@@ -697,6 +712,31 @@ cat << 'EOF' > public/operator.html
             originalTitle = 'Saldo E-Toll';
             subtitleEl.innerText = 'PILIH KARTU E-TOLL';
             currentList = etollCategories;
+        } else if(type === 'tagihan') {
+            originalTitle = 'Tagihan';
+            subtitleEl.innerText = 'PILIH JENIS TAGIHAN';
+            document.getElementById('operatorContainer').classList.replace('block', 'hidden');
+            
+            // Render Grid Langsung
+            let gridHtml = '<div class="grid grid-cols-4 gap-y-6 gap-x-3 mt-4 mx-4">';
+            tagihanCategories.forEach(item => {
+                gridHtml += `
+                    <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu', text: 'Fitur sedang dikembangkan.'})">
+                        <div class="w-[4.2rem] h-[4.2rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-[26px] shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors">
+                            <i class="${item.icon}"></i>
+                        </div>
+                        <span class="text-[9px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase text-center leading-tight transition-colors">${item.name}</span>
+                    </div>
+                `;
+            });
+            gridHtml += '</div>';
+            
+            // Inject Grid outside of operatorContainer
+            const parent = document.getElementById('operatorContainer').parentElement;
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = `<h3 class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-4 uppercase mx-4 mt-6">PILIH JENIS TAGIHAN</h3>` + gridHtml;
+            parent.appendChild(tempDiv);
+
         } else {
             if(type === 'pulsa') originalTitle = 'Isi Pulsa'; 
             else if(type === 'data') originalTitle = 'Paket Internet'; 
@@ -708,18 +748,20 @@ cat << 'EOF' > public/operator.html
 
         titleEl.innerText = originalTitle;
 
-        let opHtml = '';
-        for(let key in currentList){
-            let op = currentList[key];
-            opHtml += `
-                <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('${key}')">
-                    <div class="w-10 h-10 rounded-full border border-black dark:border-gray-400 flex items-center justify-center text-black dark:text-gray-300 font-bold text-[10px] shrink-0 text-center leading-tight bg-white dark:bg-[#0b1320]">${op.logo}</div>
-                    <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">${op.name}</div>
-                    <i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
-                </div>
-            `;
+        if(type !== 'tagihan') {
+            let opHtml = '';
+            for(let key in currentList){
+                let op = currentList[key];
+                opHtml += `
+                    <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('${key}')">
+                        <div class="w-10 h-10 rounded-full border border-black dark:border-gray-400 flex items-center justify-center text-black dark:text-gray-300 font-bold text-[10px] shrink-0 text-center leading-tight bg-white dark:bg-[#0b1320]">${op.logo}</div>
+                        <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">${op.name}</div>
+                        <i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
+                    </div>
+                `;
+            }
+            document.getElementById('opListRender').innerHTML = opHtml;
         }
-        document.getElementById('opListRender').innerHTML = opHtml;
 
         function selectProvider(op) {
             if(type === 'data' && dataCategories[op]) {
@@ -759,7 +801,7 @@ cat << 'EOF' > public/operator.html
 EOF
 
 # ==========================================
-# FILE NODE.JS (API & BOT WA)
+# FILE NODE.JS (API)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -975,7 +1017,7 @@ NC='\033[0m' # No Color
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V66) 💎       ${NC}"
+    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V67) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
