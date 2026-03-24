@@ -51,7 +51,7 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Menu Data Provider Dinamis)..."
+echo "[3/5] Membangun Antarmuka Website..."
 
 cat << 'EOF' > public/style.css
 body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
@@ -537,6 +537,7 @@ cat << 'EOF' > public/dashboard.html
                 closeTopUp(); 
                 const formatted = 'Rp ' + finalNominal.toLocaleString('id-ID');
 
+                // Request ke API, durasi akan ditambahkan 5 menit di Backend
                 await fetch('/api/topup/request', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ phone: user.phone, method: 'QRIS Otomatis', nominal: finalNominal }) });
                 
                 setTimeout(() => {
@@ -656,45 +657,17 @@ cat << 'EOF' > public/operator.html
         <div id="operatorContainer" class="block">
             <div class="px-4 mt-6">
                 <h3 class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-3 uppercase">PILIH OPERATOR TUJUAN</h3>
-                <div class="bg-white dark:bg-[#111c2e] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm transition-colors">
-                    <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('axis')">
-                        <div class="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-white font-bold text-[13px] shrink-0">AX</div>
-                        <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">Axis</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
+                <div class="bg-white dark:bg-[#111c2e] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm transition-colors" id="opListRender">
                     </div>
-                    <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('indosat')">
-                        <div class="w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center text-black font-bold text-[13px] shrink-0">IS</div>
-                        <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">Indosat</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
-                    </div>
-                    <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('smartfren')">
-                        <div class="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white font-bold text-[13px] shrink-0">SF</div>
-                        <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">Smartfren</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
-                    </div>
-                    <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('telkomsel')">
-                        <div class="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-bold text-[13px] shrink-0">TS</div>
-                        <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">Telkomsel</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
-                    </div>
-                    <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('byu')">
-                        <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-[13px] shrink-0">BU</div>
-                        <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">By.U</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
-                    </div>
-                    <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('tri')">
-                        <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-white font-bold text-[13px] shrink-0">3</div>
-                        <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">Three</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
-                    </div>
-                    <div class="flex items-center p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('xl')">
-                        <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-[13px] shrink-0">XL</div>
-                        <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">XL</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
-                    </div>
-                </div>
             </div>
         </div>
 
         <div id="categoryContainer" class="hidden">
             <div class="flex justify-between items-center px-5 py-4 bg-black dark:bg-[#001229] text-white">
-                <span class="font-bold text-[15px] tracking-wide">Silahkan Di Pilih..</span>
+                <span class="font-bold text-[15px] tracking-wide" id="catSubtitle">Silahkan Di Pilih..</span>
                 <i class="fas fa-home text-lg cursor-pointer hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"></i>
             </div>
-            <div class="bg-white dark:bg-[#111c2e] shadow-sm transition-colors" id="categoryList">
+            <div class="bg-white dark:bg-[#111c2e] shadow-sm transition-colors pb-4" id="categoryList">
                 </div>
         </div>
 
@@ -718,14 +691,27 @@ cat << 'EOF' > public/operator.html
         titleEl.innerText = originalTitle;
 
         const dataCategories = {
-            'axis': { name: 'AXIS', logo: 'axis', items: ['BRONET 24 JAM', 'OWSEM', 'BOOSTR', 'AIGO'] },
-            'indosat': { name: 'INDOSAT', logo: 'indosat<br>ooredoo', items: ['FREEDOM NASIONAL', 'FREEDOM SENSASI (LARIS)', 'RAMADHAN (BARU)', 'DATA LOKAL', 'FREEDOM HARIAN', 'FREEDOM COMBO', 'FREEDOM UNLIMITED', 'FREEDOM COMBO GIFT', 'FREEDOM INTERNET GIFT', 'FREEDOM INTERNET SPESIAL', 'FREEDOM LONGLIFE', 'FREEDOM MAX', 'UMUM', 'CUANKU PROMO', 'SACHET', 'GASPOL', 'HIFI AIR', 'FREEDOM APPS', 'FREEDOM APPS GIFT', 'PURE MERDEKA', 'FREEDOM PLAY', 'KITA', 'YELLOW', 'ROAMING', 'E-SIM', 'UMROH & HAJI', 'UMROH & HAJI COMBO'] },
-            'smartfren': { name: 'SMARTFREN', logo: 'smart<br>fren', items: ['UMUM', 'UNLIMITED', 'UNLIMITED NONSTOP', 'NONSTOP', 'KUOTA', 'KUOTA 5G+', 'APLIKASI', 'GAMING', 'MANDIRI', 'CONNEX EVO', 'ROAMING', 'VOLUME'] },
-            'telkomsel': { name: 'TELKOMSEL', logo: 'telkomsel', items: ['DATA OMG', 'COMBO SAKTI', 'INTERNET MAX', 'DATA HARIAN', 'DATA KAGET'] },
-            'byu': { name: 'BY.U', logo: 'by.U', items: ['Paket Data Umum', 'Paket Data Topping', 'BY.U CUANKU PROMO', 'Paket Data Mbps', 'Paket Data Kaget', 'Paket Data Super Kaget', 'Paket Data Jajan'] },
-            'tri': { name: 'TRI', logo: '3', items: ['UMUM & MINI', 'HAPPY', 'AON', 'TRI CUANKU', 'LOKAL', 'KIKIDA', 'MIX & TRANSFER', 'GETMORE & CICILAN', 'HOME', 'ROAMING', 'H3RO', "SAHABAT OJOL", "IBADAH", "ADDON", "HAPPY PLAY", "HIFI AIR", "RAMADHAN (BARU)", "happy 5G", "KEEPON"] },
-            'xl': { name: 'XL', logo: 'XL', items: ['XTRA COMBO FLEX', 'XTRA ON', 'XTRA KUOTA'] }
+            'xl': { name: 'XL', logo: 'XL', items: ['AKRAB','CIRCLE','XL DATA','BEBAS PUAS','XL CUANKU','EXTRA DIGITAL','HARIAN','HOTROAD SPESIAL','COMBO FLEX','XL Data Flex Mini (Baru)','XL Data FLex (Baru)','FLEX MAX','ULTRA 5G+','XTRA COMBO','XTRA COMBO GIFT','XTRA COMBO LITE','XTRA COMBO MINI','DATA GIFT','BONUS HARIAN','XL DATA GAMES','XL KUOTA GAMES','GAMES','ROAMING','GRAB GACOR','X-TRA ON','BLUE','XL PASS','XL UMROH','TEMBAK XL'] },
+            'axis': { name: 'AXIS', logo: 'AXIS', items: ['AKRAB','UMUM','AXIS MINI','AXIS BAGI KUOTA','AIGO SS','HARIAN','OWSEM','BORNET','AXIS CUANKU','AXIS','LOKAL','XTRA DIGITAL','WARNET','UMROH'] },
+            'telkomsel': { name: 'TELKOMSEL', logo: 'telkomsel', items: ['UMUM','BULK','FLASH','MINI','CUANKU TELKOMSEL','APPS KUOTA','MAXSTREAM','UMROH','MALAM','COMBO SAKTI','GamesMAX Unlimited','GamesMax','Musicmax','Disney+ Hotstar','OMG','GigaMAX','UnlimitedMAX','Orbit','InternetMAX','Surprise Deal','UKM','Bronze','Harian','Mingguan','Bulanan','Ketengan Utama','Harian Sepuasnya','Roamax','GamesMAX Booster','Naslok','Game','Roamax Haji','COMBO','Eksklusif','Super Seru','Flash','Revamp','DPI','Enterprise','Serba Lima Ribu','Magnet','UKM Plus','Terbaik Untukmu','Non Puma','VideoMax'] },
+            'indosat': { name: 'INDOSAT OOREDOO', logo: 'indosat<br>ooredoo', items: ['FREEDOM NASIONAL','FREEDOM SENSASI (LARIS)','RAMADHAN (BARU)','DATA LOKAL','FREEDOM HARIAN','FREEDOM COMBO','FREEDOM UNLIMITED','FREEDOM COMBO GIFT','FREEDOM INTERNET GIFT','FREEDOM INTERNET SPESIAL','FREEDOM LONGLIFE','FREEDOM MAX','UMUM','CUANKU PROMO','SACHET','GASPOL','HIFI AIR','FREEDOM APPS','FREEDOM APPS GIFT','PURE MERDEKA','FREEDOM PLAY','KITA','YELLOW','ROAMING','E-SIM','UMROH & HAJI','UMROH HAJI COMBO'] },
+            'tri': { name: 'TRI', logo: '3', items: ['UMUM & MINI','HAPPY','AON','TRI CUANKU','LOKAL','KIKIDA','MIX & TRANSFER','GETMORE & CICILAN','HOME','ROAMING','H3RO','SAHABAT OJOL','IBADAH','ADDON','HAPPY PLAY','HIFI AIR','RAMADHAN (BARU)','happy 5G','KEEPON'] },
+            'smartfren': { name: 'SMARTFREN', logo: 'smart<br>fren', items: ['UMUM','UNLIMITED','UNLIMITED NONSTOP','NONSTOP','KUOTA','KUOTA 5G+','APLIKASI','GAMING','MANDIRI','CONNEX EVO','ROAMING','VOLUME'] },
+            'byu': { name: 'BY.U', logo: 'by.U', items: ['Paket Data Umum','Paket Data Topping','BY.U CUANKU PROMO','Paket Data Mbps','Paket Data Kaget','Paket Data Super Kaget','Paket Data Jajan'] }
         };
+
+        let opHtml = '';
+        for(let key in dataCategories){
+            let op = dataCategories[key];
+            opHtml += `
+                <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('${key}')">
+                    <div class="w-10 h-10 rounded-full border border-black dark:border-gray-400 flex items-center justify-center text-black dark:text-gray-300 font-bold text-[8px] shrink-0 text-center leading-tight bg-white dark:bg-[#0b1320]">${op.logo}</div>
+                    <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">${op.name}</div>
+                    <i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
+                </div>
+            `;
+        }
+        document.getElementById('opListRender').innerHTML = opHtml;
 
         function selectProvider(op) {
             if(type === 'data') {
@@ -738,7 +724,7 @@ cat << 'EOF' > public/operator.html
                 
                 const html = provider.items.map(item => `
                     <div class="flex items-center px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="Swal.fire({icon:'info', title:'Menu', text:'Fitur sedang dikembangkan.'})">
-                        <div class="w-8 h-8 rounded-full border border-black dark:border-gray-400 flex items-center justify-center text-black dark:text-gray-300 font-bold text-[7px] shrink-0 text-center leading-tight bg-white dark:bg-[#0b1320]">${provider.logo}</div>
+                        <div class="w-10 h-10 rounded-full border border-black dark:border-gray-400 flex items-center justify-center text-black dark:text-gray-300 font-bold text-[8px] shrink-0 text-center leading-tight bg-white dark:bg-[#0b1320]">${provider.logo}</div>
                         <div class="flex-1 ml-4 text-[15px] font-medium text-gray-800 dark:text-gray-200 uppercase">${item}</div>
                         <i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-xs"></i>
                     </div>
@@ -985,7 +971,7 @@ NC='\033[0m' # No Color
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V64) 💎       ${NC}"
+    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V65) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
