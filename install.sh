@@ -51,13 +51,15 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Edit Profile Fix)..."
+echo "[3/5] Membangun Antarmuka Website (Edit Profile OTP)..."
 
 cat << 'EOF' > public/style.css
 body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
 .centered-modal-box { background-color: #002147; padding: 3rem 1.5rem 2rem 1.5rem; border-radius: 1.2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); width: 90%; max-width: 360px; text-align: center; position: relative; z-index: 10; }
 .logo-f-metalik-box { width: 85px; height: 85px; margin: 0 auto; display: flex; justify-content: center; align-items: center; border-radius: 50%; border: 3px solid #94a3b8; background: radial-gradient(circle, #333333 0%, #000000 100%); box-shadow: inset 0 0 10px rgba(255,255,255,0.2), 0 10px 20px rgba(0,0,0,0.5); position: relative; }
 .logo-f-metalik-box::before { content: "F"; font-size: 55px; font-family: "Times New Roman", Times, serif; font-weight: bold; color: #e2e8f0; text-shadow: 2px 2px 4px rgba(0,0,0,0.9), -1px -1px 1px rgba(255,255,255,0.3); position: absolute; top: 52%; left: 50%; transform: translate(-50%, -50%); }
+.logo-f-small { width: 45px; height: 45px; margin: 0 auto 10px auto; display: flex; justify-content: center; align-items: center; border-radius: 50%; border: 2px solid #cbd5e1; background: radial-gradient(circle, #333333 0%, #000000 100%); box-shadow: inset 0 0 5px rgba(255,255,255,0.2), 0 5px 10px rgba(0,0,0,0.5); position: relative; z-index: 2; }
+.logo-f-small::before { content: "F"; font-size: 28px; font-family: "Times New Roman", Times, serif; font-weight: bold; color: #e2e8f0; text-shadow: 1px 1px 2px rgba(0,0,0,0.9); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 .compact-input-box { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #334155; border-radius: 0.5rem; margin-bottom: 0.85rem; font-size: 0.875rem; outline: none; background-color: #ffffff; color: #0f172a; }
 .compact-input-box:focus { border-color: #fde047; box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3); }
 ::placeholder { color: #94a3b8; font-size: 0.8rem; }
@@ -99,7 +101,9 @@ cat << 'EOF' > public/index.html
 <body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
     <div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div>
     <div class="centered-modal-box pt-14">
-        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4"><h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1></div>
+        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
+            <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
+        </div>
         <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
         <p class="compact-text-small mb-6">Silahkan masukkan email/no HP dan password kamu!</p>
         <form id="loginForm">
@@ -121,6 +125,140 @@ cat << 'EOF' > public/index.html
                 if (res.ok) { localStorage.setItem('user', JSON.stringify(data.user)); window.location.href = '/dashboard.html'; } 
                 else { Swal.fire({ icon: 'error', title: 'Gagal Login', text: data.error }); }
             } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Terjadi kesalahan sistem.' }); }
+        });
+    </script>
+</body>
+</html>
+EOF
+
+cat << 'EOF' > public/register.html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - DIGITAL FIKY STORE</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
+    <div class="z-20 mb-[-42px]" id="logo-header"><div class="logo-f-metalik-box"></div></div>
+    <div class="centered-modal-box pt-14" id="box-register">
+        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-2">
+            <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
+        </div>
+        <h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2>
+        <p class="compact-text-small mb-4">Silahkan lengkapi data untuk mendaftar!</p>
+        <form id="registerForm">
+            <div><label class="compact-label">Nama Lengkap</label><input type="text" id="name" class="compact-input-box" required placeholder="Ketik disini"></div>
+            <div><label class="compact-label">Nomor WA Aktif</label><input type="number" id="phone" class="compact-input-box" required placeholder="Ketik disini (08123...)"></div>
+            <div><label class="compact-label">Email</label><input type="email" id="email" class="compact-input-box" required placeholder="Ketik disini"></div>
+            <div><label class="compact-label">Password</label><input type="password" id="password" class="compact-input-box" required placeholder="Ketik disini"></div>
+            <button type="submit" class="btn-yellow mt-1">Daftar Sekarang</button>
+        </form>
+        <div class="mt-4 text-center compact-text-small">Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a></div>
+    </div>
+    <div class="centered-modal-box pt-14 hidden" id="box-otp">
+        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
+            <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
+        </div>
+        <h2 class="text-lg font-bold text-white mb-1">VERIFIKASI WA</h2>
+        <p class="compact-text-small mb-5 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
+        <form id="otpForm">
+            <div><label class="compact-label text-center">Kode OTP (4 Digit)</label><input type="number" id="otpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX"></div>
+            <button type="submit" class="btn-yellow mt-4">Verifikasi OTP</button>
+        </form>
+    </div>
+    <script>
+        let registeredPhone = '';
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            try {
+                const res = await fetch('/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, email, password }) });
+                const data = await res.json();
+                if (res.ok) {
+                    registeredPhone = data.phone;
+                    document.getElementById('box-register').classList.add('hidden');
+                    document.getElementById('box-otp').classList.remove('hidden');
+                    Swal.fire({ icon: 'success', title: 'OTP Terkirim!', text: 'Silakan cek pesan WhatsApp Anda.' });
+                } else { Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses pendaftaran.' }); }
+        });
+        
+        document.getElementById('otpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const otp = document.getElementById('otpCode').value;
+            try {
+                const res = await fetch('/api/auth/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: registeredPhone, otp }) });
+                if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun terverifikasi. Silakan Login.' }).then(() => { window.location.href = '/'; }); } 
+                else { const data = await res.json(); Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi OTP.' }); }
+        });
+    </script>
+</body>
+</html>
+EOF
+
+cat << 'EOF' > public/forgot.html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lupa Password - DIGITAL FIKY STORE</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
+    <div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div>
+    <div class="centered-modal-box pt-14">
+        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
+            <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
+        </div>
+        <h2 class="text-lg font-bold text-white mb-1">RESET PASSWORD</h2>
+        <form id="requestOtpForm">
+            <p class="compact-text-small mb-5 text-center">Masukkan Nomor WA Anda untuk reset password.</p>
+            <div><input type="number" id="phone" class="compact-input-box text-center" required placeholder="Ketik disini (08123...)"></div>
+            <button type="submit" class="btn-yellow mt-2">Kirim OTP Reset</button>
+        </form>
+        <form id="resetForm" class="hidden mt-4">
+            <hr class="mb-5 border-gray-600">
+            <div><label class="compact-label text-center">Kode OTP (4 Digit)</label><input type="number" id="otp" class="compact-input-box text-center text-xl tracking-[0.5em] font-bold" required placeholder="XXXX"></div>
+            <div><label class="compact-label text-center mt-2">Password Baru</label><input type="password" id="newPassword" class="compact-input-box" required placeholder="Ketik disini"></div>
+            <button type="submit" class="btn-yellow mt-3">Simpan Password Baru</button>
+        </form>
+        <div class="mt-6 text-center compact-text-small">Kembali ke <a href="/" class="compact-link-small">Login</a></div>
+    </div>
+    <script>
+        let resetPhone = '';
+        document.getElementById('requestOtpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const phone = document.getElementById('phone').value;
+            try {
+                const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
+                const data = await res.json();
+                if (res.ok) {
+                    resetPhone = data.phone;
+                    document.getElementById('requestOtpForm').classList.add('hidden');
+                    document.getElementById('resetForm').classList.remove('hidden');
+                    Swal.fire({ icon: 'success', title: 'OTP Terkirim!', text: 'Silakan cek pesan WhatsApp Anda.' });
+                } else { Swal.fire({ icon: 'error', title: 'Gagal', text: data.error }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Terjadi kesalahan sistem.' }); }
+        });
+        
+        document.getElementById('resetForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const otp = document.getElementById('otp').value;
+            const newPassword = document.getElementById('newPassword').value;
+            try {
+                const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) });
+                if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password berhasil diubah. Silakan Login.' }).then(() => { window.location.href = '/'; }); } 
+                else { const data = await res.json(); Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal mereset password.' }); }
         });
     </script>
 </body>
@@ -255,7 +393,7 @@ cat << 'EOF' > public/dashboard.html
 </html>
 EOF
 
-# HTML PROFIL PREMIUM DARK (DENGAN MODAL EDIT)
+# HTML PROFIL PREMIUM (DENGAN EDIT MODAL + OTP WA UNTUK NOMOR)
 cat << 'EOF' > public/profile.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -271,15 +409,11 @@ cat << 'EOF' > public/profile.html
     <div class="max-w-md mx-auto bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden text-white">
         
         <div class="bg-[#050b14] p-8 pb-10 flex flex-col items-center relative rounded-b-[2rem] shadow-lg">
-            <div class="absolute top-6 right-6 text-xl cursor-pointer hover:text-yellow-400 transition" onclick="openEditModal()">
-                <i class="fas fa-pencil-alt text-gray-300"></i>
+            <div class="w-24 h-24 bg-gray-200 rounded-full flex justify-center items-center text-black font-extrabold text-4xl mt-2 mb-3 shadow-xl" id="profileCircle">U</div>
+            <div class="flex items-center gap-3">
+                <h2 class="text-2xl font-bold tracking-wide text-gray-100" id="profileName">User Name</h2>
+                <i class="fas fa-pencil-alt text-gray-400 hover:text-yellow-400 cursor-pointer transition text-lg" onclick="openEditModal()"></i>
             </div>
-            
-            <div class="w-24 h-24 bg-gray-200 rounded-full flex justify-center items-center text-black font-extrabold text-4xl mt-2 mb-3 shadow-xl" id="profileCircle">
-                U
-            </div>
-            
-            <h2 class="text-2xl font-bold tracking-wide text-gray-100" id="profileName">User Name</h2>
         </div>
 
         <div class="mt-4 px-2">
@@ -346,7 +480,7 @@ cat << 'EOF' > public/profile.html
             
             <div class="relative w-20 h-20 mx-auto mb-8">
                 <div class="w-full h-full rounded-full border-2 border-yellow-400 flex items-center justify-center text-white text-3xl font-bold bg-[#1e293b]" id="editModalInitial">U</div>
-                <div class="absolute bottom-0 right-0 bg-yellow-400 rounded-full w-7 h-7 flex items-center justify-center text-[#0b1320] border-[3px] border-[#0b1320] cursor-pointer" onclick="Swal.fire({icon:'info', title:'Coming Soon', text:'Fitur ganti foto menyusul.', confirmButtonColor: '#002147'})">
+                <div class="absolute bottom-0 right-0 bg-yellow-400 rounded-full w-7 h-7 flex items-center justify-center text-[#0b1320] border-[3px] border-[#0b1320] cursor-pointer" onclick="Swal.fire({icon:'info', title:'Coming Soon', text:'Fitur ganti foto menyusul.'})">
                     <i class="fas fa-camera text-[10px]"></i>
                 </div>
             </div>
@@ -361,12 +495,17 @@ cat << 'EOF' > public/profile.html
                 <input type="text" id="editName" class="w-full bg-[#0b1320] border border-gray-700 rounded-lg px-3 py-3 text-white text-sm focus:outline-none focus:border-yellow-400 transition-colors">
             </div>
 
-            <div class="mb-8">
+            <div class="mb-4">
                 <label class="block text-[10px] text-gray-500 mb-1">Nomor Telepon</label>
                 <input type="number" id="editPhone" class="w-full bg-[#0b1320] border border-gray-700 rounded-lg px-3 py-3 text-white text-sm focus:outline-none focus:border-yellow-400 transition-colors">
             </div>
 
-            <button onclick="saveProfile()" class="w-full py-3.5 bg-yellow-400 text-[#001229] font-bold rounded-xl mb-3 shadow-[0_2px_10px_rgba(253,224,71,0.2)]">Simpan Profil</button>
+            <div class="mb-6 hidden slide-down" id="editOtpContainer">
+                <label class="block text-[10px] text-gray-400 mb-1 text-center">OTP dikirim ke nomor WA baru Anda</label>
+                <input type="number" id="editOtpInput" class="w-full bg-[#0b1320] border border-green-700 rounded-lg px-3 py-3 text-white text-lg tracking-[0.5em] text-center font-bold focus:outline-none focus:border-green-400 transition-colors" placeholder="XXXX">
+            </div>
+
+            <button id="btnSimpanProfil" onclick="saveProfile()" class="w-full py-3.5 bg-yellow-400 text-[#001229] font-bold rounded-xl mb-3 shadow-[0_2px_10px_rgba(253,224,71,0.2)] transition">Simpan Profil</button>
             <button onclick="deleteAccount()" class="w-full py-3.5 bg-[#3f161e] border border-[#5c1a24] text-red-500 font-bold rounded-xl transition hover:bg-red-900/50">Hapus Akun</button>
         </div>
     </div>
@@ -423,28 +562,64 @@ cat << 'EOF' > public/profile.html
         }
 
         // LOGIKA MODAL UBAH PROFIL & HAPUS AKUN
+        let isRequestingOtp = false;
+
         function openEditModal() {
             document.getElementById('editModalInitial').innerText = user.name.charAt(0).toUpperCase();
             document.getElementById('editEmail').value = user.email || 'fikyshoto@gmail.com';
             document.getElementById('editName').value = user.name;
-            document.getElementById('editPhone').value = user.phone;
+            document.getElementById('editPhone').value = user.phone.replace('62', '0');
             document.getElementById('editProfileModal').classList.remove('hidden');
         }
-        function closeEditModal() { document.getElementById('editProfileModal').classList.add('hidden'); }
+
+        function closeEditModal() { 
+            document.getElementById('editProfileModal').classList.add('hidden'); 
+            isRequestingOtp = false;
+            document.getElementById('editOtpContainer').classList.add('hidden');
+            document.getElementById('btnSimpanProfil').innerText = 'Simpan Profil';
+            document.getElementById('editOtpInput').value = '';
+        }
         
         async function saveProfile() {
             const oldPhone = user.phone;
             const newName = document.getElementById('editName').value;
-            const newPhone = document.getElementById('editPhone').value;
-            if(!newName || !newPhone) return Swal.fire({icon:'warning', title:'Gagal', text:'Nama & No WA wajib diisi!'});
+            const rawPhone = document.getElementById('editPhone').value;
+            const newPhone = rawPhone.startsWith('0') ? '62' + rawPhone.slice(1) : rawPhone;
+            const otp = document.getElementById('editOtpInput').value;
+
+            if(!newName || !rawPhone) return Swal.fire({icon:'warning', title:'Gagal', text:'Nama & No WA wajib diisi!'});
             
+            // JIKA NOMOR BERUBAH DAN BELUM MINTA OTP
+            if(newPhone !== oldPhone && !isRequestingOtp) {
+                Swal.fire({title: 'Mengirim OTP...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+                try {
+                    const res = await fetch('/api/auth/request-update-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ oldPhone, newPhone }) });
+                    const data = await res.json();
+                    if(res.ok) {
+                        isRequestingOtp = true;
+                        document.getElementById('editOtpContainer').classList.remove('hidden');
+                        document.getElementById('btnSimpanProfil').innerText = 'Verifikasi OTP & Simpan';
+                        document.getElementById('btnSimpanProfil').classList.replace('bg-yellow-400', 'bg-green-400');
+                        Swal.fire({icon:'success', title:'OTP Terkirim!', text:'Silakan cek WA di nomor yang baru.'});
+                    } else { Swal.fire({icon:'error', title:'Gagal', text: data.error}); }
+                } catch(e) { Swal.fire({icon:'error', title:'Oops', text:'Kesalahan jaringan.'}); }
+                return;
+            }
+
+            // JIKA NOMOR BERUBAH TAPI OTP KOSONG
+            if(newPhone !== oldPhone && isRequestingOtp && !otp) {
+                return Swal.fire({icon:'warning', title:'Gagal', text:'Masukkan kode OTP 4 digit!'});
+            }
+
+            // PROSES SIMPAN KE DATABASE
             Swal.fire({title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
             try {
-                const res = await fetch('/api/auth/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ oldPhone, newName, newPhone }) });
+                const res = await fetch('/api/auth/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ oldPhone, newPhone, newName, otp }) });
+                const data = await res.json();
                 if(res.ok) {
-                    user.name = newName; user.phone = newPhone; localStorage.setItem('user', JSON.stringify(user));
+                    user.name = newName; user.phone = data.phone; localStorage.setItem('user', JSON.stringify(user));
                     Swal.fire({icon:'success', title:'Berhasil', text:'Profil diperbarui!'}).then(() => { location.reload(); });
-                } else { Swal.fire({icon:'error', title:'Gagal', text: (await res.json()).error}); }
+                } else { Swal.fire({icon:'error', title:'Gagal', text: data.error}); }
             } catch(e) { Swal.fire({icon:'error', title:'Oops', text:'Kesalahan jaringan.'}); }
         }
 
@@ -468,7 +643,7 @@ cat << 'EOF' > public/profile.html
 EOF
 
 # ==========================================
-# FILE NODE.JS (API UPDATE & DELETE)
+# FILE NODE.JS (UPDATE API UNTUK OTP GANTI NOMOR)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -507,7 +682,10 @@ if (!fs.existsSync(webUsersFile)) saveJSON(webUsersFile, {});
 
 app.get('/api/banners', (req, res) => res.json({ banners: loadJSON(configFile).banners }));
 
-app.post('/api/user/balance', (req, res) => res.json({ saldo: loadJSON(dbFile)[req.body.phone]?.saldo || 0 }));
+app.post('/api/user/balance', (req, res) => {
+    let db = loadJSON(dbFile);
+    res.json({ saldo: db[req.body.phone]?.saldo || 0 });
+});
 
 app.post('/api/auth/register', async (req, res) => {
     const { name, phone, email, password } = req.body;
@@ -527,7 +705,7 @@ app.post('/api/auth/verify', (req, res) => {
         webUsers[phone].isVerified = true; webUsers[phone].otp = null; saveJSON(webUsersFile, webUsers);
         let db = loadJSON(dbFile); if (!db[phone]) { db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net' }; saveJSON(dbFile, db); }
         res.json({ message: 'Sukses!' });
-    } else res.status(400).json({ error: 'OTP Salah.' });
+    } else res.status(400).json({ error: 'OTP Salah atau Kedaluwarsa.' });
 });
 
 app.post('/api/auth/login', (req, res) => {
@@ -558,23 +736,57 @@ app.post('/api/auth/reset', (req, res) => {
     else res.status(400).json({ error: 'OTP Salah.' });
 });
 
-// API UPDATE PROFIL
+// MINTA OTP SAAT GANTI NOMOR HP
+app.post('/api/auth/request-update-otp', async (req, res) => {
+    const { oldPhone, newPhone } = req.body;
+    let webUsers = loadJSON(webUsersFile);
+    let fOld = oldPhone.startsWith('0') ? '62' + oldPhone.slice(1) : oldPhone;
+    let fNew = newPhone.startsWith('0') ? '62' + newPhone.slice(1) : newPhone;
+
+    if (webUsers[fNew] && fNew !== fOld) return res.status(400).json({ error: 'Nomor baru sudah terdaftar pengguna lain.' });
+    
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    if(webUsers[fOld]) {
+        webUsers[fOld].updateOtp = otp; 
+        saveJSON(webUsersFile, webUsers);
+        try {
+            await global.waSocket?.sendMessage(fNew + '@c.us', { text: `Kode OTP Perubahan Nomor HP DIGITAL FIKY STORE Anda: *${otp}*` });
+            res.json({ message: 'OTP Terkirim' });
+        } catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); }
+    } else {
+        res.status(400).json({ error: 'Akun lama tidak ditemukan.' });
+    }
+});
+
+// SIMPAN UPDATE PROFIL
 app.post('/api/auth/update', (req, res) => {
-    const { oldPhone, newPhone, newName } = req.body;
+    const { oldPhone, newPhone, newName, otp } = req.body;
     let webUsers = loadJSON(webUsersFile);
     let db = loadJSON(dbFile);
     
-    if (!webUsers[oldPhone]) return res.status(400).json({ error: 'Akun tidak ditemukan.' });
-    if (oldPhone !== newPhone) {
-        if (webUsers[newPhone]) return res.status(400).json({ error: 'Nomor baru sudah terdaftar pengguna lain.' });
-        webUsers[newPhone] = { ...webUsers[oldPhone], name: newName }; delete webUsers[oldPhone];
-        if (db[oldPhone]) { db[newPhone] = { ...db[oldPhone], jid: newPhone + '@s.whatsapp.net' }; delete db[oldPhone]; }
-    } else { webUsers[oldPhone].name = newName; }
+    let fOld = oldPhone.startsWith('0') ? '62' + oldPhone.slice(1) : oldPhone;
+    let fNew = newPhone.startsWith('0') ? '62' + newPhone.slice(1) : newPhone;
+
+    if (!webUsers[fOld]) return res.status(400).json({ error: 'Akun tidak ditemukan.' });
+    
+    if (fOld !== fNew) {
+        if (webUsers[fNew]) return res.status(400).json({ error: 'Nomor baru sudah dipakai.' });
+        if (webUsers[fOld].updateOtp !== otp) return res.status(400).json({ error: 'Kode OTP Salah.' });
+
+        webUsers[fNew] = { ...webUsers[fOld], name: newName }; 
+        delete webUsers[fNew].updateOtp; 
+        delete webUsers[fOld];
+
+        if (db[fOld]) { db[fNew] = { ...db[fOld], jid: fNew + '@s.whatsapp.net' }; delete db[fOld]; }
+    } else { 
+        webUsers[fOld].name = newName; 
+    }
+    
     saveJSON(webUsersFile, webUsers); saveJSON(dbFile, db);
-    res.json({ message: 'Profil diperbarui.' });
+    res.json({ message: 'Profil diperbarui.', phone: fNew });
 });
 
-// API DELETE ACCOUNT
+// HAPUS AKUN
 app.post('/api/auth/delete', (req, res) => {
     const { phone } = req.body;
     let webUsers = loadJSON(webUsersFile); let db = loadJSON(dbFile);
