@@ -51,7 +51,7 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Edit Profile OTP)..."
+echo "[3/5] Membangun Antarmuka Website (Ikon Solid & Riwayat)..."
 
 cat << 'EOF' > public/style.css
 body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
@@ -81,11 +81,14 @@ body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-
 .swal2-cancel { background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important; color: #ffffff !important; border-radius: 0.5rem !important; font-weight: 800 !important; padding: 0.6rem 1.5rem !important; font-size: 0.85rem !important; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3) !important; letter-spacing: 0.5px !important; }
 .swal2-icon { transform: scale(0.7) !important; margin: 0 auto 0.5em !important; border-width: 3px !important; }
 
-/* Animasi untuk kotak dropdown ubah password & Edit Profile */
+/* Animasi Edit Profile */
 .slide-down { animation: slideDown 0.3s ease-out forwards; }
 @keyframes slideDown { 0% { opacity: 0; transform: translateY(-10px); } 100% { opacity: 1; transform: translateY(0); } }
 .animate-slide-up { animation: slideUp 0.3s ease-out forwards; }
 @keyframes slideUp { 0% { opacity: 0; transform: scale(0.95) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+
+/* Select Dropdown Styling */
+select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.7rem center; background-size: 1em; }
 EOF
 
 cat << 'EOF' > public/index.html
@@ -101,11 +104,8 @@ cat << 'EOF' > public/index.html
 <body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
     <div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div>
     <div class="centered-modal-box pt-14">
-        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
-            <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
-        </div>
+        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4"><h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1></div>
         <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
-        <p class="compact-text-small mb-6">Silahkan masukkan email/no HP dan password kamu!</p>
         <form id="loginForm">
             <div><label class="compact-label">Email / No. HP</label><input type="text" id="identifier" class="compact-input-box" required placeholder="Ketik disini"></div>
             <div><label class="compact-label">Password</label><input type="password" id="password" class="compact-input-box" required placeholder="Ketik disini"></div>
@@ -142,13 +142,10 @@ cat << 'EOF' > public/register.html
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
-    <div class="z-20 mb-[-42px]" id="logo-header"><div class="logo-f-metalik-box"></div></div>
+    <div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div>
     <div class="centered-modal-box pt-14" id="box-register">
-        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-2">
-            <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
-        </div>
+        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-2"><h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1></div>
         <h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2>
-        <p class="compact-text-small mb-4">Silahkan lengkapi data untuk mendaftar!</p>
         <form id="registerForm">
             <div><label class="compact-label">Nama Lengkap</label><input type="text" id="name" class="compact-input-box" required placeholder="Ketik disini"></div>
             <div><label class="compact-label">Nomor WA Aktif</label><input type="number" id="phone" class="compact-input-box" required placeholder="Ketik disini (08123...)"></div>
@@ -159,13 +156,11 @@ cat << 'EOF' > public/register.html
         <div class="mt-4 text-center compact-text-small">Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a></div>
     </div>
     <div class="centered-modal-box pt-14 hidden" id="box-otp">
-        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
-            <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
-        </div>
+        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4"><h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1></div>
         <h2 class="text-lg font-bold text-white mb-1">VERIFIKASI WA</h2>
         <p class="compact-text-small mb-5 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
         <form id="otpForm">
-            <div><label class="compact-label text-center">Kode OTP (4 Digit)</label><input type="number" id="otpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX"></div>
+            <div><input type="number" id="otpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX"></div>
             <button type="submit" class="btn-yellow mt-4">Verifikasi OTP</button>
         </form>
     </div>
@@ -184,19 +179,18 @@ cat << 'EOF' > public/register.html
                     registeredPhone = data.phone;
                     document.getElementById('box-register').classList.add('hidden');
                     document.getElementById('box-otp').classList.remove('hidden');
-                    Swal.fire({ icon: 'success', title: 'OTP Terkirim!', text: 'Silakan cek pesan WhatsApp Anda.' });
+                    Swal.fire({ icon: 'success', title: 'OTP Terkirim!', text: 'Silakan cek WA Anda.' });
                 } else { Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error }); }
-            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses pendaftaran.' }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses.' }); }
         });
-        
         document.getElementById('otpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const otp = document.getElementById('otpCode').value;
             try {
                 const res = await fetch('/api/auth/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: registeredPhone, otp }) });
-                if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun terverifikasi. Silakan Login.' }).then(() => { window.location.href = '/'; }); } 
-                else { const data = await res.json(); Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error }); }
-            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi OTP.' }); }
+                if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Silakan Login.' }).then(() => { window.location.href = '/'; }); } 
+                else { Swal.fire({ icon: 'error', title: 'OTP Salah', text: (await res.json()).error }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.' }); }
         });
     </script>
 </body>
@@ -216,9 +210,7 @@ cat << 'EOF' > public/forgot.html
 <body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
     <div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div>
     <div class="centered-modal-box pt-14">
-        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4">
-            <h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1>
-        </div>
+        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4"><h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1></div>
         <h2 class="text-lg font-bold text-white mb-1">RESET PASSWORD</h2>
         <form id="requestOtpForm">
             <p class="compact-text-small mb-5 text-center">Masukkan Nomor WA Anda untuk reset password.</p>
@@ -240,31 +232,29 @@ cat << 'EOF' > public/forgot.html
             const phone = document.getElementById('phone').value;
             try {
                 const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
-                const data = await res.json();
                 if (res.ok) {
-                    resetPhone = data.phone;
-                    document.getElementById('requestOtpForm').classList.add('hidden');
-                    document.getElementById('resetForm').classList.remove('hidden');
-                    Swal.fire({ icon: 'success', title: 'OTP Terkirim!', text: 'Silakan cek pesan WhatsApp Anda.' });
-                } else { Swal.fire({ icon: 'error', title: 'Gagal', text: data.error }); }
-            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Terjadi kesalahan sistem.' }); }
+                    resetPhone = (await res.json()).phone;
+                    document.getElementById('requestOtpForm').classList.add('hidden'); document.getElementById('resetForm').classList.remove('hidden');
+                    Swal.fire({ icon: 'success', title: 'OTP Terkirim!', text: 'Cek WA Anda.' });
+                } else { Swal.fire({ icon: 'error', title: 'Gagal', text: (await res.json()).error }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.' }); }
         });
-        
         document.getElementById('resetForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const otp = document.getElementById('otp').value;
             const newPassword = document.getElementById('newPassword').value;
             try {
                 const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) });
-                if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password berhasil diubah. Silakan Login.' }).then(() => { window.location.href = '/'; }); } 
-                else { const data = await res.json(); Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error }); }
-            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal mereset password.' }); }
+                if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.' }).then(() => { window.location.href = '/'; }); } 
+                else { Swal.fire({ icon: 'error', title: 'Gagal', text: (await res.json()).error }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.' }); }
         });
     </script>
 </body>
 </html>
 EOF
 
+# HTML DASHBOARD PREMIUM (NEW IKON SOLID DARK NAVY)
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -275,99 +265,120 @@ cat << 'EOF' > public/dashboard.html
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>tailwind.config = { darkMode: 'class' }</script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 font-sans transition-colors duration-300">
-    <div class="max-w-md mx-auto bg-[#f4f6f9] dark:bg-gray-900 min-h-screen relative pb-24 shadow-2xl transition-colors duration-300 overflow-x-hidden">
-        <div class="flex justify-between items-center p-4 bg-[#001229] text-white shadow-md sticky top-0 z-40 transition-colors">
-            <div class="flex items-center gap-4"><i class="fas fa-bars text-xl cursor-pointer text-gray-300 hover:text-white transition" onclick="toggleSidebar()"></i><h1 class="font-medium text-[17px] tracking-wide" id="headerGreeting">Hai, Member</h1></div>
-            <div class="bg-white/10 text-[11px] font-bold px-3 py-1.5 rounded-full border border-white/20 shadow-sm flex items-center gap-1 text-gray-200">0 Trx</div>
+<body class="bg-[#0b1320] font-sans transition-colors duration-300">
+    <div class="max-w-md mx-auto bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+        
+        <div class="flex justify-between items-center p-4 bg-[#0b1320] text-white sticky top-0 z-40">
+            <div class="flex items-center gap-4"><i class="fas fa-bars text-xl cursor-pointer text-gray-300 hover:text-yellow-400 transition" onclick="toggleSidebar()"></i><h1 class="font-medium text-[17px] tracking-wide" id="headerGreeting">Hai, Member</h1></div>
+            <div class="text-[11px] font-bold text-gray-300">0 Trx</div>
         </div>
+
         <div id="sidebar" class="fixed inset-0 z-[100] transform -translate-x-full transition-transform duration-300 flex">
-            <div class="w-full bg-black bg-opacity-50" onclick="toggleSidebar()"></div>
-            <div class="absolute top-0 left-0 w-3/4 max-w-[300px] h-full bg-white dark:bg-gray-900 shadow-2xl flex flex-col transition-colors">
-                <div class="bg-[#002147] p-8 flex flex-col items-center justify-center text-white relative">
-                    <button class="absolute top-3 right-4 text-gray-300 hover:text-white" onclick="toggleSidebar()"><i class="fas fa-times text-xl"></i></button>
-                    <div class="w-20 h-20 bg-white rounded-full flex justify-center items-center text-[#002147] font-bold text-3xl mb-3 shadow-inner" id="sidebarInitial">U</div>
-                    <h3 class="font-bold text-lg tracking-wide" id="sidebarName">User Name</h3>
-                    <p class="text-sm text-gray-300" id="sidebarPhone">08...</p>
+            <div class="w-full bg-black bg-opacity-60" onclick="toggleSidebar()"></div>
+            <div class="absolute top-0 left-0 w-3/4 max-w-[300px] h-full bg-[#0b1320] shadow-2xl flex flex-col border-r border-gray-800">
+                <div class="bg-[#050b14] p-8 flex flex-col items-center justify-center text-white relative border-b border-gray-800">
+                    <button class="absolute top-3 right-4 text-gray-400 hover:text-white" onclick="toggleSidebar()"><i class="fas fa-times text-xl"></i></button>
+                    <div class="w-20 h-20 bg-gray-200 rounded-full flex justify-center items-center text-black font-extrabold text-3xl mb-3" id="sidebarInitial">U</div>
+                    <h3 class="font-bold text-lg tracking-wide text-white" id="sidebarName">User Name</h3>
                 </div>
                 <div class="flex-1 overflow-y-auto py-2">
-                    <ul class="text-gray-700 dark:text-gray-200">
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 cursor-pointer transition" onclick="location.href='/profile.html'"><i class="far fa-user text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Profil Akun</span></li>
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 cursor-pointer transition"><i class="far fa-clock text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Transaksi Saya</span></li>
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 cursor-pointer transition"><i class="far fa-bell text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Pemberitahuan</span></li>
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-4 hover:bg-gray-50 cursor-pointer transition" onclick="window.open('https://wa.me/6282231154407', '_blank')"><i class="fas fa-headset text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Hubungi Admin</span></li>
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition" onclick="toggleDarkMode()">
-                            <div class="flex items-center gap-4"><i class="far fa-moon text-xl w-6 text-center"></i> <span class="font-semibold text-sm">Mode Gelap</span></div>
-                            <div class="w-10 h-5 bg-gray-300 dark:bg-blue-500 rounded-full relative transition-colors duration-300" id="darkModeToggleBg"><div class="w-5 h-5 bg-white rounded-full absolute left-0 shadow-md transform transition-transform duration-300" id="darkModeToggleDot"></div></div>
-                        </li>
+                    <ul class="text-gray-300">
+                        <li class="px-6 py-4 border-b border-gray-800 flex items-center gap-4 hover:bg-gray-800 cursor-pointer transition" onclick="location.href='/profile.html'"><i class="far fa-user text-xl w-6 text-center text-gray-400"></i> <span class="font-semibold text-sm">Profil Akun</span></li>
+                        <li class="px-6 py-4 border-b border-gray-800 flex items-center gap-4 hover:bg-gray-800 cursor-pointer transition" onclick="location.href='/riwayat.html'"><i class="far fa-clock text-xl w-6 text-center text-gray-400"></i> <span class="font-semibold text-sm">Transaksi Saya</span></li>
+                        <li class="px-6 py-4 border-b border-gray-800 flex items-center gap-4 hover:bg-gray-800 cursor-pointer transition" onclick="window.open('https://wa.me/6282231154407', '_blank')"><i class="fas fa-headset text-xl w-6 text-center text-gray-400"></i> <span class="font-semibold text-sm">Hubungi Admin</span></li>
                     </ul>
                 </div>
-                <div class="p-6 border-t border-gray-100 dark:border-gray-800"><button onclick="logout()" class="w-full py-3 border-2 border-red-500 text-red-500 font-bold rounded-lg hover:bg-red-50 transition">Keluar Akun</button></div>
             </div>
         </div>
-        <div class="mx-4 mt-5 bg-[#002147] rounded-3xl p-6 text-white relative overflow-hidden shadow-lg border-b-[5px] border-yellow-400">
-            <div class="tech-bg opacity-70"></div> 
+
+        <div class="mx-4 mt-2 bg-[#002147] rounded-[1.5rem] p-6 text-white relative overflow-hidden shadow-lg border border-[#1e3a8a]">
+            <div class="tech-bg opacity-40"></div> 
             <div class="text-center relative z-10">
                 <p class="text-xs text-gray-300 mb-1">Sisa Saldo Anda</p>
                 <h2 class="text-4xl font-extrabold mb-6 tracking-tight drop-shadow-md" id="displaySaldo">Rp 0</h2>
-                <div class="flex gap-4"><button class="flex-1 border border-gray-500 text-white rounded-full py-2.5 text-xs font-bold hover:bg-white hover:text-[#002147] transition" onclick="Swal.fire({icon: 'info', title: 'Top Up', text: 'Fitur deposit saldo akan segera hadir.'})">ISI SALDO</button><button class="flex-1 border border-gray-500 text-white rounded-full py-2.5 text-xs font-bold hover:bg-white hover:text-[#002147] transition" onclick="window.open('https://wa.me/6282231154407', '_blank')">BANTUAN</button></div>
+                <div class="flex gap-4">
+                    <button class="flex-1 border border-gray-500/50 bg-[#001229]/50 text-white rounded-full py-2.5 text-[11px] font-bold hover:bg-yellow-400 hover:text-[#001229] transition" onclick="Swal.fire({icon: 'info', title: 'Top Up', text: 'Fitur deposit saldo akan segera hadir.'})">ISI SALDO</button>
+                    <button class="flex-1 border border-gray-500/50 bg-[#001229]/50 text-white rounded-full py-2.5 text-[11px] font-bold hover:bg-yellow-400 hover:text-[#001229] transition" onclick="window.open('https://wa.me/6282231154407', '_blank')">BANTUAN</button>
+                </div>
             </div>
         </div>
-        <div class="mx-4 mt-6 relative rounded-2xl h-[170px] overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 bg-gray-200 dark:bg-gray-800">
+
+        <div class="mx-4 mt-6 relative rounded-[1.2rem] h-[170px] overflow-hidden border border-gray-800 bg-[#111c2e]">
             <div id="promoSlider" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth"></div>
             <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20" id="promoDots"></div>
         </div>
-        <div class="mx-4 mt-6 bg-white dark:bg-gray-800 p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors mb-8">
-            <h3 class="font-extrabold text-[#002147] dark:text-gray-100 mb-5 text-[15px] tracking-wide ml-1">Layanan Pilihan</h3>
-            <div class="grid grid-cols-4 gap-y-6 gap-x-2">
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu Pulsa', text: 'Sistem pembelian sedang dibangun.'})"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-cyan-400 to-blue-600 text-white flex items-center justify-center text-xl shadow-lg shadow-blue-500/30 mb-2"><i class="fas fa-mobile-screen"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide">PULSA</span></div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu Data', text: 'Sistem pembelian sedang dibangun.'})"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-emerald-400 to-green-600 text-white flex items-center justify-center text-xl shadow-lg shadow-green-500/30 mb-2"><i class="fas fa-globe"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide">DATA</span></div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-amber-400 to-orange-500 text-white flex items-center justify-center text-xl shadow-lg shadow-orange-500/30 mb-2"><i class="fas fa-bolt"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide">PLN</span></div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-purple-400 to-pink-600 text-white flex items-center justify-center text-xl shadow-lg shadow-pink-500/30 mb-2"><i class="fas fa-gamepad"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide">GAME</span></div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-indigo-400 to-purple-600 text-white flex items-center justify-center text-xl shadow-lg shadow-indigo-500/30 mb-2"><i class="fas fa-wallet"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide text-center">E-WALLET</span></div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-rose-400 to-red-500 text-white flex items-center justify-center text-xl shadow-lg shadow-red-500/30 mb-2"><i class="fas fa-ticket-alt"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide text-center">VOUCHER</span></div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-teal-400 to-cyan-600 text-white flex items-center justify-center text-xl shadow-lg shadow-cyan-500/30 mb-2"><i class="fas fa-phone-volume"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide text-center leading-tight mt-0.5">SMS<br>TELP</span></div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[3.2rem] h-[3.2rem] rounded-[14px] bg-gradient-to-br from-gray-400 to-gray-600 text-white flex items-center justify-center text-xl shadow-lg shadow-gray-500/30 mb-2"><i class="fas fa-th-large"></i></div><span class="text-[10px] font-bold text-[#002147] dark:text-gray-200 tracking-wide text-center">LAINNYA</span></div>
+
+        <div class="mx-4 mt-8 mb-4">
+            <h3 class="font-extrabold text-white mb-4 text-[16px] tracking-wide ml-1">Layanan Produk</h3>
+            <div class="grid grid-cols-4 gap-y-6 gap-x-3">
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu', text: 'Sistem pembelian sedang dibangun.'})">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#111c2e] text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-800/60"><i class="fas fa-mobile-alt"></i></div>
+                    <span class="text-[11px] font-bold text-gray-300 tracking-wide uppercase">PULSA</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu', text: 'Sistem pembelian sedang dibangun.'})">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#111c2e] text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-800/60"><i class="fas fa-globe"></i></div>
+                    <span class="text-[11px] font-bold text-gray-300 tracking-wide uppercase">DATA</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#111c2e] text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-800/60"><i class="fas fa-gamepad"></i></div>
+                    <span class="text-[11px] font-bold text-gray-300 tracking-wide uppercase">GAME</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#111c2e] text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-800/60"><i class="fas fa-ticket-alt"></i></div>
+                    <span class="text-[11px] font-bold text-gray-300 tracking-wide uppercase">VOUCHER</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#111c2e] text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-800/60"><i class="fas fa-wallet"></i></div>
+                    <span class="text-[11px] font-bold text-gray-300 tracking-wide uppercase">E-WALLET</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#111c2e] text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-800/60"><i class="fas fa-bolt"></i></div>
+                    <span class="text-[11px] font-bold text-gray-300 tracking-wide uppercase">PLN</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#111c2e] text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-800/60"><i class="fas fa-calendar-check"></i></div>
+                    <span class="text-[10px] font-bold text-gray-300 tracking-wide uppercase text-center leading-tight">MASA<br>AKTIF</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#111c2e] text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-800/60"><i class="fas fa-sim-card"></i></div>
+                    <span class="text-[11px] font-bold text-gray-300 tracking-wide uppercase">PERDANA</span>
+                </div>
             </div>
         </div>
-        <div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.2)] z-40">
+
+        <div class="mx-4 mt-8 mb-8">
+            <h3 class="font-extrabold text-white mb-4 text-[16px] tracking-wide ml-1">Produk Digital</h3>
+            <div class="grid grid-cols-4 gap-y-6 gap-x-3">
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#111c2e] text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-800/60"><i class="fas fa-file-invoice-dollar"></i></div>
+                    <span class="text-[11px] font-bold text-gray-300 tracking-wide uppercase">TAGIHAN</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#111c2e] text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-800/60"><i class="fas fa-id-card"></i></div>
+                    <span class="text-[10px] font-bold text-gray-300 tracking-wide uppercase text-center leading-tight">SALDO<br>E-TOLL</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="fixed bottom-0 w-full max-w-md bg-[#001229] border-t border-gray-800 flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.5)] z-40">
             <div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
-            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
-            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
         </div>
     </div>
+
     <script>
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) window.location.href = '/';
         document.getElementById('headerGreeting').innerText = "Hai, " + user.name.split(' ')[0];
         document.getElementById('sidebarName').innerText = user.name;
-        document.getElementById('sidebarPhone').innerText = user.phone;
         document.getElementById('sidebarInitial').innerText = user.name.charAt(0).toUpperCase();
 
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
-        
-        function logout() { 
-            Swal.fire({
-                title: 'Keluar Akun?', text: "Apakah Anda yakin ingin keluar?", icon: 'warning',
-                showCancelButton: true, confirmButtonText: 'Ya, Keluar', cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) { localStorage.removeItem('user'); window.location.href = '/'; }
-            });
-        }
 
         fetch('/api/user/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) })
         .then(res => res.json()).then(data => { document.getElementById('displaySaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); });
-
-        let isDark = localStorage.getItem('darkMode') === 'true';
-        function applyDarkMode() {
-            if (isDark) { document.getElementById('html-root').classList.add('dark'); document.getElementById('darkModeToggleDot').classList.add('translate-x-5'); document.getElementById('darkModeToggleBg').classList.add('bg-blue-500'); } 
-            else { document.getElementById('html-root').classList.remove('dark'); document.getElementById('darkModeToggleDot').classList.remove('translate-x-5'); document.getElementById('darkModeToggleBg').classList.remove('bg-blue-500'); }
-        }
-        function toggleDarkMode() { isDark = !isDark; localStorage.setItem('darkMode', isDark); applyDarkMode(); }
-        applyDarkMode();
 
         fetch('/api/banners').then(res => res.json()).then(data => {
             if(data.banners && data.banners.length > 0 && data.banners[0] !== "") {
@@ -393,10 +404,82 @@ cat << 'EOF' > public/dashboard.html
 </html>
 EOF
 
-# HTML PROFIL PREMIUM (DENGAN EDIT MODAL + OTP WA UNTUK NOMOR)
+# HTML HALAMAN RIWAYAT TRANSAKSI (BARU!)
+cat << 'EOF' > public/riwayat.html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riwayat - DIGITAL FIKY STORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-[#0b1320] font-sans text-white">
+    <div class="max-w-md mx-auto bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+        
+        <div class="flex items-center p-5 bg-[#0b1320] sticky top-0 z-40">
+            <i class="fas fa-arrow-left text-xl cursor-pointer mr-4" onclick="location.href='/dashboard.html'"></i>
+            <h1 class="text-[18px] font-bold tracking-wide">Riwayat Transaksi</h1>
+        </div>
+
+        <div class="mx-4 bg-[#111c2e] p-4 rounded-2xl border border-gray-800 shadow-sm">
+            <div class="relative mb-4">
+                <i class="fas fa-search absolute left-3.5 top-3 text-gray-400 text-sm"></i>
+                <input type="text" class="w-full bg-[#1a2639] border border-gray-700 text-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-yellow-400 transition" placeholder="Cari transaksi...">
+            </div>
+            
+            <div class="flex justify-between mb-4 gap-2">
+                <div class="flex-1 bg-[#0b1320] text-yellow-400 border border-gray-700 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer">Semua</div>
+                <div class="flex-1 bg-[#1a2639] text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer hover:text-white transition">Sukses</div>
+                <div class="flex-1 bg-[#1a2639] text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer hover:text-white transition">Proses</div>
+                <div class="flex-1 bg-[#1a2639] text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer hover:text-white transition">Gagal</div>
+            </div>
+
+            <div class="flex items-end gap-2">
+                <div class="flex-1">
+                    <label class="text-[10px] text-gray-400 font-bold block mb-1.5 ml-1">Dari</label>
+                    <div class="bg-[#1a2639] border border-gray-700 rounded-xl px-3 py-2.5 flex justify-between items-center text-gray-400 cursor-pointer">
+                        <span class="text-xs">&nbsp;</span><i class="fas fa-chevron-down text-[10px]"></i>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <label class="text-[10px] text-gray-400 font-bold block mb-1.5 ml-1">Sampai</label>
+                    <div class="bg-[#1a2639] border border-gray-700 rounded-xl px-3 py-2.5 flex justify-between items-center text-gray-400 cursor-pointer">
+                        <span class="text-xs">&nbsp;</span><i class="fas fa-chevron-down text-[10px]"></i>
+                    </div>
+                </div>
+                <div class="bg-[#1a2639] border border-gray-700 w-10 h-10 rounded-xl flex items-center justify-center text-gray-400 cursor-pointer hover:text-white transition">
+                    <i class="fas fa-sync-alt text-sm"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
+            <div class="w-[5.5rem] h-[5.5rem] bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-800">
+                <i class="fas fa-receipt text-gray-400 text-4xl"></i>
+            </div>
+            <h2 class="text-white font-bold text-lg tracking-wide mb-2">Belum Ada Transaksi</h2>
+            <p class="text-gray-400 text-[13px] leading-relaxed mb-8 px-2">Ayo mulai transaksi pertamamu sekarang dan nikmati berbagai promo menarik!</p>
+            <button class="bg-[#0b1320] text-yellow-400 border border-gray-700 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-800 transition" onclick="location.href='/dashboard.html'">Transaksi Sekarang</button>
+        </div>
+
+        <div class="fixed bottom-0 w-full max-w-md bg-[#001229] border-t border-gray-800 flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.5)] z-40">
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
+        </div>
+    </div>
+    <script>
+        if (!localStorage.getItem('user')) window.location.href = '/';
+    </script>
+</body>
+</html>
+EOF
+
+# HTML PROFIL PREMIUM
 cat << 'EOF' > public/profile.html
 <!DOCTYPE html>
-<html lang="id" id="html-root">
+<html lang="id">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil - DIGITAL FIKY STORE</title>
@@ -465,10 +548,9 @@ cat << 'EOF' > public/profile.html
             </div>
         </div>
 
-        <div class="fixed bottom-0 w-full max-w-md bg-[#001229] rounded-t-3xl flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.5)] z-40">
+        <div class="fixed bottom-0 w-full max-w-md bg-[#001229] border-t border-gray-800 flex justify-around p-3 pb-4 text-white shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.5)] z-40">
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
-            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
-            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
             <div class="flex flex-col items-center cursor-pointer text-yellow-400"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
         </div>
     </div>
@@ -477,34 +559,28 @@ cat << 'EOF' > public/profile.html
         <div class="bg-[#0b1320] w-[90%] max-w-[340px] rounded-[1.25rem] border border-gray-800 shadow-2xl relative p-6 animate-slide-up">
             <button onclick="closeEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
             <h3 class="text-center text-white font-bold text-lg mb-6">Ubah Profil</h3>
-            
             <div class="relative w-20 h-20 mx-auto mb-8">
                 <div class="w-full h-full rounded-full border-2 border-yellow-400 flex items-center justify-center text-white text-3xl font-bold bg-[#1e293b]" id="editModalInitial">U</div>
-                <div class="absolute bottom-0 right-0 bg-yellow-400 rounded-full w-7 h-7 flex items-center justify-center text-[#0b1320] border-[3px] border-[#0b1320] cursor-pointer" onclick="Swal.fire({icon:'info', title:'Coming Soon', text:'Fitur ganti foto menyusul.'})">
+                <div class="absolute bottom-0 right-0 bg-yellow-400 rounded-full w-7 h-7 flex items-center justify-center text-[#0b1320] border-[3px] border-[#0b1320] cursor-pointer" onclick="Swal.fire({icon:'info', title:'Coming Soon', text:'Fitur ganti foto menyusul.', confirmButtonColor: '#002147'})">
                     <i class="fas fa-camera text-[10px]"></i>
                 </div>
             </div>
-
             <div class="mb-4">
                 <label class="block text-[10px] text-gray-500 mb-1">Email (Hanya Baca)</label>
                 <input type="email" id="editEmail" readonly class="w-full bg-[#1e293b]/50 border border-gray-800 rounded-lg px-3 py-3 text-gray-400 text-sm focus:outline-none cursor-not-allowed">
             </div>
-            
             <div class="mb-4">
                 <label class="block text-[10px] text-gray-500 mb-1">Nama Pengguna</label>
                 <input type="text" id="editName" class="w-full bg-[#0b1320] border border-gray-700 rounded-lg px-3 py-3 text-white text-sm focus:outline-none focus:border-yellow-400 transition-colors">
             </div>
-
             <div class="mb-4">
                 <label class="block text-[10px] text-gray-500 mb-1">Nomor Telepon</label>
                 <input type="number" id="editPhone" class="w-full bg-[#0b1320] border border-gray-700 rounded-lg px-3 py-3 text-white text-sm focus:outline-none focus:border-yellow-400 transition-colors">
             </div>
-
             <div class="mb-6 hidden slide-down" id="editOtpContainer">
                 <label class="block text-[10px] text-gray-400 mb-1 text-center">OTP dikirim ke nomor WA baru Anda</label>
                 <input type="number" id="editOtpInput" class="w-full bg-[#0b1320] border border-green-700 rounded-lg px-3 py-3 text-white text-lg tracking-[0.5em] text-center font-bold focus:outline-none focus:border-green-400 transition-colors" placeholder="XXXX">
             </div>
-
             <button id="btnSimpanProfil" onclick="saveProfile()" class="w-full py-3.5 bg-yellow-400 text-[#001229] font-bold rounded-xl mb-3 shadow-[0_2px_10px_rgba(253,224,71,0.2)] transition">Simpan Profil</button>
             <button onclick="deleteAccount()" class="w-full py-3.5 bg-[#3f161e] border border-[#5c1a24] text-red-500 font-bold rounded-xl transition hover:bg-red-900/50">Hapus Akun</button>
         </div>
@@ -526,15 +602,10 @@ cat << 'EOF' > public/profile.html
         .then(res => res.json()).then(data => { document.getElementById('profileSaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); });
 
         function logout() { 
-            Swal.fire({
-                title: 'Keluar Akun?', text: "Apakah Anda yakin ingin keluar?", icon: 'warning',
-                showCancelButton: true, confirmButtonText: 'Ya, Keluar', cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) { localStorage.removeItem('user'); window.location.href = '/'; }
-            });
+            Swal.fire({ title: 'Keluar Akun?', text: "Apakah Anda yakin ingin keluar?", icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya, Keluar', cancelButtonText: 'Batal' })
+            .then((result) => { if (result.isConfirmed) { localStorage.removeItem('user'); window.location.href = '/'; } });
         }
 
-        // LOGIKA UBAH PASSWORD
         function toggleChangePassword() {
             const box = document.getElementById('changePasswordBox');
             const icon = document.getElementById('cpwIcon');
@@ -550,8 +621,7 @@ cat << 'EOF' > public/profile.html
             } catch(e) { Swal.fire({ icon: 'error', title: 'Error', text: 'Kesalahan jaringan.' }); }
         }
         async function submitChangePassword() {
-            const otp = document.getElementById('cpOtp').value;
-            const newPassword = document.getElementById('cpNewPassword').value;
+            const otp = document.getElementById('cpOtp').value; const newPassword = document.getElementById('cpNewPassword').value;
             if(!otp || !newPassword) return Swal.fire({ icon: 'warning', title: 'Lengkapi Data', text: 'Wajib diisi.' });
             try {
                 Swal.fire({title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
@@ -561,9 +631,7 @@ cat << 'EOF' > public/profile.html
             } catch(e) { Swal.fire({ icon: 'error', title: 'Error', text: 'Kesalahan jaringan.' }); }
         }
 
-        // LOGIKA MODAL UBAH PROFIL & HAPUS AKUN
         let isRequestingOtp = false;
-
         function openEditModal() {
             document.getElementById('editModalInitial').innerText = user.name.charAt(0).toUpperCase();
             document.getElementById('editEmail').value = user.email || 'fikyshoto@gmail.com';
@@ -571,63 +639,46 @@ cat << 'EOF' > public/profile.html
             document.getElementById('editPhone').value = user.phone.replace('62', '0');
             document.getElementById('editProfileModal').classList.remove('hidden');
         }
-
         function closeEditModal() { 
             document.getElementById('editProfileModal').classList.add('hidden'); 
-            isRequestingOtp = false;
-            document.getElementById('editOtpContainer').classList.add('hidden');
-            document.getElementById('btnSimpanProfil').innerText = 'Simpan Profil';
-            document.getElementById('editOtpInput').value = '';
+            isRequestingOtp = false; document.getElementById('editOtpContainer').classList.add('hidden');
+            document.getElementById('btnSimpanProfil').innerText = 'Simpan Profil'; document.getElementById('editOtpInput').value = '';
         }
-        
         async function saveProfile() {
-            const oldPhone = user.phone;
-            const newName = document.getElementById('editName').value;
+            const oldPhone = user.phone; const newName = document.getElementById('editName').value;
             const rawPhone = document.getElementById('editPhone').value;
             const newPhone = rawPhone.startsWith('0') ? '62' + rawPhone.slice(1) : rawPhone;
             const otp = document.getElementById('editOtpInput').value;
 
             if(!newName || !rawPhone) return Swal.fire({icon:'warning', title:'Gagal', text:'Nama & No WA wajib diisi!'});
             
-            // JIKA NOMOR BERUBAH DAN BELUM MINTA OTP
             if(newPhone !== oldPhone && !isRequestingOtp) {
                 Swal.fire({title: 'Mengirim OTP...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
                 try {
                     const res = await fetch('/api/auth/request-update-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ oldPhone, newPhone }) });
-                    const data = await res.json();
                     if(res.ok) {
-                        isRequestingOtp = true;
-                        document.getElementById('editOtpContainer').classList.remove('hidden');
-                        document.getElementById('btnSimpanProfil').innerText = 'Verifikasi OTP & Simpan';
-                        document.getElementById('btnSimpanProfil').classList.replace('bg-yellow-400', 'bg-green-400');
+                        isRequestingOtp = true; document.getElementById('editOtpContainer').classList.remove('hidden');
+                        document.getElementById('btnSimpanProfil').innerText = 'Verifikasi OTP & Simpan'; document.getElementById('btnSimpanProfil').classList.replace('bg-yellow-400', 'bg-green-400');
                         Swal.fire({icon:'success', title:'OTP Terkirim!', text:'Silakan cek WA di nomor yang baru.'});
-                    } else { Swal.fire({icon:'error', title:'Gagal', text: data.error}); }
+                    } else { Swal.fire({icon:'error', title:'Gagal', text: (await res.json()).error}); }
                 } catch(e) { Swal.fire({icon:'error', title:'Oops', text:'Kesalahan jaringan.'}); }
                 return;
             }
+            if(newPhone !== oldPhone && isRequestingOtp && !otp) return Swal.fire({icon:'warning', title:'Gagal', text:'Masukkan kode OTP 4 digit!'});
 
-            // JIKA NOMOR BERUBAH TAPI OTP KOSONG
-            if(newPhone !== oldPhone && isRequestingOtp && !otp) {
-                return Swal.fire({icon:'warning', title:'Gagal', text:'Masukkan kode OTP 4 digit!'});
-            }
-
-            // PROSES SIMPAN KE DATABASE
             Swal.fire({title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
             try {
                 const res = await fetch('/api/auth/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ oldPhone, newPhone, newName, otp }) });
-                const data = await res.json();
                 if(res.ok) {
-                    user.name = newName; user.phone = data.phone; localStorage.setItem('user', JSON.stringify(user));
+                    user.name = newName; user.phone = (await res.json()).phone || newPhone; localStorage.setItem('user', JSON.stringify(user));
                     Swal.fire({icon:'success', title:'Berhasil', text:'Profil diperbarui!'}).then(() => { location.reload(); });
-                } else { Swal.fire({icon:'error', title:'Gagal', text: data.error}); }
+                } else { Swal.fire({icon:'error', title:'Gagal', text: (await res.json()).error}); }
             } catch(e) { Swal.fire({icon:'error', title:'Oops', text:'Kesalahan jaringan.'}); }
         }
 
         function deleteAccount() {
-            Swal.fire({
-                title: 'Hapus Akun Permanen?', text: "Akun dan sisa saldo Anda akan hangus. Tidak bisa dikembalikan!", icon: 'error',
-                showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Ya, Hapus!', cancelButtonText: 'Batal'
-            }).then(async (result) => {
+            Swal.fire({ title: 'Hapus Akun Permanen?', text: "Akun dan sisa saldo Anda akan hangus!", icon: 'error', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Ya, Hapus!' })
+            .then(async (result) => {
                 if (result.isConfirmed) {
                     Swal.fire({title: 'Menghapus...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
                     try {
@@ -643,7 +694,7 @@ cat << 'EOF' > public/profile.html
 EOF
 
 # ==========================================
-# FILE NODE.JS (UPDATE API UNTUK OTP GANTI NOMOR)
+# FILE NODE.JS (LOGIK BOT + API)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -671,9 +722,7 @@ configAwal.botName = configAwal.botName || "DIGITAL FIKY STORE";
 configAwal.botNumber = configAwal.botNumber || "";
 configAwal.banners = configAwal.banners || [
     "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80",
-    "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=600&q=80",
-    "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=600&q=80",
-    "https://images.unsplash.com/photo-1616077168712-fc6c788db4fa?auto=format&fit=crop&w=600&q=80"
+    "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=600&q=80"
 ];
 saveJSON(configFile, configAwal);
 
@@ -681,11 +730,9 @@ if (!fs.existsSync(dbFile)) saveJSON(dbFile, {});
 if (!fs.existsSync(webUsersFile)) saveJSON(webUsersFile, {});
 
 app.get('/api/banners', (req, res) => res.json({ banners: loadJSON(configFile).banners }));
-
-app.post('/api/user/balance', (req, res) => {
-    let db = loadJSON(dbFile);
-    res.json({ saldo: db[req.body.phone]?.saldo || 0 });
-});
+app.post('/api/user/balance', (req, res) => res.json({ saldo: loadJSON(dbFile)[req.body.phone]?.saldo || 0 }));
+// Endpoint kosong untuk transaksi
+app.get('/api/transactions', (req, res) => res.json({ transactions: [] }));
 
 app.post('/api/auth/register', async (req, res) => {
     const { name, phone, email, password } = req.body;
@@ -695,7 +742,7 @@ app.post('/api/auth/register', async (req, res) => {
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
     webUsers[fPhone] = { name, email, password, isVerified: false, otp };
     saveJSON(webUsersFile, webUsers);
-    try { await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Halo *${name}*!\n\nKode OTP Pendaftaran Akun DIGITAL FIKY STORE Anda adalah: *${otp}*\n\n_Jangan berikan kode ini kepada siapapun._` }); res.json({ message: 'OTP Terkirim', phone: fPhone }); } catch(e) { res.status(500).json({ error: 'Gagal mengirim WA.' }); }
+    try { await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Halo *${name}*!\n\nKode OTP Pendaftaran Akun DIGITAL FIKY STORE Anda: *${otp}*` }); res.json({ message: 'OTP Terkirim', phone: fPhone }); } catch(e) { res.status(500).json({ error: 'Gagal mengirim WA.' }); }
 });
 
 app.post('/api/auth/verify', (req, res) => {
@@ -705,7 +752,7 @@ app.post('/api/auth/verify', (req, res) => {
         webUsers[phone].isVerified = true; webUsers[phone].otp = null; saveJSON(webUsersFile, webUsers);
         let db = loadJSON(dbFile); if (!db[phone]) { db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net' }; saveJSON(dbFile, db); }
         res.json({ message: 'Sukses!' });
-    } else res.status(400).json({ error: 'OTP Salah atau Kedaluwarsa.' });
+    } else res.status(400).json({ error: 'OTP Salah.' });
 });
 
 app.post('/api/auth/login', (req, res) => {
@@ -736,64 +783,39 @@ app.post('/api/auth/reset', (req, res) => {
     else res.status(400).json({ error: 'OTP Salah.' });
 });
 
-// MINTA OTP SAAT GANTI NOMOR HP
 app.post('/api/auth/request-update-otp', async (req, res) => {
     const { oldPhone, newPhone } = req.body;
     let webUsers = loadJSON(webUsersFile);
     let fOld = oldPhone.startsWith('0') ? '62' + oldPhone.slice(1) : oldPhone;
     let fNew = newPhone.startsWith('0') ? '62' + newPhone.slice(1) : newPhone;
-
-    if (webUsers[fNew] && fNew !== fOld) return res.status(400).json({ error: 'Nomor baru sudah terdaftar pengguna lain.' });
-    
+    if (webUsers[fNew] && fNew !== fOld) return res.status(400).json({ error: 'Nomor baru sudah terdaftar.' });
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
     if(webUsers[fOld]) {
-        webUsers[fOld].updateOtp = otp; 
-        saveJSON(webUsersFile, webUsers);
-        try {
-            await global.waSocket?.sendMessage(fNew + '@c.us', { text: `Kode OTP Perubahan Nomor HP DIGITAL FIKY STORE Anda: *${otp}*` });
-            res.json({ message: 'OTP Terkirim' });
-        } catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); }
-    } else {
-        res.status(400).json({ error: 'Akun lama tidak ditemukan.' });
-    }
+        webUsers[fOld].updateOtp = otp; saveJSON(webUsersFile, webUsers);
+        try { await global.waSocket?.sendMessage(fNew + '@c.us', { text: `Kode OTP Perubahan Nomor HP: *${otp}*` }); res.json({ message: 'OTP Terkirim' }); } catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); }
+    } else res.status(400).json({ error: 'Akun tidak ditemukan.' });
 });
 
-// SIMPAN UPDATE PROFIL
 app.post('/api/auth/update', (req, res) => {
     const { oldPhone, newPhone, newName, otp } = req.body;
-    let webUsers = loadJSON(webUsersFile);
-    let db = loadJSON(dbFile);
-    
+    let webUsers = loadJSON(webUsersFile); let db = loadJSON(dbFile);
     let fOld = oldPhone.startsWith('0') ? '62' + oldPhone.slice(1) : oldPhone;
     let fNew = newPhone.startsWith('0') ? '62' + newPhone.slice(1) : newPhone;
-
     if (!webUsers[fOld]) return res.status(400).json({ error: 'Akun tidak ditemukan.' });
-    
     if (fOld !== fNew) {
-        if (webUsers[fNew]) return res.status(400).json({ error: 'Nomor baru sudah dipakai.' });
+        if (webUsers[fNew]) return res.status(400).json({ error: 'Nomor sudah dipakai.' });
         if (webUsers[fOld].updateOtp !== otp) return res.status(400).json({ error: 'Kode OTP Salah.' });
-
-        webUsers[fNew] = { ...webUsers[fOld], name: newName }; 
-        delete webUsers[fNew].updateOtp; 
-        delete webUsers[fOld];
-
+        webUsers[fNew] = { ...webUsers[fOld], name: newName }; delete webUsers[fNew].updateOtp; delete webUsers[fOld];
         if (db[fOld]) { db[fNew] = { ...db[fOld], jid: fNew + '@s.whatsapp.net' }; delete db[fOld]; }
-    } else { 
-        webUsers[fOld].name = newName; 
-    }
-    
+    } else { webUsers[fOld].name = newName; }
     saveJSON(webUsersFile, webUsers); saveJSON(dbFile, db);
     res.json({ message: 'Profil diperbarui.', phone: fNew });
 });
 
-// HAPUS AKUN
 app.post('/api/auth/delete', (req, res) => {
-    const { phone } = req.body;
-    let webUsers = loadJSON(webUsersFile); let db = loadJSON(dbFile);
-    if(webUsers[phone]) delete webUsers[phone];
-    if(db[phone]) delete db[phone];
-    saveJSON(webUsersFile, webUsers); saveJSON(dbFile, db);
-    res.json({ message: 'Akun dihapus.' });
+    const { phone } = req.body; let webUsers = loadJSON(webUsersFile); let db = loadJSON(dbFile);
+    if(webUsers[phone]) delete webUsers[phone]; if(db[phone]) delete db[phone];
+    saveJSON(webUsersFile, webUsers); saveJSON(dbFile, db); res.json({ message: 'Akun dihapus.' });
 });
 
 async function startBot() {
@@ -806,7 +828,6 @@ async function startBot() {
     }
     sock.ev.on('creds.update', saveCreds); global.waSocket = sock; 
 }
-
 if (require.main === module) { app.listen(3000, () => { console.log('🌐 Web Server berjalan.'); }); startBot(); }
 EOF
 
@@ -822,7 +843,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V36) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V37) 🤖     "
     echo "==============================================="
     echo "1. Setup No. Bot & Login Pairing"
     echo "2. Jalankan Bot (Latar Belakang/PM2)"
