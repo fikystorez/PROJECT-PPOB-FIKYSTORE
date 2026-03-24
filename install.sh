@@ -51,7 +51,7 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Light/Dark Theme & Info Logo)..."
+echo "[3/5] Membangun Antarmuka Website (Top Up QRIS/WA)..."
 
 cat << 'EOF' > public/style.css
 body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
@@ -249,7 +249,7 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
-# HTML DASHBOARD (LIGHT & DARK MODE TOGGLE AKTIF)
+# HTML DASHBOARD (DENGAN MULTI OPTION TOP UP)
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -273,33 +273,21 @@ cat << 'EOF' > public/dashboard.html
         <div id="sidebar" class="fixed inset-0 z-[100] transform -translate-x-full transition-transform duration-300 flex">
             <div class="w-full bg-black/40 dark:bg-black/60 backdrop-blur-sm" onclick="toggleSidebar()"></div>
             <div class="absolute top-0 left-0 w-[80%] max-w-[300px] h-full bg-white dark:bg-[#001730] shadow-2xl flex flex-col transition-colors border-r border-gray-200 dark:border-[#0a2342]">
-                
                 <div class="p-8 pb-4 flex flex-col items-center relative bg-gray-50 dark:bg-[#050b14] border-b border-gray-200 dark:border-gray-800 transition-colors">
                     <button class="absolute top-5 right-5 text-gray-400 hover:text-red-500 transition" onclick="toggleSidebar()"><i class="fas fa-times text-xl"></i></button>
                     <div class="w-[4.5rem] h-[4.5rem] bg-white rounded-full flex justify-center items-center text-[#001730] font-extrabold text-3xl mb-3 shadow-md border-2 border-gray-200 dark:border-none" id="sidebarInitial">U</div>
                     <h3 class="font-bold text-lg text-gray-800 dark:text-white tracking-wide" id="sidebarName">User Name</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5" id="sidebarPhone">08...</p>
                 </div>
-
                 <div class="flex-1 overflow-y-auto py-2">
                     <ul class="text-[14px]">
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="location.href='/profile.html'">
-                            <i class="far fa-user w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Profil Akun</span>
-                        </li>
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="location.href='/riwayat.html'">
-                            <i class="far fa-clock w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Transaksi Saya</span>
-                        </li>
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="location.href='/info.html'">
-                            <i class="far fa-bell w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Pusat Informasi</span>
-                        </li>
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="window.open('https://wa.me/6282231154407', '_blank')">
-                            <i class="fas fa-headset w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Hubungi Admin</span>
-                        </li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="location.href='/profile.html'"><i class="far fa-user w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Profil Akun</span></li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="location.href='/riwayat.html'"><i class="far fa-clock w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Transaksi Saya</span></li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="location.href='/info.html'"><i class="far fa-bell w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Pusat Informasi</span></li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="window.open('https://wa.me/6282231154407', '_blank')"><i class="fas fa-headset w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Hubungi Admin</span></li>
                         <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="toggleDarkMode()">
                             <div class="flex items-center gap-4"><i class="far fa-moon w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Mode Gelap</span></div>
-                            <div class="w-11 h-[22px] bg-gray-300 dark:bg-blue-500 rounded-full relative transition-colors duration-300" id="darkModeToggleBg">
-                                <div class="w-[18px] h-[18px] bg-white rounded-full absolute top-[2px] left-[2px] shadow-md transform transition-transform duration-300" id="darkModeToggleDot"></div>
-                            </div>
+                            <div class="w-11 h-[22px] bg-gray-300 dark:bg-blue-500 rounded-full relative transition-colors duration-300" id="darkModeToggleBg"><div class="w-[18px] h-[18px] bg-white rounded-full absolute top-[2px] left-[2px] shadow-md transform transition-transform duration-300" id="darkModeToggleDot"></div></div>
                         </li>
                     </ul>
                 </div>
@@ -315,7 +303,7 @@ cat << 'EOF' > public/dashboard.html
                 <p class="text-xs text-gray-300 mb-1">Sisa Saldo Anda</p>
                 <h2 class="text-4xl font-extrabold mb-6 tracking-tight drop-shadow-md" id="displaySaldo">Rp 0</h2>
                 <div class="flex gap-4">
-                    <button class="flex-1 border border-gray-500/50 bg-[#001229]/50 text-white rounded-full py-2.5 text-[11px] font-bold hover:bg-yellow-400 hover:text-[#001229] transition" onclick="Swal.fire({icon: 'info', title: 'Top Up', text: 'Fitur deposit saldo akan segera hadir.', confirmButtonColor: '#002147'})">ISI SALDO</button>
+                    <button class="flex-1 border border-gray-500/50 bg-[#001229]/50 text-white rounded-full py-2.5 text-[11px] font-bold hover:bg-yellow-400 hover:text-[#001229] transition" onclick="showTopUpMenu()">ISI SALDO</button>
                     <button class="flex-1 border border-gray-500/50 bg-[#001229]/50 text-white rounded-full py-2.5 text-[11px] font-bold hover:bg-yellow-400 hover:text-[#001229] transition" onclick="window.open('https://wa.me/6282231154407', '_blank')">BANTUAN</button>
                 </div>
             </div>
@@ -329,52 +317,22 @@ cat << 'EOF' > public/dashboard.html
         <div class="mx-4 mt-8 mb-4">
             <h3 class="font-extrabold text-gray-800 dark:text-white mb-4 text-[16px] tracking-wide ml-1 transition-colors">Layanan Produk</h3>
             <div class="grid grid-cols-4 gap-y-6 gap-x-3">
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu', text: 'Sistem pembelian sedang dibangun.', confirmButtonColor: '#002147'})">
-                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-mobile-alt"></i></div>
-                    <span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">PULSA</span>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu', text: 'Sistem pembelian sedang dibangun.', confirmButtonColor: '#002147'})">
-                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-globe"></i></div>
-                    <span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">DATA</span>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
-                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-gamepad"></i></div>
-                    <span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">GAME</span>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
-                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-ticket-alt"></i></div>
-                    <span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">VOUCHER</span>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
-                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-wallet"></i></div>
-                    <span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">E-WALLET</span>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
-                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-bolt"></i></div>
-                    <span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">PLN</span>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
-                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-calendar-check"></i></div>
-                    <span class="text-[10px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase text-center leading-tight transition-colors">MASA<br>AKTIF</span>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
-                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-sim-card"></i></div>
-                    <span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">PERDANA</span>
-                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu', text: 'Sistem pembelian sedang dibangun.', confirmButtonColor: '#002147'})"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-mobile-alt"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">PULSA</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu', text: 'Sistem pembelian sedang dibangun.', confirmButtonColor: '#002147'})"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-globe"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">DATA</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-gamepad"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">GAME</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-ticket-alt"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">VOUCHER</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-wallet"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">E-WALLET</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-bolt"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">PLN</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-calendar-check"></i></div><span class="text-[10px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase text-center leading-tight transition-colors">MASA<br>AKTIF</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-sim-card"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">PERDANA</span></div>
             </div>
         </div>
 
         <div class="mx-4 mt-8 mb-8">
             <h3 class="font-extrabold text-gray-800 dark:text-white mb-4 text-[16px] tracking-wide ml-1 transition-colors">Produk Digital</h3>
             <div class="grid grid-cols-4 gap-y-6 gap-x-3">
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
-                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-file-invoice-dollar"></i></div>
-                    <span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">TAGIHAN</span>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform">
-                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-id-card"></i></div>
-                    <span class="text-[10px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase text-center leading-tight transition-colors">SALDO<br>E-TOLL</span>
-                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-file-invoice-dollar"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">TAGIHAN</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-id-card"></i></div><span class="text-[10px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase text-center leading-tight transition-colors">SALDO<br>E-TOLL</span></div>
             </div>
         </div>
 
@@ -402,21 +360,13 @@ cat << 'EOF' > public/dashboard.html
             const dot = document.getElementById('darkModeToggleDot');
             const bg = document.getElementById('darkModeToggleBg');
             if (isDark) { 
-                root.classList.add('dark'); 
-                if(dot) dot.classList.add('translate-x-5'); 
-                if(bg) bg.classList.replace('bg-gray-300', 'bg-blue-500'); 
+                root.classList.add('dark'); if(dot) dot.classList.add('translate-x-5'); if(bg) bg.classList.replace('bg-gray-300', 'bg-blue-500'); 
             } else { 
-                root.classList.remove('dark'); 
-                if(dot) dot.classList.remove('translate-x-5'); 
-                if(bg) bg.classList.replace('bg-blue-500', 'bg-gray-300'); 
+                root.classList.remove('dark'); if(dot) dot.classList.remove('translate-x-5'); if(bg) bg.classList.replace('bg-blue-500', 'bg-gray-300'); 
             }
         }
-        function toggleDarkMode() { 
-            let isDark = localStorage.getItem('darkMode') === 'true';
-            localStorage.setItem('darkMode', !isDark); 
-            applyDarkMode(); 
-        }
-        if(localStorage.getItem('darkMode') === null) localStorage.setItem('darkMode', 'true'); // Default Dark
+        function toggleDarkMode() { localStorage.setItem('darkMode', !(localStorage.getItem('darkMode') === 'true')); applyDarkMode(); }
+        if(localStorage.getItem('darkMode') === null) localStorage.setItem('darkMode', 'true'); 
         applyDarkMode();
 
         function logout() { 
@@ -424,10 +374,13 @@ cat << 'EOF' > public/dashboard.html
             .then((result) => { if (result.isConfirmed) { localStorage.removeItem('user'); window.location.href = '/'; } });
         }
 
+        let qrisImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg';
+
         fetch('/api/user/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) })
         .then(res => res.json()).then(data => { document.getElementById('displaySaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); });
 
-        fetch('/api/banners').then(res => res.json()).then(data => {
+        fetch('/api/config').then(res => res.json()).then(data => {
+            if(data.qrisUrl) qrisImageUrl = data.qrisUrl;
             if(data.banners && data.banners.length > 0 && data.banners[0] !== "") {
                 const slider = document.getElementById('promoSlider');
                 const dotsContainer = document.getElementById('promoDots');
@@ -446,12 +399,80 @@ cat << 'EOF' > public/dashboard.html
             });
             setInterval(() => { currentSlide = (currentSlide + 1) % (dots.length||4); sliderElement.scrollTo({ left: currentSlide * sliderElement.clientWidth, behavior: 'smooth' }); }, 3500);
         });
+
+        // LOGIKA MENU TOP UP
+        function showTopUpMenu() {
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            const bgPopup = isDark ? '#0b1320' : '#ffffff';
+            const titleColor = isDark ? 'text-white' : 'text-gray-800';
+
+            Swal.fire({
+                title: `<span class="font-bold ${titleColor}">Pilih Metode Top Up</span>`,
+                html: `
+                    <div class="flex flex-col gap-3 mt-4 text-left">
+                        <button onclick="Swal.close(); setTimeout(showQris, 300);" class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-[#111c2e] border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-[#1a2639] transition-colors w-full shadow-sm">
+                            <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400 text-xl shrink-0"><i class="fas fa-qrcode"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-800 dark:text-white text-[15px] m-0">QRIS Otomatis</h4>
+                                <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5 mb-0">Minimal Rp 10.000 (Otomatis masuk)</p>
+                            </div>
+                        </button>
+                        <button onclick="window.open('https://wa.me/6282231154407?text=Halo%20Admin,%20saya%20mau%20Top%20Up%20Saldo%20akun%20saya.', '_blank')" class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-[#111c2e] border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-[#1a2639] transition-colors w-full shadow-sm">
+                            <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center text-green-600 dark:text-green-400 text-xl shrink-0"><i class="fab fa-whatsapp"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-800 dark:text-white text-[15px] m-0">Manual via WhatsApp</h4>
+                                <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5 mb-0">Hubungi admin untuk transfer</p>
+                            </div>
+                        </button>
+                    </div>
+                `,
+                showConfirmButton: false,
+                showCloseButton: true,
+                background: bgPopup
+            });
+        }
+
+        function showQris() {
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            const bgPopup = isDark ? '#0b1320' : '#ffffff';
+            const textColor = isDark ? 'text-gray-200' : 'text-gray-800';
+
+            Swal.fire({
+                title: `<span class="font-bold ${isDark ? 'text-white' : 'text-gray-800'}">QRIS Pembayaran</span>`,
+                html: `
+                    <div class="flex flex-col items-center mt-2">
+                        <div class="bg-white p-3 rounded-xl shadow-md mb-4 inline-block border border-gray-200">
+                            <img src="${qrisImageUrl}" alt="QRIS" class="w-48 h-48 object-cover rounded-lg">
+                        </div>
+                        <p class="text-[16px] ${textColor} font-extrabold mb-1">Minimal Top Up: Rp 10.000</p>
+                        <p class="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed px-2 mb-4">Scan kode QR di atas menggunakan aplikasi E-Wallet atau M-Banking Anda (Dana, OVO, GoPay, BCA, dll).</p>
+                        
+                        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 w-full text-left">
+                            <p class="text-[10px] text-blue-600 dark:text-blue-400 m-0 leading-tight"><i class="fas fa-info-circle mr-1"></i><b>Penting:</b> Pastikan nominal transfer di atas Rp 10.000 agar saldo langsung masuk secara otomatis.</p>
+                        </div>
+                    </div>
+                `,
+                confirmButtonText: 'Saya Sudah Transfer',
+                showCancelButton: true,
+                cancelButtonText: 'Kembali',
+                confirmButtonColor: '#facc15',
+                cancelButtonColor: '#ef4444',
+                background: bgPopup,
+                customClass: { confirmButton: 'text-[#001229] font-bold' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({icon: 'success', title: 'Sedang Diproses', text: 'Sistem mengecek pembayaran Anda...', timer: 2500, showConfirmButton: false, background: bgPopup, color: isDark ? '#fff' : '#000'});
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    setTimeout(showTopUpMenu, 300);
+                }
+            });
+        }
     </script>
 </body>
 </html>
 EOF
 
-# HTML PUSAT INFORMASI DENGAN LOGO MEGAPHONE 📢 WATERMARK
+# HTML PUSAT INFORMASI
 cat << 'EOF' > public/info.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -465,19 +486,13 @@ cat << 'EOF' > public/info.html
 </head>
 <body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
     <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden transition-colors">
-        
         <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 transition-colors">
             <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i>
             <h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white">Pusat Informasi</h1>
         </div>
-
         <div class="p-4" id="infoList">
-            <div class="mt-20 flex flex-col items-center justify-center text-gray-400">
-                <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
-                <p>Memuat informasi...</p>
-            </div>
+            <div class="mt-20 flex flex-col items-center justify-center text-gray-400"><i class="fas fa-spinner fa-spin text-4xl mb-4"></i><p>Memuat informasi...</p></div>
         </div>
-
         <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.5)] z-40 transition-colors">
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
@@ -513,7 +528,7 @@ cat << 'EOF' > public/info.html
 </html>
 EOF
 
-# HTML RIWAYAT TRANSAKSI DENGAN TEMA TERANG/GELAP
+# HTML RIWAYAT TRANSAKSI
 cat << 'EOF' > public/riwayat.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -526,53 +541,33 @@ cat << 'EOF' > public/riwayat.html
 </head>
 <body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
     <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden transition-colors">
-        
         <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 transition-colors">
             <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i>
             <h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white">Riwayat Transaksi</h1>
         </div>
-
         <div class="mx-4 bg-white dark:bg-[#111c2e] p-4 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm transition-colors">
             <div class="relative mb-4">
                 <i class="fas fa-search absolute left-3.5 top-3 text-gray-400 text-sm"></i>
                 <input type="text" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition" placeholder="Cari transaksi...">
             </div>
-            
             <div class="flex justify-between mb-4 gap-2">
                 <div class="flex-1 bg-[#002147] dark:bg-[#0b1320] text-white dark:text-yellow-400 border border-transparent dark:border-gray-700 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer">Semua</div>
                 <div class="flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-transparent text-center py-2 rounded-full text-[11px] font-bold cursor-pointer hover:bg-gray-100 dark:hover:text-white transition">Sukses</div>
                 <div class="flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-transparent text-center py-2 rounded-full text-[11px] font-bold cursor-pointer hover:bg-gray-100 dark:hover:text-white transition">Proses</div>
                 <div class="flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-transparent text-center py-2 rounded-full text-[11px] font-bold cursor-pointer hover:bg-gray-100 dark:hover:text-white transition">Gagal</div>
             </div>
-
             <div class="flex items-end gap-2">
-                <div class="flex-1">
-                    <label class="text-[10px] text-gray-500 dark:text-gray-400 font-bold block mb-1.5 ml-1">Dari</label>
-                    <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 flex justify-between items-center text-gray-500 dark:text-gray-400 cursor-pointer">
-                        <span class="text-xs">&nbsp;</span><i class="fas fa-chevron-down text-[10px]"></i>
-                    </div>
-                </div>
-                <div class="flex-1">
-                    <label class="text-[10px] text-gray-500 dark:text-gray-400 font-bold block mb-1.5 ml-1">Sampai</label>
-                    <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 flex justify-between items-center text-gray-500 dark:text-gray-400 cursor-pointer">
-                        <span class="text-xs">&nbsp;</span><i class="fas fa-chevron-down text-[10px]"></i>
-                    </div>
-                </div>
-                <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 w-10 h-10 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 cursor-pointer hover:bg-gray-100 dark:hover:text-white transition">
-                    <i class="fas fa-sync-alt text-sm"></i>
-                </div>
+                <div class="flex-1"><label class="text-[10px] text-gray-500 dark:text-gray-400 font-bold block mb-1.5 ml-1">Dari</label><div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 flex justify-between items-center text-gray-500 dark:text-gray-400 cursor-pointer"><span class="text-xs">&nbsp;</span><i class="fas fa-chevron-down text-[10px]"></i></div></div>
+                <div class="flex-1"><label class="text-[10px] text-gray-500 dark:text-gray-400 font-bold block mb-1.5 ml-1">Sampai</label><div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 flex justify-between items-center text-gray-500 dark:text-gray-400 cursor-pointer"><span class="text-xs">&nbsp;</span><i class="fas fa-chevron-down text-[10px]"></i></div></div>
+                <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 w-10 h-10 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 cursor-pointer hover:bg-gray-100 dark:hover:text-white transition"><i class="fas fa-sync-alt text-sm"></i></div>
             </div>
         </div>
-
         <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
-            <div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-gray-800 transition-colors">
-                <i class="fas fa-receipt text-gray-400 text-4xl"></i>
-            </div>
+            <div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-receipt text-gray-400 text-4xl"></i></div>
             <h2 class="text-gray-800 dark:text-white font-bold text-lg tracking-wide mb-2 transition-colors">Belum Ada Transaksi</h2>
             <p class="text-gray-500 dark:text-gray-400 text-[13px] leading-relaxed mb-8 px-2 transition-colors">Ayo mulai transaksi pertamamu sekarang dan nikmati berbagai promo menarik!</p>
             <button class="bg-[#002147] text-white dark:bg-[#0b1320] dark:text-yellow-400 border border-transparent dark:border-gray-700 font-bold py-3 px-8 rounded-full shadow-lg hover:opacity-90 transition" onclick="location.href='/dashboard.html'">Transaksi Sekarang</button>
         </div>
-
         <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.5)] z-40 transition-colors">
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
             <div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
@@ -588,7 +583,7 @@ cat << 'EOF' > public/riwayat.html
 </html>
 EOF
 
-# HTML PROFIL DENGAN TEMA TERANG/GELAP
+# HTML PROFIL
 cat << 'EOF' > public/profile.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -815,7 +810,7 @@ cat << 'EOF' > public/profile.html
 EOF
 
 # ==========================================
-# FILE NODE.JS (LOGIK BOT + API INFO/BANNERS)
+# FILE NODE.JS (LOGIK BOT + API INFO/BANNERS/QRIS)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -842,6 +837,7 @@ const saveJSON = (file, data) => fs.writeFileSync(file, JSON.stringify(data, nul
 let configAwal = loadJSON(configFile);
 configAwal.botName = configAwal.botName || "DIGITAL FIKY STORE";
 configAwal.botNumber = configAwal.botNumber || "";
+configAwal.qrisUrl = configAwal.qrisUrl || "https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg";
 configAwal.banners = configAwal.banners || [
     "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80",
     "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=600&q=80"
@@ -852,7 +848,11 @@ if (!fs.existsSync(dbFile)) saveJSON(dbFile, {});
 if (!fs.existsSync(webUsersFile)) saveJSON(webUsersFile, {});
 if (!fs.existsSync(infoFile)) saveJSON(infoFile, []);
 
-app.get('/api/banners', (req, res) => res.json({ banners: loadJSON(configFile).banners }));
+app.get('/api/config', (req, res) => {
+    let cfg = loadJSON(configFile);
+    res.json({ banners: cfg.banners, qrisUrl: cfg.qrisUrl });
+});
+
 app.get('/api/info', (req, res) => res.json({ info: loadJSON(infoFile) }));
 app.post('/api/user/balance', (req, res) => res.json({ saldo: loadJSON(dbFile)[req.body.phone]?.saldo || 0 }));
 
@@ -954,7 +954,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V39) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V40) 🤖     "
     echo "==============================================="
     echo "1. Setup No. Bot & Login Pairing"
     echo "2. Jalankan Bot (Latar Belakang/PM2)"
@@ -963,10 +963,11 @@ while true; do clear
     echo "5. Reset Sesi WhatsApp"
     echo "6. 👥 Tambah Saldo Member"
     echo "7. 🖼️ Ganti Foto Banner Promo"
-    echo "8. 📢 Manajemen Pusat Informasi"
-    echo "9. Update Sistem (Tarik Kode Terbaru)"
+    echo "8. 📲 Ganti Foto QRIS Top Up"
+    echo "9. 📢 Manajemen Pusat Informasi"
+    echo "10. Update Sistem (Tarik Kode Terbaru)"
     echo "0. Keluar"
-    read -p "Pilih menu [0-9]: " choice
+    read -p "Pilih menu [0-10]: " choice
 
     case $choice in
         1) cd "$HOME/$DIR_NAME" && node index.js ;;
@@ -976,7 +977,8 @@ while true; do clear
         5) pm2 stop $BOT_NAME 2>/dev/null; rm -rf "$HOME/$DIR_NAME/sesi_bot"; echo "Sesi dihapus!" ;;
         6) read -p "ID Member (No WA): " nomor && read -p "Jumlah Tambah Saldo: " jumlah && node -e "const fs=require('fs');let db=fs.existsSync('$HOME/$DIR_NAME/database.json')?JSON.parse(fs.readFileSync('$HOME/$DIR_NAME/database.json')):{};if(!db['$nomor']) db['$nomor']={saldo:0};db['$nomor'].saldo+=parseInt('$jumlah');fs.writeFileSync('$HOME/$DIR_NAME/database.json',JSON.stringify(db,null,2));console.log('Saldo Ditambah!');" ; read -p "Tekan Enter..." ;;
         7) read -p "Link Slide 1: " b1 && read -p "Link Slide 2: " b2 && read -p "Link Slide 3: " b3 && read -p "Link Slide 4: " b4 && node -e "const fs=require('fs');let file='$HOME/$DIR_NAME/config.json';let cfg=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};if(!cfg.banners)cfg.banners=['','','',''];if('$b1'.trim())cfg.banners[0]='$b1'.trim();if('$b2'.trim())cfg.banners[1]='$b2'.trim();if('$b3'.trim())cfg.banners[2]='$b3'.trim();if('$b4'.trim())cfg.banners[3]='$b4'.trim();fs.writeFileSync(file,JSON.stringify(cfg,null,2));console.log('Banner diperbarui!');"; read -p "Tekan Enter..." ;;
-        8)
+        8) read -p "Masukkan Link URL Gambar QRIS: " qrisurl && node -e "const fs=require('fs');let file='$HOME/$DIR_NAME/config.json';let cfg=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};if('$qrisurl'.trim())cfg.qrisUrl='$qrisurl'.trim();fs.writeFileSync(file,JSON.stringify(cfg,null,2));console.log('QRIS diperbarui!');"; read -p "Tekan Enter..." ;;
+        9)
             while true; do
                 clear
                 echo "==============================================="
@@ -991,36 +993,18 @@ while true; do clear
                     1)
                         read -p "Judul Info : " judul
                         read -p "Isi Info   : " isi
-                        node -e "
-                            const fs=require('fs'); let f='$HOME/$DIR_NAME/info.json'; 
-                            let d=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[]; 
-                            d.push({judul:'$judul', isi:'$isi', date:new Date().toLocaleDateString('id-ID')}); 
-                            fs.writeFileSync(f,JSON.stringify(d,null,2));
-                        "
-                        echo "✅ Info berhasil ditambahkan!"
-                        read -p "Tekan Enter..." ;;
+                        node -e "const fs=require('fs'); let f='$HOME/$DIR_NAME/info.json'; let d=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[]; d.push({judul:'$judul', isi:'$isi', date:new Date().toLocaleDateString('id-ID')}); fs.writeFileSync(f,JSON.stringify(d,null,2));"
+                        echo "✅ Info berhasil ditambahkan!" ; read -p "Tekan Enter..." ;;
                     2)
-                        node -e "
-                            const fs=require('fs'); let f='$HOME/$DIR_NAME/info.json'; 
-                            let d=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[]; 
-                            if(d.length===0) console.log('\nTidak ada info tersimpan.');
-                            else { console.log('\nDAFTAR INFO:'); d.forEach((x,i)=>console.log('['+i+'] '+x.judul)); }
-                        "
+                        node -e "const fs=require('fs'); let f='$HOME/$DIR_NAME/info.json'; let d=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[]; if(d.length===0) console.log('\nTidak ada info tersimpan.'); else { console.log('\nDAFTAR INFO:'); d.forEach((x,i)=>console.log('['+i+'] '+x.judul)); }"
                         read -p "Masukkan Nomor [0, 1, 2...] yang ingin dihapus: " hapusid
-                        if [ ! -z "$hapusid" ]; then
-                            node -e "
-                                const fs=require('fs'); let f='$HOME/$DIR_NAME/info.json'; 
-                                let d=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[]; 
-                                if(d['$hapusid']){ d.splice('$hapusid',1); fs.writeFileSync(f,JSON.stringify(d,null,2)); console.log('✅ Berhasil dihapus!'); }
-                                else { console.log('❌ Nomor tidak valid.'); }
-                            "
-                        fi
+                        if [ ! -z "$hapusid" ]; then node -e "const fs=require('fs'); let f='$HOME/$DIR_NAME/info.json'; let d=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[]; if(d['$hapusid']){ d.splice('$hapusid',1); fs.writeFileSync(f,JSON.stringify(d,null,2)); console.log('✅ Berhasil dihapus!'); } else { console.log('❌ Nomor tidak valid.'); }" ; fi
                         read -p "Tekan Enter..." ;;
                     0) break ;;
                 esac
             done
             ;;
-        9) cd "$HOME" && wget -qO- https://raw.githubusercontent.com/fikystorez/PROJECT-PPOB-FIKYSTORE/main/install.sh | tr -d '\r' > install.sh && chmod +x install.sh && ./install.sh && exit 0 ;;
+        10) cd "$HOME" && wget -qO- https://raw.githubusercontent.com/fikystorez/PROJECT-PPOB-FIKYSTORE/main/install.sh | tr -d '\r' > install.sh && chmod +x install.sh && ./install.sh && exit 0 ;;
         0) exit 0 ;;
     esac
 done
