@@ -536,6 +536,7 @@ cat << 'EOF' > public/dashboard.html
                 closeTopUp(); 
                 const formatted = 'Rp ' + finalNominal.toLocaleString('id-ID');
 
+                // Rekam transaksi duluan di background
                 await fetch('/api/topup/request', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ phone: user.phone, method: 'QRIS Otomatis', nominal: finalNominal }) });
                 
                 setTimeout(() => {
@@ -590,6 +591,7 @@ cat << 'EOF' > public/dashboard.html
 </html>
 EOF
 
+# INFO, PROFIL, RIWAYAT, OPERATOR, GAME MINIFIED TETAP SAMA SPT V50...
 cat << 'EOF' > public/info.html
 <!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Pusat Informasi</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><link rel="stylesheet" href="style.css"><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden transition-colors"><div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i><h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white">Pusat Informasi</h1></div><div class="p-4" id="infoList"><div class="mt-20 flex flex-col items-center justify-center text-gray-400"><i class="fas fa-spinner fa-spin text-4xl mb-4"></i><p>Memuat informasi...</p></div></div><div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40 transition-colors"><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div><div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div></div></div><script>if (!localStorage.getItem('user')) window.location.href = '/'; if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark'); fetch('/api/info').then(r => r.json()).then(data => { const list = document.getElementById('infoList'); if(data.info.length === 0) list.innerHTML = `<div class="mt-20 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500"><i class="fas fa-bell-slash text-5xl mb-4 opacity-50"></i><p class="text-sm">Belum ada info terbaru.</p></div>`; else list.innerHTML = data.info.reverse().map(i => `<div class="relative bg-white dark:bg-[#111c2e] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 mb-4 shadow-sm overflow-hidden transition-colors"><div class="absolute -right-2 top-4 text-7xl opacity-10 dark:opacity-20 select-none">📢</div><div class="flex justify-between items-start mb-3 relative z-10"><h3 class="font-bold text-[#002147] dark:text-yellow-400 text-[15px] pr-2">${i.judul}</h3><span class="text-[10px] text-gray-500 whitespace-nowrap bg-gray-100 dark:bg-black px-2 py-1 rounded-md border border-gray-200 dark:border-gray-800">${i.date}</span></div><p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed relative z-10">${i.isi}</p></div>`).join(''); });</script></body></html>
 EOF
@@ -619,7 +621,7 @@ cat << 'EOF' > public/game.html
 EOF
 
 # ==========================================
-# FILE NODE.JS (API)
+# FILE NODE.JS (API & BOT WA)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -677,9 +679,8 @@ app.post('/api/auth/register', async (req, res) => {
     if (webUsers[fPhone] && webUsers[fPhone].isVerified) return res.status(400).json({ error: 'Nomor sudah terdaftar.' });
     const otp = Math.floor(1000 + Math.random() * 9000).toString(); webUsers[fPhone] = { name, email, password, isVerified: false, otp, avatar: null }; saveJSON(webUsersFile, webUsers);
     try { 
-        const msg = `Halo *${name}*! 👋\n\nSelamat datang di *DIGITAL FIKY STORE*!\n\nKode OTP pendaftaran akun Anda adalah:\n\n*${otp}*\n\n⚠️ _Demi keamanan, jangan berikan kode ini kepada siapapun, termasuk admin._\n\nTerima kasih telah bergabung bersama kami! 🚀`;
-        await global.waSocket?.sendMessage(fPhone + '@c.us', { text: msg }); 
-        res.json({ message: 'OTP Terkirim', phone: fPhone }); 
+        const msg = `Halo *${name}*! 👋\n\nSelamat datang di aplikasi *DIGITAL FIKY STORE*!\n\nUntuk menyelesaikan pendaftaran, silakan masukkan kode OTP berikut:\n\n*${otp}*\n\n⚠️ _Demi keamanan, jangan berikan kode ini kepada siapapun, termasuk admin._\n\nTerima kasih telah mempercayakan transaksi Anda bersama kami! 🚀`;
+        await global.waSocket?.sendMessage(fPhone + '@c.us', { text: msg }); res.json({ message: 'OTP Terkirim', phone: fPhone }); 
     } catch(e) { res.status(500).json({ error: 'Gagal mengirim WA.' }); }
 });
 
@@ -705,9 +706,8 @@ app.post('/api/auth/forgot', async (req, res) => {
     if (!webUsers[fPhone]) return res.status(400).json({ error: 'Nomor tidak terdaftar.' });
     const otp = Math.floor(1000 + Math.random() * 9000).toString(); webUsers[fPhone].otp = otp; saveJSON(webUsersFile, webUsers);
     try { 
-        const msg = `Halo! 👋\n\nKami menerima permintaan reset password untuk akun *DIGITAL FIKY STORE* Anda.\n\nBerikut adalah kode OTP Anda:\n\n*${otp}*\n\n⚠️ _Jika Anda tidak merasa meminta reset password, silakan abaikan pesan ini._`;
-        await global.waSocket?.sendMessage(fPhone + '@c.us', { text: msg }); 
-        res.json({ message: 'OTP Terkirim' }); 
+        const msg = `Halo! 🔒\n\nKami menerima permintaan *Reset Password* untuk akun DIGITAL FIKY STORE Anda.\n\nBerikut adalah kode OTP Anda:\n\n*${otp}*\n\n⚠️ _Jika Anda tidak merasa melakukan permintaan ini, abaikan pesan ini dan akun Anda akan tetap aman._`;
+        await global.waSocket?.sendMessage(fPhone + '@c.us', { text: msg }); res.json({ message: 'OTP Terkirim' }); 
     } catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); }
 });
 
@@ -725,9 +725,8 @@ app.post('/api/auth/request-update-otp', async (req, res) => {
     if(webUsers[fOld]) { 
         webUsers[fOld].updateOtp = otp; saveJSON(webUsersFile, webUsers); 
         try { 
-            const msg = `Halo! 👋\n\nBerikut adalah kode OTP untuk memverifikasi perubahan nomor WhatsApp Anda di *DIGITAL FIKY STORE*:\n\n*${otp}*\n\n⚠️ _Jangan bagikan kode ini kepada siapapun demi keamanan akun Anda._`;
-            await global.waSocket?.sendMessage(fNew + '@c.us', { text: msg }); 
-            res.json({ message: 'OTP Terkirim' }); 
+            const msg = `Halo! 📲\n\nAnda sedang melakukan proses *Perubahan Nomor WhatsApp* di aplikasi DIGITAL FIKY STORE.\n\nMasukkan kode OTP berikut untuk memverifikasi nomor baru ini:\n\n*${otp}*\n\n⚠️ _Jangan bagikan kode ini kepada siapapun demi keamanan akun Anda._`;
+            await global.waSocket?.sendMessage(fNew + '@c.us', { text: msg }); res.json({ message: 'OTP Terkirim' }); 
         } catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); } 
     } 
     else res.status(400).json({ error: 'Akun tidak ditemukan.' });
@@ -774,7 +773,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V55) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V54) 🤖     "
     echo "==============================================="
     echo "1. Setup No. Bot & Login Pairing"
     echo "2. Jalankan Bot (Latar Belakang/PM2)"
@@ -801,26 +800,30 @@ while true; do clear
                 echo "==============================================="
                 echo "          💰 MANAJEMEN SALDO MEMBER            "
                 echo "==============================================="
-                echo "1. 🔍 Cek Saldo Member"
-                echo "2. ➕ Tambah Saldo Member"
-                echo "3. ➖ Kurangi Saldo Member"
+                echo "1. 📋 Daftar Semua Member & Saldo"
+                echo "2. 🔍 Cek Saldo Member Spesifik"
+                echo "3. ➕ Tambah Saldo Member"
+                echo "4. ➖ Kurangi Saldo Member"
                 echo "0. Kembali ke Menu Utama"
                 echo "==============================================="
-                read -p "Pilih [0-3]: " saldomenu
+                read -p "Pilih [0-4]: " saldomenu
                 case $saldomenu in
                     1)
-                        read -p "ID Member (No WA): " nomor
-                        node -e "const fs=require('fs');let f='$HOME/$DIR_NAME/database.json';let db=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):{};if(db['$nomor']) console.log('\n✅ Saldo ' + '$nomor' + ' saat ini: Rp ' + db['$nomor'].saldo.toLocaleString('id-ID')); else console.log('\n❌ Member tidak ditemukan!');"
+                        node -e "const fs=require('fs');const db=fs.existsSync('$HOME/$DIR_NAME/database.json')?JSON.parse(fs.readFileSync('$HOME/$DIR_NAME/database.json')):{};const users=fs.existsSync('$HOME/$DIR_NAME/web_users.json')?JSON.parse(fs.readFileSync('$HOME/$DIR_NAME/web_users.json')):{};console.log('\n==================================');console.log('📋 DAFTAR MEMBER DIGITAL FIKY STORE');console.log('==================================');let count=0;for(let phone in users){if(users[phone].isVerified){let saldo=db[phone]?db[phone].saldo:0;console.log('- '+users[phone].name+' ('+phone+') : Rp '+saldo.toLocaleString('id-ID'));count++;}}if(count===0)console.log('Belum ada member terverifikasi.');console.log('==================================\n');"
                         read -p "Tekan Enter..." ;;
                     2)
-                        read -p "ID Member (No WA): " nomor
-                        read -p "Jumlah Tambah Saldo: " jumlah
-                        node -e "const fs=require('fs');let file='$HOME/$DIR_NAME/database.json';let db=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};if(!db['$nomor']) db['$nomor']={saldo:0, mutasi:[], topup:[]};if(!db['$nomor'].mutasi) db['$nomor'].mutasi=[];db['$nomor'].saldo+=parseInt('$jumlah');db['$nomor'].mutasi.push({id:'TRX'+Date.now(),type:'in',amount:parseInt('$jumlah'),desc:'Penambahan oleh Admin',date:new Date().toLocaleString('id-ID')});fs.writeFileSync(file,JSON.stringify(db,null,2));console.log('\n✅ Saldo berhasil ditambah!');"
+                        read -p "ID Member (No WA, misal 0812...): " nomor
+                        node -e "const fs=require('fs');let f='$HOME/$DIR_NAME/database.json';let db=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):{};let num='$nomor'.startsWith('0')?'62'+'$nomor'.slice(1):'$nomor';if(db[num]) console.log('\n✅ Saldo ' + num + ' saat ini: Rp ' + db[num].saldo.toLocaleString('id-ID')); else console.log('\n❌ Member tidak ditemukan!');"
                         read -p "Tekan Enter..." ;;
                     3)
-                        read -p "ID Member (No WA): " nomor
+                        read -p "ID Member (No WA, misal 0812...): " nomor
+                        read -p "Jumlah Tambah Saldo: " jumlah
+                        node -e "const fs=require('fs');let file='$HOME/$DIR_NAME/database.json';let db=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};let num='$nomor'.startsWith('0')?'62'+'$nomor'.slice(1):'$nomor';if(!db[num]) db[num]={saldo:0, mutasi:[], topup:[]};if(!db[num].mutasi) db[num].mutasi=[];db[num].saldo+=parseInt('$jumlah');db[num].mutasi.push({id:'TRX'+Date.now(),type:'in',amount:parseInt('$jumlah'),desc:'Penambahan oleh Admin',date:new Date().toLocaleString('id-ID')});fs.writeFileSync(file,JSON.stringify(db,null,2));console.log('\n✅ Saldo berhasil ditambah!');"
+                        read -p "Tekan Enter..." ;;
+                    4)
+                        read -p "ID Member (No WA, misal 0812...): " nomor
                         read -p "Jumlah Kurangi Saldo: " jumlah
-                        node -e "const fs=require('fs');let file='$HOME/$DIR_NAME/database.json';let db=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};if(!db['$nomor']) console.log('\n❌ Member tidak ditemukan!'); else { if(!db['$nomor'].mutasi) db['$nomor'].mutasi=[]; db['$nomor'].saldo-=parseInt('$jumlah'); db['$nomor'].mutasi.push({id:'TRX'+Date.now(),type:'out',amount:parseInt('$jumlah'),desc:'Pengurangan oleh Admin',date:new Date().toLocaleString('id-ID')}); fs.writeFileSync(file,JSON.stringify(db,null,2)); console.log('\n✅ Saldo berhasil dikurangi!'); }"
+                        node -e "const fs=require('fs');let file='$HOME/$DIR_NAME/database.json';let db=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};let num='$nomor'.startsWith('0')?'62'+'$nomor'.slice(1):'$nomor';if(!db[num]) console.log('\n❌ Member tidak ditemukan!'); else { if(!db[num].mutasi) db[num].mutasi=[]; db[num].saldo-=parseInt('$jumlah'); db[num].mutasi.push({id:'TRX'+Date.now(),type:'out',amount:parseInt('$jumlah'),desc:'Pengurangan oleh Admin',date:new Date().toLocaleString('id-ID')}); fs.writeFileSync(file,JSON.stringify(db,null,2)); console.log('\n✅ Saldo berhasil dikurangi!'); }"
                         read -p "Tekan Enter..." ;;
                     0) break ;;
                 esac
