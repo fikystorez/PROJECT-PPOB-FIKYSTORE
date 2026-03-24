@@ -51,7 +51,7 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website..."
+echo "[3/5] Membangun Antarmuka Website (Menu Data Provider Dinamis)..."
 
 cat << 'EOF' > public/style.css
 body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
@@ -632,8 +632,136 @@ cat << 'EOF' > public/mutasi.html
 <!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Mutasi Saldo</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden transition-colors"><div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="history.back()"></i><h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white">Mutasi Saldo</h1></div><div class="px-4 mt-4" id="mutasiList"><div class="mt-20 flex flex-col items-center justify-center text-gray-400"><i class="fas fa-spinner fa-spin text-4xl mb-4"></i><p>Memuat data mutasi...</p></div></div></div><script>const user = JSON.parse(localStorage.getItem('user')); if (!user) window.location.href = '/'; if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark'); fetch('/api/user/mutasi', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }).then(res => res.json()).then(data => { const list = document.getElementById('mutasiList'); if(data.mutasi.length === 0) { list.innerHTML = `<div class="mt-20 flex flex-col items-center justify-center text-center px-6"><div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-exchange-alt text-gray-400 text-4xl"></i></div><h2 class="text-gray-800 dark:text-white font-bold text-lg tracking-wide mb-2 transition-colors">Belum Ada Mutasi</h2><p class="text-gray-500 dark:text-gray-400 text-[13px] leading-relaxed">Catatan uang masuk dan keluar akan tampil di sini.</p></div>`; } else { list.innerHTML = data.mutasi.reverse().map(m => `<div class="flex items-center justify-between p-4 bg-white dark:bg-[#111c2e] border border-gray-200 dark:border-gray-800 rounded-2xl mb-3 shadow-sm transition-colors"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full ${m.type === 'in' ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'} flex items-center justify-center text-lg shrink-0"><i class="fas ${m.type === 'in' ? 'fa-arrow-down' : 'fa-arrow-up'}"></i></div><div><h4 class="font-bold text-[13px] text-gray-800 dark:text-gray-200">${m.desc}</h4><p class="text-[10px] text-gray-500">${m.date}</p></div></div><div class="text-right"><span class="font-bold text-[14px] ${m.type === 'in' ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}">${m.type === 'in' ? '+' : '-'} Rp ${m.amount.toLocaleString('id-ID')}</span></div></div>`).join(''); } }).catch(err => { list.innerHTML = `<div class="mt-20 text-center text-red-500">Gagal memuat data mutasi.</div>`; });</script></body></html>
 EOF
 
+# MEMBUAT HALAMAN OPERATOR DINAMIS
 cat << 'EOF' > public/operator.html
-<!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Pilih Operator - DIGITAL FIKY STORE</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><link rel="stylesheet" href="style.css"><script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative shadow-2xl overflow-x-hidden transition-colors"><div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="history.back()"></i><h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white" id="pageTitle">Operator</h1></div><div class="px-4 mt-6"><h3 class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-3 uppercase">PILIH OPERATOR TUJUAN</h3><div class="bg-white dark:bg-[#111c2e] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm transition-colors"><div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="Swal.fire({icon:'info', title:'Axis', text:'Fitur sedang dikembangkan.'})"><div class="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-white font-bold text-[13px] shrink-0">AX</div><div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">Axis</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i></div><div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="Swal.fire({icon:'info', title:'Indosat', text:'Fitur sedang dikembangkan.'})"><div class="w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center text-black font-bold text-[13px] shrink-0">IS</div><div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">Indosat</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i></div><div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="Swal.fire({icon:'info', title:'Smartfren', text:'Fitur sedang dikembangkan.'})"><div class="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white font-bold text-[13px] shrink-0">SF</div><div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">Smartfren</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i></div><div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="Swal.fire({icon:'info', title:'Telkomsel', text:'Fitur sedang dikembangkan.'})"><div class="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-bold text-[13px] shrink-0">TS</div><div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">Telkomsel</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i></div><div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="Swal.fire({icon:'info', title:'By.U', text:'Fitur sedang dikembangkan.'})"><div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-[13px] shrink-0">BU</div><div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">By.U</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i></div><div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="Swal.fire({icon:'info', title:'Three', text:'Fitur sedang dikembangkan.'})"><div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-white font-bold text-[13px] shrink-0">3</div><div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">Three</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i></div><div class="flex items-center p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="Swal.fire({icon:'info', title:'XL', text:'Fitur sedang dikembangkan.'})"><div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-[13px] shrink-0">XL</div><div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">XL</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i></div></div></div></div><script>if (!localStorage.getItem('user')) window.location.href = '/'; if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark'); const params = new URLSearchParams(window.location.search); const type = params.get('type'); const titleEl = document.getElementById('pageTitle'); if(type === 'pulsa') titleEl.innerText = 'Isi Pulsa'; else if(type === 'data') titleEl.innerText = 'Paket Internet'; else if(type === 'masaaktif') titleEl.innerText = 'Masa Aktif'; else titleEl.innerText = 'Pilih Operator';</script></body></html>
+<!DOCTYPE html>
+<html lang="id" id="html-root">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilih Operator - DIGITAL FIKY STORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
+</head>
+<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
+    <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative shadow-2xl overflow-x-hidden transition-colors">
+        
+        <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 transition-colors">
+            <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="goBack()"></i>
+            <h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white uppercase" id="pageTitle">Operator</h1>
+        </div>
+
+        <div id="operatorContainer" class="block">
+            <div class="px-4 mt-6">
+                <h3 class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-3 uppercase">PILIH OPERATOR TUJUAN</h3>
+                <div class="bg-white dark:bg-[#111c2e] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm transition-colors">
+                    <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('axis')">
+                        <div class="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-white font-bold text-[13px] shrink-0">AX</div>
+                        <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">Axis</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
+                    </div>
+                    <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('indosat')">
+                        <div class="w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center text-black font-bold text-[13px] shrink-0">IS</div>
+                        <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">Indosat</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
+                    </div>
+                    <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('smartfren')">
+                        <div class="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white font-bold text-[13px] shrink-0">SF</div>
+                        <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">Smartfren</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
+                    </div>
+                    <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('telkomsel')">
+                        <div class="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-bold text-[13px] shrink-0">TS</div>
+                        <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">Telkomsel</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
+                    </div>
+                    <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('byu')">
+                        <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-[13px] shrink-0">BU</div>
+                        <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">By.U</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
+                    </div>
+                    <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('tri')">
+                        <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-white font-bold text-[13px] shrink-0">3</div>
+                        <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">Three</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
+                    </div>
+                    <div class="flex items-center p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('xl')">
+                        <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-[13px] shrink-0">XL</div>
+                        <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">XL</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="categoryContainer" class="hidden">
+            <div class="flex justify-between items-center px-5 py-4 bg-black dark:bg-[#001229] text-white">
+                <span class="font-bold text-[15px] tracking-wide">Silahkan Di Pilih..</span>
+                <i class="fas fa-home text-lg cursor-pointer hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"></i>
+            </div>
+            <div class="bg-white dark:bg-[#111c2e] shadow-sm transition-colors" id="categoryList">
+                </div>
+        </div>
+
+    </div>
+    <script>
+        if (!localStorage.getItem('user')) window.location.href = '/';
+        if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark');
+        
+        const params = new URLSearchParams(window.location.search); 
+        const type = params.get('type'); 
+        const titleEl = document.getElementById('pageTitle'); 
+        
+        let currentState = 'operator';
+        let originalTitle = '';
+
+        if(type === 'pulsa') originalTitle = 'Isi Pulsa'; 
+        else if(type === 'data') originalTitle = 'Paket Internet'; 
+        else if(type === 'masaaktif') originalTitle = 'Masa Aktif'; 
+        else originalTitle = 'Pilih Operator';
+
+        titleEl.innerText = originalTitle;
+
+        const dataCategories = {
+            'axis': { name: 'AXIS', logo: 'axis', items: ['BRONET 24 JAM', 'OWSEM', 'BOOSTR', 'AIGO'] },
+            'indosat': { name: 'INDOSAT', logo: 'indosat<br>ooredoo', items: ['FREEDOM NASIONAL', 'FREEDOM SENSASI (LARIS)', 'RAMADHAN (BARU)', 'DATA LOKAL', 'FREEDOM HARIAN', 'FREEDOM COMBO', 'FREEDOM UNLIMITED', 'FREEDOM COMBO GIFT', 'FREEDOM INTERNET GIFT', 'FREEDOM INTERNET SPESIAL', 'FREEDOM LONGLIFE', 'FREEDOM MAX', 'UMUM', 'CUANKU PROMO', 'SACHET', 'GASPOL', 'HIFI AIR', 'FREEDOM APPS', 'FREEDOM APPS GIFT', 'PURE MERDEKA', 'FREEDOM PLAY', 'KITA', 'YELLOW', 'ROAMING', 'E-SIM', 'UMROH & HAJI', 'UMROH & HAJI COMBO'] },
+            'smartfren': { name: 'SMARTFREN', logo: 'smart<br>fren', items: ['UMUM', 'UNLIMITED', 'UNLIMITED NONSTOP', 'NONSTOP', 'KUOTA', 'KUOTA 5G+', 'APLIKASI', 'GAMING', 'MANDIRI', 'CONNEX EVO', 'ROAMING', 'VOLUME'] },
+            'telkomsel': { name: 'TELKOMSEL', logo: 'telkomsel', items: ['DATA OMG', 'COMBO SAKTI', 'INTERNET MAX', 'DATA HARIAN', 'DATA KAGET'] },
+            'byu': { name: 'BY.U', logo: 'by.U', items: ['Paket Data Umum', 'Paket Data Topping', 'BY.U CUANKU PROMO', 'Paket Data Mbps', 'Paket Data Kaget', 'Paket Data Super Kaget', 'Paket Data Jajan'] },
+            'tri': { name: 'TRI', logo: '3', items: ['UMUM & MINI', 'HAPPY', 'AON', 'TRI CUANKU', 'LOKAL', 'KIKIDA', 'MIX & TRANSFER', 'GETMORE & CICILAN', 'HOME', 'ROAMING', 'H3RO', "SAHABAT OJOL", "IBADAH", "ADDON", "HAPPY PLAY", "HIFI AIR", "RAMADHAN (BARU)", "happy 5G", "KEEPON"] },
+            'xl': { name: 'XL', logo: 'XL', items: ['XTRA COMBO FLEX', 'XTRA ON', 'XTRA KUOTA'] }
+        };
+
+        function selectProvider(op) {
+            if(type === 'data') {
+                currentState = 'category';
+                document.getElementById('operatorContainer').classList.replace('block', 'hidden');
+                document.getElementById('categoryContainer').classList.replace('hidden', 'block');
+                
+                const provider = dataCategories[op];
+                titleEl.innerText = provider.name;
+                
+                const html = provider.items.map(item => `
+                    <div class="flex items-center px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="Swal.fire({icon:'info', title:'Menu', text:'Fitur sedang dikembangkan.'})">
+                        <div class="w-8 h-8 rounded-full border border-black dark:border-gray-400 flex items-center justify-center text-black dark:text-gray-300 font-bold text-[7px] shrink-0 text-center leading-tight bg-white dark:bg-[#0b1320]">${provider.logo}</div>
+                        <div class="flex-1 ml-4 text-[15px] font-medium text-gray-800 dark:text-gray-200 uppercase">${item}</div>
+                        <i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-xs"></i>
+                    </div>
+                `).join('');
+                document.getElementById('categoryList').innerHTML = html;
+            } else {
+                Swal.fire({icon:'info', title:'Menu', text:'Fitur sedang dikembangkan.'});
+            }
+        }
+
+        function goBack() {
+            if(currentState === 'category') {
+                currentState = 'operator';
+                document.getElementById('operatorContainer').classList.replace('hidden', 'block');
+                document.getElementById('categoryContainer').classList.replace('block', 'hidden');
+                titleEl.innerText = originalTitle;
+            } else {
+                history.back();
+            }
+        }
+    </script>
+</body>
+</html>
 EOF
 
 cat << 'EOF' > public/game.html
@@ -702,7 +830,6 @@ app.post('/api/topup/history', (req, res) => {
     let changed = false;
     let now = Date.now();
     
-    // Auto Update Status Expired
     history.forEach(t => {
         if (t.status === 'Proses' && t.method === 'QRIS Otomatis' && t.expiry && now > t.expiry) {
             t.status = 'Expired';
@@ -858,7 +985,7 @@ NC='\033[0m' # No Color
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V63) 💎       ${NC}"
+    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V64) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
