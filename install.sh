@@ -58,6 +58,8 @@ body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-
 .centered-modal-box { background-color: #002147; padding: 3rem 1.5rem 2rem 1.5rem; border-radius: 1.2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); width: 90%; max-width: 360px; text-align: center; position: relative; z-index: 10; }
 .logo-f-metalik-box { width: 85px; height: 85px; margin: 0 auto; display: flex; justify-content: center; align-items: center; border-radius: 50%; border: 3px solid #94a3b8; background: radial-gradient(circle, #333333 0%, #000000 100%); box-shadow: inset 0 0 10px rgba(255,255,255,0.2), 0 10px 20px rgba(0,0,0,0.5); position: relative; }
 .logo-f-metalik-box::before { content: "F"; font-size: 55px; font-family: "Times New Roman", Times, serif; font-weight: bold; color: #e2e8f0; text-shadow: 2px 2px 4px rgba(0,0,0,0.9), -1px -1px 1px rgba(255,255,255,0.3); position: absolute; top: 52%; left: 50%; transform: translate(-50%, -50%); }
+.logo-f-small { width: 45px; height: 45px; margin: 0 auto 10px auto; display: flex; justify-content: center; align-items: center; border-radius: 50%; border: 2px solid #cbd5e1; background: radial-gradient(circle, #333333 0%, #000000 100%); box-shadow: inset 0 0 5px rgba(255,255,255,0.2), 0 5px 10px rgba(0,0,0,0.5); position: relative; z-index: 2; }
+.logo-f-small::before { content: "F"; font-size: 28px; font-family: "Times New Roman", Times, serif; font-weight: bold; color: #e2e8f0; text-shadow: 1px 1px 2px rgba(0,0,0,0.9); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 .compact-input-box { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #334155; border-radius: 0.5rem; margin-bottom: 0.85rem; font-size: 0.875rem; outline: none; background-color: #ffffff; color: #0f172a; }
 .compact-input-box:focus { border-color: #fde047; box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3); }
 ::placeholder { color: #94a3b8; font-size: 0.8rem; }
@@ -71,7 +73,7 @@ body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Custom SweetAlert2 Styling - Diperlebar sedikit untuk layout Kanan-Kiri */
+/* Custom SweetAlert2 Styling */
 .swal2-popup { background-color: #002147 !important; border-radius: 1rem !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important; width: 320px !important; padding: 1.5rem 1.25rem 1.25rem !important; }
 .swal2-title { color: #fde047 !important; font-size: 1.15rem !important; font-weight: 800 !important; letter-spacing: 0.5px !important; margin: 0 0 0.5em !important; }
 .swal2-html-container { color: #cbd5e1 !important; font-size: 0.85rem !important; line-height: 1.5 !important; margin: 0.5em 0.2em 1em !important; }
@@ -284,7 +286,7 @@ cat << 'EOF' > public/dashboard.html
                         <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="location.href='/profile.html'"><i class="far fa-user w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Profil Akun</span></li>
                         <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="location.href='/riwayat.html'"><i class="far fa-clock w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Transaksi Saya</span></li>
                         <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="location.href='/info.html'"><i class="far fa-bell w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Pusat Informasi</span></li>
-                        <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="window.open('https://wa.me/6282231154407', '_blank')"><i class="fas fa-headset w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Hubungi Admin</span></li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="bantuanAdmin()"><i class="fas fa-headset w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Hubungi Admin</span></li>
                         <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="toggleDarkMode()">
                             <div class="flex items-center gap-4"><i class="far fa-moon w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Mode Gelap</span></div>
                             <div class="w-11 h-[22px] bg-gray-300 dark:bg-blue-500 rounded-full relative transition-colors duration-300" id="darkModeToggleBg"><div class="w-[18px] h-[18px] bg-white rounded-full absolute top-[2px] left-[2px] shadow-md transform transition-transform duration-300" id="darkModeToggleDot"></div></div>
@@ -303,8 +305,8 @@ cat << 'EOF' > public/dashboard.html
                 <p class="text-xs text-gray-300 mb-1">Sisa Saldo Anda</p>
                 <h2 class="text-4xl font-extrabold mb-6 tracking-tight drop-shadow-md" id="displaySaldo">Rp 0</h2>
                 <div class="flex gap-4">
-                    <button class="flex-1 border border-gray-500/50 bg-[#001229]/50 text-white rounded-full py-2.5 text-[11px] font-bold hover:bg-yellow-400 hover:text-[#001229] transition" onclick="showTopUpMenu()">ISI SALDO</button>
-                    <button class="flex-1 border border-gray-500/50 bg-[#001229]/50 text-white rounded-full py-2.5 text-[11px] font-bold hover:bg-yellow-400 hover:text-[#001229] transition" onclick="window.open('https://wa.me/6282231154407', '_blank')">BANTUAN</button>
+                    <button class="flex-1 border border-gray-500/50 bg-[#001229]/50 text-white rounded-full py-2.5 text-[11px] font-bold hover:bg-yellow-400 hover:text-[#001229] transition" onclick="location.href='/topup.html'">ISI SALDO</button>
+                    <button class="flex-1 border border-gray-500/50 bg-[#001229]/50 text-white rounded-full py-2.5 text-[11px] font-bold hover:bg-yellow-400 hover:text-[#001229] transition" onclick="bantuanAdmin()">BANTUAN</button>
                 </div>
             </div>
         </div>
@@ -352,8 +354,6 @@ cat << 'EOF' > public/dashboard.html
         document.getElementById('sidebarPhone').innerText = user.phone;
         document.getElementById('sidebarInitial').innerText = user.name.charAt(0).toUpperCase();
 
-        let qrisImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg';
-
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
 
         function applyDarkMode() {
@@ -376,11 +376,15 @@ cat << 'EOF' > public/dashboard.html
             .then((result) => { if (result.isConfirmed) { localStorage.removeItem('user'); window.location.href = '/'; } });
         }
 
+        function bantuanAdmin() {
+            const text = encodeURIComponent(`Halo Admin DIGITAL FIKY STORE,\n\nSaya butuh bantuan terkait akun saya (${user.phone}). Mohon dibantu ya min, terima kasih.`);
+            window.open(`https://wa.me/6282231154407?text=${text}`, '_blank');
+        }
+
         fetch('/api/user/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) })
         .then(res => res.json()).then(data => { document.getElementById('displaySaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); });
 
         fetch('/api/config').then(res => res.json()).then(data => {
-            if(data.qrisUrl) qrisImageUrl = data.qrisUrl;
             if(data.banners && data.banners.length > 0 && data.banners[0] !== "") {
                 const slider = document.getElementById('promoSlider');
                 const dotsContainer = document.getElementById('promoDots');
@@ -399,155 +403,174 @@ cat << 'EOF' > public/dashboard.html
             });
             setInterval(() => { currentSlide = (currentSlide + 1) % (dots.length||4); sliderElement.scrollTo({ left: currentSlide * sliderElement.clientWidth, behavior: 'smooth' }); }, 3500);
         });
+    </script>
+</body>
+</html>
+EOF
 
-        // FUNGSI TOP UP BARU KANAN-KIRI (QRIS & WA)
-        function showTopUpMenu() {
+# HTML TOP UP KHUSUS (HALAMAN BARU)
+cat << 'EOF' > public/topup.html
+<!DOCTYPE html>
+<html lang="id" id="html-root">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Up Saldo - DIGITAL FIKY STORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
+</head>
+<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
+    <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden transition-colors duration-300">
+        
+        <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 transition-colors">
+            <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i>
+            <h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white">Top Up Saldo</h1>
+        </div>
+
+        <div class="px-5 mt-6">
+            <div class="bg-[#002147] rounded-2xl p-5 text-white text-center mb-8 shadow-md">
+                <p class="text-xs text-gray-300 mb-1">Sisa Saldo Saat Ini</p>
+                <h2 class="text-3xl font-extrabold tracking-tight" id="displaySaldoTopup">Rp 0</h2>
+            </div>
+
+            <h3 class="font-bold text-gray-800 dark:text-white mb-4 text-[15px]">Pilih Metode Pembayaran</h3>
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div id="cardQris" onclick="selectMethod('qris')" class="bg-white dark:bg-[#111c2e] border-2 border-gray-200 dark:border-gray-800 p-5 rounded-2xl shadow-sm text-center cursor-pointer transition-all hover:border-yellow-400 dark:hover:border-yellow-400">
+                    <div class="w-14 h-14 mx-auto bg-white rounded-full flex items-center justify-center p-2.5 mb-3 shadow-sm border border-gray-100">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg" class="w-full object-contain">
+                    </div>
+                    <h4 class="font-bold text-gray-800 dark:text-white text-[13px]">QRIS Otomatis</h4>
+                </div>
+                <div id="cardWa" onclick="selectMethod('wa')" class="bg-white dark:bg-[#111c2e] border-2 border-gray-200 dark:border-gray-800 p-5 rounded-2xl shadow-sm text-center cursor-pointer transition-all hover:border-green-500 dark:hover:border-green-500">
+                    <div class="w-14 h-14 mx-auto bg-[#25D366]/10 rounded-full flex items-center justify-center text-[#25D366] text-3xl mb-3 shadow-sm">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-800 dark:text-white text-[13px]">Manual WA</h4>
+                </div>
+            </div>
+
+            <div id="formSection" class="hidden transition-all duration-300">
+                <h3 class="font-bold text-gray-800 dark:text-white mb-3 text-[15px]" id="formTitle">Masukkan Nominal</h3>
+                
+                <div id="quickButtons" class="grid grid-cols-2 gap-3 mb-4">
+                    <button onclick="setNominal(10000)" class="py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#1a2639] font-bold text-sm text-gray-700 dark:text-gray-300 hover:border-yellow-400 dark:hover:border-yellow-400 transition-colors">Rp 10.000</button>
+                    <button onclick="setNominal(20000)" class="py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#1a2639] font-bold text-sm text-gray-700 dark:text-gray-300 hover:border-yellow-400 dark:hover:border-yellow-400 transition-colors">Rp 20.000</button>
+                    <button onclick="setNominal(50000)" class="py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#1a2639] font-bold text-sm text-gray-700 dark:text-gray-300 hover:border-yellow-400 dark:hover:border-yellow-400 transition-colors">Rp 50.000</button>
+                    <button onclick="setNominal(100000)" class="py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#1a2639] font-bold text-sm text-gray-700 dark:text-gray-300 hover:border-yellow-400 dark:hover:border-yellow-400 transition-colors">Rp 100.000</button>
+                </div>
+
+                <div class="relative mb-6">
+                    <span class="absolute left-4 top-4 text-gray-500 font-bold text-lg">Rp</span>
+                    <input type="number" id="inputNominal" class="w-full rounded-xl py-4 pl-12 pr-4 border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#1a2639] text-gray-900 dark:text-white font-bold text-xl outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition-colors" placeholder="Ketik nominal...">
+                    <p class="text-[10px] text-gray-500 mt-2" id="minText">*Minimal Rp 10.000</p>
+                </div>
+
+                <button id="btnLanjutkan" onclick="prosesTopup()" class="w-full py-3.5 bg-yellow-400 text-[#001229] font-bold rounded-xl shadow-[0_4px_10px_rgba(253,224,71,0.3)] hover:opacity-90 transition text-sm">Lanjutkan Pembayaran</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) window.location.href = '/';
+        
+        let selectedMethod = '';
+        let qrisImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg';
+
+        if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) {
+            document.getElementById('html-root').classList.add('dark');
+        }
+
+        // Ambil Saldo
+        fetch('/api/user/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) })
+        .then(res => res.json()).then(data => { document.getElementById('displaySaldoTopup').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); });
+
+        // Ambil Gambar QRIS
+        fetch('/api/config').then(res => res.json()).then(data => {
+            if(data.qrisUrl) qrisImageUrl = data.qrisUrl;
+        });
+
+        function selectMethod(method) {
+            selectedMethod = method;
+            const cardQris = document.getElementById('cardQris');
+            const cardWa = document.getElementById('cardWa');
+            const formSection = document.getElementById('formSection');
+            const quickButtons = document.getElementById('quickButtons');
+            const btnLanjutkan = document.getElementById('btnLanjutkan');
+            const minText = document.getElementById('minText');
+
+            // Reset Styles
+            cardQris.classList.remove('border-yellow-400', 'dark:border-yellow-400');
+            cardWa.classList.remove('border-green-500', 'dark:border-green-500');
+
+            if(method === 'qris') {
+                cardQris.classList.add('border-yellow-400', 'dark:border-yellow-400');
+                quickButtons.classList.remove('hidden');
+                btnLanjutkan.innerText = 'Tampilkan Kode QRIS';
+                btnLanjutkan.className = 'w-full py-3.5 bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#001229] font-bold rounded-xl shadow-lg transition text-sm';
+                minText.innerText = '*Minimal Top Up Rp 10.000 (Otomatis Masuk)';
+            } else {
+                cardWa.classList.add('border-green-500', 'dark:border-green-500');
+                quickButtons.classList.add('hidden');
+                btnLanjutkan.innerHTML = '<i class="fab fa-whatsapp text-lg mr-2"></i>Lanjutkan ke WhatsApp';
+                btnLanjutkan.className = 'w-full flex justify-center items-center py-3.5 bg-[#25D366] text-white font-bold rounded-xl shadow-lg transition text-sm hover:bg-green-600';
+                minText.innerText = '*Hubungi Admin untuk transfer manual';
+            }
+
+            document.getElementById('inputNominal').value = '';
+            formSection.classList.remove('hidden');
+            formSection.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+
+        function setNominal(amount) {
+            document.getElementById('inputNominal').value = amount;
+        }
+
+        function prosesTopup() {
+            const nominal = parseInt(document.getElementById('inputNominal').value);
             const isDark = localStorage.getItem('darkMode') === 'true';
             const bgPopup = isDark ? '#0b1320' : '#ffffff';
-            const titleColor = isDark ? 'text-white' : 'text-gray-800';
-            const cardBg = isDark ? 'bg-[#111c2e]' : 'bg-gray-50';
-            const cardHover = isDark ? 'hover:bg-[#1a2639]' : 'hover:bg-gray-100';
-            const borderColor = isDark ? 'border-gray-700' : 'border-gray-200';
-            const textDesc = isDark ? 'text-gray-400' : 'text-gray-500';
 
-            Swal.fire({
-                title: `<span class="font-extrabold ${titleColor} text-lg">Pilih Metode Top Up</span>`,
-                html: `
-                    <div class="grid grid-cols-2 gap-3 mt-4">
-                        <button onclick="Swal.close(); setTimeout(showQrisNominal, 300);" class="flex flex-col items-center justify-center p-4 ${cardBg} border ${borderColor} rounded-2xl ${cardHover} hover:border-yellow-400 transition-all group shadow-sm">
-                            <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center p-2.5 mb-3 shadow-md group-hover:scale-110 transition-transform">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg" alt="QRIS" class="w-full object-contain">
+            if(selectedMethod === 'qris') {
+                if(!nominal || nominal < 10000) return Swal.fire({icon:'warning', title:'Gagal', text:'Minimal top up QRIS adalah Rp 10.000', background: bgPopup, color: isDark?'#fff':'#000'});
+                
+                const formatted = 'Rp ' + nominal.toLocaleString('id-ID');
+                Swal.fire({
+                    title: `<span class="font-bold ${isDark ? 'text-white' : 'text-gray-800'} text-lg">Scan QRIS</span>`,
+                    html: `
+                        <div class="flex flex-col items-center mt-2">
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Total Pembayaran</p>
+                            <p class="text-3xl ${isDark ? 'text-gray-200' : 'text-gray-800'} font-extrabold mb-4">${formatted}</p>
+                            <div class="bg-white p-3 rounded-xl shadow-md mb-4 inline-block border border-gray-200">
+                                <img src="${qrisImageUrl}" alt="QRIS" class="w-48 h-48 object-cover rounded-lg">
                             </div>
-                            <h4 class="font-bold ${titleColor} text-[13px] mb-1">QRIS Otomatis</h4>
-                            <p class="text-[9px] ${textDesc} text-center leading-tight">Scan & Masuk<br>Otomatis</p>
-                        </button>
-                        <button onclick="Swal.close(); setTimeout(showManualNominal, 300);" class="flex flex-col items-center justify-center p-4 ${cardBg} border ${borderColor} rounded-2xl ${cardHover} hover:border-green-500 transition-all group shadow-sm">
-                            <div class="w-14 h-14 bg-[#25D366]/10 rounded-full flex items-center justify-center text-[#25D366] text-3xl mb-3 shadow-md group-hover:scale-110 transition-transform">
-                                <i class="fab fa-whatsapp"></i>
+                            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 w-full text-left">
+                                <p class="text-[10px] text-blue-600 dark:text-blue-400 m-0 leading-tight"><i class="fas fa-info-circle mr-1"></i><b>Penting:</b> Pastikan transfer sesuai nominal agar saldo otomatis masuk.</p>
                             </div>
-                            <h4 class="font-bold ${titleColor} text-[13px] mb-1">Manual WA</h4>
-                            <p class="text-[9px] ${textDesc} text-center leading-tight">Transfer via<br>Admin</p>
-                        </button>
-                    </div>
-                `,
-                showConfirmButton: false,
-                showCloseButton: true,
-                background: bgPopup
-            });
-        }
-
-        function showQrisNominal() {
-            const isDark = localStorage.getItem('darkMode') === 'true';
-            const bgPopup = isDark ? '#0b1320' : '#ffffff';
-            const btnClass = isDark ? 'bg-[#111c2e] border-gray-700 text-gray-300 hover:border-yellow-400 hover:text-yellow-400' : 'bg-white border-gray-300 text-gray-700 hover:border-[#002147] hover:text-[#002147]';
-            const inputClass = isDark ? 'bg-[#1a2639] border-gray-700 text-white focus:border-yellow-400' : 'bg-gray-50 border-gray-300 text-gray-900 focus:border-[#002147]';
-
-            Swal.fire({
-                title: `<span class="font-bold ${isDark ? 'text-white' : 'text-gray-800'} text-lg">Nominal QRIS</span>`,
-                html: `
-                    <div class="mt-4">
-                        <div class="grid grid-cols-2 gap-3 mb-4">
-                            <button onclick="document.getElementById('qrisNominalInput').value = 10000" class="py-2.5 rounded-lg border font-bold text-sm transition-colors ${btnClass}">Rp 10.000</button>
-                            <button onclick="document.getElementById('qrisNominalInput').value = 20000" class="py-2.5 rounded-lg border font-bold text-sm transition-colors ${btnClass}">Rp 20.000</button>
-                            <button onclick="document.getElementById('qrisNominalInput').value = 50000" class="py-2.5 rounded-lg border font-bold text-sm transition-colors ${btnClass}">Rp 50.000</button>
-                            <button onclick="document.getElementById('qrisNominalInput').value = 100000" class="py-2.5 rounded-lg border font-bold text-sm transition-colors ${btnClass}">Rp 100.000</button>
                         </div>
-                        <div class="relative">
-                            <span class="absolute left-3 top-3.5 text-gray-500 font-bold text-sm">Rp</span>
-                            <input type="number" id="qrisNominalInput" class="w-full rounded-xl py-3 pl-10 pr-4 border font-bold text-lg outline-none transition-colors ${inputClass}" placeholder="Ketik nominal lain...">
-                        </div>
-                        <p class="text-[10px] text-gray-400 mt-2 text-left">*Minimal Top Up Rp 10.000</p>
-                    </div>
-                `,
-                showCancelButton: true,
-                confirmButtonText: 'Lanjutkan',
-                cancelButtonText: 'Kembali',
-                confirmButtonColor: '#facc15',
-                cancelButtonColor: '#ef4444',
-                background: bgPopup,
-                customClass: { confirmButton: 'text-[#001229] font-bold' },
-                preConfirm: () => {
-                    const nominal = document.getElementById('qrisNominalInput').value;
-                    if (!nominal || parseInt(nominal) < 10000) { Swal.showValidationMessage('Minimal top up Rp 10.000'); return false; }
-                    return parseInt(nominal);
-                }
-            }).then((result) => {
-                if (result.isConfirmed) { showQris(result.value); } 
-                else if (result.dismiss === Swal.DismissReason.cancel) { setTimeout(showTopUpMenu, 300); }
-            });
-        }
-
-        function showQris(nominal) {
-            const isDark = localStorage.getItem('darkMode') === 'true';
-            const bgPopup = isDark ? '#0b1320' : '#ffffff';
-            const textColor = isDark ? 'text-gray-200' : 'text-gray-800';
-            const formattedNominal = 'Rp ' + nominal.toLocaleString('id-ID');
-
-            Swal.fire({
-                title: `<span class="font-bold ${isDark ? 'text-white' : 'text-gray-800'} text-lg">Scan QRIS</span>`,
-                html: `
-                    <div class="flex flex-col items-center mt-2">
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Total Pembayaran</p>
-                        <p class="text-3xl ${textColor} font-extrabold mb-4">${formattedNominal}</p>
-                        <div class="bg-white p-3 rounded-xl shadow-md mb-4 inline-block border border-gray-200">
-                            <img src="${qrisImageUrl}" alt="QRIS" class="w-48 h-48 object-cover rounded-lg">
-                        </div>
-                        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 w-full text-left">
-                            <p class="text-[10px] text-blue-600 dark:text-blue-400 m-0 leading-tight"><i class="fas fa-info-circle mr-1"></i><b>Penting:</b> Pastikan transfer sesuai nominal agar saldo otomatis masuk.</p>
-                        </div>
-                    </div>
-                `,
-                confirmButtonText: 'Saya Sudah Transfer',
-                showCancelButton: true,
-                cancelButtonText: 'Batal',
-                confirmButtonColor: '#facc15',
-                cancelButtonColor: '#ef4444',
-                background: bgPopup,
-                customClass: { confirmButton: 'text-[#001229] font-bold' }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({icon: 'success', title: 'Sedang Diproses', text: 'Sistem memverifikasi pembayaran Anda...', timer: 3000, showConfirmButton: false, background: bgPopup, color: isDark ? '#fff' : '#000'});
-                }
-            });
-        }
-
-        function showManualNominal() {
-            const isDark = localStorage.getItem('darkMode') === 'true';
-            const bgPopup = isDark ? '#0b1320' : '#ffffff';
-            const inputClass = isDark ? 'bg-[#1a2639] border-gray-700 text-white focus:border-yellow-400' : 'bg-gray-50 border-gray-300 text-gray-900 focus:border-[#002147]';
-
-            Swal.fire({
-                title: `<span class="font-bold ${isDark ? 'text-white' : 'text-gray-800'} text-lg">Top Up Manual WA</span>`,
-                html: `
-                    <div class="mt-4">
-                        <p class="text-[11px] text-gray-500 dark:text-gray-400 mb-3 text-left">Masukkan nominal saldo yang ingin diisi.</p>
-                        <div class="relative">
-                            <span class="absolute left-3 top-3.5 text-gray-500 font-bold text-sm">Rp</span>
-                            <input type="number" id="manualNominalInput" class="w-full rounded-xl py-3 pl-10 pr-4 border font-bold text-lg outline-none transition-colors ${inputClass}" placeholder="Contoh: 50000">
-                        </div>
-                    </div>
-                `,
-                showCancelButton: true,
-                confirmButtonText: '<i class="fab fa-whatsapp mr-1"></i> Lanjut ke WA',
-                cancelButtonText: 'Kembali',
-                confirmButtonColor: '#25D366',
-                cancelButtonColor: '#ef4444',
-                background: bgPopup,
-                customClass: { confirmButton: 'text-white font-bold' },
-                preConfirm: () => {
-                    const nominal = document.getElementById('manualNominalInput').value;
-                    if (!nominal || parseInt(nominal) <= 0) { Swal.showValidationMessage('Masukkan nominal yang valid'); return false; }
-                    return parseInt(nominal);
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const formattedNominal = result.value.toLocaleString('id-ID');
-                    const text = encodeURIComponent(`Halo Admin DIGITAL FIKY STORE, saya ingin melakukan Top Up saldo secara manual sebesar *Rp ${formattedNominal}* ke akun saya (${user.phone}). Tolong berikan instruksi pembayarannya.`);
-                    window.open(`https://wa.me/6282231154407?text=${text}`, '_blank');
-                } else if (result.dismiss === Swal.DismissReason.cancel) { setTimeout(showTopUpMenu, 300); }
-            });
+                    `,
+                    confirmButtonText: 'Saya Sudah Transfer',
+                    showCancelButton: true,
+                    cancelButtonText: 'Tutup',
+                    confirmButtonColor: '#facc15',
+                    cancelButtonColor: '#ef4444',
+                    background: bgPopup,
+                    customClass: { confirmButton: 'text-[#001229] font-bold' }
+                }).then((res) => {
+                    if (res.isConfirmed) { Swal.fire({icon: 'success', title: 'Sedang Diproses', text: 'Sistem memverifikasi pembayaran Anda...', timer: 3000, showConfirmButton: false, background: bgPopup, color: isDark ? '#fff' : '#000'}); }
+                });
+            } else if(selectedMethod === 'wa') {
+                if(!nominal || nominal <= 0) return Swal.fire({icon:'warning', title:'Gagal', text:'Masukkan nominal yang valid', background: bgPopup, color: isDark?'#fff':'#000'});
+                const formattedNominal = nominal.toLocaleString('id-ID');
+                const text = encodeURIComponent(`Halo Admin DIGITAL FIKY STORE, saya ingin melakukan Top Up saldo secara manual sebesar *Rp ${formattedNominal}* ke akun saya (${user.phone}). Tolong berikan instruksi pembayarannya.`);
+                window.open(`https://wa.me/6282231154407?text=${text}`, '_blank');
+            }
         }
     </script>
+    <style>
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    </style>
 </body>
 </html>
 EOF
@@ -706,7 +729,7 @@ cat << 'EOF' > public/profile.html
             <div class="mb-4"><label class="block text-[10px] text-gray-500 mb-1">Email (Hanya Baca)</label><input type="email" id="editEmail" readonly class="w-full bg-gray-100 dark:bg-[#1e293b]/50 border border-gray-300 dark:border-gray-800 rounded-lg px-3 py-3 text-gray-500 dark:text-gray-400 text-sm focus:outline-none cursor-not-allowed"></div>
             <div class="mb-4"><label class="block text-[10px] text-gray-500 mb-1">Nama Pengguna</label><input type="text" id="editName" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition-colors"></div>
             <div class="mb-4"><label class="block text-[10px] text-gray-500 mb-1">Nomor Telepon</label><input type="number" id="editPhone" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition-colors"></div>
-            <div class="mb-6 hidden slide-down" id="editOtpContainer"><label class="block text-[10px] text-gray-500 dark:text-gray-400 mb-1 text-center">OTP dikirim ke nomor WA baru</label><input type="number" id="editOtpInput" class="w-full bg-white dark:bg-[#0b1320] border border-green-500 dark:border-green-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-lg tracking-[0.5em] text-center font-bold focus:outline-none focus:border-green-500 dark:focus:border-green-400 transition-colors" placeholder="XXXX"></div>
+            <div class="mb-6 hidden slide-down" id="editOtpContainer"><label class="block text-[10px] text-gray-500 dark:text-gray-400 mb-1 text-center">OTP dikirim ke WA baru</label><input type="number" id="editOtpInput" class="w-full bg-white dark:bg-[#0b1320] border border-green-500 dark:border-green-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-lg tracking-[0.5em] text-center font-bold focus:outline-none focus:border-green-500 dark:focus:border-green-400 transition-colors" placeholder="XXXX"></div>
             <button id="btnSimpanProfil" onclick="saveProfile()" class="w-full py-3.5 bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#001229] font-bold rounded-xl mb-3 shadow-[0_2px_10px_rgba(0,33,71,0.2)] dark:shadow-[0_2px_10px_rgba(253,224,71,0.2)] transition">Simpan Profil</button>
             <button onclick="deleteAccount()" class="w-full py-3.5 bg-red-50 dark:bg-[#3f161e] border border-red-200 dark:border-[#5c1a24] text-red-600 dark:text-red-500 font-bold rounded-xl transition hover:bg-red-100 dark:hover:bg-red-900/50">Hapus Akun</button>
         </div>
@@ -718,7 +741,7 @@ cat << 'EOF' > public/profile.html
         function loadProfileData() { document.getElementById('profileName').innerText = user.name; document.getElementById('profilePhoneData').innerText = user.phone; document.getElementById('profileCircle').innerText = user.name.charAt(0).toUpperCase(); document.getElementById('profileEmail').innerText = user.email || 'fikyshoto@gmail.com'; }
         loadProfileData();
         fetch('/api/user/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }).then(res => res.json()).then(data => { document.getElementById('profileSaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); });
-        function logout() { Swal.fire({ title: 'Keluar Akun?', text: "Apakah Anda yakin ingin keluar?", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#002147', confirmButtonText: 'Ya, Keluar', cancelButtonText: 'Batal' }).then((result) => { if (result.isConfirmed) { localStorage.removeItem('user'); window.location.href = '/'; } }); }
+        function logout() { Swal.fire({ title: 'Keluar Akun?', text: "Apakah Anda yakin ingin keluar?", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#002147', confirmButtonText: 'Ya, Keluar', cancelButtonText: 'Batal', background: localStorage.getItem('darkMode') === 'true' ? '#0b1320' : '#ffffff', color: localStorage.getItem('darkMode') === 'true' ? '#fff' : '#000' }).then((result) => { if (result.isConfirmed) { localStorage.removeItem('user'); window.location.href = '/'; } }); }
         function toggleChangePassword() { const box = document.getElementById('changePasswordBox'); const icon = document.getElementById('cpwIcon'); if(box.classList.contains('hidden')) { box.classList.remove('hidden'); icon.classList.replace('fa-chevron-down', 'fa-chevron-up'); } else { box.classList.add('hidden'); icon.classList.replace('fa-chevron-up', 'fa-chevron-down'); document.getElementById('step1Cp').classList.remove('hidden'); document.getElementById('step2Cp').classList.add('hidden'); } }
         async function requestOtpCp() { try { Swal.fire({title: 'Mengirim...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }}); const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }); if (res.ok) { Swal.fire({ icon: 'success', title: 'Terkirim', text: 'OTP terkirim ke WA!', timer: 1500, showConfirmButton: false }); document.getElementById('step1Cp').classList.add('hidden'); document.getElementById('step2Cp').classList.remove('hidden'); } else { Swal.fire({ icon: 'error', title: 'Gagal', text: (await res.json()).error }); } } catch(e) { Swal.fire({ icon: 'error', title: 'Error', text: 'Kesalahan jaringan.' }); } }
         async function submitChangePassword() { const otp = document.getElementById('cpOtp').value; const newPassword = document.getElementById('cpNewPassword').value; if(!otp || !newPassword) return Swal.fire({ icon: 'warning', title: 'Lengkapi Data', text: 'Wajib diisi.' }); try { Swal.fire({title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }}); const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone, otp, newPassword }) }); if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.' }).then(() => { toggleChangePassword(); document.getElementById('cpOtp').value=''; document.getElementById('cpNewPassword').value=''; }); } else { Swal.fire({ icon: 'error', title: 'Gagal', text: (await res.json()).error }); } } catch(e) { Swal.fire({ icon: 'error', title: 'Error', text: 'Kesalahan jaringan.' }); } }
@@ -733,7 +756,7 @@ cat << 'EOF' > public/profile.html
             Swal.fire({title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
             try { const res = await fetch('/api/auth/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ oldPhone, newPhone, newName, otp }) }); if(res.ok) { user.name = newName; user.phone = (await res.json()).phone || newPhone; localStorage.setItem('user', JSON.stringify(user)); Swal.fire({icon:'success', title:'Berhasil', text:'Profil diperbarui!'}).then(() => { location.reload(); }); } else { Swal.fire({icon:'error', title:'Gagal', text: (await res.json()).error}); } } catch(e) { Swal.fire({icon:'error', title:'Oops', text:'Kesalahan jaringan.'}); }
         }
-        function deleteAccount() { Swal.fire({ title: 'Hapus Akun Permanen?', text: "Akun dan sisa saldo Anda akan hangus!", icon: 'error', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#002147', confirmButtonText: 'Ya, Hapus!' }).then(async (result) => { if (result.isConfirmed) { Swal.fire({title: 'Menghapus...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }}); try { const res = await fetch('/api/auth/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }); if(res.ok) { localStorage.removeItem('user'); Swal.fire({icon:'success', title:'Terhapus', text:'Akun dihapus.'}).then(() => { location.href = '/'; }); } } catch(e) { Swal.fire({icon:'error', title:'Error', text:'Gagal menghapus.'}); } } }); }
+        function deleteAccount() { Swal.fire({ title: 'Hapus Akun Permanen?', text: "Akun dan sisa saldo Anda akan hangus!", icon: 'error', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#002147', confirmButtonText: 'Ya, Hapus!', background: localStorage.getItem('darkMode') === 'true' ? '#0b1320' : '#ffffff', color: localStorage.getItem('darkMode') === 'true' ? '#fff' : '#000' }).then(async (result) => { if (result.isConfirmed) { Swal.fire({title: 'Menghapus...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }}); try { const res = await fetch('/api/auth/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }); if(res.ok) { localStorage.removeItem('user'); Swal.fire({icon:'success', title:'Terhapus', text:'Akun dihapus.'}).then(() => { location.href = '/'; }); } } catch(e) { Swal.fire({icon:'error', title:'Error', text:'Gagal menghapus.'}); } } }); }
     </script>
 </body>
 </html>
@@ -783,7 +806,8 @@ app.get('/api/info', (req, res) => res.json({ info: loadJSON(infoFile) }));
 app.post('/api/user/balance', (req, res) => res.json({ saldo: loadJSON(dbFile)[req.body.phone]?.saldo || 0 }));
 
 app.post('/api/auth/register', async (req, res) => {
-    const { name, phone, email, password } = req.body; let webUsers = loadJSON(webUsersFile); let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
+    const { name, phone, email, password } = req.body;
+    let webUsers = loadJSON(webUsersFile); let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
     if (webUsers[fPhone] && webUsers[fPhone].isVerified) return res.status(400).json({ error: 'Nomor sudah terdaftar.' });
     const otp = Math.floor(1000 + Math.random() * 9000).toString(); webUsers[fPhone] = { name, email, password, isVerified: false, otp }; saveJSON(webUsersFile, webUsers);
     try { await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Halo *${name}*!\n\nKode OTP Pendaftaran Akun DIGITAL FIKY STORE Anda adalah: *${otp}*\n\n_Jangan berikan kode ini kepada siapapun._` }); res.json({ message: 'OTP Terkirim', phone: fPhone }); } catch(e) { res.status(500).json({ error: 'Gagal mengirim WA.' }); }
@@ -791,8 +815,10 @@ app.post('/api/auth/register', async (req, res) => {
 
 app.post('/api/auth/verify', (req, res) => {
     const { phone, otp } = req.body; let webUsers = loadJSON(webUsersFile);
-    if (webUsers[phone] && webUsers[phone].otp === otp) { webUsers[phone].isVerified = true; webUsers[phone].otp = null; saveJSON(webUsersFile, webUsers); let db = loadJSON(dbFile); if (!db[phone]) { db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net' }; saveJSON(dbFile, db); } res.json({ message: 'Sukses!' }); } 
-    else res.status(400).json({ error: 'OTP Salah.' });
+    if (webUsers[phone] && webUsers[phone].otp === otp) {
+        webUsers[phone].isVerified = true; webUsers[phone].otp = null; saveJSON(webUsersFile, webUsers);
+        let db = loadJSON(dbFile); if (!db[phone]) { db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net' }; saveJSON(dbFile, db); } res.json({ message: 'Sukses!' });
+    } else res.status(400).json({ error: 'OTP Salah.' });
 });
 
 app.post('/api/auth/login', (req, res) => {
@@ -806,7 +832,7 @@ app.post('/api/auth/forgot', async (req, res) => {
     const { phone } = req.body; let webUsers = loadJSON(webUsersFile); let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
     if (!webUsers[fPhone]) return res.status(400).json({ error: 'Nomor tidak terdaftar.' });
     const otp = Math.floor(1000 + Math.random() * 9000).toString(); webUsers[fPhone].otp = otp; saveJSON(webUsersFile, webUsers);
-    try { await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Kode OTP Reset Password Anda: *${otp}*` }); res.json({ message: 'OTP Terkirim', phone: fPhone }); } catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); }
+    try { await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Kode OTP Reset Password: *${otp}*` }); res.json({ message: 'OTP Terkirim' }); } catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); }
 });
 
 app.post('/api/auth/reset', (req, res) => {
@@ -816,8 +842,7 @@ app.post('/api/auth/reset', (req, res) => {
 });
 
 app.post('/api/auth/request-update-otp', async (req, res) => {
-    const { oldPhone, newPhone } = req.body; let webUsers = loadJSON(webUsersFile);
-    let fOld = oldPhone.startsWith('0') ? '62' + oldPhone.slice(1) : oldPhone; let fNew = newPhone.startsWith('0') ? '62' + newPhone.slice(1) : newPhone;
+    const { oldPhone, newPhone } = req.body; let webUsers = loadJSON(webUsersFile); let fOld = oldPhone.startsWith('0') ? '62' + oldPhone.slice(1) : oldPhone; let fNew = newPhone.startsWith('0') ? '62' + newPhone.slice(1) : newPhone;
     if (webUsers[fNew] && fNew !== fOld) return res.status(400).json({ error: 'Nomor baru sudah terdaftar.' });
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
     if(webUsers[fOld]) { webUsers[fOld].updateOtp = otp; saveJSON(webUsersFile, webUsers); try { await global.waSocket?.sendMessage(fNew + '@c.us', { text: `Kode OTP Perubahan Nomor HP: *${otp}*` }); res.json({ message: 'OTP Terkirim' }); } catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); } } 
@@ -828,29 +853,21 @@ app.post('/api/auth/update', (req, res) => {
     const { oldPhone, newPhone, newName, otp } = req.body; let webUsers = loadJSON(webUsersFile); let db = loadJSON(dbFile);
     let fOld = oldPhone.startsWith('0') ? '62' + oldPhone.slice(1) : oldPhone; let fNew = newPhone.startsWith('0') ? '62' + newPhone.slice(1) : newPhone;
     if (!webUsers[fOld]) return res.status(400).json({ error: 'Akun tidak ditemukan.' });
-    if (fOld !== fNew) {
-        if (webUsers[fNew]) return res.status(400).json({ error: 'Nomor sudah dipakai.' });
-        if (webUsers[fOld].updateOtp !== otp) return res.status(400).json({ error: 'Kode OTP Salah.' });
-        webUsers[fNew] = { ...webUsers[fOld], name: newName }; delete webUsers[fNew].updateOtp; delete webUsers[fOld];
-        if (db[fOld]) { db[fNew] = { ...db[fOld], jid: fNew + '@s.whatsapp.net' }; delete db[fOld]; }
-    } else { webUsers[fOld].name = newName; }
+    if (fOld !== fNew) { if (webUsers[fNew]) return res.status(400).json({ error: 'Nomor sudah dipakai.' }); if (webUsers[fOld].updateOtp !== otp) return res.status(400).json({ error: 'Kode OTP Salah.' }); webUsers[fNew] = { ...webUsers[fOld], name: newName }; delete webUsers[fNew].updateOtp; delete webUsers[fOld]; if (db[fOld]) { db[fNew] = { ...db[fOld], jid: fNew + '@s.whatsapp.net' }; delete db[fOld]; } } 
+    else { webUsers[fOld].name = newName; }
     saveJSON(webUsersFile, webUsers); saveJSON(dbFile, db); res.json({ message: 'Profil diperbarui.', phone: fNew });
 });
 
 app.post('/api/auth/delete', (req, res) => {
     const { phone } = req.body; let webUsers = loadJSON(webUsersFile); let db = loadJSON(dbFile);
-    if(webUsers[phone]) delete webUsers[phone]; if(db[phone]) delete db[phone];
-    saveJSON(webUsersFile, webUsers); saveJSON(dbFile, db); res.json({ message: 'Akun dihapus.' });
+    if(webUsers[phone]) delete webUsers[phone]; if(db[phone]) delete db[phone]; saveJSON(webUsersFile, webUsers); saveJSON(dbFile, db); res.json({ message: 'Akun dihapus.' });
 });
 
 async function startBot() {
     const { state, saveCreds } = await useMultiFileAuthState('sesi_bot');
     const { version } = await fetchLatestBaileysVersion();
     const sock = makeWASocket({ version, auth: state, logger: pino({ level: 'silent' }), browser: Browsers.ubuntu('Chrome'), printQRInTerminal: false });
-    if (!sock.authState.creds.registered) {
-        let config = loadJSON(configFile);
-        if (config.botNumber) { setTimeout(async () => { try { const code = await sock.requestPairingCode(config.botNumber.replace(/[^0-9]/g, '')); console.log(`\n🔑 KODE PAIRING ANDA :  ${code}  \n`); } catch (error) {} }, 3000); }
-    }
+    if (!sock.authState.creds.registered) { let config = loadJSON(configFile); if (config.botNumber) { setTimeout(async () => { try { const code = await sock.requestPairingCode(config.botNumber.replace(/[^0-9]/g, '')); console.log(`\n🔑 KODE PAIRING ANDA :  ${code}  \n`); } catch (error) {} }, 3000); } }
     sock.ev.on('creds.update', saveCreds); global.waSocket = sock; 
 }
 if (require.main === module) { app.listen(3000, () => { console.log('🌐 Web Server berjalan.'); }); startBot(); }
@@ -868,7 +885,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V42) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V43) 🤖     "
     echo "==============================================="
     echo "1. Setup No. Bot & Login Pairing"
     echo "2. Jalankan Bot (Latar Belakang/PM2)"
@@ -892,32 +909,7 @@ while true; do clear
         6) read -p "ID Member (No WA): " nomor && read -p "Jumlah Tambah Saldo: " jumlah && node -e "const fs=require('fs');let db=fs.existsSync('$HOME/$DIR_NAME/database.json')?JSON.parse(fs.readFileSync('$HOME/$DIR_NAME/database.json')):{};if(!db['$nomor']) db['$nomor']={saldo:0};db['$nomor'].saldo+=parseInt('$jumlah');fs.writeFileSync('$HOME/$DIR_NAME/database.json',JSON.stringify(db,null,2));console.log('Saldo Ditambah!');" ; read -p "Tekan Enter..." ;;
         7) read -p "Link Slide 1: " b1 && read -p "Link Slide 2: " b2 && read -p "Link Slide 3: " b3 && read -p "Link Slide 4: " b4 && node -e "const fs=require('fs');let file='$HOME/$DIR_NAME/config.json';let cfg=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};if(!cfg.banners)cfg.banners=['','','',''];if('$b1'.trim())cfg.banners[0]='$b1'.trim();if('$b2'.trim())cfg.banners[1]='$b2'.trim();if('$b3'.trim())cfg.banners[2]='$b3'.trim();if('$b4'.trim())cfg.banners[3]='$b4'.trim();fs.writeFileSync(file,JSON.stringify(cfg,null,2));console.log('Banner diperbarui!');"; read -p "Tekan Enter..." ;;
         8) read -p "Masukkan Link URL Gambar QRIS: " qrisurl && node -e "const fs=require('fs');let file='$HOME/$DIR_NAME/config.json';let cfg=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};if('$qrisurl'.trim())cfg.qrisUrl='$qrisurl'.trim();fs.writeFileSync(file,JSON.stringify(cfg,null,2));console.log('QRIS diperbarui!');"; read -p "Tekan Enter..." ;;
-        9)
-            while true; do
-                clear
-                echo "==============================================="
-                echo "      📢 PUSAT INFORMASI (BROADCAST WEB)       "
-                echo "==============================================="
-                echo "1. Tambah Info Baru"
-                echo "2. Hapus Info"
-                echo "0. Kembali ke Menu Utama"
-                echo "==============================================="
-                read -p "Pilih [0-2]: " infomenu
-                case $infomenu in
-                    1)
-                        read -p "Judul Info : " judul
-                        read -p "Isi Info   : " isi
-                        node -e "const fs=require('fs'); let f='$HOME/$DIR_NAME/info.json'; let d=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[]; d.push({judul:'$judul', isi:'$isi', date:new Date().toLocaleDateString('id-ID')}); fs.writeFileSync(f,JSON.stringify(d,null,2));"
-                        echo "✅ Info berhasil ditambahkan!" ; read -p "Tekan Enter..." ;;
-                    2)
-                        node -e "const fs=require('fs'); let f='$HOME/$DIR_NAME/info.json'; let d=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[]; if(d.length===0) console.log('\nTidak ada info tersimpan.'); else { console.log('\nDAFTAR INFO:'); d.forEach((x,i)=>console.log('['+i+'] '+x.judul)); }"
-                        read -p "Masukkan Nomor [0, 1, 2...] yang ingin dihapus: " hapusid
-                        if [ ! -z "$hapusid" ]; then node -e "const fs=require('fs'); let f='$HOME/$DIR_NAME/info.json'; let d=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[]; if(d['$hapusid']){ d.splice('$hapusid',1); fs.writeFileSync(f,JSON.stringify(d,null,2)); console.log('✅ Berhasil dihapus!'); } else { console.log('❌ Nomor tidak valid.'); }" ; fi
-                        read -p "Tekan Enter..." ;;
-                    0) break ;;
-                esac
-            done
-            ;;
+        9) while true; do clear; echo "--- 📢 PUSAT INFORMASI ---"; echo "1. Tambah Info Baru"; echo "2. Hapus Info"; echo "0. Kembali"; read -p "Pilih: " infomenu; case $infomenu in 1) read -p "Judul: " judul; read -p "Isi: " isi; node -e "const fs=require('fs');let f='$HOME/$DIR_NAME/info.json';let d=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[];d.push({judul:'$judul',isi:'$isi',date:new Date().toLocaleDateString('id-ID')});fs.writeFileSync(f,JSON.stringify(d,null,2));"; echo "Berhasil!"; read -p "Enter...";; 2) node -e "const fs=require('fs');let f='$HOME/$DIR_NAME/info.json';let d=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[];if(d.length===0)console.log('Kosong.');else{d.forEach((x,i)=>console.log('['+i+'] '+x.judul));}"; read -p "Nomor yg dihapus: " hapusid; if [ ! -z "$hapusid" ]; then node -e "const fs=require('fs');let f='$HOME/$DIR_NAME/info.json';let d=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[];if(d['$hapusid']){d.splice('$hapusid',1);fs.writeFileSync(f,JSON.stringify(d,null,2));console.log('Dihapus!');}"; fi; read -p "Enter...";; 0) break;; esac; done ;;
         10) cd "$HOME" && wget -qO- https://raw.githubusercontent.com/fikystorez/PROJECT-PPOB-FIKYSTORE/main/install.sh | tr -d '\r' > install.sh && chmod +x install.sh && ./install.sh && exit 0 ;;
         0) exit 0 ;;
     esac
