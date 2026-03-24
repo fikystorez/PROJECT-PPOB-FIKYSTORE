@@ -51,7 +51,7 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Smart Top Up UI)..."
+echo "[3/5] Membangun Antarmuka Website..."
 
 cat << 'EOF' > public/style.css
 body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
@@ -71,10 +71,10 @@ body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Custom SweetAlert2 Styling */
-.swal2-popup { background-color: #002147 !important; border-radius: 1rem !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important; width: 300px !important; padding: 1.5rem 1.25rem 1.25rem !important; }
+/* Custom SweetAlert2 Styling - Diperlebar sedikit untuk layout Kanan-Kiri */
+.swal2-popup { background-color: #002147 !important; border-radius: 1rem !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important; width: 320px !important; padding: 1.5rem 1.25rem 1.25rem !important; }
 .swal2-title { color: #fde047 !important; font-size: 1.15rem !important; font-weight: 800 !important; letter-spacing: 0.5px !important; margin: 0 0 0.5em !important; }
-.swal2-html-container { color: #cbd5e1 !important; font-size: 0.85rem !important; line-height: 1.5 !important; margin: 0.5em 0.5em 1em !important; }
+.swal2-html-container { color: #cbd5e1 !important; font-size: 0.85rem !important; line-height: 1.5 !important; margin: 0.5em 0.2em 1em !important; }
 .swal2-confirm { background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important; color: #001229 !important; border-radius: 0.5rem !important; font-weight: 800 !important; padding: 0.6rem 1.5rem !important; font-size: 0.85rem !important; box-shadow: 0 4px 6px -1px rgba(253, 224, 71, 0.3) !important; letter-spacing: 0.5px !important; }
 .swal2-cancel { background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important; color: #ffffff !important; border-radius: 0.5rem !important; font-weight: 800 !important; padding: 0.6rem 1.5rem !important; font-size: 0.85rem !important; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3) !important; letter-spacing: 0.5px !important; }
 .swal2-icon { transform: scale(0.7) !important; margin: 0 auto 0.5em !important; border-width: 3px !important; }
@@ -82,7 +82,6 @@ body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-
 @keyframes slideDown { 0% { opacity: 0; transform: translateY(-10px); } 100% { opacity: 1; transform: translateY(0); } }
 .animate-slide-up { animation: slideUp 0.3s ease-out forwards; }
 @keyframes slideUp { 0% { opacity: 0; transform: scale(0.95) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
-/* Menghilangkan panah di input type number */
 input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 EOF
 
@@ -119,8 +118,8 @@ cat << 'EOF' > public/index.html
                 const res = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password }) });
                 const data = await res.json();
                 if (res.ok) { localStorage.setItem('user', JSON.stringify(data.user)); window.location.href = '/dashboard.html'; } 
-                else { Swal.fire({ icon: 'error', title: 'Gagal Login', text: data.error }); }
-            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Terjadi kesalahan sistem.' }); }
+                else { Swal.fire({ icon: 'error', title: 'Gagal Login', text: data.error, background: '#002147', color: '#fff' }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Terjadi kesalahan sistem.', background: '#002147', color: '#fff' }); }
         });
     </script>
 </body>
@@ -176,18 +175,18 @@ cat << 'EOF' > public/register.html
                     registeredPhone = data.phone;
                     document.getElementById('box-register').classList.add('hidden');
                     document.getElementById('box-otp').classList.remove('hidden');
-                    Swal.fire({ icon: 'success', title: 'OTP Terkirim!', text: 'Silakan cek pesan WhatsApp Anda.' });
-                } else { Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error }); }
-            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses pendaftaran.' }); }
+                    Swal.fire({ icon: 'success', title: 'OTP Terkirim!', text: 'Silakan cek pesan WhatsApp Anda.', background: '#002147', color: '#fff' });
+                } else { Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error, background: '#002147', color: '#fff' }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses pendaftaran.', background: '#002147', color: '#fff' }); }
         });
         document.getElementById('otpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const otp = document.getElementById('otpCode').value;
             try {
                 const res = await fetch('/api/auth/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: registeredPhone, otp }) });
-                if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun terverifikasi. Silakan Login.' }).then(() => { window.location.href = '/'; }); } 
-                else { Swal.fire({ icon: 'error', title: 'OTP Salah', text: (await res.json()).error }); }
-            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi OTP.' }); }
+                if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun terverifikasi. Silakan Login.', background: '#002147', color: '#fff' }).then(() => { window.location.href = '/'; }); } 
+                else { Swal.fire({ icon: 'error', title: 'OTP Salah', text: (await res.json()).error, background: '#002147', color: '#fff' }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi OTP.', background: '#002147', color: '#fff' }); }
         });
     </script>
 </body>
@@ -232,9 +231,9 @@ cat << 'EOF' > public/forgot.html
                 if (res.ok) {
                     resetPhone = (await res.json()).phone;
                     document.getElementById('requestOtpForm').classList.add('hidden'); document.getElementById('resetForm').classList.remove('hidden');
-                    Swal.fire({ icon: 'success', title: 'OTP Terkirim!', text: 'Cek WA Anda.' });
-                } else { Swal.fire({ icon: 'error', title: 'Gagal', text: (await res.json()).error }); }
-            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.' }); }
+                    Swal.fire({ icon: 'success', title: 'OTP Terkirim!', text: 'Cek WA Anda.', background: '#002147', color: '#fff' });
+                } else { Swal.fire({ icon: 'error', title: 'Gagal', text: (await res.json()).error, background: '#002147', color: '#fff' }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.', background: '#002147', color: '#fff' }); }
         });
         document.getElementById('resetForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -242,16 +241,15 @@ cat << 'EOF' > public/forgot.html
             const newPassword = document.getElementById('newPassword').value;
             try {
                 const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) });
-                if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.' }).then(() => { window.location.href = '/'; }); } 
-                else { Swal.fire({ icon: 'error', title: 'Gagal', text: (await res.json()).error }); }
-            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.' }); }
+                if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.', background: '#002147', color: '#fff' }).then(() => { window.location.href = '/'; }); } 
+                else { Swal.fire({ icon: 'error', title: 'Gagal', text: (await res.json()).error, background: '#002147', color: '#fff' }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.', background: '#002147', color: '#fff' }); }
         });
     </script>
 </body>
 </html>
 EOF
 
-# HTML DASHBOARD (TOP UP CANGGIH: QRIS / WA MANUAL)
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -374,7 +372,7 @@ cat << 'EOF' > public/dashboard.html
         applyDarkMode();
 
         function logout() { 
-            Swal.fire({ title: 'Keluar Akun?', text: "Apakah Anda yakin ingin keluar?", icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya, Keluar', cancelButtonText: 'Batal', confirmButtonColor: '#d33', cancelButtonColor: '#002147'})
+            Swal.fire({ title: 'Keluar Akun?', text: "Apakah Anda yakin ingin keluar?", icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya, Keluar', cancelButtonText: 'Batal', confirmButtonColor: '#d33', cancelButtonColor: '#002147', background: localStorage.getItem('darkMode') === 'true' ? '#0b1320' : '#ffffff', color: localStorage.getItem('darkMode') === 'true' ? '#fff' : '#000'})
             .then((result) => { if (result.isConfirmed) { localStorage.removeItem('user'); window.location.href = '/'; } });
         }
 
@@ -402,31 +400,33 @@ cat << 'EOF' > public/dashboard.html
             setInterval(() => { currentSlide = (currentSlide + 1) % (dots.length||4); sliderElement.scrollTo({ left: currentSlide * sliderElement.clientWidth, behavior: 'smooth' }); }, 3500);
         });
 
-        // FUNGSI TOP UP BARU (QRIS & WA)
+        // FUNGSI TOP UP BARU KANAN-KIRI (QRIS & WA)
         function showTopUpMenu() {
             const isDark = localStorage.getItem('darkMode') === 'true';
             const bgPopup = isDark ? '#0b1320' : '#ffffff';
             const titleColor = isDark ? 'text-white' : 'text-gray-800';
+            const cardBg = isDark ? 'bg-[#111c2e]' : 'bg-gray-50';
+            const cardHover = isDark ? 'hover:bg-[#1a2639]' : 'hover:bg-gray-100';
+            const borderColor = isDark ? 'border-gray-700' : 'border-gray-200';
+            const textDesc = isDark ? 'text-gray-400' : 'text-gray-500';
 
             Swal.fire({
-                title: `<span class="font-bold ${titleColor}">Metode Top Up</span>`,
+                title: `<span class="font-extrabold ${titleColor} text-lg">Pilih Metode Top Up</span>`,
                 html: `
-                    <div class="flex flex-col gap-3 mt-4 text-left">
-                        <button onclick="Swal.close(); setTimeout(showQrisNominal, 300);" class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-[#111c2e] border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-[#1a2639] transition-colors w-full shadow-sm">
-                            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shrink-0 p-1.5 border border-gray-200 shadow-sm">
+                    <div class="grid grid-cols-2 gap-3 mt-4">
+                        <button onclick="Swal.close(); setTimeout(showQrisNominal, 300);" class="flex flex-col items-center justify-center p-4 ${cardBg} border ${borderColor} rounded-2xl ${cardHover} hover:border-yellow-400 transition-all group shadow-sm">
+                            <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center p-2.5 mb-3 shadow-md group-hover:scale-110 transition-transform">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg" alt="QRIS" class="w-full object-contain">
                             </div>
-                            <div>
-                                <h4 class="font-bold text-gray-800 dark:text-white text-[15px] m-0">QRIS Otomatis</h4>
-                                <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5 mb-0">Scan & langsung masuk</p>
-                            </div>
+                            <h4 class="font-bold ${titleColor} text-[13px] mb-1">QRIS Otomatis</h4>
+                            <p class="text-[9px] ${textDesc} text-center leading-tight">Scan & Masuk<br>Otomatis</p>
                         </button>
-                        <button onclick="Swal.close(); setTimeout(showManualNominal, 300);" class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-[#111c2e] border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-[#1a2639] transition-colors w-full shadow-sm">
-                            <div class="w-12 h-12 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] text-3xl shrink-0"><i class="fab fa-whatsapp"></i></div>
-                            <div>
-                                <h4 class="font-bold text-gray-800 dark:text-white text-[15px] m-0">Manual via WhatsApp</h4>
-                                <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5 mb-0">Hubungi admin untuk transfer</p>
+                        <button onclick="Swal.close(); setTimeout(showManualNominal, 300);" class="flex flex-col items-center justify-center p-4 ${cardBg} border ${borderColor} rounded-2xl ${cardHover} hover:border-green-500 transition-all group shadow-sm">
+                            <div class="w-14 h-14 bg-[#25D366]/10 rounded-full flex items-center justify-center text-[#25D366] text-3xl mb-3 shadow-md group-hover:scale-110 transition-transform">
+                                <i class="fab fa-whatsapp"></i>
                             </div>
+                            <h4 class="font-bold ${titleColor} text-[13px] mb-1">Manual WA</h4>
+                            <p class="text-[9px] ${textDesc} text-center leading-tight">Transfer via<br>Admin</p>
                         </button>
                     </div>
                 `,
@@ -468,10 +468,7 @@ cat << 'EOF' > public/dashboard.html
                 customClass: { confirmButton: 'text-[#001229] font-bold' },
                 preConfirm: () => {
                     const nominal = document.getElementById('qrisNominalInput').value;
-                    if (!nominal || parseInt(nominal) < 10000) {
-                        Swal.showValidationMessage('Minimal top up Rp 10.000');
-                        return false;
-                    }
+                    if (!nominal || parseInt(nominal) < 10000) { Swal.showValidationMessage('Minimal top up Rp 10.000'); return false; }
                     return parseInt(nominal);
                 }
             }).then((result) => {
@@ -555,7 +552,6 @@ cat << 'EOF' > public/dashboard.html
 </html>
 EOF
 
-# HTML PUSAT INFORMASI
 cat << 'EOF' > public/info.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -608,7 +604,6 @@ cat << 'EOF' > public/info.html
 </html>
 EOF
 
-# HTML RIWAYAT TRANSAKSI
 cat << 'EOF' > public/riwayat.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -663,7 +658,6 @@ cat << 'EOF' > public/riwayat.html
 </html>
 EOF
 
-# HTML PROFIL
 cat << 'EOF' > public/profile.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -678,7 +672,6 @@ cat << 'EOF' > public/profile.html
 </head>
 <body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
     <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden transition-colors">
-        
         <div class="bg-white dark:bg-[#050b14] p-8 pb-10 flex flex-col items-center relative rounded-b-[2rem] shadow-sm dark:shadow-lg transition-colors">
             <div class="w-24 h-24 bg-gray-100 dark:bg-gray-200 rounded-full flex justify-center items-center text-[#002147] dark:text-black font-extrabold text-4xl mt-2 mb-3 shadow-md dark:shadow-xl border border-gray-200 dark:border-none" id="profileCircle">U</div>
             <div class="flex items-center gap-3">
@@ -686,56 +679,18 @@ cat << 'EOF' > public/profile.html
                 <i class="fas fa-pencil-alt text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 cursor-pointer transition text-lg" onclick="openEditModal()"></i>
             </div>
         </div>
-
         <div class="mt-4 px-2">
-            <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800 transition-colors">
-                <i class="fas fa-envelope text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
-                <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Email</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400" id="profileEmail">-</div>
-            </div>
-            <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800 transition-colors">
-                <i class="fas fa-phone-alt text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
-                <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">No. Telp</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400" id="profilePhoneData">08...</div>
-            </div>
-            <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800 transition-colors">
-                <i class="fas fa-wallet text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
-                <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Saldo Akun</div>
-                <div class="text-sm font-bold text-[#002147] dark:text-yellow-400" id="profileSaldo">Rp 0</div>
-            </div>
-            <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800 transition-colors">
-                <i class="fas fa-shopping-cart text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
-                <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Jumlah Transaksi</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">0 Trx</div>
-            </div>
-            
-            <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800/50 transition" onclick="toggleChangePassword()">
-                <i class="fas fa-lock text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
-                <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Ubah Password</div>
-                <i class="fas fa-chevron-down text-gray-400 dark:text-gray-500 text-sm transition-transform duration-300" id="cpwIcon"></i>
-            </div>
-            
+            <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-envelope text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i><div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Email</div><div class="text-sm text-gray-500 dark:text-gray-400" id="profileEmail">-</div></div>
+            <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-phone-alt text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i><div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">No. Telp</div><div class="text-sm text-gray-500 dark:text-gray-400" id="profilePhoneData">08...</div></div>
+            <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-wallet text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i><div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Saldo Akun</div><div class="text-sm font-bold text-[#002147] dark:text-yellow-400" id="profileSaldo">Rp 0</div></div>
+            <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-shopping-cart text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i><div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Jumlah Transaksi</div><div class="text-sm text-gray-500 dark:text-gray-400">0 Trx</div></div>
+            <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800/50 transition" onclick="toggleChangePassword()"><i class="fas fa-lock text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i><div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Ubah Password</div><i class="fas fa-chevron-down text-gray-400 dark:text-gray-500 text-sm transition-transform duration-300" id="cpwIcon"></i></div>
             <div id="changePasswordBox" class="hidden px-6 py-5 border-b border-gray-200 dark:border-gray-800 bg-gray-100 dark:bg-[#070e18] slide-down transition-colors">
-                <div id="step1Cp">
-                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-3 text-center">Klik tombol di bawah untuk menerima kode OTP ke nomor WA Anda.</p>
-                    <button class="w-full py-2.5 bg-white dark:bg-[#0b1320] hover:bg-gray-50 dark:hover:bg-gray-800 text-[#002147] dark:text-yellow-400 font-bold rounded-lg text-sm border border-gray-300 dark:border-gray-700 transition" onclick="requestOtpCp()"><i class="fab fa-whatsapp mr-2"></i>Kirim OTP ke WA</button>
-                </div>
-                <div id="step2Cp" class="hidden">
-                    <p class="text-xs text-green-600 dark:text-green-400 mb-4 text-center"><i class="fas fa-check-circle mr-1"></i>OTP terkirim ke WhatsApp.</p>
-                    <label class="block text-[10px] text-gray-600 dark:text-gray-500 mb-1">Kode OTP</label>
-                    <input type="number" id="cpOtp" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-800 dark:text-white text-lg mb-3 focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 text-center tracking-[0.5em] font-bold" placeholder="XXXX">
-                    <label class="block text-[10px] text-gray-600 dark:text-gray-500 mb-1">Password Baru</label>
-                    <input type="password" id="cpNewPassword" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-800 dark:text-white text-sm mb-5 focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 text-center" placeholder="Ketik password baru">
-                    <button class="w-full py-3 bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#001229] font-bold rounded-lg text-sm" onclick="submitChangePassword()">Simpan Password</button>
-                </div>
+                <div id="step1Cp"><p class="text-xs text-gray-600 dark:text-gray-400 mb-3 text-center">Klik tombol di bawah untuk menerima kode OTP ke nomor WA Anda.</p><button class="w-full py-2.5 bg-white dark:bg-[#0b1320] hover:bg-gray-50 dark:hover:bg-gray-800 text-[#002147] dark:text-yellow-400 font-bold rounded-lg text-sm border border-gray-300 dark:border-gray-700 transition" onclick="requestOtpCp()"><i class="fab fa-whatsapp mr-2"></i>Kirim OTP ke WA</button></div>
+                <div id="step2Cp" class="hidden"><p class="text-xs text-green-600 dark:text-green-400 mb-4 text-center"><i class="fas fa-check-circle mr-1"></i>OTP terkirim ke WhatsApp.</p><label class="block text-[10px] text-gray-600 dark:text-gray-500 mb-1">Kode OTP</label><input type="number" id="cpOtp" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-800 dark:text-white text-lg mb-3 focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 text-center tracking-[0.5em] font-bold" placeholder="XXXX"><label class="block text-[10px] text-gray-600 dark:text-gray-500 mb-1">Password Baru</label><input type="password" id="cpNewPassword" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-800 dark:text-white text-sm mb-5 focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 text-center" placeholder="Ketik password baru"><button class="w-full py-3 bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#001229] font-bold rounded-lg text-sm" onclick="submitChangePassword()">Simpan Password</button></div>
             </div>
-
-            <div class="flex items-center px-4 py-5 cursor-pointer hover:bg-red-50 dark:hover:bg-gray-800/50 transition" onclick="logout()">
-                <i class="fas fa-sign-out-alt text-red-600 w-10 text-xl text-center"></i>
-                <div class="flex-1 text-[15px] font-bold text-red-600 ml-2">Keluar Akun</div>
-            </div>
+            <div class="flex items-center px-4 py-5 cursor-pointer hover:bg-red-50 dark:hover:bg-gray-800/50 transition" onclick="logout()"><i class="fas fa-sign-out-alt text-red-600 w-10 text-xl text-center"></i><div class="flex-1 text-[15px] font-bold text-red-600 ml-2">Keluar Akun</div></div>
         </div>
-
         <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.5)] z-40 transition-colors">
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
             <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
@@ -743,30 +698,15 @@ cat << 'EOF' > public/profile.html
             <div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
         </div>
     </div>
-
     <div id="editProfileModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/70">
         <div class="bg-white dark:bg-[#0b1320] w-[90%] max-w-[340px] rounded-[1.25rem] border border-gray-200 dark:border-gray-800 shadow-2xl relative p-6 animate-slide-up transition-colors">
             <button onclick="closeEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
             <h3 class="text-center text-gray-800 dark:text-white font-bold text-lg mb-6">Ubah Profil</h3>
-            <div class="relative w-20 h-20 mx-auto mb-8">
-                <div class="w-full h-full rounded-full border-2 border-[#002147] dark:border-yellow-400 flex items-center justify-center text-[#002147] dark:text-white text-3xl font-bold bg-gray-100 dark:bg-[#1e293b]" id="editModalInitial">U</div>
-            </div>
-            <div class="mb-4">
-                <label class="block text-[10px] text-gray-500 mb-1">Email (Hanya Baca)</label>
-                <input type="email" id="editEmail" readonly class="w-full bg-gray-100 dark:bg-[#1e293b]/50 border border-gray-300 dark:border-gray-800 rounded-lg px-3 py-3 text-gray-500 dark:text-gray-400 text-sm focus:outline-none cursor-not-allowed">
-            </div>
-            <div class="mb-4">
-                <label class="block text-[10px] text-gray-500 mb-1">Nama Pengguna</label>
-                <input type="text" id="editName" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition-colors">
-            </div>
-            <div class="mb-4">
-                <label class="block text-[10px] text-gray-500 mb-1">Nomor Telepon</label>
-                <input type="number" id="editPhone" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition-colors">
-            </div>
-            <div class="mb-6 hidden slide-down" id="editOtpContainer">
-                <label class="block text-[10px] text-gray-500 dark:text-gray-400 mb-1 text-center">OTP dikirim ke nomor WA baru</label>
-                <input type="number" id="editOtpInput" class="w-full bg-white dark:bg-[#0b1320] border border-green-500 dark:border-green-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-lg tracking-[0.5em] text-center font-bold focus:outline-none focus:border-green-500 dark:focus:border-green-400 transition-colors" placeholder="XXXX">
-            </div>
+            <div class="relative w-20 h-20 mx-auto mb-8"><div class="w-full h-full rounded-full border-2 border-[#002147] dark:border-yellow-400 flex items-center justify-center text-[#002147] dark:text-white text-3xl font-bold bg-gray-100 dark:bg-[#1e293b]" id="editModalInitial">U</div></div>
+            <div class="mb-4"><label class="block text-[10px] text-gray-500 mb-1">Email (Hanya Baca)</label><input type="email" id="editEmail" readonly class="w-full bg-gray-100 dark:bg-[#1e293b]/50 border border-gray-300 dark:border-gray-800 rounded-lg px-3 py-3 text-gray-500 dark:text-gray-400 text-sm focus:outline-none cursor-not-allowed"></div>
+            <div class="mb-4"><label class="block text-[10px] text-gray-500 mb-1">Nama Pengguna</label><input type="text" id="editName" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition-colors"></div>
+            <div class="mb-4"><label class="block text-[10px] text-gray-500 mb-1">Nomor Telepon</label><input type="number" id="editPhone" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition-colors"></div>
+            <div class="mb-6 hidden slide-down" id="editOtpContainer"><label class="block text-[10px] text-gray-500 dark:text-gray-400 mb-1 text-center">OTP dikirim ke nomor WA baru</label><input type="number" id="editOtpInput" class="w-full bg-white dark:bg-[#0b1320] border border-green-500 dark:border-green-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-lg tracking-[0.5em] text-center font-bold focus:outline-none focus:border-green-500 dark:focus:border-green-400 transition-colors" placeholder="XXXX"></div>
             <button id="btnSimpanProfil" onclick="saveProfile()" class="w-full py-3.5 bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#001229] font-bold rounded-xl mb-3 shadow-[0_2px_10px_rgba(0,33,71,0.2)] dark:shadow-[0_2px_10px_rgba(253,224,71,0.2)] transition">Simpan Profil</button>
             <button onclick="deleteAccount()" class="w-full py-3.5 bg-red-50 dark:bg-[#3f161e] border border-red-200 dark:border-[#5c1a24] text-red-600 dark:text-red-500 font-bold rounded-xl transition hover:bg-red-100 dark:hover:bg-red-900/50">Hapus Akun</button>
         </div>
@@ -775,98 +715,32 @@ cat << 'EOF' > public/profile.html
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) window.location.href = '/';
         if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark');
-        function loadProfileData() {
-            document.getElementById('profileName').innerText = user.name; document.getElementById('profilePhoneData').innerText = user.phone;
-            document.getElementById('profileCircle').innerText = user.name.charAt(0).toUpperCase(); document.getElementById('profileEmail').innerText = user.email || 'fikyshoto@gmail.com';
-        }
+        function loadProfileData() { document.getElementById('profileName').innerText = user.name; document.getElementById('profilePhoneData').innerText = user.phone; document.getElementById('profileCircle').innerText = user.name.charAt(0).toUpperCase(); document.getElementById('profileEmail').innerText = user.email || 'fikyshoto@gmail.com'; }
         loadProfileData();
-        fetch('/api/user/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) })
-        .then(res => res.json()).then(data => { document.getElementById('profileSaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); });
-        function logout() { 
-            Swal.fire({ title: 'Keluar Akun?', text: "Apakah Anda yakin ingin keluar?", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#002147', confirmButtonText: 'Ya, Keluar', cancelButtonText: 'Batal' })
-            .then((result) => { if (result.isConfirmed) { localStorage.removeItem('user'); window.location.href = '/'; } });
-        }
-        function toggleChangePassword() {
-            const box = document.getElementById('changePasswordBox'); const icon = document.getElementById('cpwIcon');
-            if(box.classList.contains('hidden')) { box.classList.remove('hidden'); icon.classList.replace('fa-chevron-down', 'fa-chevron-up'); } 
-            else { box.classList.add('hidden'); icon.classList.replace('fa-chevron-up', 'fa-chevron-down'); document.getElementById('step1Cp').classList.remove('hidden'); document.getElementById('step2Cp').classList.add('hidden'); }
-        }
-        async function requestOtpCp() {
-            try {
-                Swal.fire({title: 'Mengirim...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-                const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) });
-                if (res.ok) { Swal.fire({ icon: 'success', title: 'Terkirim', text: 'OTP terkirim ke WA!', timer: 1500, showConfirmButton: false }); document.getElementById('step1Cp').classList.add('hidden'); document.getElementById('step2Cp').classList.remove('hidden'); } 
-                else { Swal.fire({ icon: 'error', title: 'Gagal', text: (await res.json()).error }); }
-            } catch(e) { Swal.fire({ icon: 'error', title: 'Error', text: 'Kesalahan jaringan.' }); }
-        }
-        async function submitChangePassword() {
-            const otp = document.getElementById('cpOtp').value; const newPassword = document.getElementById('cpNewPassword').value;
-            if(!otp || !newPassword) return Swal.fire({ icon: 'warning', title: 'Lengkapi Data', text: 'Wajib diisi.' });
-            try {
-                Swal.fire({title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-                const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone, otp, newPassword }) });
-                if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.' }).then(() => { toggleChangePassword(); document.getElementById('cpOtp').value=''; document.getElementById('cpNewPassword').value=''; }); } 
-                else { Swal.fire({ icon: 'error', title: 'Gagal', text: (await res.json()).error }); }
-            } catch(e) { Swal.fire({ icon: 'error', title: 'Error', text: 'Kesalahan jaringan.' }); }
-        }
+        fetch('/api/user/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }).then(res => res.json()).then(data => { document.getElementById('profileSaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); });
+        function logout() { Swal.fire({ title: 'Keluar Akun?', text: "Apakah Anda yakin ingin keluar?", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#002147', confirmButtonText: 'Ya, Keluar', cancelButtonText: 'Batal' }).then((result) => { if (result.isConfirmed) { localStorage.removeItem('user'); window.location.href = '/'; } }); }
+        function toggleChangePassword() { const box = document.getElementById('changePasswordBox'); const icon = document.getElementById('cpwIcon'); if(box.classList.contains('hidden')) { box.classList.remove('hidden'); icon.classList.replace('fa-chevron-down', 'fa-chevron-up'); } else { box.classList.add('hidden'); icon.classList.replace('fa-chevron-up', 'fa-chevron-down'); document.getElementById('step1Cp').classList.remove('hidden'); document.getElementById('step2Cp').classList.add('hidden'); } }
+        async function requestOtpCp() { try { Swal.fire({title: 'Mengirim...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }}); const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }); if (res.ok) { Swal.fire({ icon: 'success', title: 'Terkirim', text: 'OTP terkirim ke WA!', timer: 1500, showConfirmButton: false }); document.getElementById('step1Cp').classList.add('hidden'); document.getElementById('step2Cp').classList.remove('hidden'); } else { Swal.fire({ icon: 'error', title: 'Gagal', text: (await res.json()).error }); } } catch(e) { Swal.fire({ icon: 'error', title: 'Error', text: 'Kesalahan jaringan.' }); } }
+        async function submitChangePassword() { const otp = document.getElementById('cpOtp').value; const newPassword = document.getElementById('cpNewPassword').value; if(!otp || !newPassword) return Swal.fire({ icon: 'warning', title: 'Lengkapi Data', text: 'Wajib diisi.' }); try { Swal.fire({title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }}); const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone, otp, newPassword }) }); if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.' }).then(() => { toggleChangePassword(); document.getElementById('cpOtp').value=''; document.getElementById('cpNewPassword').value=''; }); } else { Swal.fire({ icon: 'error', title: 'Gagal', text: (await res.json()).error }); } } catch(e) { Swal.fire({ icon: 'error', title: 'Error', text: 'Kesalahan jaringan.' }); } }
         let isRequestingOtp = false;
-        function openEditModal() {
-            document.getElementById('editModalInitial').innerText = user.name.charAt(0).toUpperCase(); document.getElementById('editEmail').value = user.email || 'fikyshoto@gmail.com';
-            document.getElementById('editName').value = user.name; document.getElementById('editPhone').value = user.phone.replace('62', '0');
-            document.getElementById('editProfileModal').classList.remove('hidden');
-        }
-        function closeEditModal() { 
-            document.getElementById('editProfileModal').classList.add('hidden'); 
-            isRequestingOtp = false; document.getElementById('editOtpContainer').classList.add('hidden');
-            document.getElementById('btnSimpanProfil').innerText = 'Simpan Profil'; document.getElementById('btnSimpanProfil').classList.remove('bg-green-500', 'dark:bg-green-400');
-            document.getElementById('editOtpInput').value = '';
-        }
+        function openEditModal() { document.getElementById('editModalInitial').innerText = user.name.charAt(0).toUpperCase(); document.getElementById('editEmail').value = user.email || 'fikyshoto@gmail.com'; document.getElementById('editName').value = user.name; document.getElementById('editPhone').value = user.phone.replace('62', '0'); document.getElementById('editProfileModal').classList.remove('hidden'); }
+        function closeEditModal() { document.getElementById('editProfileModal').classList.add('hidden'); isRequestingOtp = false; document.getElementById('editOtpContainer').classList.add('hidden'); document.getElementById('btnSimpanProfil').innerText = 'Simpan Profil'; document.getElementById('btnSimpanProfil').classList.remove('bg-green-500', 'dark:bg-green-400'); document.getElementById('editOtpInput').value = ''; }
         async function saveProfile() {
-            const oldPhone = user.phone; const newName = document.getElementById('editName').value;
-            const rawPhone = document.getElementById('editPhone').value; const newPhone = rawPhone.startsWith('0') ? '62' + rawPhone.slice(1) : rawPhone;
-            const otp = document.getElementById('editOtpInput').value;
+            const oldPhone = user.phone; const newName = document.getElementById('editName').value; const rawPhone = document.getElementById('editPhone').value; const newPhone = rawPhone.startsWith('0') ? '62' + rawPhone.slice(1) : rawPhone; const otp = document.getElementById('editOtpInput').value;
             if(!newName || !rawPhone) return Swal.fire({icon:'warning', title:'Gagal', text:'Nama & No WA wajib diisi!'});
-            if(newPhone !== oldPhone && !isRequestingOtp) {
-                Swal.fire({title: 'Mengirim OTP...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-                try {
-                    const res = await fetch('/api/auth/request-update-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ oldPhone, newPhone }) });
-                    if(res.ok) {
-                        isRequestingOtp = true; document.getElementById('editOtpContainer').classList.remove('hidden');
-                        document.getElementById('btnSimpanProfil').innerText = 'Verifikasi OTP & Simpan'; document.getElementById('btnSimpanProfil').classList.add('bg-green-500', 'dark:bg-green-400');
-                        Swal.fire({icon:'success', title:'OTP Terkirim!', text:'Silakan cek WA di nomor yang baru.'});
-                    } else { Swal.fire({icon:'error', title:'Gagal', text: (await res.json()).error}); }
-                } catch(e) { Swal.fire({icon:'error', title:'Oops', text:'Kesalahan jaringan.'}); }
-                return;
-            }
+            if(newPhone !== oldPhone && !isRequestingOtp) { Swal.fire({title: 'Mengirim OTP...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }}); try { const res = await fetch('/api/auth/request-update-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ oldPhone, newPhone }) }); if(res.ok) { isRequestingOtp = true; document.getElementById('editOtpContainer').classList.remove('hidden'); document.getElementById('btnSimpanProfil').innerText = 'Verifikasi OTP & Simpan'; document.getElementById('btnSimpanProfil').classList.add('bg-green-500', 'dark:bg-green-400'); Swal.fire({icon:'success', title:'OTP Terkirim!', text:'Silakan cek WA di nomor yang baru.'}); } else { Swal.fire({icon:'error', title:'Gagal', text: (await res.json()).error}); } } catch(e) { Swal.fire({icon:'error', title:'Oops', text:'Kesalahan jaringan.'}); } return; }
             if(newPhone !== oldPhone && isRequestingOtp && !otp) return Swal.fire({icon:'warning', title:'Gagal', text:'Masukkan kode OTP 4 digit!'});
             Swal.fire({title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-            try {
-                const res = await fetch('/api/auth/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ oldPhone, newPhone, newName, otp }) });
-                if(res.ok) {
-                    user.name = newName; user.phone = (await res.json()).phone || newPhone; localStorage.setItem('user', JSON.stringify(user));
-                    Swal.fire({icon:'success', title:'Berhasil', text:'Profil diperbarui!'}).then(() => { location.reload(); });
-                } else { Swal.fire({icon:'error', title:'Gagal', text: (await res.json()).error}); }
-            } catch(e) { Swal.fire({icon:'error', title:'Oops', text:'Kesalahan jaringan.'}); }
+            try { const res = await fetch('/api/auth/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ oldPhone, newPhone, newName, otp }) }); if(res.ok) { user.name = newName; user.phone = (await res.json()).phone || newPhone; localStorage.setItem('user', JSON.stringify(user)); Swal.fire({icon:'success', title:'Berhasil', text:'Profil diperbarui!'}).then(() => { location.reload(); }); } else { Swal.fire({icon:'error', title:'Gagal', text: (await res.json()).error}); } } catch(e) { Swal.fire({icon:'error', title:'Oops', text:'Kesalahan jaringan.'}); }
         }
-        function deleteAccount() {
-            Swal.fire({ title: 'Hapus Akun Permanen?', text: "Akun dan sisa saldo Anda akan hangus!", icon: 'error', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#002147', confirmButtonText: 'Ya, Hapus!' })
-            .then(async (result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({title: 'Menghapus...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-                    try {
-                        const res = await fetch('/api/auth/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) });
-                        if(res.ok) { localStorage.removeItem('user'); Swal.fire({icon:'success', title:'Terhapus', text:'Akun dihapus.'}).then(() => { location.href = '/'; }); }
-                    } catch(e) { Swal.fire({icon:'error', title:'Error', text:'Gagal menghapus.'}); }
-                }
-            });
-        }
+        function deleteAccount() { Swal.fire({ title: 'Hapus Akun Permanen?', text: "Akun dan sisa saldo Anda akan hangus!", icon: 'error', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#002147', confirmButtonText: 'Ya, Hapus!' }).then(async (result) => { if (result.isConfirmed) { Swal.fire({title: 'Menghapus...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }}); try { const res = await fetch('/api/auth/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }); if(res.ok) { localStorage.removeItem('user'); Swal.fire({icon:'success', title:'Terhapus', text:'Akun dihapus.'}).then(() => { location.href = '/'; }); } } catch(e) { Swal.fire({icon:'error', title:'Error', text:'Gagal menghapus.'}); } } }); }
     </script>
 </body>
 </html>
 EOF
 
 # ==========================================
-# FILE NODE.JS (API CONFIG)
+# FILE NODE.JS
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -904,51 +778,35 @@ if (!fs.existsSync(dbFile)) saveJSON(dbFile, {});
 if (!fs.existsSync(webUsersFile)) saveJSON(webUsersFile, {});
 if (!fs.existsSync(infoFile)) saveJSON(infoFile, []);
 
-app.get('/api/config', (req, res) => {
-    let cfg = loadJSON(configFile);
-    res.json({ banners: cfg.banners, qrisUrl: cfg.qrisUrl });
-});
-
+app.get('/api/config', (req, res) => { let cfg = loadJSON(configFile); res.json({ banners: cfg.banners, qrisUrl: cfg.qrisUrl }); });
 app.get('/api/info', (req, res) => res.json({ info: loadJSON(infoFile) }));
 app.post('/api/user/balance', (req, res) => res.json({ saldo: loadJSON(dbFile)[req.body.phone]?.saldo || 0 }));
 
 app.post('/api/auth/register', async (req, res) => {
-    const { name, phone, email, password } = req.body;
-    let webUsers = loadJSON(webUsersFile);
-    let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
+    const { name, phone, email, password } = req.body; let webUsers = loadJSON(webUsersFile); let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
     if (webUsers[fPhone] && webUsers[fPhone].isVerified) return res.status(400).json({ error: 'Nomor sudah terdaftar.' });
-    const otp = Math.floor(1000 + Math.random() * 9000).toString();
-    webUsers[fPhone] = { name, email, password, isVerified: false, otp };
-    saveJSON(webUsersFile, webUsers);
+    const otp = Math.floor(1000 + Math.random() * 9000).toString(); webUsers[fPhone] = { name, email, password, isVerified: false, otp }; saveJSON(webUsersFile, webUsers);
     try { await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Halo *${name}*!\n\nKode OTP Pendaftaran Akun DIGITAL FIKY STORE Anda adalah: *${otp}*\n\n_Jangan berikan kode ini kepada siapapun._` }); res.json({ message: 'OTP Terkirim', phone: fPhone }); } catch(e) { res.status(500).json({ error: 'Gagal mengirim WA.' }); }
 });
 
 app.post('/api/auth/verify', (req, res) => {
-    const { phone, otp } = req.body;
-    let webUsers = loadJSON(webUsersFile);
-    if (webUsers[phone] && webUsers[phone].otp === otp) {
-        webUsers[phone].isVerified = true; webUsers[phone].otp = null; saveJSON(webUsersFile, webUsers);
-        let db = loadJSON(dbFile); if (!db[phone]) { db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net' }; saveJSON(dbFile, db); }
-        res.json({ message: 'Sukses!' });
-    } else res.status(400).json({ error: 'OTP Salah atau Kedaluwarsa.' });
+    const { phone, otp } = req.body; let webUsers = loadJSON(webUsersFile);
+    if (webUsers[phone] && webUsers[phone].otp === otp) { webUsers[phone].isVerified = true; webUsers[phone].otp = null; saveJSON(webUsersFile, webUsers); let db = loadJSON(dbFile); if (!db[phone]) { db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net' }; saveJSON(dbFile, db); } res.json({ message: 'Sukses!' }); } 
+    else res.status(400).json({ error: 'OTP Salah.' });
 });
 
 app.post('/api/auth/login', (req, res) => {
-    const { identifier, password } = req.body;
-    let webUsers = loadJSON(webUsersFile);
-    let fPhone = identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier;
+    const { identifier, password } = req.body; let webUsers = loadJSON(webUsersFile); let fPhone = identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier;
     let foundPhone = Object.keys(webUsers).find(p => (p === fPhone || webUsers[p].email === identifier) && webUsers[p].password === password);
-    if (foundPhone) {
-        if (!webUsers[foundPhone].isVerified) return res.status(400).json({ error: 'Akun belum diverifikasi OTP.' });
-        res.json({ message: 'Login sukses', user: { phone: foundPhone, name: webUsers[foundPhone].name, email: webUsers[foundPhone].email } });
-    } else res.status(400).json({ error: 'Data salah.' });
+    if (foundPhone) { if (!webUsers[foundPhone].isVerified) return res.status(400).json({ error: 'Akun belum diverifikasi OTP.' }); res.json({ message: 'Login sukses', user: { phone: foundPhone, name: webUsers[foundPhone].name, email: webUsers[foundPhone].email } }); } 
+    else res.status(400).json({ error: 'Data salah.' });
 });
 
 app.post('/api/auth/forgot', async (req, res) => {
     const { phone } = req.body; let webUsers = loadJSON(webUsersFile); let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
     if (!webUsers[fPhone]) return res.status(400).json({ error: 'Nomor tidak terdaftar.' });
     const otp = Math.floor(1000 + Math.random() * 9000).toString(); webUsers[fPhone].otp = otp; saveJSON(webUsersFile, webUsers);
-    try { await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Kode OTP Reset Password: *${otp}*` }); res.json({ message: 'OTP Terkirim' }); } catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); }
+    try { await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Kode OTP Reset Password Anda: *${otp}*` }); res.json({ message: 'OTP Terkirim', phone: fPhone }); } catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); }
 });
 
 app.post('/api/auth/reset', (req, res) => {
@@ -1010,7 +868,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V41) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V42) 🤖     "
     echo "==============================================="
     echo "1. Setup No. Bot & Login Pairing"
     echo "2. Jalankan Bot (Latar Belakang/PM2)"
