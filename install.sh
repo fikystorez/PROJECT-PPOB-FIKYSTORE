@@ -51,7 +51,7 @@ EOF
 # ==========================================
 # MEMBUAT TAMPILAN WEB (CSS & HTML)
 # ==========================================
-echo "[3/5] Membangun Antarmuka Website (Top Up QRIS/WA)..."
+echo "[3/5] Membangun Antarmuka Website (Smart Top Up UI)..."
 
 cat << 'EOF' > public/style.css
 body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
@@ -72,7 +72,7 @@ body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 /* Custom SweetAlert2 Styling */
-.swal2-popup { background-color: #002147 !important; border-radius: 1rem !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important; width: 280px !important; padding: 1.5rem 1.25rem 1.25rem !important; }
+.swal2-popup { background-color: #002147 !important; border-radius: 1rem !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important; width: 300px !important; padding: 1.5rem 1.25rem 1.25rem !important; }
 .swal2-title { color: #fde047 !important; font-size: 1.15rem !important; font-weight: 800 !important; letter-spacing: 0.5px !important; margin: 0 0 0.5em !important; }
 .swal2-html-container { color: #cbd5e1 !important; font-size: 0.85rem !important; line-height: 1.5 !important; margin: 0.5em 0.5em 1em !important; }
 .swal2-confirm { background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important; color: #001229 !important; border-radius: 0.5rem !important; font-weight: 800 !important; padding: 0.6rem 1.5rem !important; font-size: 0.85rem !important; box-shadow: 0 4px 6px -1px rgba(253, 224, 71, 0.3) !important; letter-spacing: 0.5px !important; }
@@ -82,6 +82,8 @@ body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-
 @keyframes slideDown { 0% { opacity: 0; transform: translateY(-10px); } 100% { opacity: 1; transform: translateY(0); } }
 .animate-slide-up { animation: slideUp 0.3s ease-out forwards; }
 @keyframes slideUp { 0% { opacity: 0; transform: scale(0.95) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+/* Menghilangkan panah di input type number */
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 EOF
 
 cat << 'EOF' > public/index.html
@@ -249,7 +251,7 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
-# HTML DASHBOARD (DENGAN MULTI OPTION TOP UP)
+# HTML DASHBOARD (TOP UP CANGGIH: QRIS / WA MANUAL)
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -352,6 +354,8 @@ cat << 'EOF' > public/dashboard.html
         document.getElementById('sidebarPhone').innerText = user.phone;
         document.getElementById('sidebarInitial').innerText = user.name.charAt(0).toUpperCase();
 
+        let qrisImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg';
+
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
 
         function applyDarkMode() {
@@ -373,8 +377,6 @@ cat << 'EOF' > public/dashboard.html
             Swal.fire({ title: 'Keluar Akun?', text: "Apakah Anda yakin ingin keluar?", icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya, Keluar', cancelButtonText: 'Batal', confirmButtonColor: '#d33', cancelButtonColor: '#002147'})
             .then((result) => { if (result.isConfirmed) { localStorage.removeItem('user'); window.location.href = '/'; } });
         }
-
-        let qrisImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg';
 
         fetch('/api/user/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) })
         .then(res => res.json()).then(data => { document.getElementById('displaySaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); });
@@ -400,25 +402,27 @@ cat << 'EOF' > public/dashboard.html
             setInterval(() => { currentSlide = (currentSlide + 1) % (dots.length||4); sliderElement.scrollTo({ left: currentSlide * sliderElement.clientWidth, behavior: 'smooth' }); }, 3500);
         });
 
-        // LOGIKA MENU TOP UP
+        // FUNGSI TOP UP BARU (QRIS & WA)
         function showTopUpMenu() {
             const isDark = localStorage.getItem('darkMode') === 'true';
             const bgPopup = isDark ? '#0b1320' : '#ffffff';
             const titleColor = isDark ? 'text-white' : 'text-gray-800';
 
             Swal.fire({
-                title: `<span class="font-bold ${titleColor}">Pilih Metode Top Up</span>`,
+                title: `<span class="font-bold ${titleColor}">Metode Top Up</span>`,
                 html: `
                     <div class="flex flex-col gap-3 mt-4 text-left">
-                        <button onclick="Swal.close(); setTimeout(showQris, 300);" class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-[#111c2e] border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-[#1a2639] transition-colors w-full shadow-sm">
-                            <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400 text-xl shrink-0"><i class="fas fa-qrcode"></i></div>
+                        <button onclick="Swal.close(); setTimeout(showQrisNominal, 300);" class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-[#111c2e] border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-[#1a2639] transition-colors w-full shadow-sm">
+                            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shrink-0 p-1.5 border border-gray-200 shadow-sm">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg" alt="QRIS" class="w-full object-contain">
+                            </div>
                             <div>
                                 <h4 class="font-bold text-gray-800 dark:text-white text-[15px] m-0">QRIS Otomatis</h4>
-                                <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5 mb-0">Minimal Rp 10.000 (Otomatis masuk)</p>
+                                <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5 mb-0">Scan & langsung masuk</p>
                             </div>
                         </button>
-                        <button onclick="window.open('https://wa.me/6282231154407?text=Halo%20Admin,%20saya%20mau%20Top%20Up%20Saldo%20akun%20saya.', '_blank')" class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-[#111c2e] border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-[#1a2639] transition-colors w-full shadow-sm">
-                            <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center text-green-600 dark:text-green-400 text-xl shrink-0"><i class="fab fa-whatsapp"></i></div>
+                        <button onclick="Swal.close(); setTimeout(showManualNominal, 300);" class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-[#111c2e] border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-[#1a2639] transition-colors w-full shadow-sm">
+                            <div class="w-12 h-12 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] text-3xl shrink-0"><i class="fab fa-whatsapp"></i></div>
                             <div>
                                 <h4 class="font-bold text-gray-800 dark:text-white text-[15px] m-0">Manual via WhatsApp</h4>
                                 <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5 mb-0">Hubungi admin untuk transfer</p>
@@ -432,39 +436,118 @@ cat << 'EOF' > public/dashboard.html
             });
         }
 
-        function showQris() {
+        function showQrisNominal() {
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            const bgPopup = isDark ? '#0b1320' : '#ffffff';
+            const btnClass = isDark ? 'bg-[#111c2e] border-gray-700 text-gray-300 hover:border-yellow-400 hover:text-yellow-400' : 'bg-white border-gray-300 text-gray-700 hover:border-[#002147] hover:text-[#002147]';
+            const inputClass = isDark ? 'bg-[#1a2639] border-gray-700 text-white focus:border-yellow-400' : 'bg-gray-50 border-gray-300 text-gray-900 focus:border-[#002147]';
+
+            Swal.fire({
+                title: `<span class="font-bold ${isDark ? 'text-white' : 'text-gray-800'} text-lg">Nominal QRIS</span>`,
+                html: `
+                    <div class="mt-4">
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <button onclick="document.getElementById('qrisNominalInput').value = 10000" class="py-2.5 rounded-lg border font-bold text-sm transition-colors ${btnClass}">Rp 10.000</button>
+                            <button onclick="document.getElementById('qrisNominalInput').value = 20000" class="py-2.5 rounded-lg border font-bold text-sm transition-colors ${btnClass}">Rp 20.000</button>
+                            <button onclick="document.getElementById('qrisNominalInput').value = 50000" class="py-2.5 rounded-lg border font-bold text-sm transition-colors ${btnClass}">Rp 50.000</button>
+                            <button onclick="document.getElementById('qrisNominalInput').value = 100000" class="py-2.5 rounded-lg border font-bold text-sm transition-colors ${btnClass}">Rp 100.000</button>
+                        </div>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3.5 text-gray-500 font-bold text-sm">Rp</span>
+                            <input type="number" id="qrisNominalInput" class="w-full rounded-xl py-3 pl-10 pr-4 border font-bold text-lg outline-none transition-colors ${inputClass}" placeholder="Ketik nominal lain...">
+                        </div>
+                        <p class="text-[10px] text-gray-400 mt-2 text-left">*Minimal Top Up Rp 10.000</p>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Lanjutkan',
+                cancelButtonText: 'Kembali',
+                confirmButtonColor: '#facc15',
+                cancelButtonColor: '#ef4444',
+                background: bgPopup,
+                customClass: { confirmButton: 'text-[#001229] font-bold' },
+                preConfirm: () => {
+                    const nominal = document.getElementById('qrisNominalInput').value;
+                    if (!nominal || parseInt(nominal) < 10000) {
+                        Swal.showValidationMessage('Minimal top up Rp 10.000');
+                        return false;
+                    }
+                    return parseInt(nominal);
+                }
+            }).then((result) => {
+                if (result.isConfirmed) { showQris(result.value); } 
+                else if (result.dismiss === Swal.DismissReason.cancel) { setTimeout(showTopUpMenu, 300); }
+            });
+        }
+
+        function showQris(nominal) {
             const isDark = localStorage.getItem('darkMode') === 'true';
             const bgPopup = isDark ? '#0b1320' : '#ffffff';
             const textColor = isDark ? 'text-gray-200' : 'text-gray-800';
+            const formattedNominal = 'Rp ' + nominal.toLocaleString('id-ID');
 
             Swal.fire({
-                title: `<span class="font-bold ${isDark ? 'text-white' : 'text-gray-800'}">QRIS Pembayaran</span>`,
+                title: `<span class="font-bold ${isDark ? 'text-white' : 'text-gray-800'} text-lg">Scan QRIS</span>`,
                 html: `
                     <div class="flex flex-col items-center mt-2">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Total Pembayaran</p>
+                        <p class="text-3xl ${textColor} font-extrabold mb-4">${formattedNominal}</p>
                         <div class="bg-white p-3 rounded-xl shadow-md mb-4 inline-block border border-gray-200">
                             <img src="${qrisImageUrl}" alt="QRIS" class="w-48 h-48 object-cover rounded-lg">
                         </div>
-                        <p class="text-[16px] ${textColor} font-extrabold mb-1">Minimal Top Up: Rp 10.000</p>
-                        <p class="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed px-2 mb-4">Scan kode QR di atas menggunakan aplikasi E-Wallet atau M-Banking Anda (Dana, OVO, GoPay, BCA, dll).</p>
-                        
                         <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 w-full text-left">
-                            <p class="text-[10px] text-blue-600 dark:text-blue-400 m-0 leading-tight"><i class="fas fa-info-circle mr-1"></i><b>Penting:</b> Pastikan nominal transfer di atas Rp 10.000 agar saldo langsung masuk secara otomatis.</p>
+                            <p class="text-[10px] text-blue-600 dark:text-blue-400 m-0 leading-tight"><i class="fas fa-info-circle mr-1"></i><b>Penting:</b> Pastikan transfer sesuai nominal agar saldo otomatis masuk.</p>
                         </div>
                     </div>
                 `,
                 confirmButtonText: 'Saya Sudah Transfer',
                 showCancelButton: true,
-                cancelButtonText: 'Kembali',
+                cancelButtonText: 'Batal',
                 confirmButtonColor: '#facc15',
                 cancelButtonColor: '#ef4444',
                 background: bgPopup,
                 customClass: { confirmButton: 'text-[#001229] font-bold' }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    Swal.fire({icon: 'success', title: 'Sedang Diproses', text: 'Sistem mengecek pembayaran Anda...', timer: 2500, showConfirmButton: false, background: bgPopup, color: isDark ? '#fff' : '#000'});
-                } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    setTimeout(showTopUpMenu, 300);
+                    Swal.fire({icon: 'success', title: 'Sedang Diproses', text: 'Sistem memverifikasi pembayaran Anda...', timer: 3000, showConfirmButton: false, background: bgPopup, color: isDark ? '#fff' : '#000'});
                 }
+            });
+        }
+
+        function showManualNominal() {
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            const bgPopup = isDark ? '#0b1320' : '#ffffff';
+            const inputClass = isDark ? 'bg-[#1a2639] border-gray-700 text-white focus:border-yellow-400' : 'bg-gray-50 border-gray-300 text-gray-900 focus:border-[#002147]';
+
+            Swal.fire({
+                title: `<span class="font-bold ${isDark ? 'text-white' : 'text-gray-800'} text-lg">Top Up Manual WA</span>`,
+                html: `
+                    <div class="mt-4">
+                        <p class="text-[11px] text-gray-500 dark:text-gray-400 mb-3 text-left">Masukkan nominal saldo yang ingin diisi.</p>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3.5 text-gray-500 font-bold text-sm">Rp</span>
+                            <input type="number" id="manualNominalInput" class="w-full rounded-xl py-3 pl-10 pr-4 border font-bold text-lg outline-none transition-colors ${inputClass}" placeholder="Contoh: 50000">
+                        </div>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: '<i class="fab fa-whatsapp mr-1"></i> Lanjut ke WA',
+                cancelButtonText: 'Kembali',
+                confirmButtonColor: '#25D366',
+                cancelButtonColor: '#ef4444',
+                background: bgPopup,
+                customClass: { confirmButton: 'text-white font-bold' },
+                preConfirm: () => {
+                    const nominal = document.getElementById('manualNominalInput').value;
+                    if (!nominal || parseInt(nominal) <= 0) { Swal.showValidationMessage('Masukkan nominal yang valid'); return false; }
+                    return parseInt(nominal);
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const formattedNominal = result.value.toLocaleString('id-ID');
+                    const text = encodeURIComponent(`Halo Admin DIGITAL FIKY STORE, saya ingin melakukan Top Up saldo secara manual sebesar *Rp ${formattedNominal}* ke akun saya (${user.phone}). Tolong berikan instruksi pembayarannya.`);
+                    window.open(`https://wa.me/6282231154407?text=${text}`, '_blank');
+                } else if (result.dismiss === Swal.DismissReason.cancel) { setTimeout(showTopUpMenu, 300); }
             });
         }
     </script>
@@ -503,7 +586,6 @@ cat << 'EOF' > public/info.html
     <script>
         if (!localStorage.getItem('user')) window.location.href = '/';
         if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark');
-
         fetch('/api/info').then(r => r.json()).then(data => {
             const list = document.getElementById('infoList');
             if(data.info.length === 0) {
@@ -520,9 +602,7 @@ cat << 'EOF' > public/info.html
                     </div>
                 `).join('');
             }
-        }).catch(err => {
-            document.getElementById('infoList').innerHTML = `<div class="mt-20 text-center text-red-500">Gagal memuat info.</div>`;
-        });
+        }).catch(err => { document.getElementById('infoList').innerHTML = `<div class="mt-20 text-center text-red-500">Gagal memuat info.</div>`; });
     </script>
 </body>
 </html>
@@ -668,60 +748,44 @@ cat << 'EOF' > public/profile.html
         <div class="bg-white dark:bg-[#0b1320] w-[90%] max-w-[340px] rounded-[1.25rem] border border-gray-200 dark:border-gray-800 shadow-2xl relative p-6 animate-slide-up transition-colors">
             <button onclick="closeEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
             <h3 class="text-center text-gray-800 dark:text-white font-bold text-lg mb-6">Ubah Profil</h3>
-            
             <div class="relative w-20 h-20 mx-auto mb-8">
                 <div class="w-full h-full rounded-full border-2 border-[#002147] dark:border-yellow-400 flex items-center justify-center text-[#002147] dark:text-white text-3xl font-bold bg-gray-100 dark:bg-[#1e293b]" id="editModalInitial">U</div>
-                <div class="absolute bottom-0 right-0 bg-[#002147] dark:bg-yellow-400 rounded-full w-7 h-7 flex items-center justify-center text-white dark:text-[#0b1320] border-[3px] border-white dark:border-[#0b1320] cursor-pointer" onclick="Swal.fire({icon:'info', title:'Coming Soon', text:'Fitur ganti foto menyusul.', confirmButtonColor: '#002147'})">
-                    <i class="fas fa-camera text-[10px]"></i>
-                </div>
             </div>
-
             <div class="mb-4">
                 <label class="block text-[10px] text-gray-500 mb-1">Email (Hanya Baca)</label>
                 <input type="email" id="editEmail" readonly class="w-full bg-gray-100 dark:bg-[#1e293b]/50 border border-gray-300 dark:border-gray-800 rounded-lg px-3 py-3 text-gray-500 dark:text-gray-400 text-sm focus:outline-none cursor-not-allowed">
             </div>
-            
             <div class="mb-4">
                 <label class="block text-[10px] text-gray-500 mb-1">Nama Pengguna</label>
                 <input type="text" id="editName" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition-colors">
             </div>
-
             <div class="mb-4">
                 <label class="block text-[10px] text-gray-500 mb-1">Nomor Telepon</label>
                 <input type="number" id="editPhone" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition-colors">
             </div>
-
             <div class="mb-6 hidden slide-down" id="editOtpContainer">
                 <label class="block text-[10px] text-gray-500 dark:text-gray-400 mb-1 text-center">OTP dikirim ke nomor WA baru</label>
                 <input type="number" id="editOtpInput" class="w-full bg-white dark:bg-[#0b1320] border border-green-500 dark:border-green-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-lg tracking-[0.5em] text-center font-bold focus:outline-none focus:border-green-500 dark:focus:border-green-400 transition-colors" placeholder="XXXX">
             </div>
-
             <button id="btnSimpanProfil" onclick="saveProfile()" class="w-full py-3.5 bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#001229] font-bold rounded-xl mb-3 shadow-[0_2px_10px_rgba(0,33,71,0.2)] dark:shadow-[0_2px_10px_rgba(253,224,71,0.2)] transition">Simpan Profil</button>
             <button onclick="deleteAccount()" class="w-full py-3.5 bg-red-50 dark:bg-[#3f161e] border border-red-200 dark:border-[#5c1a24] text-red-600 dark:text-red-500 font-bold rounded-xl transition hover:bg-red-100 dark:hover:bg-red-900/50">Hapus Akun</button>
         </div>
     </div>
-
     <script>
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) window.location.href = '/';
         if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark');
-
         function loadProfileData() {
-            document.getElementById('profileName').innerText = user.name;
-            document.getElementById('profilePhoneData').innerText = user.phone;
-            document.getElementById('profileCircle').innerText = user.name.charAt(0).toUpperCase();
-            document.getElementById('profileEmail').innerText = user.email || 'fikyshoto@gmail.com';
+            document.getElementById('profileName').innerText = user.name; document.getElementById('profilePhoneData').innerText = user.phone;
+            document.getElementById('profileCircle').innerText = user.name.charAt(0).toUpperCase(); document.getElementById('profileEmail').innerText = user.email || 'fikyshoto@gmail.com';
         }
         loadProfileData();
-
         fetch('/api/user/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) })
         .then(res => res.json()).then(data => { document.getElementById('profileSaldo').innerText = 'Rp ' + data.saldo.toLocaleString('id-ID'); });
-
         function logout() { 
             Swal.fire({ title: 'Keluar Akun?', text: "Apakah Anda yakin ingin keluar?", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#002147', confirmButtonText: 'Ya, Keluar', cancelButtonText: 'Batal' })
             .then((result) => { if (result.isConfirmed) { localStorage.removeItem('user'); window.location.href = '/'; } });
         }
-
         function toggleChangePassword() {
             const box = document.getElementById('changePasswordBox'); const icon = document.getElementById('cpwIcon');
             if(box.classList.contains('hidden')) { box.classList.remove('hidden'); icon.classList.replace('fa-chevron-down', 'fa-chevron-up'); } 
@@ -745,13 +809,10 @@ cat << 'EOF' > public/profile.html
                 else { Swal.fire({ icon: 'error', title: 'Gagal', text: (await res.json()).error }); }
             } catch(e) { Swal.fire({ icon: 'error', title: 'Error', text: 'Kesalahan jaringan.' }); }
         }
-
         let isRequestingOtp = false;
         function openEditModal() {
-            document.getElementById('editModalInitial').innerText = user.name.charAt(0).toUpperCase();
-            document.getElementById('editEmail').value = user.email || 'fikyshoto@gmail.com';
-            document.getElementById('editName').value = user.name;
-            document.getElementById('editPhone').value = user.phone.replace('62', '0');
+            document.getElementById('editModalInitial').innerText = user.name.charAt(0).toUpperCase(); document.getElementById('editEmail').value = user.email || 'fikyshoto@gmail.com';
+            document.getElementById('editName').value = user.name; document.getElementById('editPhone').value = user.phone.replace('62', '0');
             document.getElementById('editProfileModal').classList.remove('hidden');
         }
         function closeEditModal() { 
@@ -762,12 +823,9 @@ cat << 'EOF' > public/profile.html
         }
         async function saveProfile() {
             const oldPhone = user.phone; const newName = document.getElementById('editName').value;
-            const rawPhone = document.getElementById('editPhone').value;
-            const newPhone = rawPhone.startsWith('0') ? '62' + rawPhone.slice(1) : rawPhone;
+            const rawPhone = document.getElementById('editPhone').value; const newPhone = rawPhone.startsWith('0') ? '62' + rawPhone.slice(1) : rawPhone;
             const otp = document.getElementById('editOtpInput').value;
-
             if(!newName || !rawPhone) return Swal.fire({icon:'warning', title:'Gagal', text:'Nama & No WA wajib diisi!'});
-            
             if(newPhone !== oldPhone && !isRequestingOtp) {
                 Swal.fire({title: 'Mengirim OTP...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
                 try {
@@ -781,7 +839,6 @@ cat << 'EOF' > public/profile.html
                 return;
             }
             if(newPhone !== oldPhone && isRequestingOtp && !otp) return Swal.fire({icon:'warning', title:'Gagal', text:'Masukkan kode OTP 4 digit!'});
-
             Swal.fire({title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
             try {
                 const res = await fetch('/api/auth/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ oldPhone, newPhone, newName, otp }) });
@@ -791,7 +848,6 @@ cat << 'EOF' > public/profile.html
                 } else { Swal.fire({icon:'error', title:'Gagal', text: (await res.json()).error}); }
             } catch(e) { Swal.fire({icon:'error', title:'Oops', text:'Kesalahan jaringan.'}); }
         }
-
         function deleteAccount() {
             Swal.fire({ title: 'Hapus Akun Permanen?', text: "Akun dan sisa saldo Anda akan hangus!", icon: 'error', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#002147', confirmButtonText: 'Ya, Hapus!' })
             .then(async (result) => {
@@ -810,7 +866,7 @@ cat << 'EOF' > public/profile.html
 EOF
 
 # ==========================================
-# FILE NODE.JS (LOGIK BOT + API INFO/BANNERS/QRIS)
+# FILE NODE.JS (API CONFIG)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -837,7 +893,7 @@ const saveJSON = (file, data) => fs.writeFileSync(file, JSON.stringify(data, nul
 let configAwal = loadJSON(configFile);
 configAwal.botName = configAwal.botName || "DIGITAL FIKY STORE";
 configAwal.botNumber = configAwal.botNumber || "";
-configAwal.qrisUrl = configAwal.qrisUrl || "https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg";
+configAwal.qrisUrl = configAwal.qrisUrl || "https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg";
 configAwal.banners = configAwal.banners || [
     "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80",
     "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=600&q=80"
@@ -874,7 +930,7 @@ app.post('/api/auth/verify', (req, res) => {
         webUsers[phone].isVerified = true; webUsers[phone].otp = null; saveJSON(webUsersFile, webUsers);
         let db = loadJSON(dbFile); if (!db[phone]) { db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net' }; saveJSON(dbFile, db); }
         res.json({ message: 'Sukses!' });
-    } else res.status(400).json({ error: 'OTP Salah.' });
+    } else res.status(400).json({ error: 'OTP Salah atau Kedaluwarsa.' });
 });
 
 app.post('/api/auth/login', (req, res) => {
@@ -954,7 +1010,7 @@ BOT_NAME="digital-fiky-bot"
 
 while true; do clear
     echo "==============================================="
-    echo "      🤖 PANEL DIGITAL FIKY STORE (V40) 🤖     "
+    echo "      🤖 PANEL DIGITAL FIKY STORE (V41) 🤖     "
     echo "==============================================="
     echo "1. Setup No. Bot & Login Pairing"
     echo "2. Jalankan Bot (Latar Belakang/PM2)"
