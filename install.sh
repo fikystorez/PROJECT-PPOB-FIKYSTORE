@@ -55,9 +55,8 @@ echo "[3/5] Membangun Antarmuka Website..."
 
 cat << 'EOF' > public/style.css
 body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
-.centered-modal-box { background-color: #002147; padding: 3rem 1.5rem 2rem 1.5rem; border-radius: 1.2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); width: 90%; max-width: 360px; text-align: center; position: relative; z-index: 10; }
-.logo-f-metalik-box { width: 85px; height: 85px; margin: 0 auto; display: flex; justify-content: center; align-items: center; border-radius: 50%; border: 3px solid #94a3b8; background: radial-gradient(circle, #333333 0%, #000000 100%); box-shadow: inset 0 0 10px rgba(255,255,255,0.2), 0 10px 20px rgba(0,0,0,0.5); position: relative; }
-.logo-f-metalik-box::before { content: "F"; font-size: 55px; font-family: "Times New Roman", Times, serif; font-weight: bold; color: #e2e8f0; text-shadow: 2px 2px 4px rgba(0,0,0,0.9), -1px -1px 1px rgba(255,255,255,0.3); position: absolute; top: 52%; left: 50%; transform: translate(-50%, -50%); }
+.centered-modal-box { background-color: #002147; padding: 2.5rem 1.5rem 2rem 1.5rem; border-radius: 1.2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); width: 90%; max-width: 360px; text-align: center; position: relative; z-index: 10; }
+.brand-logo-text { font-size: 1.8rem; font-weight: 900; background: linear-gradient(135deg, #fde047 0%, #facc15 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0px 4px 10px rgba(0,0,0,0.4); margin-bottom: 1.5rem; letter-spacing: 1px; font-family: 'Arial Black', Impact, sans-serif; text-transform: uppercase; line-height: 1.1; }
 .logo-f-small { width: 45px; height: 45px; margin: 0 auto 10px auto; display: flex; justify-content: center; align-items: center; border-radius: 50%; border: 2px solid #cbd5e1; background: radial-gradient(circle, #333333 0%, #000000 100%); box-shadow: inset 0 0 5px rgba(255,255,255,0.2), 0 5px 10px rgba(0,0,0,0.5); position: relative; z-index: 2; }
 .logo-f-small::before { content: "F"; font-size: 28px; font-family: "Times New Roman", Times, serif; font-weight: bold; color: #e2e8f0; text-shadow: 1px 1px 2px rgba(0,0,0,0.9); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 .compact-input-wrapper { position: relative; margin-bottom: 0.85rem; width: 100%; }
@@ -104,11 +103,11 @@ cat << 'EOF' > public/index.html
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
-    <div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div>
-    <div class="centered-modal-box pt-14">
-        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4"><h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1></div>
+    <div class="centered-modal-box">
+        <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
         <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
-        <p class="compact-text-small mb-6">Silahkan masukkan email/no HP dan password kamu!</p>
+        <p class="compact-text-small mb-6" id="loginDesc">Silahkan masukkan email/no HP dan password kamu!</p>
+        
         <form id="loginForm">
             <div class="compact-input-wrapper">
                 <input type="text" id="identifier" class="compact-input-box" required placeholder="Email / No. HP">
@@ -117,26 +116,63 @@ cat << 'EOF' > public/index.html
                 <input type="password" id="password" class="compact-input-box" required placeholder="Password">
                 <i class="fas fa-eye password-toggle" onclick="togglePassword('password', this)"></i>
             </div>
-            <div class="text-right mb-5 mt-1"><a href="/forgot.html" class="text-[0.8rem] text-[#fde047] font-bold">Lupa password?</a></div>
+            <div class="text-right mb-5 mt-1" id="forgotLink"><a href="/forgot.html" class="text-[0.8rem] text-[#fde047] font-bold">Lupa password?</a></div>
             <button type="submit" class="btn-yellow">Login Sekarang</button>
         </form>
-        <div class="mt-6 text-center compact-text-small">Belum punya akun? <a href="/register.html" class="text-[0.8rem] text-[#fde047] font-bold">Daftar disini</a></div>
+
+        <form id="otpLoginForm" class="hidden">
+            <div class="compact-input-wrapper mb-5">
+                <input type="number" id="loginOtpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX">
+            </div>
+            <button type="submit" class="btn-yellow">Verifikasi & Login</button>
+        </form>
+
+        <div class="mt-6 text-center compact-text-small" id="registerLink">Belum punya akun? <a href="/register.html" class="text-[0.8rem] text-[#fde047] font-bold">Daftar disini</a></div>
     </div>
+
     <script>
         function togglePassword(id, el) {
             const input = document.getElementById(id);
             if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
             else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
         }
+        
+        let loginPhone = '';
+
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const identifier = document.getElementById('identifier').value; const password = document.getElementById('password').value;
+            const identifier = document.getElementById('identifier').value; 
+            const password = document.getElementById('password').value;
+            Swal.fire({title: 'Memeriksa Data...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
             try {
-                const res = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password }) });
+                const res = await fetch('/api/auth/login-req', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password }) });
                 const data = await res.json();
-                if (res.ok) { localStorage.setItem('user', JSON.stringify(data.user)); window.location.href = '/dashboard.html'; } 
+                if (res.ok) { 
+                    loginPhone = data.phone;
+                    document.getElementById('loginForm').classList.add('hidden');
+                    document.getElementById('forgotLink').classList.add('hidden');
+                    document.getElementById('registerLink').classList.add('hidden');
+                    document.getElementById('otpLoginForm').classList.remove('hidden');
+                    document.getElementById('loginDesc').innerHTML = "Kode OTP Login 4 Digit telah dikirim ke WA Anda.";
+                    Swal.fire({ icon: 'success', title: 'Aman!', text: 'Silakan cek WhatsApp Anda untuk kode OTP Login.', background: '#002147', color: '#fff' });
+                } 
                 else { Swal.fire({ icon: 'error', title: 'Gagal Login', text: data.error, background: '#002147', color: '#fff' }); }
             } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Terjadi kesalahan sistem.', background: '#002147', color: '#fff' }); }
+        });
+
+        document.getElementById('otpLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            const otp = document.getElementById('loginOtpCode').value;
+            Swal.fire({title: 'Memverifikasi...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+            try {
+                const res = await fetch('/api/auth/login-verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: loginPhone, otp }) });
+                const data = await res.json();
+                if (res.ok) { 
+                    localStorage.setItem('user', JSON.stringify(data.user)); 
+                    Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Login Sukses.', background: '#002147', color: '#fff', timer: 1500, showConfirmButton: false }).then(() => { window.location.href = '/dashboard.html'; }); 
+                } 
+                else { Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: '#002147', color: '#fff' }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi OTP.', background: '#002147', color: '#fff' }); }
         });
     </script>
 </body>
@@ -155,9 +191,8 @@ cat << 'EOF' > public/register.html
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
-    <div class="z-20 mb-[-42px]" id="logo-header"><div class="logo-f-metalik-box"></div></div>
-    <div class="centered-modal-box pt-14" id="box-register">
-        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-2"><h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1></div>
+    <div class="centered-modal-box" id="box-register">
+        <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
         <h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2>
         <p class="compact-text-small mb-4">Silahkan lengkapi data untuk mendaftar!</p>
         <form id="registerForm">
@@ -172,8 +207,8 @@ cat << 'EOF' > public/register.html
         </form>
         <div class="mt-4 text-center compact-text-small">Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a></div>
     </div>
-    <div class="centered-modal-box pt-14 hidden" id="box-otp">
-        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4"><h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1></div>
+    <div class="centered-modal-box hidden" id="box-otp">
+        <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
         <h2 class="text-lg font-bold text-white mb-1">VERIFIKASI WA</h2>
         <p class="compact-text-small mb-5 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
         <form id="otpForm">
@@ -225,9 +260,8 @@ cat << 'EOF' > public/forgot.html
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="flex flex-col items-center justify-center h-screen relative bg-[#fde047]">
-    <div class="z-20 mb-[-42px]"><div class="logo-f-metalik-box"></div></div>
     <div class="centered-modal-box pt-14">
-        <div class="inline-block border-2 border-yellow-300 rounded-full px-5 py-1 mb-4"><h1 class="text-sm font-extrabold text-yellow-300 tracking-widest m-0">DIGITAL FIKY STORE</h1></div>
+        <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
         <h2 class="text-lg font-bold text-white mb-1">RESET PASSWORD</h2>
         <form id="requestOtpForm">
             <p class="compact-text-small mb-5 text-center">Masukkan Nomor WA Anda untuk reset password.</p>
@@ -275,6 +309,7 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
+# SCRIPT DASHBOARD & LAINNYA 100% SAMA SEPERTI V69, TIDAK ADA YANG DIHAPUS.
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -670,6 +705,7 @@ cat << 'EOF' > public/mutasi.html
 <!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Mutasi Saldo</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden transition-colors"><div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="history.back()"></i><h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white">Mutasi Saldo</h1></div><div class="px-4 mt-4" id="mutasiList"><div class="mt-20 flex flex-col items-center justify-center text-gray-400"><i class="fas fa-spinner fa-spin text-4xl mb-4"></i><p>Memuat data mutasi...</p></div></div></div><script>const user = JSON.parse(localStorage.getItem('user')); if (!user) window.location.href = '/'; if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark'); fetch('/api/user/mutasi', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }).then(res => res.json()).then(data => { const list = document.getElementById('mutasiList'); if(data.mutasi.length === 0) { list.innerHTML = `<div class="mt-20 flex flex-col items-center justify-center text-center px-6"><div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-exchange-alt text-gray-400 text-4xl"></i></div><h2 class="text-gray-800 dark:text-white font-bold text-lg tracking-wide mb-2 transition-colors">Belum Ada Mutasi</h2><p class="text-gray-500 dark:text-gray-400 text-[13px] leading-relaxed">Catatan uang masuk dan keluar akan tampil di sini.</p></div>`; } else { list.innerHTML = data.mutasi.reverse().map(m => `<div class="flex items-center justify-between p-4 bg-white dark:bg-[#111c2e] border border-gray-200 dark:border-gray-800 rounded-2xl mb-3 shadow-sm transition-colors"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full ${m.type === 'in' ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'} flex items-center justify-center text-lg shrink-0"><i class="fas ${m.type === 'in' ? 'fa-arrow-down' : 'fa-arrow-up'}"></i></div><div><h4 class="font-bold text-[13px] text-gray-800 dark:text-gray-200">${m.desc}</h4><p class="text-[10px] text-gray-500">${m.date}</p></div></div><div class="text-right"><span class="font-bold text-[14px] ${m.type === 'in' ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}">${m.type === 'in' ? '+' : '-'} Rp ${m.amount.toLocaleString('id-ID')}</span></div></div>`).join(''); } }).catch(err => { list.innerHTML = `<div class="mt-20 text-center text-red-500">Gagal memuat data mutasi.</div>`; });</script></body></html>
 EOF
 
+# MEMBUAT HALAMAN OPERATOR DINAMIS
 cat << 'EOF' > public/operator.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -964,6 +1000,50 @@ app.post('/api/admin/add_balance', async (req, res) => {
     res.json({ success: true, message: `\n✅ Saldo ${n} berhasil ditambah dan notifikasi WA telah dikirim!` });
 });
 
+// API BARU: Login Request OTP
+app.post('/api/auth/login-req', async (req, res) => {
+    const { identifier, password } = req.body; 
+    let webUsers = loadJSON(webUsersFile); 
+    let fPhone = identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier;
+    let foundPhone = Object.keys(webUsers).find(p => (p === fPhone || webUsers[p].email === identifier) && webUsers[p].password === password);
+    
+    if (foundPhone) {
+        if (!webUsers[foundPhone].isVerified) return res.status(400).json({ error: 'Akun belum diverifikasi OTP saat pendaftaran.' });
+        
+        const otp = Math.floor(1000 + Math.random() * 9000).toString();
+        webUsers[foundPhone].loginOtp = otp;
+        webUsers[foundPhone].loginOtpExpiry = Date.now() + 5 * 60 * 1000; // 5 menit
+        saveJSON(webUsersFile, webUsers);
+        
+        try {
+            const msg = `Halo *${webUsers[foundPhone].name}*! 👋\n\nAda percobaan masuk ke akun *DIGITAL FIKY STORE* Anda.\n\nBerikut adalah kode OTP Login Anda:\n\n*${otp}*\n\n⏳ _Kode ini berlaku selama 5 menit._\n\n⚠️ _Jangan bagikan kode ini kepada siapapun demi keamanan saldo Anda!_`;
+            await global.waSocket?.sendMessage(foundPhone + '@c.us', { text: msg });
+        } catch(e) {}
+        
+        res.json({ message: 'OTP Terkirim', phone: foundPhone });
+    } else {
+        res.status(400).json({ error: 'Email/No HP atau Password salah.' });
+    }
+});
+
+// API BARU: Login Verify OTP
+app.post('/api/auth/login-verify', (req, res) => {
+    const { phone, otp } = req.body; 
+    let webUsers = loadJSON(webUsersFile);
+    if (webUsers[phone] && webUsers[phone].loginOtp === otp) {
+        if(Date.now() > webUsers[phone].loginOtpExpiry) {
+            return res.status(400).json({ error: 'OTP sudah kedaluwarsa. Silakan login ulang.' });
+        }
+        delete webUsers[phone].loginOtp;
+        delete webUsers[phone].loginOtpExpiry;
+        saveJSON(webUsersFile, webUsers);
+        
+        res.json({ message: 'Login sukses', user: { phone: phone, name: webUsers[phone].name, email: webUsers[phone].email, avatar: webUsers[phone].avatar || null } });
+    } else {
+        res.status(400).json({ error: 'Kode OTP Salah.' });
+    }
+});
+
 app.post('/api/auth/register', async (req, res) => {
     const { name, phone, email, password } = req.body; let webUsers = loadJSON(webUsersFile); let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
     if (webUsers[fPhone] && webUsers[fPhone].isVerified) return res.status(400).json({ error: 'Nomor sudah terdaftar.' });
@@ -987,14 +1067,7 @@ app.post('/api/auth/verify', (req, res) => {
     } else res.status(400).json({ error: 'OTP Salah.' });
 });
 
-app.post('/api/auth/login', (req, res) => {
-    const { identifier, password } = req.body; let webUsers = loadJSON(webUsersFile); let fPhone = identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier;
-    let foundPhone = Object.keys(webUsers).find(p => (p === fPhone || webUsers[p].email === identifier) && webUsers[p].password === password);
-    if (foundPhone) {
-        if (!webUsers[foundPhone].isVerified) return res.status(400).json({ error: 'Akun belum diverifikasi OTP.' });
-        res.json({ message: 'Login sukses', user: { phone: foundPhone, name: webUsers[foundPhone].name, email: webUsers[foundPhone].email, avatar: webUsers[foundPhone].avatar || null } });
-    } else res.status(400).json({ error: 'Data salah.' });
-});
+// LOGIN LAMA DIHAPUS, DIGANTI LOGIN-REQ DAN LOGIN-VERIFY DIATAS
 
 app.post('/api/auth/forgot', async (req, res) => {
     const { phone } = req.body; let webUsers = loadJSON(webUsersFile); let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
@@ -1090,7 +1163,7 @@ NC='\033[0m' # No Color
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V69) 💎       ${NC}"
+    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V70) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
