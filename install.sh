@@ -477,7 +477,8 @@ cat << 'EOF' > public/dashboard.html
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) window.location.href = '/';
         
-        document.getElementById('headerGreeting').innerText = "Hai, " + user.name.split(' ')[0];
+        // FIX: Display full name
+        document.getElementById('headerGreeting').innerText = "Hai, " + user.name; 
         document.getElementById('sidebarName').innerText = user.name;
         document.getElementById('sidebarPhone').innerText = user.phone;
         
@@ -608,7 +609,6 @@ cat << 'EOF' > public/dashboard.html
                 closeTopUp(); 
                 const formatted = 'Rp ' + finalNominal.toLocaleString('id-ID');
 
-                // Request ke API, durasi akan ditambahkan 5 menit di Backend
                 await fetch('/api/topup/request', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ phone: user.phone, method: 'QRIS Otomatis', nominal: finalNominal }) });
                 
                 setTimeout(() => {
@@ -684,7 +684,6 @@ cat << 'EOF' > public/dashboard.html
 </html>
 EOF
 
-# INFO, PROFIL, GAME, RIWAYAT, RIWAYAT TOPUP, MUTASI, OPERATOR MINIFIED TETAP SAMA SPT V68...
 cat << 'EOF' > public/info.html
 <!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Pusat Informasi</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><link rel="stylesheet" href="style.css"><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden transition-colors"><div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i><h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white">Pusat Informasi</h1></div><div class="p-4" id="infoList"><div class="mt-20 flex flex-col items-center justify-center text-gray-400"><i class="fas fa-spinner fa-spin text-4xl mb-4"></i><p>Memuat informasi...</p></div></div><div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40 transition-colors"><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div><div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div></div></div><script>if (!localStorage.getItem('user')) window.location.href = '/'; if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark'); fetch('/api/info').then(r => r.json()).then(data => { const list = document.getElementById('infoList'); if(data.info.length === 0) list.innerHTML = `<div class="mt-20 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500"><i class="fas fa-bell-slash text-5xl mb-4 opacity-50"></i><p class="text-sm">Belum ada info terbaru.</p></div>`; else list.innerHTML = data.info.reverse().map(i => `<div class="relative bg-white dark:bg-[#111c2e] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 mb-4 shadow-sm overflow-hidden transition-colors"><div class="absolute -right-2 top-4 text-7xl opacity-10 dark:opacity-20 select-none">📢</div><div class="flex justify-between items-start mb-3 relative z-10"><h3 class="font-bold text-[#002147] dark:text-yellow-400 text-[15px] pr-2">${i.judul}</h3><span class="text-[10px] text-gray-500 whitespace-nowrap bg-gray-100 dark:bg-black px-2 py-1 rounded-md border border-gray-200 dark:border-gray-800">${i.date}</span></div><p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed relative z-10">${i.isi}</p></div>`).join(''); });</script></body></html>
 EOF
@@ -890,6 +889,10 @@ cat << 'EOF' > public/operator.html
 </html>
 EOF
 
+cat << 'EOF' > public/game.html
+<!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Top Up Game - DIGITAL FIKY STORE</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><link rel="stylesheet" href="style.css"><script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative shadow-2xl overflow-x-hidden transition-colors"><div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="history.back()"></i><h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white">Top Up Game</h1></div><div class="px-4 mt-6"><h3 class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-3 uppercase">PILIH GAME FAVORITMU</h3><div class="bg-white dark:bg-[#111c2e] rounded-b-2xl rounded-t-xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm transition-colors mt-4"><div class="bg-black p-4 flex items-center gap-2"><i class="fas fa-gamepad text-yellow-400 text-lg"></i><span class="font-bold text-white text-sm">Game</span></div><div class="p-4 grid grid-cols-3 gap-3"><div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="Swal.fire({icon:'info', title:'Free Fire', text:'Fitur sedang dikembangkan.'})"><div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 dark:border-gray-500 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold italic text-sm mb-2 shrink-0">FF</div><div class="text-[11px] font-medium text-gray-700 dark:text-gray-300 text-center leading-tight">Free Fire</div></div><div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="Swal.fire({icon:'info', title:'Mobile Legends', text:'Fitur sedang dikembangkan.'})"><div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 dark:border-gray-500 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold italic text-xs leading-tight text-center shrink-0">ML<br>BB</div><div class="text-[11px] font-medium text-gray-700 dark:text-gray-300 text-center leading-tight">Mobile<br>Legends</div></div><div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="Swal.fire({icon:'info', title:'PUBG Mobile', text:'Fitur sedang dikembangkan.'})"><div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 dark:border-gray-500 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold italic text-[10px] shrink-0">PUBG</div><div class="text-[11px] font-medium text-gray-700 dark:text-gray-300 text-center leading-tight">PUBG<br>Mobile</div></div><div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="Swal.fire({icon:'info', title:'Valorant', text:'Fitur sedang dikembangkan.'})"><div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 dark:border-gray-500 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold italic text-[11px] shrink-0">VALO</div><div class="text-[11px] font-medium text-gray-700 dark:text-gray-300 text-center leading-tight">Valorant</div></div></div></div></div></div><script>if (!localStorage.getItem('user')) window.location.href = '/'; if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark');</script></body></html>
+EOF
+
 # ==========================================
 # FILE NODE.JS (API)
 # ==========================================
@@ -1000,7 +1003,6 @@ app.post('/api/admin/add_balance', async (req, res) => {
     res.json({ success: true, message: `\n✅ Saldo ${n} berhasil ditambah dan notifikasi WA telah dikirim!` });
 });
 
-// API BARU: Login Request OTP
 app.post('/api/auth/login-req', async (req, res) => {
     const { identifier, password } = req.body; 
     let webUsers = loadJSON(webUsersFile); 
@@ -1026,7 +1028,6 @@ app.post('/api/auth/login-req', async (req, res) => {
     }
 });
 
-// API BARU: Login Verify OTP
 app.post('/api/auth/login-verify', (req, res) => {
     const { phone, otp } = req.body; 
     let webUsers = loadJSON(webUsersFile);
@@ -1161,7 +1162,7 @@ NC='\033[0m' # No Color
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V72) 💎       ${NC}"
+    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V73) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
