@@ -388,6 +388,28 @@ cat << 'EOF' > public/dashboard.html
             <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20" id="promoDots"></div>
         </div>
 
+        <div class="mx-4 mt-4 bg-white dark:bg-[#111c2e] border border-gray-200 dark:border-gray-800 rounded-[1rem] p-3.5 shadow-sm flex justify-between items-center transition-colors">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-[#002147] dark:text-yellow-400 shadow-sm border border-blue-100 dark:border-blue-800/30">
+                    <i class="far fa-calendar-alt text-[15px]"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-[9px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Tanggal</span>
+                    <span class="text-xs font-extrabold text-gray-800 dark:text-gray-200 tracking-wide" id="realtimeDate">YYYY/MM/DD</span>
+                </div>
+            </div>
+            <div class="h-8 w-px bg-gray-200 dark:bg-gray-700 mx-2"></div>
+            <div class="flex items-center gap-3">
+                <div class="flex flex-col text-right">
+                    <span class="text-[9px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Waktu</span>
+                    <span class="text-xs font-extrabold text-gray-800 dark:text-gray-200 tracking-widest" id="realtimeClock">00:00:00</span>
+                </div>
+                <div class="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-[#002147] dark:text-yellow-400 shadow-sm border border-blue-100 dark:border-blue-800/30">
+                    <i class="far fa-clock text-[15px]"></i>
+                </div>
+            </div>
+        </div>
+
         <div class="mx-4 mt-8 mb-4">
             <h3 class="font-extrabold text-gray-800 dark:text-white mb-4 text-[16px] tracking-wide ml-1 transition-colors">Layanan Produk</h3>
             <div class="grid grid-cols-4 gap-y-6 gap-x-3">
@@ -490,6 +512,25 @@ cat << 'EOF' > public/dashboard.html
         let timerInterval;
         let currentSaldo = 0;
         let isSaldoHidden = localStorage.getItem('hideSaldo') === 'true';
+
+        // FUNGSI UPDATE JAM REALTIME
+        function updateDateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const date = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            const dateEl = document.getElementById('realtimeDate');
+            const clockEl = document.getElementById('realtimeClock');
+            
+            if(dateEl) dateEl.innerText = `${year}/${month}/${date}`;
+            if(clockEl) clockEl.innerText = `${hours}:${minutes}:${seconds}`;
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime(); // init first call
 
         function updateSaldoDisplay() {
             const el = document.getElementById('displaySaldo');
@@ -685,6 +726,7 @@ cat << 'EOF' > public/dashboard.html
 </html>
 EOF
 
+# INFO, PROFIL, MUTASI, OPERATOR MINIFIED TETAP SAMA SPT V76...
 cat << 'EOF' > public/info.html
 <!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Pusat Informasi</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><link rel="stylesheet" href="style.css"><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden transition-colors"><div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i><h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white">Pusat Informasi</h1></div><div class="p-4" id="infoList"><div class="mt-20 flex flex-col items-center justify-center text-gray-400"><i class="fas fa-spinner fa-spin text-4xl mb-4"></i><p>Memuat informasi...</p></div></div><div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40 transition-colors"><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div><div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div></div></div><script>if (!localStorage.getItem('user')) window.location.href = '/'; if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark'); fetch('/api/info').then(r => r.json()).then(data => { const list = document.getElementById('infoList'); if(data.info.length === 0) list.innerHTML = `<div class="mt-20 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500"><i class="fas fa-bell-slash text-5xl mb-4 opacity-50"></i><p class="text-sm">Belum ada info terbaru.</p></div>`; else list.innerHTML = data.info.reverse().map(i => `<div class="relative bg-white dark:bg-[#111c2e] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 mb-4 shadow-sm overflow-hidden transition-colors"><div class="absolute -right-2 top-4 text-7xl opacity-10 dark:opacity-20 select-none">📢</div><div class="flex justify-between items-start mb-3 relative z-10"><h3 class="font-bold text-[#002147] dark:text-yellow-400 text-[15px] pr-2">${i.judul}</h3><span class="text-[10px] text-gray-500 whitespace-nowrap bg-gray-100 dark:bg-black px-2 py-1 rounded-md border border-gray-200 dark:border-gray-800">${i.date}</span></div><p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed relative z-10">${i.isi}</p></div>`).join(''); });</script></body></html>
 EOF
@@ -701,6 +743,191 @@ cat << 'EOF' > public/riwayat_topup.html
 <!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Riwayat Top Up - DIGITAL FIKY STORE</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden transition-colors"><div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 transition-colors border-b border-gray-200 dark:border-gray-800"><i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i><h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white">Riwayat Top Up</h1></div><div class="px-4 mt-6" id="historyContainer"><div class="mt-14 flex flex-col items-center justify-center text-center px-6"><i class="fas fa-spinner fa-spin text-4xl mb-4 text-gray-400"></i></div></div></div><script>const user = JSON.parse(localStorage.getItem('user')); if (!user) window.location.href = '/'; if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark'); fetch('/api/topup/history', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }).then(res => res.json()).then(data => { const container = document.getElementById('historyContainer'); if(data.history.length === 0) { container.innerHTML = `<div class="mt-14 flex flex-col items-center justify-center text-center px-6"><div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-wallet text-gray-400 text-4xl"></i></div><h2 class="text-gray-800 dark:text-white font-bold text-lg tracking-wide mb-2 transition-colors">Belum Ada Top Up</h2><p class="text-gray-500 dark:text-gray-400 text-[13px] leading-relaxed mb-8 px-2 transition-colors">Anda belum melakukan pengisian saldo. Ayo isi saldo sekarang!</p><button class="bg-[#002147] text-white dark:bg-[#0b1320] dark:text-yellow-400 border border-transparent dark:border-gray-700 font-bold py-3 px-8 rounded-full shadow-lg hover:opacity-90 transition" onclick="location.href='/dashboard.html'">Top Up Sekarang</button></div>`; } else { window.topupData = data.history.reverse(); container.innerHTML = window.topupData.map((item, index) => { let isExpired = item.status === 'Expired'; let statusColor = item.status === 'Proses' ? 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-800' : (item.status === 'Sukses' ? 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 border-green-200 dark:border-green-800' : 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-800'); let iconMethod = item.method.includes('QRIS') ? '<i class="fas fa-qrcode"></i>' : (item.method.includes('Admin') ? '<i class="fas fa-check-circle"></i>' : '<i class="fab fa-whatsapp"></i>'); let titleText = item.method.includes('Admin') ? 'Saldo ditambah oleh Admin Fiky Store' : `Top Up ${item.method}`; return `<div onclick="showDetailTopup(${index})" class="bg-white dark:bg-[#111c2e] p-4 rounded-2xl mb-3 border border-gray-200 dark:border-gray-800 shadow-sm flex justify-between items-center transition-colors cursor-pointer hover:shadow-md hover:border-[#002147] dark:hover:border-yellow-400 ${isExpired ? 'opacity-70' : ''}"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-[#0b1320] flex items-center justify-center text-gray-500 dark:text-gray-400 text-lg">${iconMethod}</div><div><h4 class="font-bold text-[13px] text-gray-800 dark:text-gray-200">${titleText}</h4><p class="text-[10px] text-gray-500">${item.date}</p></div></div><div class="text-right"><p class="font-extrabold text-[14px] text-[#002147] dark:text-yellow-400 mb-1">Rp ${item.nominal.toLocaleString('id-ID')}</p><span class="text-[9px] font-bold px-2 py-0.5 rounded border ${statusColor} uppercase tracking-wider">${item.status}</span></div></div>`; }).join(''); } }).catch(err => { document.getElementById('historyContainer').innerHTML = `<div class="mt-20 text-center text-red-500">Gagal memuat data.</div>`; }); window.showDetailTopup = function(index) { const item = window.topupData[index]; const isDark = localStorage.getItem('darkMode') === 'true'; const bgPopup = isDark ? '#0b1320' : '#ffffff'; const textColor = isDark ? 'text-gray-200' : 'text-gray-800'; const mutedColor = isDark ? 'text-gray-400' : 'text-gray-500'; const borderColor = isDark ? 'border-gray-800' : 'border-gray-200'; let statusColor = item.status === 'Proses' ? 'text-yellow-500' : (item.status === 'Sukses' ? 'text-green-500' : 'text-red-500'); let titleText = item.method.includes('Admin') ? 'Saldo ditambah oleh Admin Fiky Store' : `Top Up Saldo`; Swal.fire({ title: `<span class="font-bold ${isDark ? 'text-white' : 'text-gray-800'} text-lg">Detail Top Up</span>`, html: `<div class="text-left mt-2 space-y-3 text-sm"><div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Waktu</span><span class="font-medium ${textColor} text-right">${item.date}</span></div><div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Nominal</span><span class="font-medium ${textColor} text-right">Rp ${item.nominal.toLocaleString('id-ID')}</span></div><div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Status</span><span class="font-bold ${statusColor} text-right uppercase">${item.status}</span></div><div class="mt-5 text-center"><p class="${mutedColor} text-xs mb-1">Total Bayar</p><p class="text-3xl font-extrabold ${textColor}">Rp ${item.nominal.toLocaleString('id-ID')}</p></div></div>`, showConfirmButton: true, confirmButtonText: 'Tutup', confirmButtonColor: isDark ? '#facc15' : '#002147', background: bgPopup, customClass: { confirmButton: isDark ? 'text-[#001229] font-bold px-8' : 'text-white font-bold px-8' } }); }</script></body></html>
 EOF
 
+cat << 'EOF' > public/operator.html
+<!DOCTYPE html>
+<html lang="id" id="html-root">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilih Operator - DIGITAL FIKY STORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
+</head>
+<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
+    <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative shadow-2xl overflow-x-hidden transition-colors">
+        
+        <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 transition-colors">
+            <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="goBack()"></i>
+            <h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white uppercase" id="pageTitle">Operator</h1>
+        </div>
+
+        <div id="operatorContainer" class="block">
+            <div class="px-4 mt-6">
+                <h3 class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-3 uppercase" id="pageSubtitle">PILIH OPERATOR TUJUAN</h3>
+                <div class="bg-white dark:bg-[#111c2e] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm transition-colors" id="opListRender">
+                    </div>
+            </div>
+        </div>
+
+        <div id="categoryContainer" class="hidden">
+            <div class="flex justify-between items-center px-5 py-4 bg-black dark:bg-[#001229] text-white">
+                <span class="font-bold text-[15px] tracking-wide" id="catSubtitle">Silahkan Di Pilih..</span>
+                <i class="fas fa-home text-lg cursor-pointer hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"></i>
+            </div>
+            
+            <div class="bg-white dark:bg-[#111c2e] shadow-sm transition-colors pb-4" id="categoryListContainer">
+                <div id="categoryList"></div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        if (!localStorage.getItem('user')) window.location.href = '/';
+        if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark');
+        
+        const params = new URLSearchParams(window.location.search); 
+        const type = params.get('type'); 
+        const titleEl = document.getElementById('pageTitle'); 
+        const subtitleEl = document.getElementById('pageSubtitle');
+        
+        let currentState = 'operator';
+        let originalTitle = '';
+
+        const dataCategories = {
+            'xl': { name: 'XL', logo: 'XL', items: ['AKRAB','CIRCLE','XL DATA','BEBAS PUAS','XL CUANKU','EXTRA DIGITAL','HARIAN','HOTROAD SPESIAL','COMBO FLEX','XL Data Flex Mini (Baru)','XL Data FLex (Baru)','FLEX MAX','ULTRA 5G+','XTRA COMBO','XTRA COMBO GIFT','XTRA COMBO LITE','XTRA COMBO MINI','DATA GIFT','BONUS HARIAN','XL DATA GAMES','XL KUOTA GAMES','GAMES','ROAMING','GRAB GACOR','X-TRA ON','BLUE','XL PASS','XL UMROH','TEMBAK XL'] },
+            'axis': { name: 'AXIS', logo: 'AXIS', items: ['AKRAB','UMUM','AXIS MINI','AXIS BAGI KUOTA','AIGO SS','HARIAN','OWSEM','BORNET','AXIS CUANKU','AXIS','LOKAL','XTRA DIGITAL','WARNET','UMROH'] },
+            'telkomsel': { name: 'TELKOMSEL', logo: 'TS', items: ['UMUM','BULK','FLASH','MINI','CUANKU TELKOMSEL','APPS KUOTA','MAXSTREAM','UMROH','MALAM','COMBO SAKTI','GamesMAX Unlimited','GamesMax','Musicmax','Disney+ Hotstar','OMG','GigaMAX','UnlimitedMAX','Orbit','InternetMAX','Surprise Deal','UKM','Bronze','Harian','Mingguan','Bulanan','Ketengan Utama','Harian Sepuasnya','Roamax','GamesMAX Booster','Naslok','Game','Roamax Haji','COMBO','Eksklusif','Super Seru','Flash','Revamp','DPI','Enterprise','Serba Lima Ribu','Magnet','UKM Plus','Terbaik Untukmu','Non Puma','VideoMax'] },
+            'indosat': { name: 'INDOSAT OOREDOO', logo: 'IS', items: ['FREEDOM NASIONAL','FREEDOM SENSASI (LARIS)','RAMADHAN (BARU)','DATA LOKAL','FREEDOM HARIAN','FREEDOM COMBO','FREEDOM UNLIMITED','FREEDOM COMBO GIFT','FREEDOM INTERNET GIFT','FREEDOM INTERNET SPESIAL','FREEDOM LONGLIFE','FREEDOM MAX','UMUM','CUANKU PROMO','SACHET','GASPOL','HIFI AIR','FREEDOM APPS','FREEDOM APPS GIFT','PURE MERDEKA','FREEDOM PLAY','KITA','YELLOW','ROAMING','E-SIM','UMROH & HAJI','UMROH HAJI COMBO'] },
+            'tri': { name: 'TRI', logo: '3', items: ['UMUM & MINI','HAPPY','AON','TRI CUANKU','LOKAL','KIKIDA','MIX & TRANSFER','GETMORE & CICILAN','HOME','ROAMING','H3RO','SAHABAT OJOL','IBADAH','ADDON','HAPPY PLAY','HIFI AIR','RAMADHAN (BARU)','happy 5G','KEEPON'] },
+            'smartfren': { name: 'SMARTFREN', logo: 'SF', items: ['UMUM','UNLIMITED','UNLIMITED NONSTOP','NONSTOP','KUOTA','KUOTA 5G+','APLIKASI','GAMING','MANDIRI','CONNEX EVO','ROAMING','VOLUME'] },
+            'byu': { name: 'BY.U', logo: 'BY.U', items: ['Paket Data Umum','Paket Data Topping','BY.U CUANKU PROMO','Paket Data Mbps','Paket Data Kaget','Paket Data Super Kaget','Paket Data Jajan'] }
+        };
+
+        const ewalletCategories = {
+            'dana': { name: 'DANA', logo: 'DN' },
+            'gopay': { name: 'GOPAY', logo: 'GP' },
+            'shopeepay': { name: 'SHOPEEPAY', logo: 'SP' },
+            'ovo': { name: 'OVO', logo: 'OV' },
+            'linkaja': { name: 'LINKAJA', logo: 'LA' }
+        };
+
+        const etollCategories = {
+            'bni': { name: 'BNI TapCash', logo: 'BNI' },
+            'bri': { name: 'BRI Brizzi', logo: 'BRI' },
+            'mandiri': { name: 'Mandiri Emoney', logo: 'MDR' }
+        };
+
+        const tagihanCategories = [
+            { name: 'BPJS', icon: 'fas fa-heartbeat' },
+            { name: 'Gas Negara (PGN)', icon: 'fas fa-fire' },
+            { name: 'Pertagas (GAS)', icon: 'fas fa-fire-alt' },
+            { name: 'PLN', icon: 'fas fa-lightbulb' },
+            { name: 'Telkom/<br>Indihome', icon: 'fas fa-wifi' },
+            { name: 'TV Berbayar', icon: 'fas fa-tv' },
+            { name: 'Tagihan<br>Seluler', icon: 'fas fa-mobile-alt' },
+            { name: 'Cicilan<br>Finance', icon: 'fas fa-hand-holding-usd' },
+            { name: 'Internet<br>Bulanan', icon: 'fas fa-globe' },
+            { name: 'PDAM', icon: 'fas fa-tint' }
+        ];
+
+        let currentList = {};
+
+        if(type === 'ewallet') {
+            originalTitle = 'E-Wallet';
+            subtitleEl.innerText = 'PILIH E-WALLET TUJUAN';
+            currentList = ewalletCategories;
+        } else if(type === 'etoll') {
+            originalTitle = 'Saldo E-Toll';
+            subtitleEl.innerText = 'PILIH KARTU E-TOLL';
+            currentList = etollCategories;
+        } else if(type === 'tagihan') {
+            originalTitle = 'Tagihan';
+            subtitleEl.innerText = 'PILIH JENIS TAGIHAN';
+            document.getElementById('operatorContainer').classList.replace('block', 'hidden');
+            
+            let gridHtml = '<div class="grid grid-cols-4 gap-y-6 gap-x-3 mt-4 mx-4">';
+            tagihanCategories.forEach(item => {
+                gridHtml += `
+                    <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu', text: 'Fitur sedang dikembangkan.'})">
+                        <div class="w-[4.2rem] h-[4.2rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-[26px] shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors">
+                            <i class="${item.icon}"></i>
+                        </div>
+                        <span class="text-[9px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase text-center leading-tight transition-colors">${item.name}</span>
+                    </div>
+                `;
+            });
+            gridHtml += '</div>';
+            
+            const parent = document.getElementById('operatorContainer').parentElement;
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = `<h3 class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-4 uppercase mx-4 mt-6">PILIH JENIS TAGIHAN</h3>` + gridHtml;
+            parent.appendChild(tempDiv);
+
+        } else {
+            if(type === 'pulsa') originalTitle = 'Isi Pulsa'; 
+            else if(type === 'data') originalTitle = 'Paket Internet'; 
+            else if(type === 'masaaktif') originalTitle = 'Masa Aktif'; 
+            else originalTitle = 'Pilih Operator';
+            subtitleEl.innerText = 'PILIH OPERATOR TUJUAN';
+            currentList = dataCategories;
+        }
+
+        titleEl.innerText = originalTitle;
+
+        if(type !== 'tagihan') {
+            let opHtml = '';
+            for(let key in currentList){
+                let op = currentList[key];
+                opHtml += `
+                    <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('${key}')">
+                        <div class="w-10 h-10 rounded-full border border-black dark:border-gray-400 flex items-center justify-center text-black dark:text-gray-300 font-bold text-[10px] shrink-0 text-center leading-tight bg-white dark:bg-[#0b1320]">${op.logo}</div>
+                        <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">${op.name}</div>
+                        <i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
+                    </div>
+                `;
+            }
+            document.getElementById('opListRender').innerHTML = opHtml;
+        }
+
+        function selectProvider(op) {
+            if(type === 'data' && dataCategories[op]) {
+                currentState = 'category';
+                document.getElementById('operatorContainer').classList.replace('block', 'hidden');
+                document.getElementById('categoryContainer').classList.replace('hidden', 'block');
+                
+                const provider = dataCategories[op];
+                titleEl.innerText = provider.name;
+                
+                const html = provider.items.map(item => `
+                    <div class="flex items-center px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="Swal.fire({icon:'info', title:'Menu', text:'Fitur sedang dikembangkan.'})">
+                        <div class="w-8 h-8 rounded-full border border-black dark:border-gray-400 flex items-center justify-center text-black dark:text-gray-300 font-bold text-[8px] shrink-0 text-center leading-tight bg-white dark:bg-[#0b1320]">${provider.logo}</div>
+                        <div class="flex-1 ml-4 text-[13px] font-medium text-gray-800 dark:text-gray-200 uppercase">${item}</div>
+                        <i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-xs"></i>
+                    </div>
+                `).join('');
+                document.getElementById('categoryList').innerHTML = html;
+            } else {
+                Swal.fire({icon:'info', title:'Menu', text:'Fitur sedang dikembangkan.'});
+            }
+        }
+
+        function goBack() {
+            if(currentState === 'category') {
+                currentState = 'operator';
+                document.getElementById('operatorContainer').classList.replace('hidden', 'block');
+                document.getElementById('categoryContainer').classList.replace('block', 'hidden');
+                titleEl.innerText = originalTitle;
+            } else {
+                history.back();
+            }
+        }
+    </script>
+</body>
+</html>
+EOF
+
 # ==========================================
 # FILE NODE.JS (API)
 # ==========================================
@@ -713,6 +940,7 @@ const pino = require('pino');
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const { exec } = require('child_process');
 
 const app = express();
 app.use(bodyParser.json({ limit: '10mb' }));
@@ -810,7 +1038,6 @@ app.post('/api/admin/add_balance', async (req, res) => {
     res.json({ success: true, message: `\n✅ Saldo ${n} berhasil ditambah dan notifikasi WA telah dikirim!` });
 });
 
-// API BARU: Login Request OTP
 app.post('/api/auth/login-req', async (req, res) => {
     const { identifier, password } = req.body; 
     let webUsers = loadJSON(webUsersFile); 
@@ -836,7 +1063,6 @@ app.post('/api/auth/login-req', async (req, res) => {
     }
 });
 
-// API BARU: Login Verify OTP
 app.post('/api/auth/login-verify', (req, res) => {
     const { phone, otp } = req.body; 
     let webUsers = loadJSON(webUsersFile);
@@ -1012,7 +1238,7 @@ NC='\033[0m' # No Color
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V76) 💎       ${NC}"
+    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V77) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
