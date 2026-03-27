@@ -726,7 +726,245 @@ cat << 'EOF' > public/dashboard.html
 </html>
 EOF
 
-# INFO, PROFIL, MUTASI, OPERATOR MINIFIED TETAP SAMA SPT V76...
+cat << 'EOF' > public/operator.html
+<!DOCTYPE html>
+<html lang="id" id="html-root">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilih Operator - DIGITAL FIKY STORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
+</head>
+<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
+    <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative shadow-2xl overflow-x-hidden transition-colors">
+        
+        <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 transition-colors">
+            <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="goBack()"></i>
+            <h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white uppercase" id="pageTitle">Operator</h1>
+        </div>
+
+        <div id="operatorContainer" class="block">
+            <div class="px-4 mt-6">
+                <h3 class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-3 uppercase" id="pageSubtitle">PILIH OPERATOR TUJUAN</h3>
+                <div class="bg-white dark:bg-[#111c2e] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm transition-colors" id="opListRender">
+                    </div>
+            </div>
+        </div>
+
+        <div id="categoryContainer" class="hidden">
+            <div class="flex justify-between items-center px-5 py-4 bg-black dark:bg-[#001229] text-white">
+                <span class="font-bold text-[15px] tracking-wide" id="catSubtitle">Silahkan Di Pilih..</span>
+                <i class="fas fa-home text-lg cursor-pointer hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"></i>
+            </div>
+            
+            <div class="px-4 py-4 bg-white dark:bg-[#0b1320] border-b border-gray-200 dark:border-gray-800 transition-colors">
+                <label class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-2 block uppercase">Nomor Tujuan</label>
+                <div class="relative">
+                    <input type="number" id="inputTarget" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition shadow-sm" placeholder="Ketik nomor disini...">
+                    <i class="fas fa-address-book absolute right-4 top-[14px] text-gray-400 text-lg cursor-pointer hover:text-[#002147] dark:hover:text-yellow-400 transition"></i>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-[#111c2e] shadow-sm transition-colors pb-4" id="categoryListContainer">
+                <div id="categoryList"></div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        if (!localStorage.getItem('user')) window.location.href = '/';
+        if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark');
+        
+        const params = new URLSearchParams(window.location.search); 
+        const type = params.get('type'); 
+        const titleEl = document.getElementById('pageTitle'); 
+        const subtitleEl = document.getElementById('pageSubtitle');
+        
+        let currentState = 'operator';
+        let originalTitle = '';
+
+        const dataCategories = {
+            'xl': { name: 'XL', logo: 'XL', placeholder: 'Masukkan Nomor XL...', items: ['AKRAB','CIRCLE','XL DATA','BEBAS PUAS','XL CUANKU','EXTRA DIGITAL','HARIAN','HOTROAD SPESIAL','COMBO FLEX','XL Data Flex Mini (Baru)','XL Data FLex (Baru)','FLEX MAX','ULTRA 5G+','XTRA COMBO','XTRA COMBO GIFT','XTRA COMBO LITE','XTRA COMBO MINI','DATA GIFT','BONUS HARIAN','XL DATA GAMES','XL KUOTA GAMES','GAMES','ROAMING','GRAB GACOR','X-TRA ON','BLUE','XL PASS','XL UMROH','TEMBAK XL'] },
+            'axis': { name: 'AXIS', logo: 'AXIS', placeholder: 'Masukkan Nomor AXIS...', items: ['AKRAB','UMUM','AXIS MINI','AXIS BAGI KUOTA','AIGO SS','HARIAN','OWSEM','BORNET','AXIS CUANKU','AXIS','LOKAL','XTRA DIGITAL','WARNET','UMROH'] },
+            'telkomsel': { name: 'TELKOMSEL', logo: 'TS', placeholder: 'Masukkan Nomor Telkomsel...', items: ['UMUM','BULK','FLASH','MINI','CUANKU TELKOMSEL','APPS KUOTA','MAXSTREAM','UMROH','MALAM','COMBO SAKTI','GamesMAX Unlimited','GamesMax','Musicmax','Disney+ Hotstar','OMG','GigaMAX','UnlimitedMAX','Orbit','InternetMAX','Surprise Deal','UKM','Bronze','Harian','Mingguan','Bulanan','Ketengan Utama','Harian Sepuasnya','Roamax','GamesMAX Booster','Naslok','Game','Roamax Haji','COMBO','Eksklusif','Super Seru','Flash','Revamp','DPI','Enterprise','Serba Lima Ribu','Magnet','UKM Plus','Terbaik Untukmu','Non Puma','VideoMax'] },
+            'indosat': { name: 'INDOSAT OOREDOO', logo: 'IS', placeholder: 'Masukkan Nomor Indosat...', items: ['FREEDOM NASIONAL','FREEDOM SENSASI (LARIS)','RAMADHAN (BARU)','DATA LOKAL','FREEDOM HARIAN','FREEDOM COMBO','FREEDOM UNLIMITED','FREEDOM COMBO GIFT','FREEDOM INTERNET GIFT','FREEDOM INTERNET SPESIAL','FREEDOM LONGLIFE','FREEDOM MAX','UMUM','CUANKU PROMO','SACHET','GASPOL','HIFI AIR','FREEDOM APPS','FREEDOM APPS GIFT','PURE MERDEKA','FREEDOM PLAY','KITA','YELLOW','ROAMING','E-SIM','UMROH & HAJI','UMROH HAJI COMBO'] },
+            'tri': { name: 'TRI', logo: '3', placeholder: 'Masukkan Nomor TRI...', items: ['UMUM & MINI','HAPPY','AON','TRI CUANKU','LOKAL','KIKIDA','MIX & TRANSFER','GETMORE & CICILAN','HOME','ROAMING','H3RO','SAHABAT OJOL','IBADAH','ADDON','HAPPY PLAY','HIFI AIR','RAMADHAN (BARU)','happy 5G','KEEPON'] },
+            'smartfren': { name: 'SMARTFREN', logo: 'SF', placeholder: 'Masukkan Nomor Smartfren...', items: ['UMUM','UNLIMITED','UNLIMITED NONSTOP','NONSTOP','KUOTA','KUOTA 5G+','APLIKASI','GAMING','MANDIRI','CONNEX EVO','ROAMING','VOLUME'] },
+            'byu': { name: 'BY.U', logo: 'BY.U', placeholder: 'Masukkan Nomor By.U...', items: ['Paket Data Umum','Paket Data Topping','BY.U CUANKU PROMO','Paket Data Mbps','Paket Data Kaget','Paket Data Super Kaget','Paket Data Jajan'] }
+        };
+
+        const ewalletCategories = {
+            'dana': { name: 'DANA', logo: 'DN', placeholder: 'Masukkan Nomor DANA...', items: ['Saldo DANA 10.000', 'Saldo DANA 20.000', 'Saldo DANA 50.000', 'Saldo DANA 100.000'] },
+            'gopay': { name: 'GOPAY', logo: 'GP', placeholder: 'Masukkan Nomor GoPay...', items: ['Saldo GOPAY 10.000', 'Saldo GOPAY 20.000', 'Saldo GOPAY 50.000', 'Saldo GOPAY 100.000'] },
+            'shopeepay': { name: 'SHOPEEPAY', logo: 'SP', placeholder: 'Masukkan Nomor ShopeePay...', items: ['Saldo SHOPEEPAY 10.000', 'Saldo SHOPEEPAY 20.000', 'Saldo SHOPEEPAY 50.000'] },
+            'ovo': { name: 'OVO', logo: 'OV', placeholder: 'Masukkan Nomor OVO...', items: ['Saldo OVO 20.000', 'Saldo OVO 50.000', 'Saldo OVO 100.000'] },
+            'linkaja': { name: 'LINKAJA', logo: 'LA', placeholder: 'Masukkan Nomor LinkAja...', items: ['Saldo LINKAJA 10.000', 'Saldo LINKAJA 50.000'] }
+        };
+
+        const etollCategories = {
+            'bni': { name: 'BNI TapCash', logo: 'BNI', placeholder: 'Masukkan Nomor BNI TapCash...', items: ['BNI TapCash 20.000', 'BNI TapCash 50.000', 'BNI TapCash 100.000'] },
+            'bri': { name: 'BRI Brizzi', logo: 'BRI', placeholder: 'Masukkan Nomor BRI Brizzi...', items: ['BRI Brizzi 20.000', 'BRI Brizzi 50.000', 'BRI Brizzi 100.000'] },
+            'mandiri': { name: 'Mandiri Emoney', logo: 'MDR', placeholder: 'Masukkan Nomor Mandiri E-Money...', items: ['Mandiri E-Money 20.000', 'Mandiri E-Money 50.000', 'Mandiri E-Money 100.000'] }
+        };
+
+        const tagihanCategories = [
+            { id: 'tagihan_bpjs', name: 'BPJS', icon: 'fas fa-heartbeat', placeholder: 'Masukkan No BPJS (13 Digit)...' },
+            { id: 'tagihan_pgn', name: 'Gas Negara (PGN)', icon: 'fas fa-fire', placeholder: 'Masukkan ID Pelanggan PGN...' },
+            { id: 'tagihan_gas', name: 'Pertagas (GAS)', icon: 'fas fa-fire-alt', placeholder: 'Masukkan ID Pelanggan Pertagas...' },
+            { id: 'tagihan_pln', name: 'PLN', icon: 'fas fa-lightbulb', placeholder: 'Masukkan ID Pelanggan / No Meter...' },
+            { id: 'tagihan_telkom', name: 'Telkom/<br>Indihome', icon: 'fas fa-wifi', placeholder: 'Masukkan No Telkom/Indihome...' },
+            { id: 'tagihan_tv', name: 'TV Berbayar', icon: 'fas fa-tv', placeholder: 'Masukkan ID Pelanggan TV...' },
+            { id: 'tagihan_pasca', name: 'Tagihan<br>Seluler', icon: 'fas fa-mobile-alt', placeholder: 'Masukkan Nomor HP Pascabayar...' },
+            { id: 'tagihan_finance', name: 'Cicilan<br>Finance', icon: 'fas fa-hand-holding-usd', placeholder: 'Masukkan Nomor Kontrak...' },
+            { id: 'tagihan_internet', name: 'Internet<br>Bulanan', icon: 'fas fa-globe', placeholder: 'Masukkan ID Pelanggan Internet...' },
+            { id: 'tagihan_pdam', name: 'PDAM', icon: 'fas fa-tint', placeholder: 'Masukkan Nomor Pelanggan PDAM...' }
+        ];
+
+        // MENGGABUNGKAN SEMUA PROVIDER UNTUK DIAKSES OLEH selectProvider
+        const allProviders = {};
+        Object.assign(allProviders, dataCategories, ewalletCategories, etollCategories);
+        tagihanCategories.forEach(t => {
+            allProviders[t.id] = { name: t.name.replace('<br>', ' '), logo: t.icon, isIcon: true, placeholder: t.placeholder, items: ['Cek & Bayar Tagihan ' + t.name.replace('<br>', ' ')] };
+        });
+
+        let currentList = {};
+
+        if(type === 'ewallet') {
+            originalTitle = 'E-Wallet';
+            subtitleEl.innerText = 'PILIH E-WALLET TUJUAN';
+            currentList = ewalletCategories;
+        } else if(type === 'etoll') {
+            originalTitle = 'Saldo E-Toll';
+            subtitleEl.innerText = 'PILIH KARTU E-TOLL';
+            currentList = etollCategories;
+        } else if(type === 'tagihan') {
+            originalTitle = 'Tagihan';
+            subtitleEl.innerText = 'PILIH JENIS TAGIHAN';
+            document.getElementById('operatorContainer').classList.replace('block', 'hidden');
+            
+            let gridHtml = '<div class="grid grid-cols-4 gap-y-6 gap-x-3 mt-4 mx-4">';
+            tagihanCategories.forEach(item => {
+                gridHtml += `
+                    <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="selectProvider('${item.id}')">
+                        <div class="w-[4.2rem] h-[4.2rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-[26px] shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors">
+                            <i class="${item.icon}"></i>
+                        </div>
+                        <span class="text-[9px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase text-center leading-tight transition-colors">${item.name}</span>
+                    </div>
+                `;
+            });
+            gridHtml += '</div>';
+            
+            const parent = document.getElementById('operatorContainer').parentElement;
+            const tempDiv = document.createElement('div');
+            tempDiv.id = 'tagihanGridWrap';
+            tempDiv.innerHTML = `<h3 class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-4 uppercase mx-4 mt-6">PILIH JENIS TAGIHAN</h3>` + gridHtml;
+            parent.insertBefore(tempDiv, document.getElementById('categoryContainer'));
+
+        } else {
+            if(type === 'pulsa') originalTitle = 'Isi Pulsa'; 
+            else if(type === 'data') originalTitle = 'Paket Internet'; 
+            else if(type === 'masaaktif') originalTitle = 'Masa Aktif'; 
+            else originalTitle = 'Pilih Operator';
+            subtitleEl.innerText = 'PILIH OPERATOR TUJUAN';
+            currentList = dataCategories;
+        }
+
+        titleEl.innerText = originalTitle;
+
+        if(type !== 'tagihan') {
+            let opHtml = '';
+            for(let key in currentList){
+                let op = currentList[key];
+                opHtml += `
+                    <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('${key}')">
+                        <div class="w-10 h-10 rounded-full border border-black dark:border-gray-400 flex items-center justify-center text-black dark:text-gray-300 font-bold text-[10px] shrink-0 text-center leading-tight bg-white dark:bg-[#0b1320]">${op.logo}</div>
+                        <div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">${op.name}</div>
+                        <i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i>
+                    </div>
+                `;
+            }
+            document.getElementById('opListRender').innerHTML = opHtml;
+        }
+
+        function selectProvider(op) {
+            const provider = allProviders[op];
+            if(provider) {
+                currentState = 'category';
+                
+                // Hide Operator List or Tagihan Grid
+                document.getElementById('operatorContainer').classList.replace('block', 'hidden');
+                const tagihanWrap = document.getElementById('tagihanGridWrap');
+                if(tagihanWrap) tagihanWrap.classList.add('hidden');
+                
+                // Show Category Container
+                document.getElementById('categoryContainer').classList.replace('hidden', 'block');
+                
+                titleEl.innerText = provider.name;
+                document.getElementById('inputTarget').placeholder = provider.placeholder || "Ketik nomor disini...";
+                document.getElementById('inputTarget').value = ''; // Reset input
+                
+                const html = provider.items.map(item => `
+                    <div class="flex items-center px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="buyProduct('${item}')">
+                        <div class="w-8 h-8 rounded-full border border-black dark:border-gray-400 flex items-center justify-center text-black dark:text-gray-300 font-bold text-[8px] shrink-0 text-center leading-tight bg-white dark:bg-[#0b1320]">
+                            ${provider.isIcon ? `<i class="${provider.logo} text-sm"></i>` : provider.logo}
+                        </div>
+                        <div class="flex-1 ml-4 text-[13px] font-medium text-gray-800 dark:text-gray-200 uppercase">${item}</div>
+                        <i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-xs"></i>
+                    </div>
+                `).join('');
+                document.getElementById('categoryList').innerHTML = html;
+            } else {
+                Swal.fire({icon:'info', title:'Menu', text:'Fitur sedang dikembangkan.'});
+            }
+        }
+
+        function buyProduct(itemName) {
+            const target = document.getElementById('inputTarget').value;
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            const bgPopup = isDark ? '#0b1320' : '#ffffff';
+            
+            if(!target) {
+                Swal.fire({icon: 'warning', title: 'Oops!', text: 'Silakan isi nomor tujuan terlebih dahulu!', background: bgPopup, color: isDark ? '#fff' : '#000'});
+                return;
+            }
+            
+            Swal.fire({
+                icon: 'info', 
+                title: 'Konfirmasi', 
+                text: `Fitur pembelian [${itemName}] untuk nomor ${target} sedang dalam tahap pengembangan.`, 
+                background: bgPopup, 
+                color: isDark ? '#fff' : '#000',
+                confirmButtonColor: isDark ? '#facc15' : '#002147',
+                customClass: { confirmButton: isDark ? 'text-[#001229] font-bold' : 'text-white font-bold' }
+            });
+        }
+
+        function goBack() {
+            if(currentState === 'category') {
+                currentState = 'operator';
+                document.getElementById('categoryContainer').classList.replace('block', 'hidden');
+                
+                if(type === 'tagihan') {
+                    const tagihanWrap = document.getElementById('tagihanGridWrap');
+                    if(tagihanWrap) tagihanWrap.classList.remove('hidden');
+                } else {
+                    document.getElementById('operatorContainer').classList.replace('hidden', 'block');
+                }
+                titleEl.innerText = originalTitle;
+            } else {
+                history.back();
+            }
+        }
+    </script>
+</body>
+</html>
+EOF
+
+# INFO, PROFIL, MUTASI, GAME DLL MINIFIED TETAP SAMA SPT V77...
 cat << 'EOF' > public/info.html
 <!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Pusat Informasi</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><link rel="stylesheet" href="style.css"><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden transition-colors"><div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i><h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white">Pusat Informasi</h1></div><div class="p-4" id="infoList"><div class="mt-20 flex flex-col items-center justify-center text-gray-400"><i class="fas fa-spinner fa-spin text-4xl mb-4"></i><p>Memuat informasi...</p></div></div><div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40 transition-colors"><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div><div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div><div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div></div></div><script>if (!localStorage.getItem('user')) window.location.href = '/'; if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark'); fetch('/api/info').then(r => r.json()).then(data => { const list = document.getElementById('infoList'); if(data.info.length === 0) list.innerHTML = `<div class="mt-20 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500"><i class="fas fa-bell-slash text-5xl mb-4 opacity-50"></i><p class="text-sm">Belum ada info terbaru.</p></div>`; else list.innerHTML = data.info.reverse().map(i => `<div class="relative bg-white dark:bg-[#111c2e] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 mb-4 shadow-sm overflow-hidden transition-colors"><div class="absolute -right-2 top-4 text-7xl opacity-10 dark:opacity-20 select-none">📢</div><div class="flex justify-between items-start mb-3 relative z-10"><h3 class="font-bold text-[#002147] dark:text-yellow-400 text-[15px] pr-2">${i.judul}</h3><span class="text-[10px] text-gray-500 whitespace-nowrap bg-gray-100 dark:bg-black px-2 py-1 rounded-md border border-gray-200 dark:border-gray-800">${i.date}</span></div><p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed relative z-10">${i.isi}</p></div>`).join(''); });</script></body></html>
 EOF
@@ -741,6 +979,10 @@ EOF
 
 cat << 'EOF' > public/riwayat_topup.html
 <!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Riwayat Top Up - DIGITAL FIKY STORE</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden transition-colors"><div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 transition-colors border-b border-gray-200 dark:border-gray-800"><i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i><h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white">Riwayat Top Up</h1></div><div class="px-4 mt-6" id="historyContainer"><div class="mt-14 flex flex-col items-center justify-center text-center px-6"><i class="fas fa-spinner fa-spin text-4xl mb-4 text-gray-400"></i></div></div></div><script>const user = JSON.parse(localStorage.getItem('user')); if (!user) window.location.href = '/'; if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark'); fetch('/api/topup/history', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }).then(res => res.json()).then(data => { const container = document.getElementById('historyContainer'); if(data.history.length === 0) { container.innerHTML = `<div class="mt-14 flex flex-col items-center justify-center text-center px-6"><div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-wallet text-gray-400 text-4xl"></i></div><h2 class="text-gray-800 dark:text-white font-bold text-lg tracking-wide mb-2 transition-colors">Belum Ada Top Up</h2><p class="text-gray-500 dark:text-gray-400 text-[13px] leading-relaxed mb-8 px-2 transition-colors">Anda belum melakukan pengisian saldo. Ayo isi saldo sekarang!</p><button class="bg-[#002147] text-white dark:bg-[#0b1320] dark:text-yellow-400 border border-transparent dark:border-gray-700 font-bold py-3 px-8 rounded-full shadow-lg hover:opacity-90 transition" onclick="location.href='/dashboard.html'">Top Up Sekarang</button></div>`; } else { window.topupData = data.history.reverse(); container.innerHTML = window.topupData.map((item, index) => { let isExpired = item.status === 'Expired'; let statusColor = item.status === 'Proses' ? 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-800' : (item.status === 'Sukses' ? 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 border-green-200 dark:border-green-800' : 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-800'); let iconMethod = item.method.includes('QRIS') ? '<i class="fas fa-qrcode"></i>' : (item.method.includes('Admin') ? '<i class="fas fa-check-circle"></i>' : '<i class="fab fa-whatsapp"></i>'); let titleText = item.method.includes('Admin') ? 'Saldo ditambah oleh Admin Fiky Store' : `Top Up ${item.method}`; return `<div onclick="showDetailTopup(${index})" class="bg-white dark:bg-[#111c2e] p-4 rounded-2xl mb-3 border border-gray-200 dark:border-gray-800 shadow-sm flex justify-between items-center transition-colors cursor-pointer hover:shadow-md hover:border-[#002147] dark:hover:border-yellow-400 ${isExpired ? 'opacity-70' : ''}"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-[#0b1320] flex items-center justify-center text-gray-500 dark:text-gray-400 text-lg">${iconMethod}</div><div><h4 class="font-bold text-[13px] text-gray-800 dark:text-gray-200">${titleText}</h4><p class="text-[10px] text-gray-500">${item.date}</p></div></div><div class="text-right"><p class="font-extrabold text-[14px] text-[#002147] dark:text-yellow-400 mb-1">Rp ${item.nominal.toLocaleString('id-ID')}</p><span class="text-[9px] font-bold px-2 py-0.5 rounded border ${statusColor} uppercase tracking-wider">${item.status}</span></div></div>`; }).join(''); } }).catch(err => { document.getElementById('historyContainer').innerHTML = `<div class="mt-20 text-center text-red-500">Gagal memuat data.</div>`; }); window.showDetailTopup = function(index) { const item = window.topupData[index]; const isDark = localStorage.getItem('darkMode') === 'true'; const bgPopup = isDark ? '#0b1320' : '#ffffff'; const textColor = isDark ? 'text-gray-200' : 'text-gray-800'; const mutedColor = isDark ? 'text-gray-400' : 'text-gray-500'; const borderColor = isDark ? 'border-gray-800' : 'border-gray-200'; let statusColor = item.status === 'Proses' ? 'text-yellow-500' : (item.status === 'Sukses' ? 'text-green-500' : 'text-red-500'); let titleText = item.method.includes('Admin') ? 'Saldo ditambah oleh Admin Fiky Store' : `Top Up Saldo`; Swal.fire({ title: `<span class="font-bold ${isDark ? 'text-white' : 'text-gray-800'} text-lg">Detail Top Up</span>`, html: `<div class="text-left mt-2 space-y-3 text-sm"><div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Waktu</span><span class="font-medium ${textColor} text-right">${item.date}</span></div><div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Nominal</span><span class="font-medium ${textColor} text-right">Rp ${item.nominal.toLocaleString('id-ID')}</span></div><div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Status</span><span class="font-bold ${statusColor} text-right uppercase">${item.status}</span></div><div class="mt-5 text-center"><p class="${mutedColor} text-xs mb-1">Total Bayar</p><p class="text-3xl font-extrabold ${textColor}">Rp ${item.nominal.toLocaleString('id-ID')}</p></div></div>`, showConfirmButton: true, confirmButtonText: 'Tutup', confirmButtonColor: isDark ? '#facc15' : '#002147', background: bgPopup, customClass: { confirmButton: isDark ? 'text-[#001229] font-bold px-8' : 'text-white font-bold px-8' } }); }</script></body></html>
+EOF
+
+cat << 'EOF' > public/mutasi.html
+<!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Mutasi Saldo</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden transition-colors"><div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="history.back()"></i><h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white">Mutasi Saldo</h1></div><div class="px-4 mt-4" id="mutasiList"><div class="mt-20 flex flex-col items-center justify-center text-gray-400"><i class="fas fa-spinner fa-spin text-4xl mb-4"></i><p>Memuat data mutasi...</p></div></div></div><script>const user = JSON.parse(localStorage.getItem('user')); if (!user) window.location.href = '/'; if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark'); fetch('/api/user/mutasi', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }).then(res => res.json()).then(data => { const list = document.getElementById('mutasiList'); if(data.mutasi.length === 0) { list.innerHTML = `<div class="mt-20 flex flex-col items-center justify-center text-center px-6"><div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-exchange-alt text-gray-400 text-4xl"></i></div><h2 class="text-gray-800 dark:text-white font-bold text-lg tracking-wide mb-2 transition-colors">Belum Ada Mutasi</h2><p class="text-gray-500 dark:text-gray-400 text-[13px] leading-relaxed">Catatan uang masuk dan keluar akan tampil di sini.</p></div>`; } else { list.innerHTML = data.mutasi.reverse().map(m => `<div class="flex items-center justify-between p-4 bg-white dark:bg-[#111c2e] border border-gray-200 dark:border-gray-800 rounded-2xl mb-3 shadow-sm transition-colors"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full ${m.type === 'in' ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'} flex items-center justify-center text-lg shrink-0"><i class="fas ${m.type === 'in' ? 'fa-arrow-down' : 'fa-arrow-up'}"></i></div><div><h4 class="font-bold text-[13px] text-gray-800 dark:text-gray-200">${m.desc}</h4><p class="text-[10px] text-gray-500">${m.date}</p></div></div><div class="text-right"><span class="font-bold text-[14px] ${m.type === 'in' ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}">${m.type === 'in' ? '+' : '-'} Rp ${m.amount.toLocaleString('id-ID')}</span></div></div>`).join(''); } }).catch(err => { list.innerHTML = `<div class="mt-20 text-center text-red-500">Gagal memuat data mutasi.</div>`; });</script></body></html>
 EOF
 
 cat << 'EOF' > public/operator.html
@@ -777,6 +1019,14 @@ cat << 'EOF' > public/operator.html
                 <i class="fas fa-home text-lg cursor-pointer hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"></i>
             </div>
             
+            <div class="px-4 py-4 bg-white dark:bg-[#0b1320] border-b border-gray-200 dark:border-gray-800 transition-colors">
+                <label class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-2 block uppercase">Nomor Tujuan</label>
+                <div class="relative">
+                    <input type="text" id="inputTarget" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition shadow-sm" placeholder="Ketik nomor disini...">
+                    <i class="fas fa-address-book absolute right-4 top-[14px] text-gray-400 text-lg cursor-pointer hover:text-[#002147] dark:hover:text-yellow-400 transition"></i>
+                </div>
+            </div>
+
             <div class="bg-white dark:bg-[#111c2e] shadow-sm transition-colors pb-4" id="categoryListContainer">
                 <div id="categoryList"></div>
             </div>
@@ -796,41 +1046,47 @@ cat << 'EOF' > public/operator.html
         let originalTitle = '';
 
         const dataCategories = {
-            'xl': { name: 'XL', logo: 'XL', items: ['AKRAB','CIRCLE','XL DATA','BEBAS PUAS','XL CUANKU','EXTRA DIGITAL','HARIAN','HOTROAD SPESIAL','COMBO FLEX','XL Data Flex Mini (Baru)','XL Data FLex (Baru)','FLEX MAX','ULTRA 5G+','XTRA COMBO','XTRA COMBO GIFT','XTRA COMBO LITE','XTRA COMBO MINI','DATA GIFT','BONUS HARIAN','XL DATA GAMES','XL KUOTA GAMES','GAMES','ROAMING','GRAB GACOR','X-TRA ON','BLUE','XL PASS','XL UMROH','TEMBAK XL'] },
-            'axis': { name: 'AXIS', logo: 'AXIS', items: ['AKRAB','UMUM','AXIS MINI','AXIS BAGI KUOTA','AIGO SS','HARIAN','OWSEM','BORNET','AXIS CUANKU','AXIS','LOKAL','XTRA DIGITAL','WARNET','UMROH'] },
-            'telkomsel': { name: 'TELKOMSEL', logo: 'TS', items: ['UMUM','BULK','FLASH','MINI','CUANKU TELKOMSEL','APPS KUOTA','MAXSTREAM','UMROH','MALAM','COMBO SAKTI','GamesMAX Unlimited','GamesMax','Musicmax','Disney+ Hotstar','OMG','GigaMAX','UnlimitedMAX','Orbit','InternetMAX','Surprise Deal','UKM','Bronze','Harian','Mingguan','Bulanan','Ketengan Utama','Harian Sepuasnya','Roamax','GamesMAX Booster','Naslok','Game','Roamax Haji','COMBO','Eksklusif','Super Seru','Flash','Revamp','DPI','Enterprise','Serba Lima Ribu','Magnet','UKM Plus','Terbaik Untukmu','Non Puma','VideoMax'] },
-            'indosat': { name: 'INDOSAT OOREDOO', logo: 'IS', items: ['FREEDOM NASIONAL','FREEDOM SENSASI (LARIS)','RAMADHAN (BARU)','DATA LOKAL','FREEDOM HARIAN','FREEDOM COMBO','FREEDOM UNLIMITED','FREEDOM COMBO GIFT','FREEDOM INTERNET GIFT','FREEDOM INTERNET SPESIAL','FREEDOM LONGLIFE','FREEDOM MAX','UMUM','CUANKU PROMO','SACHET','GASPOL','HIFI AIR','FREEDOM APPS','FREEDOM APPS GIFT','PURE MERDEKA','FREEDOM PLAY','KITA','YELLOW','ROAMING','E-SIM','UMROH & HAJI','UMROH HAJI COMBO'] },
-            'tri': { name: 'TRI', logo: '3', items: ['UMUM & MINI','HAPPY','AON','TRI CUANKU','LOKAL','KIKIDA','MIX & TRANSFER','GETMORE & CICILAN','HOME','ROAMING','H3RO','SAHABAT OJOL','IBADAH','ADDON','HAPPY PLAY','HIFI AIR','RAMADHAN (BARU)','happy 5G','KEEPON'] },
-            'smartfren': { name: 'SMARTFREN', logo: 'SF', items: ['UMUM','UNLIMITED','UNLIMITED NONSTOP','NONSTOP','KUOTA','KUOTA 5G+','APLIKASI','GAMING','MANDIRI','CONNEX EVO','ROAMING','VOLUME'] },
-            'byu': { name: 'BY.U', logo: 'BY.U', items: ['Paket Data Umum','Paket Data Topping','BY.U CUANKU PROMO','Paket Data Mbps','Paket Data Kaget','Paket Data Super Kaget','Paket Data Jajan'] }
+            'xl': { name: 'XL', logo: 'XL', placeholder: 'Masukkan Nomor XL (08xx)...', items: ['AKRAB','CIRCLE','XL DATA','BEBAS PUAS','XL CUANKU','EXTRA DIGITAL','HARIAN','HOTROAD SPESIAL','COMBO FLEX','XL Data Flex Mini (Baru)','XL Data FLex (Baru)','FLEX MAX','ULTRA 5G+','XTRA COMBO','XTRA COMBO GIFT','XTRA COMBO LITE','XTRA COMBO MINI','DATA GIFT','BONUS HARIAN','XL DATA GAMES','XL KUOTA GAMES','GAMES','ROAMING','GRAB GACOR','X-TRA ON','BLUE','XL PASS','XL UMROH','TEMBAK XL'] },
+            'axis': { name: 'AXIS', logo: 'AXIS', placeholder: 'Masukkan Nomor AXIS (08xx)...', items: ['AKRAB','UMUM','AXIS MINI','AXIS BAGI KUOTA','AIGO SS','HARIAN','OWSEM','BORNET','AXIS CUANKU','AXIS','LOKAL','XTRA DIGITAL','WARNET','UMROH'] },
+            'telkomsel': { name: 'TELKOMSEL', logo: 'TS', placeholder: 'Masukkan Nomor Telkomsel (08xx)...', items: ['UMUM','BULK','FLASH','MINI','CUANKU TELKOMSEL','APPS KUOTA','MAXSTREAM','UMROH','MALAM','COMBO SAKTI','GamesMAX Unlimited','GamesMax','Musicmax','Disney+ Hotstar','OMG','GigaMAX','UnlimitedMAX','Orbit','InternetMAX','Surprise Deal','UKM','Bronze','Harian','Mingguan','Bulanan','Ketengan Utama','Harian Sepuasnya','Roamax','GamesMAX Booster','Naslok','Game','Roamax Haji','COMBO','Eksklusif','Super Seru','Flash','Revamp','DPI','Enterprise','Serba Lima Ribu','Magnet','UKM Plus','Terbaik Untukmu','Non Puma','VideoMax'] },
+            'indosat': { name: 'INDOSAT OOREDOO', logo: 'IS', placeholder: 'Masukkan Nomor Indosat (08xx)...', items: ['FREEDOM NASIONAL','FREEDOM SENSASI (LARIS)','RAMADHAN (BARU)','DATA LOKAL','FREEDOM HARIAN','FREEDOM COMBO','FREEDOM UNLIMITED','FREEDOM COMBO GIFT','FREEDOM INTERNET GIFT','FREEDOM INTERNET SPESIAL','FREEDOM LONGLIFE','FREEDOM MAX','UMUM','CUANKU PROMO','SACHET','GASPOL','HIFI AIR','FREEDOM APPS','FREEDOM APPS GIFT','PURE MERDEKA','FREEDOM PLAY','KITA','YELLOW','ROAMING','E-SIM','UMROH & HAJI','UMROH HAJI COMBO'] },
+            'tri': { name: 'TRI', logo: '3', placeholder: 'Masukkan Nomor TRI (08xx)...', items: ['UMUM & MINI','HAPPY','AON','TRI CUANKU','LOKAL','KIKIDA','MIX & TRANSFER','GETMORE & CICILAN','HOME','ROAMING','H3RO','SAHABAT OJOL','IBADAH','ADDON','HAPPY PLAY','HIFI AIR','RAMADHAN (BARU)','happy 5G','KEEPON'] },
+            'smartfren': { name: 'SMARTFREN', logo: 'SF', placeholder: 'Masukkan Nomor Smartfren (08xx)...', items: ['UMUM','UNLIMITED','UNLIMITED NONSTOP','NONSTOP','KUOTA','KUOTA 5G+','APLIKASI','GAMING','MANDIRI','CONNEX EVO','ROAMING','VOLUME'] },
+            'byu': { name: 'BY.U', logo: 'BY.U', placeholder: 'Masukkan Nomor By.U (08xx)...', items: ['Paket Data Umum','Paket Data Topping','BY.U CUANKU PROMO','Paket Data Mbps','Paket Data Kaget','Paket Data Super Kaget','Paket Data Jajan'] }
         };
 
         const ewalletCategories = {
-            'dana': { name: 'DANA', logo: 'DN' },
-            'gopay': { name: 'GOPAY', logo: 'GP' },
-            'shopeepay': { name: 'SHOPEEPAY', logo: 'SP' },
-            'ovo': { name: 'OVO', logo: 'OV' },
-            'linkaja': { name: 'LINKAJA', logo: 'LA' }
+            'dana': { name: 'DANA', logo: 'DN', placeholder: 'Masukkan Nomor DANA...', items: ['Top Up Saldo DANA 10.000', 'Top Up Saldo DANA 20.000', 'Top Up Saldo DANA 50.000', 'Top Up Saldo DANA 100.000'] },
+            'gopay': { name: 'GOPAY', logo: 'GP', placeholder: 'Masukkan Nomor GoPay...', items: ['Top Up Saldo GOPAY 10.000', 'Top Up Saldo GOPAY 20.000', 'Top Up Saldo GOPAY 50.000', 'Top Up Saldo GOPAY 100.000'] },
+            'shopeepay': { name: 'SHOPEEPAY', logo: 'SP', placeholder: 'Masukkan Nomor ShopeePay...', items: ['Top Up Saldo SHOPEEPAY 10.000', 'Top Up Saldo SHOPEEPAY 20.000', 'Top Up Saldo SHOPEEPAY 50.000'] },
+            'ovo': { name: 'OVO', logo: 'OV', placeholder: 'Masukkan Nomor OVO...', items: ['Top Up Saldo OVO 20.000', 'Top Up Saldo OVO 50.000', 'Top Up Saldo OVO 100.000'] },
+            'linkaja': { name: 'LINKAJA', logo: 'LA', placeholder: 'Masukkan Nomor LinkAja...', items: ['Top Up Saldo LINKAJA 10.000', 'Top Up Saldo LINKAJA 50.000'] }
         };
 
         const etollCategories = {
-            'bni': { name: 'BNI TapCash', logo: 'BNI' },
-            'bri': { name: 'BRI Brizzi', logo: 'BRI' },
-            'mandiri': { name: 'Mandiri Emoney', logo: 'MDR' }
+            'bni': { name: 'BNI TapCash', logo: 'BNI', placeholder: 'Masukkan Nomor BNI TapCash...', items: ['BNI TapCash 20.000', 'BNI TapCash 50.000', 'BNI TapCash 100.000'] },
+            'bri': { name: 'BRI Brizzi', logo: 'BRI', placeholder: 'Masukkan Nomor BRI Brizzi...', items: ['BRI Brizzi 20.000', 'BRI Brizzi 50.000', 'BRI Brizzi 100.000'] },
+            'mandiri': { name: 'Mandiri Emoney', logo: 'MDR', placeholder: 'Masukkan Nomor Mandiri E-Money...', items: ['Mandiri E-Money 20.000', 'Mandiri E-Money 50.000', 'Mandiri E-Money 100.000'] }
         };
 
         const tagihanCategories = [
-            { name: 'BPJS', icon: 'fas fa-heartbeat' },
-            { name: 'Gas Negara (PGN)', icon: 'fas fa-fire' },
-            { name: 'Pertagas (GAS)', icon: 'fas fa-fire-alt' },
-            { name: 'PLN', icon: 'fas fa-lightbulb' },
-            { name: 'Telkom/<br>Indihome', icon: 'fas fa-wifi' },
-            { name: 'TV Berbayar', icon: 'fas fa-tv' },
-            { name: 'Tagihan<br>Seluler', icon: 'fas fa-mobile-alt' },
-            { name: 'Cicilan<br>Finance', icon: 'fas fa-hand-holding-usd' },
-            { name: 'Internet<br>Bulanan', icon: 'fas fa-globe' },
-            { name: 'PDAM', icon: 'fas fa-tint' }
+            { id: 'tagihan_bpjs', name: 'BPJS', icon: 'fas fa-heartbeat', placeholder: 'Masukkan No BPJS (13 Digit)...' },
+            { id: 'tagihan_pgn', name: 'Gas Negara (PGN)', icon: 'fas fa-fire', placeholder: 'Masukkan ID Pelanggan PGN...' },
+            { id: 'tagihan_gas', name: 'Pertagas (GAS)', icon: 'fas fa-fire-alt', placeholder: 'Masukkan ID Pelanggan Pertagas...' },
+            { id: 'tagihan_pln', name: 'PLN', icon: 'fas fa-lightbulb', placeholder: 'Masukkan ID Pelanggan / No Meter PLN...' },
+            { id: 'tagihan_telkom', name: 'Telkom/<br>Indihome', icon: 'fas fa-wifi', placeholder: 'Masukkan No Telepon/Indihome...' },
+            { id: 'tagihan_tv', name: 'TV Berbayar', icon: 'fas fa-tv', placeholder: 'Masukkan ID Pelanggan TV...' },
+            { id: 'tagihan_pasca', name: 'Tagihan<br>Seluler', icon: 'fas fa-mobile-alt', placeholder: 'Masukkan Nomor HP Pascabayar...' },
+            { id: 'tagihan_finance', name: 'Cicilan<br>Finance', icon: 'fas fa-hand-holding-usd', placeholder: 'Masukkan Nomor Kontrak Kredit...' },
+            { id: 'tagihan_internet', name: 'Internet<br>Bulanan', icon: 'fas fa-globe', placeholder: 'Masukkan ID Pelanggan Internet...' },
+            { id: 'tagihan_pdam', name: 'PDAM', icon: 'fas fa-tint', placeholder: 'Masukkan Nomor Pelanggan PDAM...' }
         ];
+
+        const allProviders = {};
+        Object.assign(allProviders, dataCategories, ewalletCategories, etollCategories);
+        tagihanCategories.forEach(t => {
+            allProviders[t.id] = { name: t.name.replace('<br>', ' '), logo: t.icon, isIcon: true, placeholder: t.placeholder, items: ['Cek & Bayar Tagihan'] };
+        });
 
         let currentList = {};
 
@@ -850,7 +1106,7 @@ cat << 'EOF' > public/operator.html
             let gridHtml = '<div class="grid grid-cols-4 gap-y-6 gap-x-3 mt-4 mx-4">';
             tagihanCategories.forEach(item => {
                 gridHtml += `
-                    <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu', text: 'Fitur sedang dikembangkan.'})">
+                    <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="selectProvider('${item.id}')">
                         <div class="w-[4.2rem] h-[4.2rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-[26px] shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors">
                             <i class="${item.icon}"></i>
                         </div>
@@ -862,8 +1118,9 @@ cat << 'EOF' > public/operator.html
             
             const parent = document.getElementById('operatorContainer').parentElement;
             const tempDiv = document.createElement('div');
+            tempDiv.id = 'tagihanGridWrap';
             tempDiv.innerHTML = `<h3 class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-4 uppercase mx-4 mt-6">PILIH JENIS TAGIHAN</h3>` + gridHtml;
-            parent.appendChild(tempDiv);
+            parent.insertBefore(tempDiv, document.getElementById('categoryContainer'));
 
         } else {
             if(type === 'pulsa') originalTitle = 'Isi Pulsa'; 
@@ -892,17 +1149,25 @@ cat << 'EOF' > public/operator.html
         }
 
         function selectProvider(op) {
-            if(type === 'data' && dataCategories[op]) {
+            const provider = allProviders[op];
+            if(provider) {
                 currentState = 'category';
                 document.getElementById('operatorContainer').classList.replace('block', 'hidden');
-                document.getElementById('categoryContainer').classList.replace('hidden', 'block');
+                const tagihanWrap = document.getElementById('tagihanGridWrap');
+                if(tagihanWrap) tagihanWrap.classList.add('hidden');
                 
-                const provider = dataCategories[op];
+                document.getElementById('categoryContainer').classList.replace('hidden', 'block');
                 titleEl.innerText = provider.name;
                 
+                // Set Placeholder
+                document.getElementById('inputTarget').placeholder = provider.placeholder || "Ketik nomor tujuan...";
+                document.getElementById('inputTarget').value = '';
+                
                 const html = provider.items.map(item => `
-                    <div class="flex items-center px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="Swal.fire({icon:'info', title:'Menu', text:'Fitur sedang dikembangkan.'})">
-                        <div class="w-8 h-8 rounded-full border border-black dark:border-gray-400 flex items-center justify-center text-black dark:text-gray-300 font-bold text-[8px] shrink-0 text-center leading-tight bg-white dark:bg-[#0b1320]">${provider.logo}</div>
+                    <div class="flex items-center px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="buyProduct('${item}')">
+                        <div class="w-8 h-8 rounded-full border border-black dark:border-gray-400 flex items-center justify-center text-black dark:text-gray-300 font-bold text-[8px] shrink-0 text-center leading-tight bg-white dark:bg-[#0b1320]">
+                            ${provider.isIcon ? `<i class="${provider.logo} text-sm"></i>` : provider.logo}
+                        </div>
                         <div class="flex-1 ml-4 text-[13px] font-medium text-gray-800 dark:text-gray-200 uppercase">${item}</div>
                         <i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-xs"></i>
                     </div>
@@ -913,11 +1178,38 @@ cat << 'EOF' > public/operator.html
             }
         }
 
+        function buyProduct(itemName) {
+            const target = document.getElementById('inputTarget').value;
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            const bgPopup = isDark ? '#0b1320' : '#ffffff';
+            
+            if(!target) {
+                Swal.fire({icon: 'warning', title: 'Oops!', text: 'Silakan isi nomor tujuan terlebih dahulu!', background: bgPopup, color: isDark ? '#fff' : '#000'});
+                return;
+            }
+            
+            Swal.fire({
+                icon: 'info', 
+                title: 'Konfirmasi', 
+                text: `Fitur pembelian [${itemName}] untuk nomor ${target} sedang dalam tahap pengembangan.`, 
+                background: bgPopup, 
+                color: isDark ? '#fff' : '#000',
+                confirmButtonColor: isDark ? '#facc15' : '#002147',
+                customClass: { confirmButton: isDark ? 'text-[#001229] font-bold' : 'text-white font-bold' }
+            });
+        }
+
         function goBack() {
             if(currentState === 'category') {
                 currentState = 'operator';
-                document.getElementById('operatorContainer').classList.replace('hidden', 'block');
                 document.getElementById('categoryContainer').classList.replace('block', 'hidden');
+                
+                if(type === 'tagihan') {
+                    const tagihanWrap = document.getElementById('tagihanGridWrap');
+                    if(tagihanWrap) tagihanWrap.classList.remove('hidden');
+                } else {
+                    document.getElementById('operatorContainer').classList.replace('hidden', 'block');
+                }
                 titleEl.innerText = originalTitle;
             } else {
                 history.back();
@@ -1238,7 +1530,7 @@ NC='\033[0m' # No Color
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V77) 💎       ${NC}"
+    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V78) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
