@@ -770,7 +770,7 @@ cat << 'EOF' > public/operator.html
                 <div class="px-4 mt-6">
                     <h3 class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-3 uppercase" id="pageSubtitle">PILIH OPERATOR TUJUAN</h3>
                     <div class="bg-white dark:bg-[#111c2e] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm transition-colors" id="opListRender">
-                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -780,7 +780,7 @@ cat << 'EOF' > public/operator.html
                     <i class="fas fa-home text-lg cursor-pointer hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"></i>
                 </div>
                 <div class="bg-white dark:bg-[#111c2e] shadow-sm transition-colors pb-4" id="categoryList">
-                    </div>
+                </div>
             </div>
 
             <div id="productContainer" class="hidden">
@@ -798,7 +798,7 @@ cat << 'EOF' > public/operator.html
                 </div>
 
                 <div class="bg-white dark:bg-[#111c2e] shadow-sm transition-colors pb-4" id="productList">
-                    </div>
+                </div>
             </div>
             
         </div>
@@ -820,7 +820,6 @@ cat << 'EOF' > public/operator.html
         let originalTitle = '';
         let currentProvider = null; 
 
-        // Mapping Data Digiflazz
         const baseOperators = {
             'xl': { name: 'XL', logo: 'XL', digiBrand: 'XL', placeholder: 'Masukkan Nomor XL (08xx)...' },
             'axis': { name: 'AXIS', logo: 'AXIS', digiBrand: 'AXIS', placeholder: 'Masukkan Nomor AXIS (08xx)...' },
@@ -984,7 +983,7 @@ cat << 'EOF' > public/operator.html
                     document.getElementById('categoryContainer').classList.add('hidden');
                     document.getElementById('productContainer').classList.remove('hidden');
                     titleEl.innerText = provider.name;
-                    document.getElementById('inputTarget').placeholder = provider.placeholder || "Ketik nomor disini...";
+                    document.getElementById('inputTarget').placeholder = provider.placeholder || "Ketik target disini...";
                     document.getElementById('inputTarget').value = ''; 
                     
                     if(type === 'tagihan') {
@@ -1001,7 +1000,7 @@ cat << 'EOF' > public/operator.html
             document.getElementById('categoryContainer').classList.add('hidden');
             document.getElementById('productContainer').classList.remove('hidden');
             titleEl.innerText = catName;
-            document.getElementById('inputTarget').placeholder = placeholderStr || "Ketik nomor disini...";
+            document.getElementById('inputTarget').placeholder = placeholderStr || "Ketik target disini...";
             document.getElementById('inputTarget').value = ''; 
             
             fetchProducts(currentProvider.digiBrand, catName);
@@ -1088,7 +1087,7 @@ cat << 'EOF' > public/operator.html
 EOF
 
 # ==========================================
-# FILE NODE.JS (API) + AUTO-HEAL & ANTI-TESTING BUG
+# FILE NODE.JS (API + AUTO-CHECKER BACKGROUND)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -1213,7 +1212,7 @@ app.post('/api/products', async (req, res) => {
             name: p.name,
             desc: p.desc,
             price: p.price + getMarkup(p.price), 
-            isLocal: true
+            isLocal: (p.isDigi === true) ? false : true
         }))
     ];
 
@@ -1221,31 +1220,27 @@ app.post('/api/products', async (req, res) => {
     res.json({ data: combined });
 });
 
-// API TRANSAKSI (V95: FIX DATABASE CRASH & TESTING BUG)
 app.post('/api/transaction/create', async (req, res) => {
     try {
         const { phone, target, sku, name, price, isLocal } = req.body;
         let db = loadJSON(dbFile);
         let config = loadJSON(configFile);
 
-        console.log(`[TRX API] Memulai TRX: ${phone} -> ${sku}`);
+        console.log(`[TRX API] Memulai TRX: ${phone} -> ${sku} (isLocal: ${isLocal})`);
 
         if (!db[phone]) return res.status(400).json({ error: 'Akun tidak ditemukan.' });
         if (db[phone].saldo < price) return res.status(400).json({ error: 'Saldo tidak mencukupi. Silakan Top Up terlebih dahulu.' });
 
-        // AUTO-HEAL: Pastikan array riwayat ada untuk menghindari Crash (Error 500)
         if (!db[phone].mutasi) db[phone].mutasi = [];
         if (!db[phone].transactions) db[phone].transactions = [];
         if (!db[phone].topup) db[phone].topup = [];
 
-        // Potong saldo sementara
         db[phone].saldo -= price;
         let ref_id = 'TRX' + Date.now();
         let dateStr = new Date().toLocaleString('id-ID');
         let trxStatus = 'Proses';
         let sn_ref = '';
 
-        // Hit Digiflazz jika bukan produk lokal
         if (!isLocal && config.digiUser && config.digiKey) {
             try {
                 let sign = crypto.createHash('md5').update(config.digiUser + config.digiKey + ref_id).digest('hex');
@@ -1259,7 +1254,6 @@ app.post('/api/transaction/create', async (req, res) => {
                     sign: sign
                 };
 
-                // FIX FATAL: HANYA KIRIMKAN PARAMETER 'testing' JIKA API KEY ADALAH DEV
                 if (isDev) {
                     digiPayload.testing = true;
                 }
@@ -1267,7 +1261,6 @@ app.post('/api/transaction/create', async (req, res) => {
                 console.log(`[DIGIFLAZZ] Mengirim Data:`, JSON.stringify(digiPayload));
 
                 let digiRes = await axios.post('https://api.digiflazz.com/v1/transaction', digiPayload);
-                
                 let digiData = digiRes.data.data;
                 console.log(`[DIGIFLAZZ] Response:`, digiData.status);
 
@@ -1302,9 +1295,14 @@ app.post('/api/transaction/create', async (req, res) => {
             }
         }
 
-        // Jika lokal, atau digiflazz pending/sukses, simpan mutasi & riwayat
         db[phone].mutasi.push({ id: ref_id, type: 'out', amount: price, desc: `Beli ${name}`, date: dateStr });
-        db[phone].transactions.push({ id: ref_id, produk: name, nominal: price, no_tujuan: target, status: trxStatus, sn_ref: sn_ref, harga: price, date: dateStr });
+        
+        // Simpan sku dan isLocal agar bisa dicek otomatis oleh Background Checker
+        db[phone].transactions.push({ 
+            id: ref_id, sku: sku, isLocal: isLocal, produk: name, 
+            nominal: price, no_tujuan: target, status: trxStatus, 
+            sn_ref: sn_ref, harga: price, date: dateStr 
+        });
         saveJSON(dbFile, db);
         
         try {
@@ -1315,9 +1313,75 @@ app.post('/api/transaction/create', async (req, res) => {
         res.json({ message: 'Transaksi berhasil diproses.' });
     } catch (fatalErr) {
         console.error("FATAL ERROR DI TRANSAKSI:", fatalErr);
-        res.status(500).json({ error: 'Terjadi error di server. Mohon hubungi admin.' });
+        res.status(500).json({ error: 'Terjadi kesalahan sistem internal: ' + fatalErr.message });
     }
 });
+
+// ===============================================
+// BACKGROUND ROBOT: AUTO CHECKER TRANSAKSI PROSES
+// ===============================================
+setInterval(async () => {
+    let db = loadJSON(dbFile);
+    let config = loadJSON(configFile);
+    let changed = false;
+
+    if(!config.digiUser || !config.digiKey) return;
+
+    for (let phone in db) {
+        let user = db[phone];
+        if (!user.transactions) continue;
+
+        for (let i = 0; i < user.transactions.length; i++) {
+            let trx = user.transactions[i];
+            
+            // Cek hanya yang statusnya Proses, punya SKU, dan bukan produk lokal murni
+            if (trx.status === 'Proses' && !trx.isLocal && trx.sku) {
+                try {
+                    let sign = crypto.createHash('md5').update(config.digiUser + config.digiKey + trx.id).digest('hex');
+                    let isDev = (config.digiKey || '').toLowerCase().startsWith('dev');
+                    
+                    let digiPayload = {
+                        username: config.digiUser,
+                        buyer_sku_code: trx.sku,
+                        customer_no: trx.no_tujuan,
+                        ref_id: trx.id,
+                        sign: sign
+                    };
+                    
+                    if (isDev) digiPayload.testing = true;
+
+                    let digiRes = await axios.post('https://api.digiflazz.com/v1/transaction', digiPayload);
+                    let digiData = digiRes.data.data;
+
+                    if (digiData.status === 'Sukses') {
+                        trx.status = 'Sukses';
+                        trx.sn_ref = digiData.sn || trx.sn_ref;
+                        changed = true;
+                        console.log(`[AUTO-CHECK] TRX Sukses: ${trx.id}`);
+                        
+                        try { global.waSocket?.sendMessage(user.jid || phone+'@s.whatsapp.net', { text: `✅ *TRANSAKSI SUKSES*\n\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n🔖 SN: ${trx.sn_ref}\n\nTerima kasih!` }); } catch(e){}
+                        
+                    } else if (digiData.status === 'Gagal') {
+                        trx.status = 'Gagal';
+                        trx.sn_ref = digiData.sn || digiData.message || 'Gagal dari Pusat';
+                        
+                        // AUTO REFUND
+                        user.saldo += trx.harga;
+                        user.mutasi.push({ id: 'REF'+Date.now(), type: 'in', amount: trx.harga, desc: `Refund: ${trx.produk}`, date: new Date().toLocaleString('id-ID') });
+                        changed = true;
+                        console.log(`[AUTO-CHECK] TRX Gagal & Refunded: ${trx.id}`);
+                        
+                        try { global.waSocket?.sendMessage(user.jid || phone+'@s.whatsapp.net', { text: `❌ *TRANSAKSI GAGAL*\n\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n⚠️ Alasan: ${digiData.message || 'Gangguan Server'}\n\n💰 Saldo Rp ${trx.harga.toLocaleString('id-ID')} telah dikembalikan.` }); } catch(e){}
+                    }
+                } catch(e) {
+                    // Abaikan jika error jaringan saat mengecek, biar dicek lagi di putaran berikutnya
+                }
+            }
+        }
+    }
+    if (changed) saveJSON(dbFile, db);
+}, 20000); // Jalan setiap 20 detik
+// ===============================================
 
 app.post('/api/topup/request', (req, res) => {
     const { phone, method, nominal } = req.body; let db = loadJSON(dbFile);
@@ -1490,7 +1554,7 @@ NC='\033[0m' # No Color
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V95) 💎       ${NC}"
+    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V97) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
@@ -1506,7 +1570,7 @@ while true; do clear
     echo -e "  ${GREEN}8.${NC} 📲 Ganti Foto QRIS Top Up"
     echo -e "  ${GREEN}9.${NC} 📢 Manajemen Pusat Informasi"
     echo -e "  ${GREEN}10.${NC} 📈 Seting Keuntungan (Markup Harga)"
-    echo -e "  ${GREEN}11.${NC} 📦 Manajemen Produk Lokal/Manual"
+    echo -e "  ${GREEN}11.${NC} 📦 Manajemen Produk (Katalog Manual & API)"
     echo ""
     echo -e "${PURPLE}[ 🌐 MANAJEMEN SERVER & API ]${NC}"
     echo -e "  ${GREEN}12.${NC} Setup Domain (Nginx + Cloudflare + UFW Firewall)"
@@ -1634,36 +1698,37 @@ while true; do clear
                 echo -e "${CYAN}===============================================${NC}"
                 echo -e "${YELLOW}       📦 MANAJEMEN PRODUK LOKAL/MANUAL        ${NC}"
                 echo -e "${CYAN}===============================================${NC}"
-                echo "Gunakan menu ini untuk menambahkan produk sendiri"
-                echo "di luar API Digiflazz (misal: Netflix, Inject, dll)"
+                echo "Gunakan menu ini untuk menambahkan produk Digiflazz"
+                echo "yang tidak muncul otomatis, agar terhubung ke API."
                 echo ""
-                echo "1. ➕ Tambah Produk Baru"
-                echo "2. 📋 Daftar Produk Lokal"
-                echo "3. ➖ Hapus Produk Lokal"
+                echo "1. ➕ Tambah Produk"
+                echo "2. 📋 Daftar Produk"
+                echo "3. ➖ Hapus Produk"
                 echo -e "${RED}0. Kembali ke Menu Utama${NC}"
                 echo -e "${CYAN}===============================================${NC}"
                 read -p "Pilih [0-3]: " prodmenu
                 case $prodmenu in
                     1)
                         echo -e "\n--- TAMBAH PRODUK BARU ---"
-                        echo "Pilihan Tipe: pulsa, data, ewallet, etoll, game, pln, masaaktif"
+                        echo "Format Tipe: pulsa, data, ewallet, etoll, game, pln, masaaktif"
                         read -p "Tipe Produk: " p_type
-                        echo "Pilihan Brand: XL, TELKOMSEL, DANA, MOBILE LEGENDS, dll"
+                        echo "Format Brand: XL, TELKOMSEL, DANA, MOBILE LEGENDS, dll"
                         read -p "Provider / Brand: " p_brand
-                        read -p "Kategori Sub (Khusus 'data', cth: AKRAB / kosongkan bila tidak ada): " p_cat
-                        read -p "Nama Produk (cth: MLBB 86 Diamonds): " p_name
-                        read -p "Harga MODAL (Rp) - Akan otomatis ditambah Markup: " p_price
-                        read -p "SKU / Kode Produk Asli: " p_sku
+                        read -p "Kategori Sub (Khusus 'data', cth: EXTRA DIGITAL / kosongkan bila tidak ada): " p_cat
+                        read -p "Nama Produk (cth: XL Xtra Conference 15GB): " p_name
+                        read -p "Harga MODAL (Akan otomatis ditambah Markup): " p_price
+                        read -p "SKU Digiflazz (WAJIB VALID, cth: C15GB): " p_sku
                         read -p "Deskripsi Singkat: " p_desc
                         
                         if [ ! -z "$p_name" ] && [ ! -z "$p_price" ]; then
-                            node -e "const fs=require('fs');let f='$HOME/$DIR_NAME/local_products.json';let data=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[];data.push({id:'LOC'+Date.now(),type:'$p_type'.toLowerCase(),brand:'$p_brand',category:'$p_cat',name:'$p_name',price:parseInt('$p_price')||0,sku:'$p_sku',desc:'$p_desc'});fs.writeFileSync(f,JSON.stringify(data,null,2));console.log('\n✅ Produk Lokal berhasil ditambahkan dan akan muncul di aplikasi!');"
+                            # isDigi di-hardcode ke 'true' supaya selalu nembak API
+                            node -e "const fs=require('fs');let f='$HOME/$DIR_NAME/local_products.json';let data=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[];data.push({id:'LOC'+Date.now(),type:'$p_type'.toLowerCase(),brand:'$p_brand',category:'$p_cat',name:'$p_name',price:parseInt('$p_price')||0,sku:'$p_sku',desc:'$p_desc',isDigi:true});fs.writeFileSync(f,JSON.stringify(data,null,2));console.log('\n✅ Produk berhasil ditambahkan & terhubung ke API!');"
                         else
                             echo -e "${RED}Nama dan Harga wajib diisi!${NC}"
                         fi
                         read -p "Tekan Enter..." ;;
                     2)
-                        node -e "const fs=require('fs');let f='$HOME/$DIR_NAME/local_products.json';let data=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[];console.log('\n📋 DAFTAR PRODUK LOKAL:');if(data.length===0)console.log('Belum ada produk lokal.');data.forEach((p,i)=>console.log('['+i+'] '+p.name+' | '+p.brand+' | Modal Rp '+p.price.toLocaleString('id-ID')+' | SKU: '+p.sku));console.log('');"
+                        node -e "const fs=require('fs');let f='$HOME/$DIR_NAME/local_products.json';let data=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[];console.log('\n📋 DAFTAR PRODUK LOKAL:');if(data.length===0)console.log('Belum ada produk.');data.forEach((p,i)=>console.log('['+i+'] '+p.name+' | SKU: '+p.sku));console.log('');"
                         read -p "Tekan Enter..." ;;
                     3)
                         node -e "const fs=require('fs');let f='$HOME/$DIR_NAME/local_products.json';let data=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[];if(data.length===0)console.log('\nBelum ada produk.');else data.forEach((p,i)=>console.log('['+i+'] '+p.name));"
@@ -1727,9 +1792,11 @@ EOFNGINX
             echo -e "${YELLOW}             🔌 SETUP API DIGIFLAZZ            ${NC}"
             echo -e "${CYAN}===============================================${NC}"
             echo -e "Kredensial bisa diambil dari Dashboard Digiflazz."
+            echo -e "${RED}PENTING: WAJIB MASUKKAN PRODUCTION KEY!${NC}"
+            echo -e "Jika memasukkan Development Key (awalan dev-), transaksi tidak akan memotong saldo."
             echo ""
             read -p "Masukkan Username Digiflazz: " digi_user
-            read -p "Masukkan API Key (WAJIB PRODUCTION KEY): " digi_key
+            read -p "Masukkan API Key (Bukan Dev Key): " digi_key
             if [ ! -z "$digi_user" ] && [ ! -z "$digi_key" ]; then
                 node -e "const fs=require('fs');let file='$HOME/$DIR_NAME/config.json';let cfg=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};cfg.digiUser='$digi_user';cfg.digiKey='$digi_key';fs.writeFileSync(file,JSON.stringify(cfg,null,2));console.log('\n✅ Data API Digiflazz berhasil disimpan!');"
                 pm2 restart $BOT_NAME > /dev/null 2>&1
@@ -1749,12 +1816,9 @@ EOFNGINX
             read -p "Tekan Enter untuk kembali..."
             ;;
         14) 
-            echo -e "${RED}PERINGATAN: Menu ini menarik kode dari GitHub.${NC}"
-            echo "Pastikan GitHub Anda sudah terupdate dengan script V95 sebelum melanjutkan!"
-            read -p "Lanjutkan? (y/n): " confirm_pull
-            if [[ "$confirm_pull" == "y" || "$confirm_pull" == "Y" ]]; then
-                cd "$HOME" && wget -qO- https://raw.githubusercontent.com/fikystorez/PROJECT-PPOB-FIKYSTORE/main/install.sh | tr -d '\r' > install.sh && chmod +x install.sh && ./install.sh && exit 0
-            fi
+            echo -e "${RED}PERINGATAN: Jangan lakukan Update Sistem kecuali file di Github sudah diperbarui ke V97!${NC}"
+            echo "Abaikan opsi ini untuk saat ini."
+            read -p "Tekan Enter untuk kembali..."
             ;;
         0) exit 0 ;;
     esac
