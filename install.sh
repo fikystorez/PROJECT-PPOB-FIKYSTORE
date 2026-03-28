@@ -770,7 +770,7 @@ cat << 'EOF' > public/operator.html
                 <div class="px-4 mt-6">
                     <h3 class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-3 uppercase" id="pageSubtitle">PILIH OPERATOR TUJUAN</h3>
                     <div class="bg-white dark:bg-[#111c2e] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm transition-colors" id="opListRender">
-                    </div>
+                        </div>
                 </div>
             </div>
 
@@ -780,7 +780,7 @@ cat << 'EOF' > public/operator.html
                     <i class="fas fa-home text-lg cursor-pointer hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"></i>
                 </div>
                 <div class="bg-white dark:bg-[#111c2e] shadow-sm transition-colors pb-4" id="categoryList">
-                </div>
+                    </div>
             </div>
 
             <div id="productContainer" class="hidden">
@@ -798,7 +798,7 @@ cat << 'EOF' > public/operator.html
                 </div>
 
                 <div class="bg-white dark:bg-[#111c2e] shadow-sm transition-colors pb-4" id="productList">
-                </div>
+                    </div>
             </div>
             
         </div>
@@ -820,6 +820,7 @@ cat << 'EOF' > public/operator.html
         let originalTitle = '';
         let currentProvider = null; 
 
+        // Mapping Data Digiflazz
         const baseOperators = {
             'xl': { name: 'XL', logo: 'XL', digiBrand: 'XL', placeholder: 'Masukkan Nomor XL (08xx)...' },
             'axis': { name: 'AXIS', logo: 'AXIS', digiBrand: 'AXIS', placeholder: 'Masukkan Nomor AXIS (08xx)...' },
@@ -1087,7 +1088,7 @@ cat << 'EOF' > public/operator.html
 EOF
 
 # ==========================================
-# FILE NODE.JS (API TRANSAKSI FIX TESTING MODE)
+# FILE NODE.JS (API) + AUTO-HEAL & ANTI-TESTING BUG
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -1220,26 +1221,31 @@ app.post('/api/products', async (req, res) => {
     res.json({ data: combined });
 });
 
-// API TRANSAKSI V94: FIX MODE TESTING DIGIFLAZZ
+// API TRANSAKSI (V95: FIX DATABASE CRASH & TESTING BUG)
 app.post('/api/transaction/create', async (req, res) => {
     try {
         const { phone, target, sku, name, price, isLocal } = req.body;
         let db = loadJSON(dbFile);
         let config = loadJSON(configFile);
 
+        console.log(`[TRX API] Memulai TRX: ${phone} -> ${sku}`);
+
         if (!db[phone]) return res.status(400).json({ error: 'Akun tidak ditemukan.' });
         if (db[phone].saldo < price) return res.status(400).json({ error: 'Saldo tidak mencukupi. Silakan Top Up terlebih dahulu.' });
 
+        // AUTO-HEAL: Pastikan array riwayat ada untuk menghindari Crash (Error 500)
         if (!db[phone].mutasi) db[phone].mutasi = [];
         if (!db[phone].transactions) db[phone].transactions = [];
         if (!db[phone].topup) db[phone].topup = [];
 
+        // Potong saldo sementara
         db[phone].saldo -= price;
         let ref_id = 'TRX' + Date.now();
         let dateStr = new Date().toLocaleString('id-ID');
         let trxStatus = 'Proses';
         let sn_ref = '';
 
+        // Hit Digiflazz jika bukan produk lokal
         if (!isLocal && config.digiUser && config.digiKey) {
             try {
                 let sign = crypto.createHash('md5').update(config.digiUser + config.digiKey + ref_id).digest('hex');
@@ -1253,15 +1259,17 @@ app.post('/api/transaction/create', async (req, res) => {
                     sign: sign
                 };
 
-                // PENTING: Hanya kirimkan testing:true JIKA PAKAI DEV KEY. 
-                // Jika pakai Prod Key, parameter testing dihapus total agar tidak dikira simulasi.
+                // FIX FATAL: HANYA KIRIMKAN PARAMETER 'testing' JIKA API KEY ADALAH DEV
                 if (isDev) {
                     digiPayload.testing = true;
                 }
 
+                console.log(`[DIGIFLAZZ] Mengirim Data:`, JSON.stringify(digiPayload));
+
                 let digiRes = await axios.post('https://api.digiflazz.com/v1/transaction', digiPayload);
                 
                 let digiData = digiRes.data.data;
+                console.log(`[DIGIFLAZZ] Response:`, digiData.status);
 
                 if (digiData.status === 'Gagal') {
                     db[phone].saldo += price; // Auto Refund
@@ -1289,10 +1297,12 @@ app.post('/api/transaction/create', async (req, res) => {
                     msgErr = e.message;
                 }
                 
+                console.log(`[DIGIFLAZZ] Axios Error:`, msgErr);
                 return res.status(400).json({ error: msgErr + ' (Saldo dikembalikan otomatis)' });
             }
         }
 
+        // Jika lokal, atau digiflazz pending/sukses, simpan mutasi & riwayat
         db[phone].mutasi.push({ id: ref_id, type: 'out', amount: price, desc: `Beli ${name}`, date: dateStr });
         db[phone].transactions.push({ id: ref_id, produk: name, nominal: price, no_tujuan: target, status: trxStatus, sn_ref: sn_ref, harga: price, date: dateStr });
         saveJSON(dbFile, db);
@@ -1305,7 +1315,7 @@ app.post('/api/transaction/create', async (req, res) => {
         res.json({ message: 'Transaksi berhasil diproses.' });
     } catch (fatalErr) {
         console.error("FATAL ERROR DI TRANSAKSI:", fatalErr);
-        res.status(500).json({ error: 'Terjadi kesalahan sistem internal: ' + fatalErr.message });
+        res.status(500).json({ error: 'Terjadi error di server. Mohon hubungi admin.' });
     }
 });
 
@@ -1480,7 +1490,7 @@ NC='\033[0m' # No Color
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V94) 💎       ${NC}"
+    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V95) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
@@ -1717,11 +1727,9 @@ EOFNGINX
             echo -e "${YELLOW}             🔌 SETUP API DIGIFLAZZ            ${NC}"
             echo -e "${CYAN}===============================================${NC}"
             echo -e "Kredensial bisa diambil dari Dashboard Digiflazz."
-            echo -e "${RED}PENTING: WAJIB MASUKKAN PRODUCTION KEY!${NC}"
-            echo -e "Jika memasukkan Development Key (awalan dev-), transaksi tidak akan memotong saldo."
             echo ""
             read -p "Masukkan Username Digiflazz: " digi_user
-            read -p "Masukkan API Key (Bukan Dev Key): " digi_key
+            read -p "Masukkan API Key (WAJIB PRODUCTION KEY): " digi_key
             if [ ! -z "$digi_user" ] && [ ! -z "$digi_key" ]; then
                 node -e "const fs=require('fs');let file='$HOME/$DIR_NAME/config.json';let cfg=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};cfg.digiUser='$digi_user';cfg.digiKey='$digi_key';fs.writeFileSync(file,JSON.stringify(cfg,null,2));console.log('\n✅ Data API Digiflazz berhasil disimpan!');"
                 pm2 restart $BOT_NAME > /dev/null 2>&1
@@ -1740,13 +1748,22 @@ EOFNGINX
             echo ""
             read -p "Tekan Enter untuk kembali..."
             ;;
-        14) cd "$HOME" && wget -qO- https://raw.githubusercontent.com/fikystorez/PROJECT-PPOB-FIKYSTORE/main/install.sh | tr -d '\r' > install.sh && chmod +x install.sh && ./install.sh && exit 0 ;;
+        14) 
+            echo -e "${RED}PERINGATAN: Menu ini menarik kode dari GitHub.${NC}"
+            echo "Pastikan GitHub Anda sudah terupdate dengan script V95 sebelum melanjutkan!"
+            read -p "Lanjutkan? (y/n): " confirm_pull
+            if [[ "$confirm_pull" == "y" || "$confirm_pull" == "Y" ]]; then
+                cd "$HOME" && wget -qO- https://raw.githubusercontent.com/fikystorez/PROJECT-PPOB-FIKYSTORE/main/install.sh | tr -d '\r' > install.sh && chmod +x install.sh && ./install.sh && exit 0
+            fi
+            ;;
         0) exit 0 ;;
     esac
 done
 EOF
 
 chmod +x /usr/bin/menu
+pm2 restart digital-fiky-bot > /dev/null 2>&1
 echo "=========================================================="
 echo "  SISTEM WEB & BOT BERHASIL DIPERBARUI SECARA PENUH!      "
+echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
