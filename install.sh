@@ -1092,7 +1092,7 @@ cat << 'EOF' > public/operator.html
 EOF
 
 # ==========================================
-# FILE NODE.JS (API)
+# FILE NODE.JS (API + AUTO-CHECKER BACKGROUND)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -1231,6 +1231,8 @@ app.post('/api/transaction/create', async (req, res) => {
         let db = loadJSON(dbFile);
         let config = loadJSON(configFile);
 
+        console.log(`[TRX API] Memulai TRX: ${phone} -> ${sku} (isLocal: ${isLocal})`);
+
         if (!db[phone]) return res.status(400).json({ error: 'Akun tidak ditemukan.' });
         if (db[phone].saldo < price) return res.status(400).json({ error: 'Saldo tidak mencukupi. Silakan Top Up terlebih dahulu.' });
 
@@ -1261,8 +1263,11 @@ app.post('/api/transaction/create', async (req, res) => {
                     digiPayload.testing = true;
                 }
 
+                console.log(`[DIGIFLAZZ] Mengirim Data:`, JSON.stringify(digiPayload));
+
                 let digiRes = await axios.post('https://api.digiflazz.com/v1/transaction', digiPayload);
                 let digiData = digiRes.data.data;
+                console.log(`[DIGIFLAZZ] Response:`, digiData.status);
 
                 if (digiData.status === 'Gagal') {
                     db[phone].saldo += price; // Auto Refund
@@ -1278,6 +1283,7 @@ app.post('/api/transaction/create', async (req, res) => {
             } catch(e) {
                 db[phone].saldo += price; // Auto Refund
                 saveJSON(dbFile, db);
+                
                 let msgErr = 'Gagal terhubung ke provider.';
                 if (e.response && e.response.data) {
                     if (e.response.data.data && e.response.data.data.message) {
@@ -1288,12 +1294,19 @@ app.post('/api/transaction/create', async (req, res) => {
                 } else if (e.message) {
                     msgErr = e.message;
                 }
+                
+                console.log(`[DIGIFLAZZ] Axios Error:`, msgErr);
                 return res.status(400).json({ error: msgErr + ' (Saldo dikembalikan otomatis)' });
             }
         }
 
         db[phone].mutasi.push({ id: ref_id, type: 'out', amount: price, desc: `Beli ${name}`, date: dateStr });
-        db[phone].transactions.push({ id: ref_id, sku: sku, isLocal: isLocal, produk: name, nominal: price, no_tujuan: target, status: trxStatus, sn_ref: sn_ref, harga: price, date: dateStr });
+        
+        db[phone].transactions.push({ 
+            id: ref_id, sku: sku, isLocal: isLocal, produk: name, 
+            nominal: price, no_tujuan: target, status: trxStatus, 
+            sn_ref: sn_ref, harga: price, date: dateStr 
+        });
         saveJSON(dbFile, db);
         
         try {
@@ -1303,10 +1316,14 @@ app.post('/api/transaction/create', async (req, res) => {
 
         res.json({ message: 'Transaksi berhasil diproses.' });
     } catch (fatalErr) {
+        console.error("FATAL ERROR DI TRANSAKSI:", fatalErr);
         res.status(500).json({ error: 'Terjadi kesalahan sistem internal: ' + fatalErr.message });
     }
 });
 
+// ===============================================
+// BACKGROUND ROBOT: AUTO CHECKER TRANSAKSI PROSES
+// ===============================================
 setInterval(async () => {
     let db = loadJSON(dbFile);
     let config = loadJSON(configFile);
@@ -1333,6 +1350,7 @@ setInterval(async () => {
                         ref_id: trx.id,
                         sign: sign
                     };
+                    
                     if (isDev) digiPayload.testing = true;
 
                     let digiRes = await axios.post('https://api.digiflazz.com/v1/transaction', digiPayload);
@@ -1342,21 +1360,31 @@ setInterval(async () => {
                         trx.status = 'Sukses';
                         trx.sn_ref = digiData.sn || trx.sn_ref;
                         changed = true;
+                        console.log(`[AUTO-CHECK] TRX Sukses: ${trx.id}`);
+                        
                         try { global.waSocket?.sendMessage(user.jid || phone+'@s.whatsapp.net', { text: `✅ *TRANSAKSI SUKSES*\n\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n🔖 SN: ${trx.sn_ref}\n\nTerima kasih!` }); } catch(e){}
+                        
                     } else if (digiData.status === 'Gagal') {
                         trx.status = 'Gagal';
                         trx.sn_ref = digiData.sn || digiData.message || 'Gagal dari Pusat';
+                        
+                        // AUTO REFUND
                         user.saldo += trx.harga;
                         user.mutasi.push({ id: 'REF'+Date.now(), type: 'in', amount: trx.harga, desc: `Refund: ${trx.produk}`, date: new Date().toLocaleString('id-ID') });
                         changed = true;
+                        console.log(`[AUTO-CHECK] TRX Gagal & Refunded: ${trx.id}`);
+                        
                         try { global.waSocket?.sendMessage(user.jid || phone+'@s.whatsapp.net', { text: `❌ *TRANSAKSI GAGAL*\n\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n⚠️ Alasan: ${digiData.message || 'Gangguan Server'}\n\n💰 Saldo Rp ${trx.harga.toLocaleString('id-ID')} telah dikembalikan.` }); } catch(e){}
                     }
-                } catch(e) {}
+                } catch(e) {
+                    // Abaikan jika error jaringan saat mengecek
+                }
             }
         }
     }
     if (changed) saveJSON(dbFile, db);
-}, 20000); 
+}, 20000); // Jalan setiap 20 detik
+// ===============================================
 
 app.post('/api/topup/request', (req, res) => {
     const { phone, method, nominal } = req.body; let db = loadJSON(dbFile);
@@ -1529,7 +1557,7 @@ NC='\033[0m' # No Color
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V98) 💎       ${NC}"
+    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V99) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
@@ -1545,18 +1573,19 @@ while true; do clear
     echo -e "  ${GREEN}8.${NC} 📲 Ganti Foto QRIS Top Up"
     echo -e "  ${GREEN}9.${NC} 📢 Manajemen Pusat Informasi"
     echo -e "  ${GREEN}10.${NC} 📈 Seting Keuntungan (Markup Harga)"
-    echo -e "  ${GREEN}11.${NC} 📦 Manajemen Produk Lokal/Manual"
+    echo -e "  ${GREEN}11.${NC} 📦 Manajemen Produk (Katalog Manual & API)"
     echo ""
     echo -e "${PURPLE}[ 🌐 MANAJEMEN SERVER & API ]${NC}"
     echo -e "  ${GREEN}12.${NC} Setup Domain (Nginx + Cloudflare + UFW Firewall)"
     echo -e "  ${GREEN}13.${NC} 🔌 Setup API Digiflazz"
-    echo -e "  ${GREEN}15.${NC} 🔍 Cek Saldo & Koneksi Digiflazz"
+    echo -e "  ${GREEN}14.${NC} 🔍 Cek Saldo & Koneksi Digiflazz"
+    echo -e "  ${GREEN}15.${NC} 🔄 Refresh Katalog Digiflazz (Hapus Cache API)"
     echo ""
     echo -e "${PURPLE}[ ⚙️ SISTEM ]${NC}"
-    echo -e "  ${YELLOW}14.${NC} Update Sistem (Tarik Kode Terbaru)"
+    echo -e "  ${YELLOW}16.${NC} Update Sistem (Tarik Kode Terbaru)"
     echo -e "  ${RED}0.${NC} Keluar"
     echo -e "${CYAN}======================================================${NC}"
-    read -p "Pilih menu [0-15]: " choice
+    read -p "Pilih menu [0-16]: " choice
 
     case $choice in
         1) cd "$HOME/$DIR_NAME" && node index.js ;;
@@ -1799,7 +1828,7 @@ EOFNGINX
             fi
             read -p "Tekan Enter untuk kembali..."
             ;;
-        15)
+        14)
             clear
             echo -e "${CYAN}===============================================${NC}"
             echo -e "${YELLOW}         🔍 CEK SALDO & KONEKSI DIGIFLAZZ      ${NC}"
@@ -1808,10 +1837,19 @@ EOFNGINX
             echo ""
             read -p "Tekan Enter untuk kembali..."
             ;;
-        14) 
-            echo -e "${RED}Fitur Penarikan Update dari GitHub!${NC}"
-            echo "Sistem akan mendownload script install.sh terbaru dari repository Anda."
-            read -p "Lanjutkan? (y/n): " confirm_pull
+        15)
+            clear
+            echo -e "${CYAN}===============================================${NC}"
+            echo -e "${YELLOW}        🔄 REFRESH KATALOG DIGIFLAZZ           ${NC}"
+            echo -e "${CYAN}===============================================${NC}"
+            echo -e "Menghapus cache sistem dan menarik data terbaru dari Digiflazz..."
+            pm2 restart $BOT_NAME > /dev/null 2>&1
+            echo -e "${GREEN}✅ Katalog berhasil di-refresh! Silakan cek web Anda.${NC}"
+            read -p "Tekan Enter untuk kembali..."
+            ;;
+        16) 
+            echo -e "${RED}PERINGATAN: Pastikan Anda sudah mem-push script terbaru ke GitHub Anda!${NC}"
+            read -p "Lanjutkan Update Sistem dari GitHub? (y/n): " confirm_pull
             if [[ "$confirm_pull" == "y" || "$confirm_pull" == "Y" ]]; then
                 cd "$HOME" && wget -qO- https://raw.githubusercontent.com/fikystorez/PROJECT-PPOB-FIKYSTORE/main/install.sh | tr -d '\r' > install.sh && chmod +x install.sh && ./install.sh && exit 0
             fi
