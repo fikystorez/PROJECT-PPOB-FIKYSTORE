@@ -744,355 +744,8 @@ cat << 'EOF' > public/mutasi.html
 <!DOCTYPE html><html lang="id" id="html-root"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Mutasi Saldo</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><script>tailwind.config = { darkMode: 'class' }</script></head><body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300"><div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden transition-colors"><div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="history.back()"></i><h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white">Mutasi Saldo</h1></div><div class="px-4 mt-4" id="mutasiList"><div class="mt-20 flex flex-col items-center justify-center text-gray-400"><i class="fas fa-spinner fa-spin text-4xl mb-4"></i><p>Memuat data mutasi...</p></div></div></div><script>const user = JSON.parse(localStorage.getItem('user')); if (!user) window.location.href = '/'; if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark'); fetch('/api/user/mutasi', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) }).then(res => res.json()).then(data => { const list = document.getElementById('mutasiList'); if(data.mutasi.length === 0) { list.innerHTML = `<div class="mt-20 flex flex-col items-center justify-center text-center px-6"><div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-gray-800 transition-colors"><i class="fas fa-exchange-alt text-gray-400 text-4xl"></i></div><h2 class="text-gray-800 dark:text-white font-bold text-lg tracking-wide mb-2 transition-colors">Belum Ada Mutasi</h2><p class="text-gray-500 dark:text-gray-400 text-[13px] leading-relaxed">Catatan uang masuk dan keluar akan tampil di sini.</p></div>`; } else { list.innerHTML = data.mutasi.reverse().map(m => `<div class="flex items-center justify-between p-4 bg-white dark:bg-[#111c2e] border border-gray-200 dark:border-gray-800 rounded-2xl mb-3 shadow-sm transition-colors"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full ${m.type === 'in' ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'} flex items-center justify-center text-lg shrink-0"><i class="fas ${m.type === 'in' ? 'fa-arrow-down' : 'fa-arrow-up'}"></i></div><div><h4 class="font-bold text-[13px] text-gray-800 dark:text-gray-200">${m.desc}</h4><p class="text-[10px] text-gray-500">${m.date}</p></div></div><div class="text-right"><span class="font-bold text-[14px] ${m.type === 'in' ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}">${m.type === 'in' ? '+' : '-'} Rp ${m.amount.toLocaleString('id-ID')}</span></div></div>`).join(''); } }).catch(err => { list.innerHTML = `<div class="mt-20 text-center text-red-500">Gagal memuat data mutasi.</div>`; });</script></body></html>
 EOF
 
-cat << 'EOF' > public/operator.html
-<!DOCTYPE html>
-<html lang="id" id="html-root">
-<head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pilih Operator - DIGITAL FIKY STORE</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>tailwind.config = { darkMode: 'class' }</script>
-</head>
-<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
-    <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative shadow-2xl overflow-x-hidden transition-colors flex flex-col">
-        
-        <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 transition-colors shrink-0">
-            <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="goBack()"></i>
-            <h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white uppercase" id="pageTitle">Operator</h1>
-        </div>
-
-        <div class="flex-1 overflow-y-auto hide-scrollbar pb-10">
-            
-            <div id="operatorContainer" class="block">
-                <div class="px-4 mt-6">
-                    <h3 class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-3 uppercase" id="pageSubtitle">PILIH OPERATOR TUJUAN</h3>
-                    <div class="bg-white dark:bg-[#111c2e] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm transition-colors" id="opListRender">
-                    </div>
-                </div>
-            </div>
-
-            <div id="categoryContainer" class="hidden">
-                <div class="flex justify-between items-center px-5 py-4 bg-black dark:bg-[#001229] text-white">
-                    <span class="font-bold text-[15px] tracking-wide" id="catSubtitle">Silahkan Di Pilih..</span>
-                    <i class="fas fa-home text-lg cursor-pointer hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"></i>
-                </div>
-                <div class="bg-white dark:bg-[#111c2e] shadow-sm transition-colors pb-4" id="categoryList">
-                </div>
-            </div>
-
-            <div id="productContainer" class="hidden">
-                <div class="flex justify-between items-center px-5 py-4 bg-black dark:bg-[#001229] text-white">
-                    <span class="font-bold text-[15px] tracking-wide" id="prodSubtitle">Silahkan Di Pilih..</span>
-                    <i class="fas fa-home text-lg cursor-pointer hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"></i>
-                </div>
-                
-                <div class="px-4 py-4 bg-white dark:bg-[#0b1320] border-b border-gray-200 dark:border-gray-800 transition-colors">
-                    <label class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-2 block uppercase">Target / Tujuan</label>
-                    <div class="relative">
-                        <input type="text" id="inputTarget" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition shadow-sm" placeholder="Ketik target disini...">
-                        <i class="fas fa-address-book absolute right-4 top-[14px] text-gray-400 text-lg cursor-pointer hover:text-[#002147] dark:hover:text-yellow-400 transition"></i>
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-[#111c2e] shadow-sm transition-colors pb-4" id="productList">
-                </div>
-            </div>
-            
-        </div>
-    </div>
-
-    <script>
-        if (!localStorage.getItem('user')) window.location.href = '/';
-        if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) document.getElementById('html-root').classList.add('dark');
-        const user = JSON.parse(localStorage.getItem('user'));
-        
-        const params = new URLSearchParams(window.location.search); 
-        const type = params.get('type'); 
-        const providerParam = params.get('provider'); 
-        
-        const titleEl = document.getElementById('pageTitle'); 
-        const subtitleEl = document.getElementById('pageSubtitle');
-        
-        let currentState = 'operator';
-        let originalTitle = '';
-        let currentProvider = null; 
-
-        const baseOperators = {
-            'xl': { name: 'XL', logo: 'XL', digiBrand: 'XL', placeholder: 'Masukkan Nomor XL (08xx)...' },
-            'axis': { name: 'AXIS', logo: 'AXIS', digiBrand: 'AXIS', placeholder: 'Masukkan Nomor AXIS (08xx)...' },
-            'telkomsel': { name: 'TELKOMSEL', logo: 'TS', digiBrand: 'TELKOMSEL', placeholder: 'Masukkan Nomor Telkomsel (08xx)...' },
-            'indosat': { name: 'INDOSAT OOREDOO', logo: 'IS', digiBrand: 'INDOSAT', placeholder: 'Masukkan Nomor Indosat (08xx)...' },
-            'tri': { name: 'TRI', logo: '3', digiBrand: 'TRI', placeholder: 'Masukkan Nomor TRI (08xx)...' },
-            'smartfren': { name: 'SMARTFREN', logo: 'SF', digiBrand: 'SMARTFREN', placeholder: 'Masukkan Nomor Smartfren (08xx)...' },
-            'byu': { name: 'BY.U', logo: 'BY.U', digiBrand: 'BYU', placeholder: 'Masukkan Nomor By.U (08xx)...' }
-        };
-
-        const dataCategories = JSON.parse(JSON.stringify(baseOperators));
-        dataCategories['xl'].items = ['AKRAB','CIRCLE','XL DATA','BEBAS PUAS','XL CUANKU','EXTRA DIGITAL','HARIAN','HOTROAD SPESIAL','COMBO FLEX','XL Data Flex Mini (Baru)','XL Data FLex (Baru)','FLEX MAX','ULTRA 5G+','XTRA COMBO','XTRA COMBO GIFT','XTRA COMBO LITE','XTRA COMBO MINI','DATA GIFT','BONUS HARIAN','XL DATA GAMES','XL KUOTA GAMES','GAMES','ROAMING','GRAB GACOR','X-TRA ON','BLUE','XL PASS','XL UMROH','TEMBAK XL'];
-        dataCategories['axis'].items = ['AKRAB','UMUM','AXIS MINI','AXIS BAGI KUOTA','AIGO SS','HARIAN','OWSEM','BORNET','AXIS CUANKU','AXIS','LOKAL','XTRA DIGITAL','WARNET','UMROH'];
-        dataCategories['telkomsel'].items = ['UMUM','BULK','FLASH','MINI','CUANKU TELKOMSEL','APPS KUOTA','MAXSTREAM','UMROH','MALAM','COMBO SAKTI','GamesMAX Unlimited','GamesMax','Musicmax','Disney+ Hotstar','OMG','GigaMAX','UnlimitedMAX','Orbit','InternetMAX','Surprise Deal','UKM','Bronze','Harian','Mingguan','Bulanan','Ketengan Utama','Harian Sepuasnya','Roamax','GamesMAX Booster','Naslok','Game','Roamax Haji','COMBO','Eksklusif','Super Seru','Flash','Revamp','DPI','Enterprise','Serba Lima Ribu','Magnet','UKM Plus','Terbaik Untukmu','Non Puma','VideoMax'];
-        dataCategories['indosat'].items = ['FREEDOM NASIONAL','FREEDOM SENSASI (LARIS)','RAMADHAN (BARU)','DATA LOKAL','FREEDOM HARIAN','FREEDOM COMBO','FREEDOM UNLIMITED','FREEDOM COMBO GIFT','FREEDOM INTERNET GIFT','FREEDOM INTERNET SPESIAL','FREEDOM LONGLIFE','FREEDOM MAX','UMUM','CUANKU PROMO','SACHET','GASPOL','HIFI AIR','FREEDOM APPS','FREEDOM APPS GIFT','PURE MERDEKA','FREEDOM PLAY','KITA','YELLOW','ROAMING','E-SIM','UMROH & HAJI','UMROH HAJI COMBO'];
-        dataCategories['tri'].items = ['UMUM & MINI','HAPPY','AON','TRI CUANKU','LOKAL','KIKIDA','MIX & TRANSFER','GETMORE & CICILAN','HOME','ROAMING','H3RO','SAHABAT OJOL','IBADAH','ADDON','HAPPY PLAY','HIFI AIR','RAMADHAN (BARU)','happy 5G','KEEPON'];
-        dataCategories['smartfren'].items = ['UMUM','UNLIMITED','UNLIMITED NONSTOP','NONSTOP','KUOTA','KUOTA 5G+','APLIKASI','GAMING','MANDIRI','CONNEX EVO','ROAMING','VOLUME'];
-        dataCategories['byu'].items = ['Paket Data Umum','Paket Data Topping','BY.U CUANKU PROMO','Paket Data Mbps','Paket Data Kaget','Paket Data Super Kaget','Paket Data Jajan'];
-
-        const ewalletCategories = {
-            'dana': { name: 'DANA', logo: 'DN', digiBrand: 'DANA', placeholder: 'Masukkan Nomor DANA...' },
-            'gopay': { name: 'GOPAY', logo: 'GP', digiBrand: 'GO PAY', placeholder: 'Masukkan Nomor GoPay...' },
-            'shopeepay': { name: 'SHOPEEPAY', logo: 'SP', digiBrand: 'SHOPEE PAY', placeholder: 'Masukkan Nomor ShopeePay...' },
-            'ovo': { name: 'OVO', logo: 'OV', digiBrand: 'OVO', placeholder: 'Masukkan Nomor OVO...' },
-            'linkaja': { name: 'LINKAJA', logo: 'LA', digiBrand: 'LINKAJA', placeholder: 'Masukkan Nomor LinkAja...' }
-        };
-
-        const etollCategories = {
-            'bni': { name: 'BNI TapCash', logo: 'BNI', digiBrand: 'TAPCASH', placeholder: 'Masukkan Nomor BNI TapCash...' },
-            'bri': { name: 'BRI Brizzi', logo: 'BRI', digiBrand: 'BRIZZI', placeholder: 'Masukkan Nomor BRI Brizzi...' },
-            'mandiri': { name: 'Mandiri Emoney', logo: 'MDR', digiBrand: 'E-MONEY', placeholder: 'Masukkan Nomor Mandiri E-Money...' }
-        };
-
-        const plnCategories = {
-            'pln_token': { name: 'Token PLN', logo: 'fas fa-bolt', isIcon: true, digiBrand: 'PLN', placeholder: 'Masukkan No Meter / ID Pelanggan PLN...' }
-        };
-
-        const gameCategories = {
-            'free fire': { name: 'Free Fire', logo: 'fas fa-gamepad', isIcon: true, digiBrand: 'FREE FIRE', placeholder: 'Masukkan ID Player...' },
-            'mobile legends': { name: 'Mobile Legends', logo: 'fas fa-gamepad', isIcon: true, digiBrand: 'MOBILE LEGENDS', placeholder: 'Masukkan ID & Server (Contoh: 12345678 1234)...' },
-            'pubg mobile': { name: 'PUBG Mobile', logo: 'fas fa-gamepad', isIcon: true, digiBrand: 'PUBG MOBILE', placeholder: 'Masukkan ID Player...' },
-            'valorant': { name: 'Valorant', logo: 'fas fa-gamepad', isIcon: true, digiBrand: 'VALORANT', placeholder: 'Masukkan Riot ID...' }
-        };
-
-        const tagihanCategories = [
-            { id: 'tagihan_bpjs', name: 'BPJS', icon: 'fas fa-heartbeat', placeholder: 'Masukkan No BPJS (13 Digit)...' },
-            { id: 'tagihan_pgn', name: 'Gas Negara (PGN)', icon: 'fas fa-fire', placeholder: 'Masukkan ID Pelanggan PGN...' },
-            { id: 'tagihan_gas', name: 'Pertagas (GAS)', icon: 'fas fa-fire-alt', placeholder: 'Masukkan ID Pelanggan Pertagas...' },
-            { id: 'tagihan_telkom', name: 'Telkom/<br>Indihome', icon: 'fas fa-wifi', placeholder: 'Masukkan No Telepon/Indihome...' },
-            { id: 'tagihan_tv', name: 'TV Berbayar', icon: 'fas fa-tv', placeholder: 'Masukkan ID Pelanggan TV...' },
-            { id: 'tagihan_pasca', name: 'Tagihan<br>Seluler', icon: 'fas fa-mobile-alt', placeholder: 'Masukkan Nomor HP Pascabayar...' },
-            { id: 'tagihan_finance', name: 'Cicilan<br>Finance', icon: 'fas fa-hand-holding-usd', placeholder: 'Masukkan Nomor Kontrak Kredit...' },
-            { id: 'tagihan_internet', name: 'Internet<br>Bulanan', icon: 'fas fa-globe', placeholder: 'Masukkan ID Pelanggan Internet...' },
-            { id: 'tagihan_pdam', name: 'PDAM', icon: 'fas fa-tint', placeholder: 'Masukkan Nomor Pelanggan PDAM...' }
-        ];
-
-        const allProviders = {};
-        Object.assign(allProviders, baseOperators, dataCategories, ewalletCategories, etollCategories, plnCategories, gameCategories);
-        tagihanCategories.forEach(t => {
-            allProviders[t.id] = { name: t.name.replace('<br>', ' '), logo: t.icon, isIcon: true, placeholder: t.placeholder };
-        });
-
-        let currentList = {};
-
-        if(type === 'ewallet') {
-            originalTitle = 'E-Wallet'; subtitleEl.innerText = 'PILIH E-WALLET TUJUAN'; currentList = ewalletCategories;
-        } else if(type === 'etoll') {
-            originalTitle = 'Saldo E-Toll'; subtitleEl.innerText = 'PILIH KARTU E-TOLL'; currentList = etollCategories;
-        } else if(type === 'pln') {
-            originalTitle = 'PLN'; subtitleEl.innerText = 'PILIH JENIS LAYANAN PLN'; currentList = plnCategories;
-        } else if(type === 'game') {
-            originalTitle = 'Top Up Game'; subtitleEl.innerText = 'PILIH GAME'; currentList = gameCategories;
-        } else if(type === 'tagihan') {
-            originalTitle = 'Tagihan'; subtitleEl.innerText = 'PILIH JENIS TAGIHAN';
-            document.getElementById('operatorContainer').classList.replace('block', 'hidden');
-            let gridHtml = '<div class="grid grid-cols-4 gap-y-6 gap-x-3 mt-4 mx-4">';
-            tagihanCategories.forEach(item => {
-                gridHtml += `<div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="selectProvider('${item.id}')"><div class="w-[4.2rem] h-[4.2rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-[26px] shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="${item.icon}"></i></div><span class="text-[9px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase text-center leading-tight transition-colors">${item.name}</span></div>`;
-            });
-            gridHtml += '</div>';
-            const parent = document.getElementById('operatorContainer').parentElement;
-            const tempDiv = document.createElement('div'); tempDiv.id = 'tagihanGridWrap';
-            tempDiv.innerHTML = `<h3 class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-4 uppercase mx-4 mt-6">PILIH JENIS TAGIHAN</h3>` + gridHtml;
-            parent.insertBefore(tempDiv, document.getElementById('categoryContainer'));
-        } else if (type === 'data') {
-            originalTitle = 'Paket Internet'; subtitleEl.innerText = 'PILIH OPERATOR TUJUAN'; currentList = dataCategories; 
-        } else {
-            if(type === 'pulsa') originalTitle = 'Isi Pulsa'; else if(type === 'masaaktif') originalTitle = 'Masa Aktif'; else originalTitle = 'Pilih Operator';
-            subtitleEl.innerText = 'PILIH OPERATOR TUJUAN'; currentList = baseOperators; 
-        }
-
-        titleEl.innerText = originalTitle;
-
-        if (providerParam && allProviders[providerParam]) {
-            setTimeout(() => { selectProvider(providerParam); }, 50);
-        } else if(type !== 'tagihan') {
-            let opHtml = '';
-            for(let key in currentList){
-                let op = currentList[key];
-                opHtml += `<div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('${key}')"><div class="w-10 h-10 rounded-full border border-black dark:border-gray-400 flex items-center justify-center text-black dark:text-gray-300 font-bold text-[10px] shrink-0 text-center leading-tight bg-white dark:bg-[#0b1320]">${op.isIcon ? `<i class="${op.logo} text-lg"></i>` : op.logo}</div><div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">${op.name}</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i></div>`;
-            }
-            document.getElementById('opListRender').innerHTML = opHtml;
-        }
-
-        async function fetchProducts(brand, categoryName) {
-            const listEl = document.getElementById('productList');
-            listEl.innerHTML = `<div class="py-12 flex justify-center"><i class="fas fa-spinner fa-spin text-3xl text-gray-400 dark:text-gray-600"></i></div>`;
-            
-            try {
-                let res = await fetch('/api/products', {
-                    method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ type: type, brand: brand, category: categoryName })
-                });
-                let data = await res.json();
-                
-                if(data.data && data.data.length > 0) {
-                    let html = data.data.map(p => {
-                        let safeName = p.name.replace(/'/g, "\\'").replace(/"/g, "&quot;");
-                        let safeSku = p.sku.replace(/'/g, "\\'").replace(/"/g, "&quot;");
-                        
-                        return `
-                        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="buyProduct('${safeSku}', '${safeName}', ${p.price}, ${p.isLocal})">
-                            <div class="flex flex-col pr-4 w-3/4">
-                                <span class="text-[12px] font-bold text-gray-800 dark:text-gray-100">${p.name} ${p.isLocal ? '<i class="fas fa-check-circle text-green-500 text-[10px] ml-1" title="Produk Lokal"></i>' : ''}</span>
-                                ${p.desc ? `<span class="text-[9px] text-gray-500 mt-1 line-clamp-2 leading-tight">${p.desc}</span>` : ''}
-                            </div>
-                            <div class="text-right shrink-0">
-                                <span class="text-[13px] font-extrabold text-[#002147] dark:text-yellow-400">Rp ${p.price.toLocaleString('id-ID')}</span>
-                            </div>
-                        </div>
-                        `;
-                    }).join('');
-                    listEl.innerHTML = html;
-                } else {
-                    listEl.innerHTML = `<div class="py-12 flex flex-col items-center justify-center text-gray-400 dark:text-gray-600"><i class="fas fa-box-open text-5xl mb-4 opacity-40"></i><p class="text-[11px] font-bold tracking-wide uppercase">Katalog Produk Kosong</p></div>`;
-                }
-            } catch(e) {
-                listEl.innerHTML = `<div class="py-12 text-center text-red-500 text-xs font-bold">Gagal memuat data dari server.</div>`;
-            }
-        }
-
-        function selectProvider(op) {
-            const provider = currentList[op] || allProviders[op]; 
-            if(provider) {
-                currentProvider = provider;
-                document.getElementById('operatorContainer').classList.replace('block', 'hidden');
-                const tagihanWrap = document.getElementById('tagihanGridWrap');
-                if(tagihanWrap) tagihanWrap.classList.add('hidden');
-                
-                if (provider.items && provider.items.length > 0 && type === 'data') {
-                    currentState = 'category';
-                    document.getElementById('categoryContainer').classList.remove('hidden');
-                    document.getElementById('productContainer').classList.add('hidden');
-                    titleEl.innerText = provider.name;
-                    
-                    const html = provider.items.map(item => `
-                        <div class="flex items-center px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectCategory('${item}', '${provider.placeholder}')">
-                            <div class="w-8 h-8 rounded-full border border-black dark:border-gray-400 flex items-center justify-center text-black dark:text-gray-300 font-bold text-[8px] shrink-0 text-center leading-tight bg-white dark:bg-[#0b1320]">${provider.isIcon ? `<i class="${provider.logo} text-sm"></i>` : provider.logo}</div>
-                            <div class="flex-1 ml-4 text-[13px] font-medium text-gray-800 dark:text-gray-200 uppercase">${item}</div>
-                            <i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-xs"></i>
-                        </div>
-                    `).join('');
-                    document.getElementById('categoryList').innerHTML = html;
-                } else {
-                    currentState = 'product';
-                    document.getElementById('categoryContainer').classList.add('hidden');
-                    document.getElementById('productContainer').classList.remove('hidden');
-                    titleEl.innerText = provider.name;
-                    document.getElementById('inputTarget').placeholder = provider.placeholder || "Ketik nomor disini...";
-                    document.getElementById('inputTarget').value = ''; 
-                    
-                    if(type === 'tagihan') {
-                        document.getElementById('productList').innerHTML = `<div class="py-12 flex flex-col items-center text-gray-400"><i class="fas fa-box-open text-5xl mb-4 opacity-40"></i><p class="text-[11px] font-bold">Layanan Tagihan Segera Hadir</p></div>`;
-                    } else {
-                        fetchProducts(provider.digiBrand, null);
-                    }
-                }
-            }
-        }
-
-        function selectCategory(catName, placeholderStr) {
-            currentState = 'product';
-            document.getElementById('categoryContainer').classList.add('hidden');
-            document.getElementById('productContainer').classList.remove('hidden');
-            titleEl.innerText = catName;
-            document.getElementById('inputTarget').placeholder = placeholderStr || "Ketik target disini...";
-            document.getElementById('inputTarget').value = ''; 
-            
-            fetchProducts(currentProvider.digiBrand, catName);
-        }
-
-        function buyProduct(sku, name, price, isLocal) {
-            const target = document.getElementById('inputTarget').value;
-            const isDark = localStorage.getItem('darkMode') === 'true';
-            const bgPopup = isDark ? '#0b1320' : '#ffffff';
-            const textColor = isDark ? 'text-gray-200' : 'text-gray-800';
-            
-            if(!target) {
-                Swal.fire({icon: 'warning', title: 'Oops!', text: 'Silakan isi target tujuan terlebih dahulu!', background: bgPopup, color: isDark ? '#fff' : '#000'});
-                return;
-            }
-            
-            Swal.fire({
-                title: `<span class="font-bold ${isDark ? 'text-white' : 'text-gray-800'} text-lg">Konfirmasi Beli</span>`,
-                html: `<div class="text-left text-[13px] mt-2 border-t border-b ${isDark ? 'border-gray-800' : 'border-gray-200'} py-3">
-                    <div class="flex justify-between mb-2"><span class="text-gray-500">Produk</span><span class="font-bold ${textColor} text-right w-2/3">${name}</span></div>
-                    <div class="flex justify-between mb-2"><span class="text-gray-500">Target</span><span class="font-bold ${textColor} text-right">${target}</span></div>
-                    <div class="flex justify-between"><span class="text-gray-500">Total Harga</span><span class="font-extrabold text-[#002147] dark:text-yellow-400 text-right">Rp ${price.toLocaleString('id-ID')}</span></div>
-                </div>`,
-                showCancelButton: true, confirmButtonText: 'Beli Sekarang', cancelButtonText: 'Batal',
-                confirmButtonColor: isDark ? '#facc15' : '#002147', cancelButtonColor: '#ef4444',
-                customClass: { confirmButton: isDark ? 'text-[#001229] font-bold' : 'text-white font-bold', cancelButton: 'font-bold' },
-                background: bgPopup, color: isDark ? '#fff' : '#000'
-            }).then(async (res) => {
-                if(res.isConfirmed) {
-                    Swal.fire({title: 'Memproses Transaksi...', allowOutsideClick: false, background: bgPopup, color: isDark ? '#fff' : '#000', didOpen: () => { Swal.showLoading() }});
-                    try {
-                        let resp = await fetch('/api/transaction/create', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ phone: user.phone, target: target, sku: sku, name: name, price: price, isLocal: isLocal })
-                        });
-                        let data = await resp.json();
-                        if (resp.ok) {
-                            Swal.fire({icon: 'success', title: 'Berhasil!', text: data.message, background: bgPopup, color: isDark ? '#fff' : '#000'}).then(()=>{ window.location.href = '/riwayat.html'; });
-                        } else {
-                            Swal.fire({icon: 'error', title: 'Gagal', text: data.error, background: bgPopup, color: isDark ? '#fff' : '#000'});
-                        }
-                    } catch(err) {
-                        Swal.fire({icon: 'error', title: 'Oops!', text: 'Terjadi kesalahan jaringan.', background: bgPopup, color: isDark ? '#fff' : '#000'});
-                    }
-                }
-            });
-        }
-
-        function goBack() {
-            if(providerParam && currentState === 'product') {
-                window.location.href = '/game.html';
-                return;
-            }
-            if(currentState === 'product') {
-                if(currentProvider && currentProvider.items && currentProvider.items.length > 0 && type === 'data') {
-                    currentState = 'category';
-                    document.getElementById('productContainer').classList.add('hidden');
-                    document.getElementById('categoryContainer').classList.remove('hidden');
-                    titleEl.innerText = currentProvider.name;
-                } else {
-                    currentState = 'operator';
-                    document.getElementById('productContainer').classList.add('hidden');
-                    if(type === 'tagihan') {
-                        const tagihanWrap = document.getElementById('tagihanGridWrap');
-                        if(tagihanWrap) tagihanWrap.classList.remove('hidden');
-                    } else {
-                        document.getElementById('operatorContainer').classList.replace('hidden', 'block');
-                    }
-                    titleEl.innerText = originalTitle;
-                }
-            } else if(currentState === 'category') {
-                currentState = 'operator';
-                document.getElementById('categoryContainer').classList.add('hidden');
-                document.getElementById('operatorContainer').classList.replace('hidden', 'block');
-                titleEl.innerText = originalTitle;
-            } else {
-                history.back();
-            }
-        }
-    </script>
-</body>
-</html>
-EOF
-
 # ==========================================
-# FILE NODE.JS (API + AUTO-CHECKER BACKGROUND)
+# FILE NODE.JS (API + LOCAL HYBRID EXACT MATCH)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -1156,8 +809,10 @@ app.post('/api/products', async (req, res) => {
                 let digiRes = await axios.post('https://api.digiflazz.com/v1/price-list', {
                     cmd: 'prepaid', username: config.digiUser, sign: sign
                 });
-                digiCache.data = digiRes.data.data || [];
-                digiCache.time = Date.now();
+                if(digiRes.data && digiRes.data.data) {
+                    digiCache.data = digiRes.data.data;
+                    digiCache.time = Date.now();
+                }
             }
 
             let products = digiCache.data;
@@ -1196,8 +851,10 @@ app.post('/api/products', async (req, res) => {
     let localProducts = loadJSON(localProductsFile);
     let myLocals = localProducts.filter(p => {
         if(p.type !== type) return false;
-        if(!p.brand.toLowerCase().includes(brand.toLowerCase()) && !brand.toLowerCase().includes(p.brand.toLowerCase())) return false;
+        if(brand && !p.brand.toLowerCase().includes(brand.toLowerCase()) && !brand.toLowerCase().includes(p.brand.toLowerCase())) return false;
         if(type === 'data' && category) {
+            // V99 FIX: Exact match category untuk produk lokal
+            if (p.category && p.category.toLowerCase().trim() === category.toLowerCase().trim()) return true;
             let kw = category.toLowerCase().split(' ');
             return kw.every(k => p.name.toLowerCase().includes(k) || (p.category && p.category.toLowerCase().includes(k)));
         }
@@ -1737,7 +1394,7 @@ while true; do clear
                         
                         echo -e "\nFormat Brand: XL, TELKOMSEL, DANA, MOBILE LEGENDS, dll"
                         read -p "Provider / Brand: " p_brand
-                        read -p "Kategori Sub (Khusus 'data', cth: EXTRA DIGITAL / kosongkan bila tidak ada): " p_cat
+                        read -p "Kategori Sub (Khusus 'data', PASTIKAN SAMA PERSIS DENGAN NAMA MENU KATEGORI): " p_cat
                         read -p "Nama Produk (Tampil di Web): " p_name
                         read -p "Harga MODAL (Akan otomatis ditambah Markup): " p_price
                         read -p "SKU Digiflazz (WAJIB VALID, cth: C15GB): " p_sku
@@ -1848,7 +1505,8 @@ EOFNGINX
             read -p "Tekan Enter untuk kembali..."
             ;;
         16) 
-            echo -e "${RED}PERINGATAN: Pastikan Anda sudah mem-push script terbaru ke GitHub Anda!${NC}"
+            echo -e "${RED}PERINGATAN: Jangan lakukan Update Sistem kecuali file di Github sudah diperbarui ke versi V99!${NC}"
+            echo "Jika di GitHub Anda scriptnya masih versi lama, Web Anda akan kembali rusak!"
             read -p "Lanjutkan Update Sistem dari GitHub? (y/n): " confirm_pull
             if [[ "$confirm_pull" == "y" || "$confirm_pull" == "Y" ]]; then
                 cd "$HOME" && wget -qO- https://raw.githubusercontent.com/fikystorez/PROJECT-PPOB-FIKYSTORE/main/install.sh | tr -d '\r' > install.sh && chmod +x install.sh && ./install.sh && exit 0
