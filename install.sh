@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ==========================================================
-# DIGITAL FIKY STORE - V118 (THE MONOLITHIC UNCUT EDITION)
+# DIGITAL FIKY STORE - V119 (THE ABSOLUTE PERFECT MONOLITH)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
@@ -17,7 +17,7 @@ DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V118 (FULL SCRIPT)      "
+echo "    MENGINSTAL DIGITAL FIKY STORE V119 (FULL SCRIPT)      "
 echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
@@ -227,15 +227,8 @@ cat << 'EOF' > public/index.html
   <script>
     function togglePassword(id, el) {
       const input = document.getElementById(id);
-      if (input.type === 'password') { 
-        input.type = 'text'; 
-        el.classList.remove('fa-eye'); 
-        el.classList.add('fa-eye-slash'); 
-      } else { 
-        input.type = 'password'; 
-        el.classList.remove('fa-eye-slash'); 
-        el.classList.add('fa-eye'); 
-      }
+      if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
+      else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
     }
     
     let loginPhone = '';
@@ -247,8 +240,7 @@ cat << 'EOF' > public/index.html
       Swal.fire({title: 'Memeriksa Data...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
       try {
         const res = await fetch('/api/auth/login-req', { 
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/json' }, 
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, 
           body: JSON.stringify({ identifier, password }) 
         });
         const data = await res.json();
@@ -259,12 +251,8 @@ cat << 'EOF' > public/index.html
           document.getElementById('otpLoginForm').classList.remove('hidden');
           document.getElementById('loginDesc').innerHTML = "Kode OTP Login dikirim ke WA Anda.";
           Swal.close();
-        } else { 
-          Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.', background: '#002147', color: '#fff' }); 
-      }
+        } else { Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.', background: '#002147', color: '#fff' }); }
     });
 
     document.getElementById('otpLoginForm').addEventListener('submit', async (e) => {
@@ -273,20 +261,15 @@ cat << 'EOF' > public/index.html
       Swal.fire({title: 'Memverifikasi...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
       try {
         const res = await fetch('/api/auth/login-verify', { 
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/json' }, 
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, 
           body: JSON.stringify({ phone: loginPhone, otp }) 
         });
         const data = await res.json();
         if (res.ok) { 
           localStorage.setItem('user', JSON.stringify(data.user)); 
           window.location.href = '/dashboard.html';
-        } else { 
-          Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.', background: '#002147', color: '#fff' }); 
-      }
+        } else { Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.', background: '#002147', color: '#fff' }); }
     });
   </script>
 </body>
@@ -346,15 +329,8 @@ cat << 'EOF' > public/register.html
   <script>
     function togglePassword(id, el) {
       const input = document.getElementById(id);
-      if (input.type === 'password') { 
-        input.type = 'text'; 
-        el.classList.remove('fa-eye'); 
-        el.classList.add('fa-eye-slash'); 
-      } else { 
-        input.type = 'password'; 
-        el.classList.remove('fa-eye-slash'); 
-        el.classList.add('fa-eye'); 
-      }
+      if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
+      else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
     }
     
     let registeredPhone = '';
@@ -368,8 +344,7 @@ cat << 'EOF' > public/register.html
       Swal.fire({title: 'Memproses...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
       try {
         const res = await fetch('/api/auth/register', { 
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/json' }, 
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, 
           body: JSON.stringify({ name, phone, email, password }) 
         });
         const data = await res.json();
@@ -378,35 +353,23 @@ cat << 'EOF' > public/register.html
           document.getElementById('box-register').classList.add('hidden'); 
           document.getElementById('box-otp').classList.remove('hidden'); 
           Swal.close();
-        } else { 
-          Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error, background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses.', background: '#002147', color: '#fff' }); 
-      }
+        } else { Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error, background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses.', background: '#002147', color: '#fff' }); }
     });
 
     document.getElementById('otpForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); 
-      const otp = document.getElementById('otpCode').value;
+      e.preventDefault(); const otp = document.getElementById('otpCode').value;
       Swal.fire({title: 'Verifikasi...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
       try {
         const res = await fetch('/api/auth/verify', { 
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/json' }, 
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, 
           body: JSON.stringify({ phone: registeredPhone, otp }) 
         });
         const data = await res.json();
         if (res.ok) { 
-          Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun aktif.', background: '#002147', color: '#fff' }).then(() => { 
-            window.location.href = '/'; 
-          }); 
-        } else { 
-          Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.', background: '#002147', color: '#fff' }); 
-      }
+          Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun aktif.', background: '#002147', color: '#fff' }).then(() => { window.location.href = '/'; }); 
+        } else { Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.', background: '#002147', color: '#fff' }); }
     });
   </script>
 </body>
@@ -460,60 +423,28 @@ cat << 'EOF' > public/forgot.html
   <script>
     function togglePassword(id, el) {
       const input = document.getElementById(id);
-      if (input.type === 'password') { 
-        input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); 
-      } else { 
-        input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); 
-      }
+      if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
+      else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
     }
-    
     let resetPhone = '';
-
     document.getElementById('requestOtpForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); 
-      const phone = document.getElementById('phone').value;
+      e.preventDefault(); const phone = document.getElementById('phone').value;
       Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
       try {
-        const res = await fetch('/api/auth/forgot', { 
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json' }, 
-            body: JSON.stringify({ phone }) 
-        });
+        const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
         const data = await res.json();
-        if (res.ok) { 
-          resetPhone = data.phone; 
-          document.getElementById('requestOtpForm').classList.add('hidden'); 
-          document.getElementById('resetForm').classList.remove('hidden'); 
-          Swal.close(); 
-        } else { 
-          Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-        Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); 
-      }
+        if (res.ok) { resetPhone = data.phone; document.getElementById('requestOtpForm').classList.add('hidden'); document.getElementById('resetForm').classList.remove('hidden'); Swal.close(); } 
+        else { Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); }
     });
-
     document.getElementById('resetForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); 
-      const otp = document.getElementById('otp').value; 
-      const newPassword = document.getElementById('newPassword').value;
+      e.preventDefault(); const otp = document.getElementById('otp').value; const newPassword = document.getElementById('newPassword').value;
       Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
       try {
-        const res = await fetch('/api/auth/reset', { 
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json' }, 
-            body: JSON.stringify({ phone: resetPhone, otp, newPassword }) 
-        });
-        if (res.ok) { 
-          Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.', background: '#002147', color: '#fff' }).then(() => { 
-              window.location.href = '/'; 
-          }); 
-        } else { 
-          Swal.fire({ icon: 'error', title: 'Gagal', text: 'OTP Salah.', background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-        Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); 
-      }
+        const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) });
+        if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.', background: '#002147', color: '#fff' }).then(() => { window.location.href = '/'; }); } 
+        else { Swal.fire({ icon: 'error', title: 'Gagal', text: 'OTP Salah.', background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); }
     });
   </script>
 </body>
@@ -844,7 +775,7 @@ cat << 'EOF' > public/operator.html
         <div class="px-4 py-4 bg-white dark:bg-[#0b1320] border-b border-gray-200 dark:border-gray-800">
           <label class="text-[10px] text-gray-500 font-bold mb-2 block uppercase">Target / Tujuan</label>
           <div class="relative flex items-center">
-            <input type="text" id="inputTarget" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white rounded-xl py-3 pl-4 pr-24 text-sm font-bold focus:outline-none focus:border-yellow-400" placeholder="Ketik target...">
+            <input type="text" id="inputTarget" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white rounded-xl py-3 pl-4 pr-24 text-sm font-bold focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400" placeholder="Ketik target...">
             <div id="prefixIcon" class="absolute right-12 font-bold text-[10px] uppercase px-2 py-1 rounded bg-blue-100 text-blue-700 dark:bg-[#002147] dark:text-yellow-400 hidden"></div>
           </div>
         </div>
@@ -1147,16 +1078,16 @@ cat << 'EOF' > public/info.html
     </div>
 
     <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40">
-      <div class="flex flex-col items-center cursor-pointer text-gray-400" onclick="location.href='/dashboard.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/dashboard.html'">
         <i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400" onclick="location.href='/riwayat.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/riwayat.html'">
         <i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span>
       </div>
       <div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400">
         <i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400" onclick="location.href='/profile.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/profile.html'">
         <i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span>
       </div>
     </div>
@@ -1599,7 +1530,6 @@ app.post('/api/transaction/create', async (req, res) => {
         
         try { global.waSocket?.sendMessage(db[phone].jid || phone + '@s.whatsapp.net', { text: `*TRANSAKSI ${trxStatus.toUpperCase()}* 🚀\n\n📦 Produk: ${name}\n📱 Tujuan: ${target}\n💰 Harga: Rp ${price.toLocaleString('id-ID')}` }); } catch(err) {}
         sendTeleNotif(`🛒 *TRANSAKSI BARU*\n\n👤 Member: ${phone}\n📦 Produk: ${name}\n📱 Tujuan: ${target}\n💰 Harga: Rp ${price.toLocaleString('id-ID')}\n🔄 Status: ${trxStatus}\n🔖 Ref: ${ref_id}`);
-        
         res.json({ message: 'Transaksi berhasil diproses.' });
     } catch (fatalErr) { 
         res.status(500).json({ error: 'Terjadi kesalahan internal.' }); 
@@ -1648,7 +1578,6 @@ function startAutoBackup() {
     if(!config.teleToken || !config.teleChatId || !config.autoBackupHours || config.autoBackupHours <= 0) return;
     
     let intervalMs = config.autoBackupHours * 60 * 60 * 1000; 
-    
     setInterval(() => {
         let zipName = `AutoBackup_FikyStore_${Date.now()}.zip`;
         exec(`zip -r ${zipName} database.json web_users.json config.json local_products.json info.json`, async (error) => {
@@ -1672,9 +1601,8 @@ app.post('/api/topup/request', (req, res) => {
     if (!db[phone].topup) db[phone].topup = [];
     const expiry = method === 'QRIS Otomatis' ? Date.now() + 5*60*1000 : null; 
     const newTopup = { id: 'TU' + Date.now(), method, nominal, status: 'Proses', date: new Date().toLocaleString('id-ID'), expiry };
-    db[phone].topup.push(newTopup); 
-    saveJSON(dbFile, db); 
-    sendTeleNotif(`💳 *PERMINTAAN TOP UP BARU*\n\n👤 Member: ${phone}\n💵 Nominal: Rp ${nominal.toLocaleString('id-ID')}\n🏦 Metode: ${method}\n⏳ Status: Menunggu Pembayaran`);
+    db[phone].topup.push(newTopup); saveJSON(dbFile, db); 
+    sendTeleNotif(`💳 *PERMINTAAN TOP UP BARU*\n\n👤 Member: ${phone}\n💵 Nominal: Rp ${nominal.toLocaleString('id-ID')}\n🏦 Metode: ${method}`);
     res.json({ message: 'Top up direkam' });
 });
 
@@ -1686,14 +1614,14 @@ app.post('/api/topup/history', (req, res) => {
 
 app.get('/api/admin/backup', async (req, res) => {
     let config = loadJSON(configFile);
-    if(!config.teleToken || !config.teleChatId) return res.status(400).json({ error: "Token/Chat ID Telegram belum disetting." });
+    if(!config.teleToken || !config.teleChatId) return res.status(400).json({ error: "Token/Chat ID Telegram belum disetting di Panel VPS." });
     try {
         let zipName = `Backup_DigitalFikyStore_${Date.now()}.zip`;
         exec(`zip -r ${zipName} database.json web_users.json config.json local_products.json info.json`, async (error) => {
             if(error) return res.status(500).json({ error: "Gagal membuat file ZIP." });
             const form = new FormData();
             form.append('chat_id', config.teleChatId);
-            form.append('caption', `📦 *BACKUP MANUAL BERHASIL*\n\nTanggal: ${new Date().toLocaleString('id-ID')}`);
+            form.append('caption', `📦 *BACKUP MANUAL BERHASIL*\n\nTanggal: ${new Date().toLocaleString('id-ID')}\nAman terkendali bosku! 🚀`);
             form.append('parse_mode', 'Markdown');
             form.append('document', fs.createReadStream(zipName));
             await axios.post(`https://api.telegram.org/bot${config.teleToken}/sendDocument`, form, { headers: form.getHeaders() });
@@ -1710,7 +1638,7 @@ app.post('/api/admin/add_balance', async (req, res) => {
         for(let p in webUsers){ if(webUsers[p].email === identifier){ targetPhone = p; break; } }
     } else { targetPhone = identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier; }
     
-    if(!targetPhone || !webUsers[targetPhone]) return res.json({ success: false, message: '\n❌ Member tidak ditemukan!' });
+    if(!targetPhone || !webUsers[targetPhone]) return res.json({ success: false, message: '\n❌ Member tidak ditemukan di database!' });
 
     if(!db[targetPhone]) db[targetPhone] = { saldo: 0, jid: targetPhone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] };
     if(!db[targetPhone].mutasi) db[targetPhone].mutasi = [];
@@ -1743,52 +1671,31 @@ app.post('/api/auth/login-req', async (req, res) => {
 });
 
 app.post('/api/auth/login-verify', (req, res) => {
-    const { phone, otp } = req.body; 
-    let webUsers = loadJSON(webUsersFile);
+    const { phone, otp } = req.body; let webUsers = loadJSON(webUsersFile);
     if (webUsers[phone] && webUsers[phone].loginOtp) {
         if (String(webUsers[phone].loginOtp).trim() === String(otp).trim()) {
             if (Date.now() > (webUsers[phone].loginOtpExpiry || Infinity)) return res.status(400).json({ error: 'OTP kedaluwarsa.' });
-            delete webUsers[phone].loginOtp; 
-            delete webUsers[phone].loginOtpExpiry; 
-            saveJSON(webUsersFile, webUsers);
+            delete webUsers[phone].loginOtp; delete webUsers[phone].loginOtpExpiry; saveJSON(webUsersFile, webUsers);
             res.json({ message: 'Login sukses', user: { phone: phone, name: webUsers[phone].name, email: webUsers[phone].email } });
         } else { res.status(400).json({ error: 'Kode OTP Salah.' }); }
     } else { res.status(400).json({ error: 'Sesi tidak valid.' }); }
 });
 
 app.post('/api/auth/register', async (req, res) => {
-    const { name, phone, email, password } = req.body; 
-    let webUsers = loadJSON(webUsersFile); 
-    let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
-    
+    const { name, phone, email, password } = req.body; let webUsers = loadJSON(webUsersFile); let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
     if (webUsers[fPhone] && webUsers[fPhone].isVerified) return res.status(400).json({ error: 'Nomor terdaftar.' });
-    
     const otp = Math.floor(1000 + Math.random() * 9000).toString(); 
-    webUsers[fPhone] = { name, email, password, isVerified: false, otp, otpExpiry: Date.now() + 300000, avatar: null }; 
-    saveJSON(webUsersFile, webUsers);
-    
-    try { 
-        await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Kode OTP Daftar Anda: *${otp}*` }); 
-        res.json({ message: 'OTP Terkirim', phone: fPhone }); 
-    } catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); }
+    webUsers[fPhone] = { name, email, password, isVerified: false, otp, otpExpiry: Date.now() + 300000, avatar: null }; saveJSON(webUsersFile, webUsers);
+    try { await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Kode OTP Daftar Anda: *${otp}*` }); res.json({ message: 'OTP Terkirim', phone: fPhone }); } catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); }
 });
 
 app.post('/api/auth/verify', (req, res) => {
-    const { phone, otp } = req.body; 
-    let webUsers = loadJSON(webUsersFile);
+    const { phone, otp } = req.body; let webUsers = loadJSON(webUsersFile);
     if (webUsers[phone] && webUsers[phone].otp) {
         if (String(webUsers[phone].otp).trim() === String(otp).trim()) {
             if (Date.now() > (webUsers[phone].otpExpiry || Infinity)) return res.status(400).json({ error: 'OTP kedaluwarsa.' });
-            webUsers[phone].isVerified = true; 
-            delete webUsers[phone].otp; 
-            delete webUsers[phone].otpExpiry; 
-            saveJSON(webUsersFile, webUsers);
-            
-            let db = loadJSON(dbFile); 
-            if (!db[phone]) { 
-                db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] }; 
-                saveJSON(dbFile, db); 
-            } 
+            webUsers[phone].isVerified = true; delete webUsers[phone].otp; delete webUsers[phone].otpExpiry; saveJSON(webUsersFile, webUsers);
+            let db = loadJSON(dbFile); if (!db[phone]) { db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] }; saveJSON(dbFile, db); } 
             sendTeleNotif(`🎊 *MEMBER BARU BERGABUNG!*\n\n👤 Nama: ${webUsers[phone].name}\n📱 WA: ${phone}`);
             res.json({ message: 'Sukses!' });
         } else { res.status(400).json({ error: 'OTP Salah.' }); }
@@ -1826,20 +1733,17 @@ async function startBot() {
                     console.log(`\n🔑 KODE PAIRING: ${code}\n`); 
                 } catch (error) {} 
             }, 5000); 
-        } 
+        } else {
+            console.log("\n❌ NOMOR BOT BELUM DISETTING! Silakan isi nomor bot melalui Menu Panel no. 1\n");
+        }
     }
     
-    sock.ev.on('connection.update', (update) => { 
-        const { connection } = update; 
-        if (connection === 'close') setTimeout(startBot, 3000); 
-    });
-    
-    sock.ev.on('creds.update', saveCreds); 
-    global.waSocket = sock; 
+    sock.ev.on('connection.update', (update) => { const { connection } = update; if (connection === 'close') setTimeout(startBot, 3000); });
+    sock.ev.on('creds.update', saveCreds); global.waSocket = sock; 
 }
 
 if (require.main === module) { 
-    app.listen(3000, () => { console.log('🌐 Web berjalan di port 3000'); }); 
+    app.listen(3000, () => { console.log('🌐 Web Server berjalan di port 3000'); }); 
     startBot(); 
 }
 EOF
@@ -1881,6 +1785,7 @@ while true; do clear
     echo -e "  ${YELLOW}22.${NC} 🚀 IMPORT CSV MASSAL (Ratusan Produk 1 Detik)"
     echo ""
     echo -e "${PURPLE}[ 🌐 MANAJEMEN SERVER & API ]${NC}"
+    echo -e "  ${GREEN}12.${NC} Setup Domain (Nginx + Cloudflare + UFW Firewall)"
     echo -e "  ${GREEN}13.${NC} 🔌 Setup API Digiflazz"
     echo -e "  ${GREEN}15.${NC} 🔍 Cek Saldo & Koneksi Digiflazz"
     echo -e "  ${GREEN}16.${NC} 🔄 Refresh Katalog Digiflazz (Hapus Cache API)"
@@ -1892,7 +1797,7 @@ while true; do clear
     echo -e "  ${GREEN}20.${NC} 📥 RESTORE DATA DARI DIRECT LINK"
     echo ""
     echo -e "${PURPLE}[ ⚙️ SISTEM ]${NC}"
-    echo -e "  ${YELLOW}21.${NC} Update Sistem"
+    echo -e "  ${YELLOW}21.${NC} Update Sistem (Tarik Kode dari Github)"
     echo -e "  ${RED}0.${NC} Keluar"
     echo -e "${CYAN}======================================================${NC}"
     read -p "Pilih menu [0-22]: " choice
@@ -1907,7 +1812,7 @@ while true; do clear
                 node -e "const fs=require('fs');let f='./config.json';let c=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):{};c.botNumber='$botnum';fs.writeFileSync(f,JSON.stringify(c,null,2));"
                 echo -e "${GREEN}Nomor disimpan! Meminta kode pairing ke WhatsApp...${NC}"
                 echo -e "${CYAN}(Tunggu sekitar 5-10 detik. Jika kode sudah muncul, catat kodenya.)${NC}"
-                echo -e "${RED}(TEKAN CTRL+C DI KEYBOARD JIKA SUDAH SELESAI UNTUK KEMBALI)${NC}"
+                echo -e "${RED}(Tekan CTRL+C di keyboard jika sudah selesai untuk kembali ke menu)${NC}"
                 node index.js
             fi
             ;;
@@ -1969,6 +1874,26 @@ while true; do clear
                 fi
                 read -p "Enter..."
             fi
+            ;;
+        12)
+            clear
+            echo -e "${CYAN}===============================================${NC}"
+            echo -e "${YELLOW}        🌐 SETUP DOMAIN (NGINX + UFW)          ${NC}"
+            echo -e "${CYAN}===============================================${NC}"
+            read -p "Masukkan Nama Domain LENGKAP (cth: digital.myfiky.store): " domain_name
+            if [ ! -z "$domain_name" ]; then
+                apt-get install nginx ufw -y > /dev/null 2>&1
+                ufw allow 80/tcp > /dev/null 2>&1
+                ufw allow 443/tcp > /dev/null 2>&1
+                cat << EOFNGINX > /etc/nginx/sites-available/$domain_name
+server { listen 80; server_name $domain_name; location / { proxy_pass http://localhost:3000; proxy_http_version 1.1; proxy_set_header Upgrade \$http_upgrade; proxy_set_header Connection 'upgrade'; proxy_set_header Host \$host; proxy_cache_bypass \$http_upgrade; proxy_set_header X-Real-IP \$remote_addr; proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for; proxy_set_header X-Forwarded-Proto \$scheme; } }
+EOFNGINX
+                ln -sf /etc/nginx/sites-available/$domain_name /etc/nginx/sites-enabled/
+                rm -f /etc/nginx/sites-enabled/default
+                nginx -t && systemctl restart nginx
+                echo -e "${GREEN}✅ Domain $domain_name berhasil dikonfigurasi!${NC}"
+            fi
+            read -p "Tekan Enter untuk kembali..."
             ;;
         22)
             clear
@@ -2062,10 +1987,8 @@ while true; do clear
             cd "$HOME/$DIR_NAME"
             git pull origin main
             npm install
-            chmod +x menu
-            cp menu /usr/bin/menu
             pm2 restart all > /dev/null 2>&1
-            echo -e "${GREEN}Update Selesai! Sistem sudah diperbarui.${NC}"
+            echo -e "${GREEN}Update Selesai!${NC}"
             read -p "Enter..."
             ;;
         0) exit 0 ;;
@@ -2076,6 +1999,6 @@ EOF
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
 echo "=========================================================="
-echo "  SISTEM WEB V118 BERHASIL DIPERBARUI SECARA PENUH!       "
+echo "  SISTEM WEB V119 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
