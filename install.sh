@@ -830,9 +830,9 @@ cat << 'EOF' > public/operator.html
                 </div>
                 
                 <div class="px-4 py-4 bg-white dark:bg-[#0b1320] border-b border-gray-200 dark:border-gray-800 transition-colors">
-                    <label class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-2 block uppercase">Target / Tujuan</label>
+                    <label class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-2 block uppercase">Nomor Tujuan</label>
                     <div class="relative">
-                        <input type="text" id="inputTarget" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition shadow-sm" placeholder="Ketik target disini...">
+                        <input type="text" id="inputTarget" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition shadow-sm" placeholder="Ketik nomor disini...">
                         <i class="fas fa-address-book absolute right-4 top-[14px] text-gray-400 text-lg cursor-pointer hover:text-[#002147] dark:hover:text-yellow-400 transition"></i>
                     </div>
                 </div>
@@ -1082,7 +1082,6 @@ cat << 'EOF' > public/operator.html
 
         function goBack() {
             if(providerParam && currentState === 'product') {
-                // Jika dari Game dan back, langsung ke index game
                 window.location.href = '/game.html';
                 return;
             }
@@ -1118,7 +1117,7 @@ cat << 'EOF' > public/operator.html
 EOF
 
 # ==========================================
-# FILE NODE.JS (API & MANAJEMEN LOKAL)
+# FILE NODE.JS (API)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -1425,7 +1424,7 @@ NC='\033[0m' # No Color
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V87) 💎       ${NC}"
+    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V88) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
