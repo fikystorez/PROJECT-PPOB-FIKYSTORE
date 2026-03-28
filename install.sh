@@ -791,9 +791,10 @@ cat << 'EOF' > public/operator.html
                 
                 <div class="px-4 py-4 bg-white dark:bg-[#0b1320] border-b border-gray-200 dark:border-gray-800 transition-colors">
                     <label class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-2 block uppercase">Target / Tujuan</label>
-                    <div class="relative">
-                        <input type="text" id="inputTarget" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition shadow-sm" placeholder="Ketik target disini...">
-                        <i class="fas fa-address-book absolute right-4 top-[14px] text-gray-400 text-lg cursor-pointer hover:text-[#002147] dark:hover:text-yellow-400 transition"></i>
+                    <div class="relative flex items-center">
+                        <input type="text" id="inputTarget" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white rounded-xl py-3 pl-4 pr-24 text-sm font-bold focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition shadow-sm" placeholder="Ketik target disini...">
+                        <div id="prefixIcon" class="absolute right-12 font-bold text-[10px] uppercase px-2 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hidden transition-all"></div>
+                        <i class="fas fa-address-book absolute right-4 text-gray-400 text-lg cursor-pointer hover:text-[#002147] dark:hover:text-yellow-400 transition"></i>
                     </div>
                 </div>
 
@@ -801,6 +802,43 @@ cat << 'EOF' > public/operator.html
                 </div>
             </div>
             
+        </div>
+    </div>
+
+    <div id="detailOverlay" class="fixed inset-0 bg-black/60 z-[130] hidden opacity-0 transition-opacity duration-300" onclick="closeDetail()"></div>
+    <div id="detailSheet" class="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#050b14] z-[140] rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] transform translate-y-full transition-transform duration-300 max-w-md mx-auto border-t border-gray-200 dark:border-gray-800 pb-safe flex flex-col max-h-[85vh]">
+        <div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full mx-auto my-3 shrink-0"></div>
+        <div class="px-5 pb-2 border-b border-gray-200 dark:border-gray-800 shrink-0 flex justify-between items-center">
+            <h3 class="font-extrabold text-gray-800 dark:text-white text-[16px] tracking-wide">Detail Produk</h3>
+            <i class="fas fa-times text-gray-400 hover:text-red-500 cursor-pointer text-xl" onclick="closeDetail()"></i>
+        </div>
+        <div class="p-5 overflow-y-auto hide-scrollbar flex-1">
+            <div class="flex items-start gap-3 mb-4">
+                <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-[#111c2e] border border-blue-100 dark:border-gray-700 flex items-center justify-center text-[#002147] dark:text-yellow-400 text-lg shrink-0 mt-1"><i class="fas fa-box"></i></div>
+                <div>
+                    <h4 class="font-extrabold text-[15px] text-gray-800 dark:text-gray-100 leading-tight" id="dtName">Nama Produk</h4>
+                    <p class="font-black text-lg text-[#002147] dark:text-yellow-400 mt-1" id="dtPrice">Rp 0</p>
+                </div>
+            </div>
+            <div class="bg-gray-50 dark:bg-[#111c2e] border border-gray-200 dark:border-gray-800 rounded-xl p-3 mb-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-xs font-bold text-gray-500 dark:text-gray-400"><i class="fas fa-address-book mr-1"></i> No Tujuan:</span>
+                    <span class="text-sm font-bold text-red-500" id="dtTarget">nomor tujuan kosong</span>
+                </div>
+            </div>
+            <div>
+                <span class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-2 block"><i class="fas fa-info-circle mr-1"></i> Deskripsi:</span>
+                <div class="bg-gray-50 dark:bg-[#111c2e] border border-gray-200 dark:border-gray-800 rounded-xl p-3 text-[11px] text-gray-600 dark:text-gray-300 leading-relaxed" id="dtDesc">
+                    Deskripsi produk...
+                </div>
+            </div>
+        </div>
+        <div class="p-5 border-t border-gray-200 dark:border-gray-800 shrink-0 bg-white dark:bg-[#050b14]">
+            <div class="flex gap-3 mb-3">
+                <button class="flex-1 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300 font-bold text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition" onclick="closeDetail()">Kembali</button>
+                <button class="flex-1 py-2.5 rounded-xl bg-green-600 text-white font-bold text-sm hover:bg-green-700 transition shadow-sm" onclick="bantuanAdmin()"><i class="fab fa-whatsapp mr-1"></i> Tanya CS</button>
+            </div>
+            <button id="btnLanjutkan" class="w-full py-3.5 bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#001229] font-bold rounded-xl text-sm shadow-md hover:opacity-90 transition opacity-50 cursor-not-allowed" onclick="executeBuy()">Lanjutkan Transaksi</button>
         </div>
     </div>
 
@@ -819,6 +857,9 @@ cat << 'EOF' > public/operator.html
         let currentState = 'operator';
         let originalTitle = '';
         let currentProvider = null; 
+
+        // State Modal
+        let selectedSku = ''; let selectedName = ''; let selectedPrice = 0; let selectedIsLocal = false;
 
         const baseOperators = {
             'xl': { name: 'XL', logo: 'XL', digiBrand: 'XL', placeholder: 'Masukkan Nomor XL (08xx)...' },
@@ -924,6 +965,48 @@ cat << 'EOF' > public/operator.html
             document.getElementById('opListRender').innerHTML = opHtml;
         }
 
+        // V102: PREFIX DETECTION (TSEL, INDOSAT, XL DLL)
+        const prefixMap = {
+            'Telkomsel': ['0811','0812','0813','0821','0822','0823','0851','0852','0853'],
+            'Indosat': ['0814','0815','0816','0855','0856','0857','0858'],
+            'XL/Axis': ['0817','0818','0819','0859','0877','0878','0831','0832','0833','0838'],
+            'Tri': ['0895','0896','0897','0898','0899'],
+            'Smartfren': ['0881','0882','0883','0884','0885','0886','0887','0888','0889']
+        };
+
+        document.getElementById('inputTarget').addEventListener('input', function() {
+            let val = this.value.replace(/[^0-9]/g, '');
+            let prefObj = document.getElementById('prefixIcon');
+            
+            // Sync with Modal
+            let dtTarget = document.getElementById('dtTarget');
+            let btnLanjutkan = document.getElementById('btnLanjutkan');
+            if(val) {
+                dtTarget.innerText = val;
+                dtTarget.classList.remove('text-red-500');
+                dtTarget.classList.add('text-gray-800', 'dark:text-white');
+                btnLanjutkan.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                dtTarget.innerText = 'nomor tujuan kosong';
+                dtTarget.classList.add('text-red-500');
+                dtTarget.classList.remove('text-gray-800', 'dark:text-white');
+                btnLanjutkan.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+
+            // Detect Provider Logo
+            if(val.length >= 4) {
+                let pfx = val.substring(0,4);
+                let found = null;
+                for(let brand in prefixMap) {
+                    if(prefixMap[brand].includes(pfx)) { found = brand; break; }
+                }
+                if(found) {
+                    prefObj.innerText = found;
+                    prefObj.classList.remove('hidden');
+                } else { prefObj.classList.add('hidden'); }
+            } else { prefObj.classList.add('hidden'); }
+        });
+
         async function fetchProducts(brand, categoryName) {
             const listEl = document.getElementById('productList');
             listEl.innerHTML = `<div class="py-12 flex justify-center"><i class="fas fa-spinner fa-spin text-3xl text-gray-400 dark:text-gray-600"></i></div>`;
@@ -939,14 +1022,26 @@ cat << 'EOF' > public/operator.html
                     let html = data.data.map(p => {
                         let safeName = p.name.replace(/'/g, "\\'").replace(/"/g, "&quot;");
                         let safeSku = p.sku.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        let safeDesc = p.desc ? p.desc.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "<br>") : 'Tidak ada deskripsi.';
                         
+                        // V102: Badge Status Open/Close
+                        let badge = p.is_open ? 
+                            `<span class="text-[8px] font-bold px-1.5 py-0.5 rounded bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400 uppercase tracking-wide">Tersedia</span>` : 
+                            `<span class="text-[8px] font-bold px-1.5 py-0.5 rounded bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 uppercase tracking-wide">Gangguan</span>`;
+                        
+                        let clickAction = p.is_open ? 
+                            `showProductDetail('${safeSku}', '${safeName}', ${p.price}, ${p.isLocal}, '${safeDesc}')` : 
+                            `Swal.fire({icon:'error', title:'Gangguan', text:'Mohon maaf, produk ini sedang gangguan dari server pusat.', background: localStorage.getItem('darkMode')==='true'?'#0b1320':'#ffffff', color: localStorage.getItem('darkMode')==='true'?'#fff':'#000'})`;
+
+                        let opacityClass = p.is_open ? '' : 'opacity-50';
+
                         return `
-                        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="buyProduct('${safeSku}', '${safeName}', ${p.price}, ${p.isLocal})">
-                            <div class="flex flex-col pr-4 w-3/4">
-                                <span class="text-[12px] font-bold text-gray-800 dark:text-gray-100">${p.name} ${p.isLocal ? '<i class="fas fa-check-circle text-green-500 text-[10px] ml-1" title="Produk Lokal"></i>' : ''}</span>
-                                ${p.desc ? `<span class="text-[9px] text-gray-500 mt-1 line-clamp-2 leading-tight">${p.desc}</span>` : ''}
+                        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition ${opacityClass}" onclick="${clickAction}">
+                            <div class="flex flex-col pr-4 w-2/3">
+                                <span class="text-[12px] font-bold text-gray-800 dark:text-gray-100 leading-tight">${p.name} ${p.isLocal ? '<i class="fas fa-check-circle text-green-500 text-[10px] ml-1" title="Produk Lokal"></i>' : ''}</span>
                             </div>
-                            <div class="text-right shrink-0">
+                            <div class="text-right shrink-0 flex flex-col items-end">
+                                <div class="mb-1">${badge}</div>
                                 <span class="text-[13px] font-extrabold text-[#002147] dark:text-yellow-400">Rp ${p.price.toLocaleString('id-ID')}</span>
                             </div>
                         </div>
@@ -959,6 +1054,69 @@ cat << 'EOF' > public/operator.html
             } catch(e) {
                 listEl.innerHTML = `<div class="py-12 text-center text-red-500 text-xs font-bold">Gagal memuat data dari server.</div>`;
             }
+        }
+
+        // V102: MODAL DETAIL PRODUK FUNCTION
+        function showProductDetail(sku, name, price, isLocal, desc) {
+            selectedSku = sku;
+            selectedName = name;
+            selectedPrice = price;
+            selectedIsLocal = isLocal;
+
+            document.getElementById('dtName').innerText = name;
+            document.getElementById('dtPrice').innerText = 'Rp ' + price.toLocaleString('id-ID');
+            document.getElementById('dtDesc').innerHTML = desc;
+
+            // Trigger sync target input
+            let evt = new Event('input');
+            document.getElementById('inputTarget').dispatchEvent(evt);
+
+            const sheet = document.getElementById('detailSheet');
+            const overlay = document.getElementById('detailOverlay');
+            overlay.classList.remove('hidden');
+            setTimeout(() => { overlay.classList.remove('opacity-0'); sheet.classList.remove('translate-y-full'); }, 10);
+        }
+
+        function closeDetail() {
+            const sheet = document.getElementById('detailSheet');
+            const overlay = document.getElementById('detailOverlay');
+            sheet.classList.add('translate-y-full');
+            overlay.classList.add('opacity-0');
+            setTimeout(() => { overlay.classList.add('hidden'); }, 300);
+        }
+
+        function bantuanAdmin() {
+            const text = encodeURIComponent(`Halo Admin DIGITAL FIKY STORE,\n\nSaya ingin bertanya tentang produk:\n*${selectedName}*\n\nApakah sedang open/aman?`);
+            window.open(`https://wa.me/6282231154407?text=${text}`, '_blank');
+        }
+
+        function executeBuy() {
+            const target = document.getElementById('inputTarget').value;
+            if(!target) return; // Prevent if disabled
+
+            closeDetail();
+
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            const bgPopup = isDark ? '#0b1320' : '#ffffff';
+            
+            setTimeout(() => {
+                Swal.fire({title: 'Memproses Transaksi...', allowOutsideClick: false, background: bgPopup, color: isDark ? '#fff' : '#000', didOpen: () => { Swal.showLoading() }});
+                
+                fetch('/api/transaction/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: user.phone, target: target, sku: selectedSku, name: selectedName, price: selectedPrice, isLocal: selectedIsLocal })
+                }).then(async (resp) => {
+                    let data = await resp.json();
+                    if (resp.ok) {
+                        Swal.fire({icon: 'success', title: 'Berhasil!', text: data.message, background: bgPopup, color: isDark ? '#fff' : '#000'}).then(()=>{ window.location.href = '/riwayat.html'; });
+                    } else {
+                        Swal.fire({icon: 'error', title: 'Gagal', text: data.error, background: bgPopup, color: isDark ? '#fff' : '#000'});
+                    }
+                }).catch(err => {
+                    Swal.fire({icon: 'error', title: 'Oops!', text: 'Terjadi kesalahan jaringan.', background: bgPopup, color: isDark ? '#fff' : '#000'});
+                });
+            }, 300);
         }
 
         function selectProvider(op) {
@@ -990,6 +1148,7 @@ cat << 'EOF' > public/operator.html
                     titleEl.innerText = provider.name;
                     document.getElementById('inputTarget').placeholder = provider.placeholder || "Ketik nomor disini...";
                     document.getElementById('inputTarget').value = ''; 
+                    document.getElementById('inputTarget').dispatchEvent(new Event('input')); // Trigger logo clear
                     
                     if(type === 'tagihan') {
                         document.getElementById('productList').innerHTML = `<div class="py-12 flex flex-col items-center text-gray-400"><i class="fas fa-box-open text-5xl mb-4 opacity-40"></i><p class="text-[11px] font-bold">Layanan Tagihan Segera Hadir</p></div>`;
@@ -1007,52 +1166,9 @@ cat << 'EOF' > public/operator.html
             titleEl.innerText = catName;
             document.getElementById('inputTarget').placeholder = placeholderStr || "Ketik target disini...";
             document.getElementById('inputTarget').value = ''; 
+            document.getElementById('inputTarget').dispatchEvent(new Event('input')); // Trigger logo clear
             
             fetchProducts(currentProvider.digiBrand, catName);
-        }
-
-        function buyProduct(sku, name, price, isLocal) {
-            const target = document.getElementById('inputTarget').value;
-            const isDark = localStorage.getItem('darkMode') === 'true';
-            const bgPopup = isDark ? '#0b1320' : '#ffffff';
-            const textColor = isDark ? 'text-gray-200' : 'text-gray-800';
-            
-            if(!target) {
-                Swal.fire({icon: 'warning', title: 'Oops!', text: 'Silakan isi target tujuan terlebih dahulu!', background: bgPopup, color: isDark ? '#fff' : '#000'});
-                return;
-            }
-            
-            Swal.fire({
-                title: `<span class="font-bold ${isDark ? 'text-white' : 'text-gray-800'} text-lg">Konfirmasi Beli</span>`,
-                html: `<div class="text-left text-[13px] mt-2 border-t border-b ${isDark ? 'border-gray-800' : 'border-gray-200'} py-3">
-                    <div class="flex justify-between mb-2"><span class="text-gray-500">Produk</span><span class="font-bold ${textColor} text-right w-2/3">${name}</span></div>
-                    <div class="flex justify-between mb-2"><span class="text-gray-500">Target</span><span class="font-bold ${textColor} text-right">${target}</span></div>
-                    <div class="flex justify-between"><span class="text-gray-500">Total Harga</span><span class="font-extrabold text-[#002147] dark:text-yellow-400 text-right">Rp ${price.toLocaleString('id-ID')}</span></div>
-                </div>`,
-                showCancelButton: true, confirmButtonText: 'Beli Sekarang', cancelButtonText: 'Batal',
-                confirmButtonColor: isDark ? '#facc15' : '#002147', cancelButtonColor: '#ef4444',
-                customClass: { confirmButton: isDark ? 'text-[#001229] font-bold' : 'text-white font-bold', cancelButton: 'font-bold' },
-                background: bgPopup, color: isDark ? '#fff' : '#000'
-            }).then(async (res) => {
-                if(res.isConfirmed) {
-                    Swal.fire({title: 'Memproses Transaksi...', allowOutsideClick: false, background: bgPopup, color: isDark ? '#fff' : '#000', didOpen: () => { Swal.showLoading() }});
-                    try {
-                        let resp = await fetch('/api/transaction/create', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ phone: user.phone, target: target, sku: sku, name: name, price: price, isLocal: isLocal })
-                        });
-                        let data = await resp.json();
-                        if (resp.ok) {
-                            Swal.fire({icon: 'success', title: 'Berhasil!', text: data.message, background: bgPopup, color: isDark ? '#fff' : '#000'}).then(()=>{ window.location.href = '/riwayat.html'; });
-                        } else {
-                            Swal.fire({icon: 'error', title: 'Gagal', text: data.error, background: bgPopup, color: isDark ? '#fff' : '#000'});
-                        }
-                    } catch(err) {
-                        Swal.fire({icon: 'error', title: 'Oops!', text: 'Terjadi kesalahan jaringan.', background: bgPopup, color: isDark ? '#fff' : '#000'});
-                    }
-                }
-            });
         }
 
         function goBack() {
@@ -1092,7 +1208,7 @@ cat << 'EOF' > public/operator.html
 EOF
 
 # ==========================================
-# FILE NODE.JS (API + ANTI-HANG TIMEOUT)
+# FILE NODE.JS (API + IS_OPEN STATUS)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -1144,6 +1260,8 @@ app.get('/api/info', (req, res) => res.json({ info: loadJSON(infoFile) }));
 app.post('/api/user/balance', (req, res) => res.json({ saldo: loadJSON(dbFile)[req.body.phone]?.saldo || 0 }));
 app.post('/api/user/mutasi', (req, res) => { let db = loadJSON(dbFile); res.json({ mutasi: db[req.body.phone]?.mutasi || [] }); });
 
+let digiCache = { time: 0, data: [] };
+
 app.post('/api/products', async (req, res) => {
     const { type, brand, category } = req.body;
     let config = loadJSON(configFile);
@@ -1154,7 +1272,6 @@ app.post('/api/products', async (req, res) => {
         if (Date.now() - digiCache.time > 300000 || !digiCache.data || digiCache.data.length === 0) { 
             try {
                 let sign = crypto.createHash('md5').update(config.digiUser + config.digiKey + "pricelist").digest('hex');
-                // V102 FIX: Tambahkan timeout 10 detik agar tidak loading abadi
                 let digiRes = await axios.post('https://api.digiflazz.com/v1/price-list', {
                     cmd: 'prepaid', username: config.digiUser, sign: sign
                 }, { timeout: 10000 });
@@ -1165,12 +1282,14 @@ app.post('/api/products', async (req, res) => {
                     saveJSON(digiCacheFile, digiCache); 
                 }
             } catch(e) {
-                console.log("[DIGIFLAZZ API] Gagal Fetch Katalog / Timeout. Memakai data cache lama. Pesan:", e.message);
+                console.log("[DIGIFLAZZ API] Gagal Fetch Katalog / Timeout. Memakai data cache lama.");
             }
         }
 
         let products = digiCache.data || [];
-        filtered = products.filter(p => p.buyer_product_status === true && p.seller_product_status === true);
+        
+        // V102 FIX: Jangan hapus yang false, sertakan agar muncul badge "Gangguan"
+        filtered = products; 
 
         if (type === 'pulsa') {
             filtered = filtered.filter(p => p.category === 'Pulsa' && p.brand.toLowerCase() === brand.toLowerCase());
@@ -1204,7 +1323,6 @@ app.post('/api/products', async (req, res) => {
         if(p.type !== type) return false;
         if(brand && !p.brand.toLowerCase().includes(brand.toLowerCase()) && !brand.toLowerCase().includes(p.brand.toLowerCase())) return false;
         if(type === 'data' && category) {
-            // V102 FIX: Jika string sama persis (termasuk spasi), langsung muncul!
             if (p.category && p.category.toLowerCase().trim() === category.toLowerCase().trim()) return true;
             let kw = category.toLowerCase().split(' ');
             return kw.every(k => p.name.toLowerCase().includes(k) || (p.category && p.category.toLowerCase().includes(k)));
@@ -1218,14 +1336,16 @@ app.post('/api/products', async (req, res) => {
             name: p.product_name,
             desc: p.desc,
             price: p.price + getMarkup(p.price),
-            isLocal: false
+            isLocal: false,
+            is_open: (p.buyer_product_status === true && p.seller_product_status === true) // STATUS
         })),
         ...myLocals.map(p => ({
             sku: p.sku,
             name: p.name,
             desc: p.desc,
             price: p.price + getMarkup(p.price), 
-            isLocal: (p.isDigi === true) ? false : true
+            isLocal: (p.isDigi === true) ? false : true,
+            is_open: true // Lokal selalu open
         }))
     ];
 
@@ -1267,14 +1387,10 @@ app.post('/api/transaction/create', async (req, res) => {
                     sign: sign
                 };
 
-                if (isDev) {
-                    digiPayload.testing = true;
-                }
+                if (isDev) digiPayload.testing = true;
 
-                console.log(`[DIGIFLAZZ] Mengirim Data:`, JSON.stringify(digiPayload));
-
-                // V102 FIX: Timeout 15 detik untuk server Digiflazz ngelag
-                let digiRes = await axios.post('https://api.digiflazz.com/v1/transaction', digiPayload, { timeout: 15000 });
+                // V102 FIX: Timeout 8 detik agar tidak loading abadi
+                let digiRes = await axios.post('https://api.digiflazz.com/v1/transaction', digiPayload, { timeout: 8000 });
                 let digiData = digiRes.data.data;
                 console.log(`[DIGIFLAZZ] Response:`, digiData.status);
 
@@ -1378,7 +1494,7 @@ setInterval(async () => {
         }
     }
     if (changed) saveJSON(dbFile, db);
-}, 20000);
+}, 20000); 
 
 app.post('/api/topup/request', (req, res) => {
     const { phone, method, nominal } = req.body; let db = loadJSON(dbFile);
@@ -1551,7 +1667,7 @@ NC='\033[0m' # No Color
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V102) 💎      ${NC}"
+    echo -e "${YELLOW}          💎 PANEL DIGITAL FIKY STORE (V102) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
@@ -1576,7 +1692,7 @@ while true; do clear
     echo -e "  ${GREEN}16.${NC} 🔄 Refresh Katalog Digiflazz (Hapus Cache API)"
     echo ""
     echo -e "${PURPLE}[ ⚙️ SISTEM ]${NC}"
-    echo -e "  ${YELLOW}14.${NC} Update Sistem (Tarik Kode Terbaru dari Github)"
+    echo -e "  ${YELLOW}14.${NC} Update Sistem (Tarik Kode Terbaru)"
     echo -e "  ${RED}0.${NC} Keluar"
     echo -e "${CYAN}======================================================${NC}"
     read -p "Pilih menu [0-16]: " choice
@@ -1843,7 +1959,7 @@ EOFNGINX
             read -p "Tekan Enter untuk kembali..."
             ;;
         14) 
-            echo -e "${RED}PERINGATAN: Pastikan kode di GitHub Anda sudah V102!${NC}"
+            echo -e "${RED}PERINGATAN: Pastikan Anda sudah mem-push script terbaru ke GitHub Anda!${NC}"
             echo "Jika di GitHub Anda scriptnya masih versi lama, Web Anda akan kembali rusak!"
             read -p "Lanjutkan Update Sistem dari GitHub? (y/n): " confirm_pull
             if [[ "$confirm_pull" == "y" || "$confirm_pull" == "Y" ]]; then
