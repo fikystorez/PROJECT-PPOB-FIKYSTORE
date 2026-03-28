@@ -860,7 +860,7 @@ cat << 'EOF' > public/operator.html
         let originalTitle = '';
         let currentProvider = null; 
 
-        // Mapping Data
+        // Mapping Data Digiflazz
         const baseOperators = {
             'xl': { name: 'XL', logo: 'XL', digiBrand: 'XL', placeholder: 'Masukkan Nomor XL (08xx)...' },
             'axis': { name: 'AXIS', logo: 'AXIS', digiBrand: 'AXIS', placeholder: 'Masukkan Nomor AXIS (08xx)...' },
@@ -977,8 +977,13 @@ cat << 'EOF' > public/operator.html
                 let data = await res.json();
                 
                 if(data.data && data.data.length > 0) {
-                    let html = data.data.map(p => `
-                        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="buyProduct('${p.sku}', '${p.name.replace(/'/g, "\\'")}', ${p.price}, ${p.isLocal})">
+                    let html = data.data.map(p => {
+                        // V98 FIX: Pelindung Karakter (Escape Single & Double Quotes)
+                        let safeName = p.name.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        let safeSku = p.sku.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        
+                        return `
+                        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="buyProduct('${safeSku}', '${safeName}', ${p.price}, ${p.isLocal})">
                             <div class="flex flex-col pr-4 w-3/4">
                                 <span class="text-[12px] font-bold text-gray-800 dark:text-gray-100">${p.name} ${p.isLocal ? '<i class="fas fa-check-circle text-green-500 text-[10px] ml-1" title="Produk Lokal"></i>' : ''}</span>
                                 ${p.desc ? `<span class="text-[9px] text-gray-500 mt-1 line-clamp-2 leading-tight">${p.desc}</span>` : ''}
@@ -987,7 +992,8 @@ cat << 'EOF' > public/operator.html
                                 <span class="text-[13px] font-extrabold text-[#002147] dark:text-yellow-400">Rp ${p.price.toLocaleString('id-ID')}</span>
                             </div>
                         </div>
-                    `).join('');
+                        `;
+                    }).join('');
                     listEl.innerHTML = html;
                 } else {
                     listEl.innerHTML = `<div class="py-12 flex flex-col items-center justify-center text-gray-400 dark:text-gray-600"><i class="fas fa-box-open text-5xl mb-4 opacity-40"></i><p class="text-[11px] font-bold tracking-wide uppercase">Katalog Produk Kosong</p></div>`;
@@ -1041,7 +1047,7 @@ cat << 'EOF' > public/operator.html
             document.getElementById('categoryContainer').classList.add('hidden');
             document.getElementById('productContainer').classList.remove('hidden');
             titleEl.innerText = catName;
-            document.getElementById('inputTarget').placeholder = placeholderStr || "Ketik nomor disini...";
+            document.getElementById('inputTarget').placeholder = placeholderStr || "Ketik target disini...";
             document.getElementById('inputTarget').value = ''; 
             
             fetchProducts(currentProvider.digiBrand, catName);
@@ -1593,7 +1599,7 @@ NC='\033[0m' # No Color
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V97) 💎       ${NC}"
+    echo -e "${YELLOW}           💎 PANEL DIGITAL FIKY STORE (V98) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
@@ -1735,7 +1741,7 @@ while true; do clear
             while true; do
                 clear
                 echo -e "${CYAN}===============================================${NC}"
-                echo -e "${YELLOW}       📦 MANAJEMEN PRODUK LOKAL/MANUAL        ${NC}"
+                echo -e "${YELLOW}       📦 MANAJEMEN PRODUK LOKAL / HYBRID      ${NC}"
                 echo -e "${CYAN}===============================================${NC}"
                 echo "Gunakan menu ini untuk menambahkan produk Digiflazz"
                 echo "yang tidak muncul otomatis, agar terhubung ke API."
@@ -1779,7 +1785,6 @@ while true; do clear
                         read -p "Deskripsi Singkat: " p_desc
                         
                         if [ ! -z "$p_name" ] && [ ! -z "$p_price" ]; then
-                            # isDigi di-hardcode ke 'true' supaya selalu nembak API
                             node -e "const fs=require('fs');let f='$HOME/$DIR_NAME/local_products.json';let data=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[];data.push({id:'LOC'+Date.now(),type:'$p_type'.toLowerCase(),brand:'$p_brand',category:'$p_cat',name:'$p_name',price:parseInt('$p_price')||0,sku:'$p_sku',desc:'$p_desc',isDigi:true});fs.writeFileSync(f,JSON.stringify(data,null,2));console.log('\n✅ Produk berhasil ditambahkan & terhubung ke API!');"
                         else
                             echo -e "${RED}Nama dan Harga wajib diisi!${NC}"
@@ -1874,7 +1879,7 @@ EOFNGINX
             read -p "Tekan Enter untuk kembali..."
             ;;
         14) 
-            echo -e "${RED}PERINGATAN: Jangan lakukan Update Sistem kecuali file di Github sudah diperbarui ke V97!${NC}"
+            echo -e "${RED}PERINGATAN: Jangan lakukan Update Sistem kecuali file di Github sudah diperbarui ke V98!${NC}"
             echo "Abaikan opsi ini untuk saat ini."
             read -p "Tekan Enter untuk kembali..."
             ;;
