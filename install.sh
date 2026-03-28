@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ==========================================================
-# DIGITAL FIKY STORE - V117 (THE LIMITLESS GITHUB EDITION)
+# DIGITAL FIKY STORE - V118 (THE MONOLITHIC UNCUT EDITION)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
@@ -17,7 +17,7 @@ DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V117 (UNCUT VERSION)    "
+echo "    MENGINSTAL DIGITAL FIKY STORE V118 (FULL SCRIPT)      "
 echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
@@ -147,7 +147,6 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-/* SweetAlert Custom UI */
 .swal2-popup {
   background-color: #002147 !important;
   border-radius: 1.5rem !important;
@@ -845,7 +844,7 @@ cat << 'EOF' > public/operator.html
         <div class="px-4 py-4 bg-white dark:bg-[#0b1320] border-b border-gray-200 dark:border-gray-800">
           <label class="text-[10px] text-gray-500 font-bold mb-2 block uppercase">Target / Tujuan</label>
           <div class="relative flex items-center">
-            <input type="text" id="inputTarget" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white rounded-xl py-3 pl-4 pr-24 text-sm font-bold focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400" placeholder="Ketik target...">
+            <input type="text" id="inputTarget" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white rounded-xl py-3 pl-4 pr-24 text-sm font-bold focus:outline-none focus:border-yellow-400" placeholder="Ketik target...">
             <div id="prefixIcon" class="absolute right-12 font-bold text-[10px] uppercase px-2 py-1 rounded bg-blue-100 text-blue-700 dark:bg-[#002147] dark:text-yellow-400 hidden"></div>
           </div>
         </div>
@@ -1139,8 +1138,8 @@ cat << 'EOF' > public/info.html
   <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
     
     <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
-      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i>
-      <h1 class="text-[18px] font-bold text-gray-800 dark:text-white">Pusat Informasi</h1>
+      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 dark:text-white" onclick="location.href='/dashboard.html'"></i>
+      <h1 class="text-[18px] font-bold dark:text-white">Pusat Informasi</h1>
     </div>
 
     <div class="p-4" id="infoList">
@@ -1148,16 +1147,16 @@ cat << 'EOF' > public/info.html
     </div>
 
     <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40">
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/dashboard.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400" onclick="location.href='/dashboard.html'">
         <i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/riwayat.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400" onclick="location.href='/riwayat.html'">
         <i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span>
       </div>
       <div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400">
         <i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/profile.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400" onclick="location.href='/profile.html'">
         <i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span>
       </div>
     </div>
@@ -1191,8 +1190,8 @@ cat << 'EOF' > public/mutasi.html
   <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
     
     <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
-      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="history.back()"></i>
-      <h1 class="text-[18px] font-bold text-gray-800 dark:text-white">Mutasi Saldo</h1>
+      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 dark:text-white" onclick="history.back()"></i>
+      <h1 class="text-[18px] font-bold dark:text-white">Mutasi Saldo</h1>
     </div>
 
     <div class="p-4" id="mutasiList">
@@ -1252,7 +1251,7 @@ cat << 'EOF' > public/profile.html
     </div>
 
     <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40">
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
+      <div class="flex flex-col items-center cursor-pointer text-gray-400" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
       <div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
     </div>
   </div>
@@ -1291,8 +1290,8 @@ cat << 'EOF' > public/riwayat.html
   <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
     
     <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
-      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i>
-      <h1 class="text-[18px] font-bold text-gray-800 dark:text-white">Riwayat Transaksi</h1>
+      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 dark:text-white" onclick="location.href='/dashboard.html'"></i>
+      <h1 class="text-[18px] font-bold dark:text-white">Riwayat Transaksi</h1>
     </div>
 
     <div class="px-4 mt-4" id="historyContainer">
@@ -1307,7 +1306,7 @@ cat << 'EOF' > public/riwayat.html
     fetch('/api/user/transactions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone})}).then(r=>r.json()).then(d=>{
       const c = document.getElementById('historyContainer');
       if(d.transactions.length===0){
-        c.innerHTML=`<div class="mt-10 text-center"><h2 class="text-gray-800 dark:text-white font-bold text-lg">Belum Ada Transaksi</h2></div>`;
+        c.innerHTML=`<div class="mt-10 text-center"><h2 class="dark:text-white font-bold text-lg">Belum Ada Transaksi</h2></div>`;
       } else {
         window.trxData = d.transactions.reverse();
         c.innerHTML = window.trxData.map((i,idx)=>{
@@ -1347,8 +1346,8 @@ cat << 'EOF' > public/riwayat_topup.html
   <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
     
     <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
-      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i>
-      <h1 class="text-[18px] font-bold text-gray-800 dark:text-white">Riwayat Topup</h1>
+      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 dark:text-white" onclick="location.href='/dashboard.html'"></i>
+      <h1 class="text-[18px] font-bold dark:text-white">Riwayat Topup</h1>
     </div>
 
     <div class="px-4 mt-4" id="historyContainer">
@@ -1363,7 +1362,7 @@ cat << 'EOF' > public/riwayat_topup.html
     fetch('/api/topup/history',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone})}).then(r=>r.json()).then(d=>{
       const c = document.getElementById('historyContainer');
       if(d.history.length===0){
-        c.innerHTML=`<div class="mt-10 text-center"><h2 class="text-gray-800 dark:text-white font-bold text-lg">Belum Ada Topup</h2></div>`;
+        c.innerHTML=`<div class="mt-10 text-center"><h2 class="dark:text-white font-bold text-lg">Belum Ada Topup</h2></div>`;
       } else {
         window.topupData = d.history.reverse();
         c.innerHTML = window.topupData.map((i,idx)=>{
@@ -1392,8 +1391,8 @@ cat << 'EOF' > public/game.html
 <body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
   <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative shadow-2xl overflow-x-hidden">
     <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
-      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="history.back()"></i>
-      <h1 class="text-[18px] font-bold text-gray-800 dark:text-white">Top Up Game</h1>
+      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 dark:text-white" onclick="history.back()"></i>
+      <h1 class="text-[18px] font-bold dark:text-white">Top Up Game</h1>
     </div>
     <div class="px-4 mt-6">
       <div class="bg-white dark:bg-[#111c2e] rounded-b-2xl rounded-t-xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm mt-4">
@@ -1403,11 +1402,11 @@ cat << 'EOF' > public/game.html
         <div class="p-4 grid grid-cols-3 gap-3">
           <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=free_fire'">
             <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold text-sm mb-2">FF</div>
-            <div class="text-[11px] font-medium text-gray-700 dark:text-gray-300 text-center">Free Fire</div>
+            <div class="text-[11px] font-medium dark:text-gray-300 text-center">Free Fire</div>
           </div>
           <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=mobile_legends'">
             <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold text-xs text-center">ML</div>
-            <div class="text-[11px] font-medium text-gray-700 dark:text-gray-300 text-center">Mobile<br>Legends</div>
+            <div class="text-[11px] font-medium dark:text-gray-300 text-center">Mobile<br>Legends</div>
           </div>
         </div>
       </div>
@@ -1422,10 +1421,9 @@ cat << 'EOF' > public/game.html
 EOF
 
 # ==========================================
-# NODE.JS BACKEND (API + TELEGRAM + CSV)
+# NODE.JS BACKEND (API + TELEGRAM)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
-
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
 const fs = require('fs');
@@ -1499,7 +1497,7 @@ app.post('/api/products', async (req, res) => {
                     digiCache.time = Date.now();
                     saveJSON(digiCacheFile, digiCache); 
                 }
-            } catch(e) {}
+            } catch(e) { console.log("[DIGIFLAZZ API] Timeout/Gagal Fetch Katalog."); }
         }
 
         let products = digiCache.data || [];
@@ -1600,7 +1598,6 @@ app.post('/api/transaction/create', async (req, res) => {
         saveJSON(dbFile, db);
         
         try { global.waSocket?.sendMessage(db[phone].jid || phone + '@s.whatsapp.net', { text: `*TRANSAKSI ${trxStatus.toUpperCase()}* 🚀\n\n📦 Produk: ${name}\n📱 Tujuan: ${target}\n💰 Harga: Rp ${price.toLocaleString('id-ID')}` }); } catch(err) {}
-        
         sendTeleNotif(`🛒 *TRANSAKSI BARU*\n\n👤 Member: ${phone}\n📦 Produk: ${name}\n📱 Tujuan: ${target}\n💰 Harga: Rp ${price.toLocaleString('id-ID')}\n🔄 Status: ${trxStatus}\n🔖 Ref: ${ref_id}`);
         
         res.json({ message: 'Transaksi berhasil diproses.' });
@@ -1609,7 +1606,6 @@ app.post('/api/transaction/create', async (req, res) => {
     }
 });
 
-// Auto Check Status (20 Detik)
 setInterval(async () => {
     let db = loadJSON(dbFile); let config = loadJSON(configFile); let changed = false;
     if(!config.digiUser || !config.digiKey) return;
@@ -1647,12 +1643,12 @@ setInterval(async () => {
     if (changed) saveJSON(dbFile, db);
 }, 20000); 
 
-// Auto Backup Telegram 
 function startAutoBackup() {
     let config = loadJSON(configFile);
     if(!config.teleToken || !config.teleChatId || !config.autoBackupHours || config.autoBackupHours <= 0) return;
     
     let intervalMs = config.autoBackupHours * 60 * 60 * 1000; 
+    
     setInterval(() => {
         let zipName = `AutoBackup_FikyStore_${Date.now()}.zip`;
         exec(`zip -r ${zipName} database.json web_users.json config.json local_products.json info.json`, async (error) => {
@@ -1678,7 +1674,7 @@ app.post('/api/topup/request', (req, res) => {
     const newTopup = { id: 'TU' + Date.now(), method, nominal, status: 'Proses', date: new Date().toLocaleString('id-ID'), expiry };
     db[phone].topup.push(newTopup); 
     saveJSON(dbFile, db); 
-    sendTeleNotif(`💳 *PERMINTAAN TOP UP BARU*\n\n👤 Member: ${phone}\n💵 Nominal: Rp ${nominal.toLocaleString('id-ID')}\n🏦 Metode: ${method}`);
+    sendTeleNotif(`💳 *PERMINTAAN TOP UP BARU*\n\n👤 Member: ${phone}\n💵 Nominal: Rp ${nominal.toLocaleString('id-ID')}\n🏦 Metode: ${method}\n⏳ Status: Menunggu Pembayaran`);
     res.json({ message: 'Top up direkam' });
 });
 
@@ -1729,7 +1725,6 @@ app.post('/api/admin/add_balance', async (req, res) => {
     res.json({ success: true, message: `\n✅ Saldo ${webUsers[targetPhone].name} berhasil ditambah!` });
 });
 
-// Sistem Authentikasi OTP
 app.post('/api/auth/login-req', async (req, res) => {
     const { identifier, password } = req.body; 
     let webUsers = loadJSON(webUsersFile); 
@@ -1744,9 +1739,7 @@ app.post('/api/auth/login-req', async (req, res) => {
         saveJSON(webUsersFile, webUsers);
         try { await global.waSocket?.sendMessage(foundPhone + '@c.us', { text: `Kode OTP Login: *${otp}*` }); } catch(e) {}
         res.json({ message: 'OTP Terkirim', phone: foundPhone });
-    } else {
-        res.status(400).json({ error: 'Email/No HP atau Password salah.' });
-    }
+    } else { res.status(400).json({ error: 'Email/No HP atau Password salah.' }); }
 });
 
 app.post('/api/auth/login-verify', (req, res) => {
@@ -1775,7 +1768,7 @@ app.post('/api/auth/register', async (req, res) => {
     saveJSON(webUsersFile, webUsers);
     
     try { 
-        await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Kode OTP Daftar: *${otp}*` }); 
+        await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Kode OTP Daftar Anda: *${otp}*` }); 
         res.json({ message: 'OTP Terkirim', phone: fPhone }); 
     } catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); }
 });
@@ -1870,12 +1863,13 @@ NC='\033[0m'
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}          💎 PANEL DIGITAL FIKY STORE (V117) 💎       ${NC}"
+    echo -e "${YELLOW}          💎 PANEL DIGITAL FIKY STORE (V118) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
     echo -e "  ${GREEN}1.${NC} Setup No. Bot & Login Pairing"
     echo -e "  ${GREEN}2.${NC} Jalankan Bot (Latar Belakang/PM2)"
+    echo -e "  ${YELLOW}3.${NC} 🛠️ Install & Perbarui Sistem Bot WA"
     echo -e "  ${GREEN}4.${NC} Lihat Log / Error Bot"
     echo -e "  ${GREEN}5.${NC} Reset Sesi & Ganti Nomor Bot"
     echo ""
@@ -1904,8 +1898,35 @@ while true; do clear
     read -p "Pilih menu [0-22]: " choice
 
     case $choice in
-        1) cd "$HOME/$DIR_NAME" && node index.js ;;
+        1) 
+            clear
+            echo -e "${YELLOW}--- SETUP PAIRING BOT WHATSAPP ---${NC}"
+            read -p "Masukkan Nomor WA Bot (Awalan 62, cth: 62812...): " botnum
+            if [ ! -z "$botnum" ]; then
+                cd "$HOME/$DIR_NAME"
+                node -e "const fs=require('fs');let f='./config.json';let c=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):{};c.botNumber='$botnum';fs.writeFileSync(f,JSON.stringify(c,null,2));"
+                echo -e "${GREEN}Nomor disimpan! Meminta kode pairing ke WhatsApp...${NC}"
+                echo -e "${CYAN}(Tunggu sekitar 5-10 detik. Jika kode sudah muncul, catat kodenya.)${NC}"
+                echo -e "${RED}(TEKAN CTRL+C DI KEYBOARD JIKA SUDAH SELESAI UNTUK KEMBALI)${NC}"
+                node index.js
+            fi
+            ;;
         2) cd "$HOME/$DIR_NAME" && pm2 delete $BOT_NAME 2>/dev/null; pm2 start index.js --name "$BOT_NAME" && pm2 save ;;
+        3)
+            clear
+            echo -e "${CYAN}===============================================${NC}"
+            echo -e "${YELLOW}     🛠️ INSTALL & PERBARUI SISTEM BOT WA      ${NC}"
+            echo -e "${CYAN}===============================================${NC}"
+            cd "$HOME/$DIR_NAME"
+            echo "Menghapus cache dan module lama..."
+            rm -rf node_modules package-lock.json
+            npm cache clean --force
+            echo "Menginstal ulang dependensi (Harap tunggu beberapa menit)..."
+            npm install
+            pm2 restart $BOT_NAME > /dev/null 2>&1
+            echo -e "${GREEN}✅ Pembaruan sistem Bot WA selesai!${NC}"
+            read -p "Tekan Enter untuk kembali..."
+            ;;
         4) pm2 logs $BOT_NAME ;;
         5) pm2 stop $BOT_NAME 2>/dev/null; rm -rf "$HOME/$DIR_NAME/sesi_bot"; echo -e "${GREEN}Sesi WA dihapus.${NC}"; read -p "Enter..." ;;
         6)
@@ -2041,8 +2062,10 @@ while true; do clear
             cd "$HOME/$DIR_NAME"
             git pull origin main
             npm install
+            chmod +x menu
+            cp menu /usr/bin/menu
             pm2 restart all > /dev/null 2>&1
-            echo -e "${GREEN}Update Selesai!${NC}"
+            echo -e "${GREEN}Update Selesai! Sistem sudah diperbarui.${NC}"
             read -p "Enter..."
             ;;
         0) exit 0 ;;
@@ -2053,6 +2076,6 @@ EOF
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
 echo "=========================================================="
-echo "  SISTEM WEB V117 BERHASIL DIPERBARUI SECARA PENUH!       "
+echo "  SISTEM WEB V118 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
