@@ -1,17 +1,32 @@
 #!/bin/bash
-if [ "$EUID" -ne 0 ]; then echo "Jalankan sebagai root (sudo su)"; exit; fi
-if command -v dos2unix > /dev/null 2>&1; then dos2unix "$0" > /dev/null 2>&1; fi
+
+# Pastikan script dijalankan dengan akses root/sudo
+if [ "$EUID" -ne 0 ]; then
+  echo "Tolong jalankan script ini sebagai root (ketik: sudo su)"
+  exit
+fi
+
+if command -v dos2unix > /dev/null 2>&1; then
+    dos2unix "$0" > /dev/null 2>&1
+fi
 
 DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
+PORT=3000
 
 echo "=========================================================="
-echo "   MENGINSTAL DIGITAL FIKY STORE V110 (ULTIMATE UNCUT)    "
+echo "      MENGINSTAL DIGITAL FIKY STORE - TECH DASHBOARD      "
 echo "=========================================================="
 
+echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
 apt update -y && apt install curl wget gnupg git dos2unix psmisc zip unzip nginx ufw -y > /dev/null 2>&1
-if ! command -v node > /dev/null 2>&1; then curl -fsSL https://deb.nodesource.com/setup_20.x | bash - > /dev/null 2>&1; apt install -y nodejs > /dev/null 2>&1; fi
 
+if ! command -v node > /dev/null 2>&1; then
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - > /dev/null 2>&1
+    apt install -y nodejs > /dev/null 2>&1
+fi
+
+echo "[2/5] Membuat direktori aplikasi dan web..."
 mkdir -p "$HOME/$DIR_NAME/public"
 cd "$HOME/$DIR_NAME"
 
@@ -19,6 +34,7 @@ cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
   "version": "1.0.0",
+  "description": "Aplikasi PPOB DIGITAL FIKY STORE",
   "main": "index.js",
   "scripts": { "start": "node index.js" },
   "dependencies": {
@@ -34,32 +50,47 @@ cat << 'EOF' > package.json
 }
 EOF
 
+# ==========================================
+# MEMBUAT TAMPILAN WEB (CSS & HTML)
+# ==========================================
+echo "[3/5] Membangun Antarmuka Website..."
+
 cat << 'EOF' > public/style.css
-body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
-.centered-modal-box { background-color: #002147; padding: 2.5rem 1.5rem 2rem 1.5rem; border-radius: 1.2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); width: 90%; max-width: 360px; text-align: center; position: relative; z-index: 10; margin: auto; margin-top: 10vh; }
-.brand-logo-text { font-size: 1.8rem; font-weight: 900; background: linear-gradient(135deg, #fde047 0%, #facc15 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; letter-spacing: 1px; }
+body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
+.centered-modal-box { background-color: #002147; padding: 2.5rem 1.5rem 2rem 1.5rem; border-radius: 1.2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); width: 90%; max-width: 360px; text-align: center; position: relative; z-index: 10; }
+.brand-logo-text { font-size: 1.8rem; font-weight: 900; background: linear-gradient(135deg, #fde047 0%, #facc15 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0px 4px 10px rgba(0,0,0,0.4); margin-bottom: 1.5rem; letter-spacing: 1px; font-family: 'Arial Black', Impact, sans-serif; text-transform: uppercase; line-height: 1.1; }
+.logo-f-small { width: 45px; height: 45px; margin: 0 auto 10px auto; display: flex; justify-content: center; align-items: center; border-radius: 50%; border: 2px solid #cbd5e1; background: radial-gradient(circle, #333333 0%, #000000 100%); box-shadow: inset 0 0 5px rgba(255,255,255,0.2), 0 5px 10px rgba(0,0,0,0.5); position: relative; z-index: 2; }
+.logo-f-small::before { content: "F"; font-size: 28px; font-family: "Times New Roman", Times, serif; font-weight: bold; color: #e2e8f0; text-shadow: 1px 1px 2px rgba(0,0,0,0.9); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 .compact-input-wrapper { position: relative; margin-bottom: 0.85rem; width: 100%; }
-.compact-input-box { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #334155; border-radius: 0.5rem; font-size: 0.875rem; outline: none; background-color: #ffffff; color: #0f172a; }
+.compact-input-box { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #334155; border-radius: 0.5rem; font-size: 0.875rem; outline: none; background-color: #ffffff; color: #0f172a; margin-bottom: 0; }
 .compact-input-box:focus { border-color: #fde047; box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3); }
 .password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #94a3b8; }
+.password-toggle:hover { color: #0f172a; }
+::placeholder { color: #94a3b8; font-size: 0.8rem; }
 .compact-text-small { font-size: 0.8rem; color: #cbd5e1; }
+.compact-label { font-size: 0.8rem; font-weight: bold; color: #f8fafc; margin-bottom: 0.25rem; display: block; text-align: left; }
 .compact-link-small { font-size: 0.8rem; color: #fde047; text-decoration: none; font-weight: bold; }
-.btn-yellow { width: 100%; padding: 0.625rem 1rem; background-color: #fde047; color: #002147; font-weight: bold; font-size: 0.9rem; border-radius: 0.5rem; cursor: pointer; border: none; transition: all 0.2s; margin-top: 0.5rem; }
+.compact-link-small:hover { text-decoration: underline; color: #fef08a; }
+.btn-yellow { width: 100%; padding: 0.625rem 1rem; background-color: #fde047; color: #002147; font-weight: bold; font-size: 0.9rem; border-radius: 0.5rem; cursor: pointer; border: none; transition: all 0.2s; margin-top: 0.5rem;}
 .btn-yellow:hover { background-color: #facc15; }
 .tech-bg { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5'%3E%3Cpath d='M0 40h20l10-10h20l10 10h20'/%3E%3Cpath d='M20 40v20l10 10'/%3E%3Cpath d='M60 40V20L50 10'/%3E%3Ccircle cx='30' cy='30' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='50' cy='50' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='10' cy='40' r='2' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='70' cy='40' r='2' fill='rgba(255,255,255,0.1)'/%3E%3C/g%3E%3C/svg%3E"); background-size: 80px 80px; pointer-events: none; z-index: 1; border-radius: 1rem; }
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.swal2-popup { background-color: #002147 !important; border-radius: 1.5rem !important; color: #ffffff !important; width: 320px !important; padding: 1.5rem 1.25rem 1.25rem !important; }
-.swal2-title { color: #fde047 !important; font-size: 1.25rem !important; font-weight: 800 !important; margin: 0 0 0.5em !important; }
-.swal2-html-container { color: #cbd5e1 !important; font-size: 0.85rem !important; margin: 0.5em 0.2em 1em !important; }
-.swal2-confirm { background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important; color: #001229 !important; border-radius: 0.5rem !important; font-weight: 800 !important; }
-.swal2-deny { background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%) !important; color: #ffffff !important; border-radius: 0.5rem !important; font-weight: 800 !important; }
-.swal2-cancel { background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important; color: #ffffff !important; border-radius: 0.5rem !important; font-weight: 800 !important; }
+
+/* Custom SweetAlert2 Styling */
+.swal2-popup { background-color: #002147 !important; border-radius: 1.5rem !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important; width: 320px !important; padding: 1.5rem 1.25rem 1.25rem !important; }
+.swal2-title { color: #fde047 !important; font-size: 1.25rem !important; font-weight: 800 !important; letter-spacing: 0.5px !important; margin: 0 0 0.5em !important; }
+.swal2-html-container { color: #cbd5e1 !important; font-size: 0.85rem !important; line-height: 1.5 !important; margin: 0.5em 0.2em 1em !important; }
+.swal2-confirm { background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important; color: #001229 !important; border-radius: 0.5rem !important; font-weight: 800 !important; padding: 0.6rem 1.5rem !important; font-size: 0.85rem !important; box-shadow: 0 4px 6px -1px rgba(253, 224, 71, 0.3) !important; letter-spacing: 0.5px !important; }
+.swal2-deny { background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%) !important; color: #ffffff !important; border-radius: 0.5rem !important; font-weight: 800 !important; padding: 0.6rem 1.5rem !important; font-size: 0.85rem !important; box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3) !important; letter-spacing: 0.5px !important; }
+.swal2-cancel { background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important; color: #ffffff !important; border-radius: 0.5rem !important; font-weight: 800 !important; padding: 0.6rem 1.5rem !important; font-size: 0.85rem !important; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3) !important; letter-spacing: 0.5px !important; }
+.swal2-icon { transform: scale(0.7) !important; margin: 0 auto 0.5em !important; border-width: 3px !important; }
 .slide-down { animation: slideDown 0.3s ease-out forwards; }
 @keyframes slideDown { 0% { opacity: 0; transform: translateY(-10px); } 100% { opacity: 1; transform: translateY(0); } }
 .animate-slide-up { animation: slideUp 0.3s ease-out forwards; }
 @keyframes slideUp { 0% { opacity: 0; transform: scale(0.95) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 .pb-safe { padding-bottom: calc(1rem + env(safe-area-inset-bottom)); }
 EOF
 
@@ -67,61 +98,84 @@ cat << 'EOF' > public/index.html
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - DIGITAL FIKY STORE</title>
-  <link rel="stylesheet" href="style.css"><script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - DIGITAL FIKY STORE</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body class="bg-[#fde047]">
-  <div class="centered-modal-box">
-    <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
-    <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
-    <p class="compact-text-small mb-6" id="loginDesc">Silahkan masukkan email/no HP dan password kamu!</p>
-    <form id="loginForm">
-      <div class="compact-input-wrapper"><input type="text" id="identifier" class="compact-input-box" required placeholder="Email / No. HP"></div>
-      <div class="compact-input-wrapper">
-        <input type="password" id="password" class="compact-input-box" required placeholder="Password">
-        <i class="fas fa-eye password-toggle" onclick="togglePassword('password', this)"></i>
-      </div>
-      <div class="text-right mb-5 mt-1"><a href="/forgot.html" class="compact-link-small">Lupa password?</a></div>
-      <button type="submit" class="btn-yellow">Login Sekarang</button>
-    </form>
-    <form id="otpLoginForm" class="hidden">
-      <div class="compact-input-wrapper mb-5"><input type="number" id="loginOtpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX"></div>
-      <button type="submit" class="btn-yellow">Verifikasi & Login</button>
-    </form>
-    <div class="mt-6 text-center compact-text-small" id="registerLink">Belum punya akun? <a href="/register.html" class="compact-link-small">Daftar disini</a></div>
-  </div>
-  <script>
-    function togglePassword(id, el) {
-      const input = document.getElementById(id);
-      if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
-      else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
-    }
-    let loginPhone = '';
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); const identifier = document.getElementById('identifier').value; const password = document.getElementById('password').value;
-      Swal.fire({title: 'Memeriksa Data...', didOpen: () => { Swal.showLoading() }});
-      try {
-        const res = await fetch('/api/auth/login-req', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password }) });
-        const data = await res.json();
-        if (res.ok) { 
-          loginPhone = data.phone; document.getElementById('loginForm').classList.add('hidden'); document.getElementById('registerLink').classList.add('hidden'); document.getElementById('otpLoginForm').classList.remove('hidden'); document.getElementById('loginDesc').innerHTML = "Kode OTP Login dikirim ke WA Anda."; Swal.close();
-        } else { Swal.fire({ icon: 'error', title: 'Gagal Login', text: data.error }); }
-      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Terjadi kesalahan sistem.' }); }
-    });
-    document.getElementById('otpLoginForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); const otp = document.getElementById('loginOtpCode').value;
-      Swal.fire({title: 'Memverifikasi...', didOpen: () => { Swal.showLoading() }});
-      try {
-        const res = await fetch('/api/auth/login-verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: loginPhone, otp }) });
-        const data = await res.json();
-        if (res.ok) { localStorage.setItem('user', JSON.stringify(data.user)); window.location.href = '/dashboard.html'; } 
-        else { Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error }); }
-      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi OTP.' }); }
-    });
-  </script>
+<body class="flex flex-col items-center justify-center min-h-screen relative bg-[#fde047]">
+    <div class="centered-modal-box">
+        <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
+        <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
+        <p class="compact-text-small mb-6" id="loginDesc">Silahkan masukkan email/no HP dan password kamu!</p>
+        
+        <form id="loginForm">
+            <div class="compact-input-wrapper">
+                <input type="text" id="identifier" class="compact-input-box" required placeholder="Email / No. HP">
+            </div>
+            <div class="compact-input-wrapper">
+                <input type="password" id="password" class="compact-input-box" required placeholder="Password">
+                <i class="fas fa-eye password-toggle" onclick="togglePassword('password', this)"></i>
+            </div>
+            <div class="text-right mb-5 mt-1"><a href="/forgot.html" class="compact-link-small">Lupa password?</a></div>
+            <button type="submit" class="btn-yellow">Login Sekarang</button>
+        </form>
+
+        <form id="otpLoginForm" class="hidden">
+            <div class="compact-input-wrapper mb-5">
+                <input type="number" id="loginOtpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX">
+            </div>
+            <button type="submit" class="btn-yellow">Verifikasi & Login</button>
+        </form>
+
+        <div class="mt-6 text-center compact-text-small" id="registerLink">Belum punya akun? <a href="/register.html" class="compact-link-small">Daftar disini</a></div>
+    </div>
+
+    <script>
+        function togglePassword(id, el) {
+            const input = document.getElementById(id);
+            if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
+            else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
+        }
+        
+        let loginPhone = '';
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const identifier = document.getElementById('identifier').value; 
+            const password = document.getElementById('password').value;
+            Swal.fire({title: 'Memeriksa Data...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+            try {
+                const res = await fetch('/api/auth/login-req', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password }) });
+                const data = await res.json();
+                if (res.ok) { 
+                    loginPhone = data.phone;
+                    document.getElementById('loginForm').classList.add('hidden');
+                    document.getElementById('forgotLink').classList.add('hidden');
+                    document.getElementById('registerLink').classList.add('hidden');
+                    document.getElementById('otpLoginForm').classList.remove('hidden');
+                    document.getElementById('loginDesc').innerHTML = "Kode OTP Login 4 Digit telah dikirim ke WA Anda.";
+                    Swal.fire({ icon: 'success', title: 'Aman!', text: 'Silakan cek WA Anda untuk kode OTP.', background: '#002147', color: '#fff' });
+                } else { Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.', background: '#002147', color: '#fff' }); }
+        });
+
+        document.getElementById('otpLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            const otp = document.getElementById('loginOtpCode').value;
+            Swal.fire({title: 'Memverifikasi...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+            try {
+                const res = await fetch('/api/auth/login-verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: loginPhone, otp }) });
+                const data = await res.json();
+                if (res.ok) { 
+                    localStorage.setItem('user', JSON.stringify(data.user)); 
+                    window.location.href = '/dashboard.html';
+                } else { Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: '#002147', color: '#fff' }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.', background: '#002147', color: '#fff' }); }
+        });
+    </script>
 </body>
 </html>
 EOF
@@ -130,65 +184,68 @@ cat << 'EOF' > public/register.html
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daftar - DIGITAL FIKY STORE</title>
-  <link rel="stylesheet" href="style.css"><script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - DIGITAL FIKY STORE</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body class="bg-[#fde047]">
-  <div class="centered-modal-box" id="box-register">
-    <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
-    <h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2>
-    <p class="compact-text-small mb-4">Silahkan lengkapi data untuk mendaftar!</p>
-    <form id="registerForm">
-      <div class="compact-input-wrapper"><input type="text" id="name" class="compact-input-box" required placeholder="Nama Lengkap"></div>
-      <div class="compact-input-wrapper"><input type="number" id="phone" class="compact-input-box" required placeholder="Nomor WA (08123...)"></div>
-      <div class="compact-input-wrapper"><input type="email" id="email" class="compact-input-box" required placeholder="Email"></div>
-      <div class="compact-input-wrapper">
-        <input type="password" id="password" class="compact-input-box" required placeholder="Password">
-        <i class="fas fa-eye password-toggle" onclick="togglePassword('password', this)"></i>
-      </div>
-      <button type="submit" class="btn-yellow mt-1">Daftar Sekarang</button>
-    </form>
-    <div class="mt-4 text-center compact-text-small">Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a></div>
-  </div>
-  <div class="centered-modal-box hidden" id="box-otp">
-    <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
-    <h2 class="text-lg font-bold text-white mb-1">VERIFIKASI WA</h2>
-    <p class="compact-text-small mb-5 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
-    <form id="otpForm">
-      <div class="compact-input-wrapper"><input type="number" id="otpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX"></div>
-      <button type="submit" class="btn-yellow mt-4">Verifikasi OTP</button>
-    </form>
-  </div>
-  <script>
-    function togglePassword(id, el) {
-      const input = document.getElementById(id);
-      if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
-      else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
-    }
-    let registeredPhone = '';
-    document.getElementById('registerForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); const name = document.getElementById('name').value; const phone = document.getElementById('phone').value; const email = document.getElementById('email').value; const password = document.getElementById('password').value;
-      Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
-      try {
-        const res = await fetch('/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, email, password }) });
-        const data = await res.json();
-        if (res.ok) { registeredPhone = data.phone; document.getElementById('box-register').classList.add('hidden'); document.getElementById('box-otp').classList.remove('hidden'); Swal.close(); } 
-        else { Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error }); }
-      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal sistem.' }); }
-    });
-    document.getElementById('otpForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); const otp = document.getElementById('otpCode').value;
-      Swal.fire({title: 'Verifikasi...', didOpen: () => { Swal.showLoading() }});
-      try {
-        const res = await fetch('/api/auth/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: registeredPhone, otp }) });
-        if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun terverifikasi.' }).then(() => { window.location.href = '/'; }); } 
-        else { Swal.fire({ icon: 'error', title: 'OTP Salah', text: 'Coba lagi.' }); }
-      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.' }); }
-    });
-  </script>
+<body class="flex flex-col items-center justify-center min-h-screen relative bg-[#fde047]">
+    <div class="centered-modal-box" id="box-register">
+        <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
+        <h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2>
+        <p class="compact-text-small mb-4">Silahkan lengkapi data untuk mendaftar!</p>
+        <form id="registerForm">
+            <div class="compact-input-wrapper"><input type="text" id="name" class="compact-input-box" required placeholder="Nama Lengkap"></div>
+            <div class="compact-input-wrapper"><input type="number" id="phone" class="compact-input-box" required placeholder="Nomor WA (08123...)"></div>
+            <div class="compact-input-wrapper"><input type="email" id="email" class="compact-input-box" required placeholder="Email"></div>
+            <div class="compact-input-wrapper">
+                <input type="password" id="password" class="compact-input-box" required placeholder="Password">
+                <i class="fas fa-eye password-toggle" onclick="togglePassword('password', this)"></i>
+            </div>
+            <button type="submit" class="btn-yellow mt-1">Daftar Sekarang</button>
+        </form>
+        <div class="mt-4 text-center compact-text-small">Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a></div>
+    </div>
+    <div class="centered-modal-box hidden" id="box-otp">
+        <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
+        <h2 class="text-lg font-bold text-white mb-1">VERIFIKASI WA</h2>
+        <p class="compact-text-small mb-5 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
+        <form id="otpForm">
+            <div class="compact-input-wrapper"><input type="number" id="otpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX"></div>
+            <button type="submit" class="btn-yellow mt-4">Verifikasi OTP</button>
+        </form>
+    </div>
+    <script>
+        function togglePassword(id, el) {
+            const input = document.getElementById(id);
+            if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
+            else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
+        }
+        let registeredPhone = '';
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value; const phone = document.getElementById('phone').value; const email = document.getElementById('email').value; const password = document.getElementById('password').value;
+            Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
+            try {
+                const res = await fetch('/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, email, password }) });
+                const data = await res.json();
+                if (res.ok) {
+                    registeredPhone = data.phone; document.getElementById('box-register').classList.add('hidden'); document.getElementById('box-otp').classList.remove('hidden'); Swal.close();
+                } else { Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error, background: '#002147', color: '#fff' }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses pendaftaran.', background: '#002147', color: '#fff' }); }
+        });
+        document.getElementById('otpForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); const otp = document.getElementById('otpCode').value;
+            Swal.fire({title: 'Verifikasi...', didOpen: () => { Swal.showLoading() }});
+            try {
+                const res = await fetch('/api/auth/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: registeredPhone, otp }) });
+                if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun terverifikasi. Silakan Login.', background: '#002147', color: '#fff' }).then(() => { window.location.href = '/'; }); } 
+                else { Swal.fire({ icon: 'error', title: 'OTP Salah', text: 'Coba lagi', background: '#002147', color: '#fff' }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi OTP.', background: '#002147', color: '#fff' }); }
+        });
+    </script>
 </body>
 </html>
 EOF
@@ -197,58 +254,60 @@ cat << 'EOF' > public/forgot.html
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lupa Password - DIGITAL FIKY STORE</title>
-  <link rel="stylesheet" href="style.css"><script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lupa Password - DIGITAL FIKY STORE</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body class="bg-[#fde047]">
-  <div class="centered-modal-box">
-    <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
-    <h2 class="text-lg font-bold text-white mb-1">RESET PASSWORD</h2>
-    <form id="requestOtpForm">
-      <p class="compact-text-small mb-5 text-center">Masukkan Nomor WA Anda untuk reset password.</p>
-      <div class="compact-input-wrapper"><input type="number" id="phone" class="compact-input-box text-center" required placeholder="Ketik disini (08123...)"></div>
-      <button type="submit" class="btn-yellow mt-2">Kirim OTP Reset</button>
-    </form>
-    <form id="resetForm" class="hidden mt-4">
-      <hr class="mb-5 border-gray-600">
-      <div class="compact-input-wrapper"><label class="compact-label text-center">Kode OTP (4 Digit)</label><input type="number" id="otp" class="compact-input-box text-center text-xl tracking-[0.5em] font-bold" required placeholder="XXXX"></div>
-      <div class="compact-input-wrapper"><label class="compact-label text-center mt-2">Password Baru</label>
-        <input type="password" id="newPassword" class="compact-input-box" required placeholder="Ketik disini">
-        <i class="fas fa-eye password-toggle" onclick="togglePassword('newPassword', this)" style="top:70%;"></i>
-      </div>
-      <button type="submit" class="btn-yellow mt-3">Simpan Password Baru</button>
-    </form>
-    <div class="mt-6 text-center compact-text-small">Kembali ke <a href="/" class="compact-link-small">Login</a></div>
-  </div>
-  <script>
-    function togglePassword(id, el) {
-      const input = document.getElementById(id);
-      if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
-      else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
-    }
-    let resetPhone = '';
-    document.getElementById('requestOtpForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); const phone = document.getElementById('phone').value;
-      Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
-      try {
-        const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
-        if (res.ok) { resetPhone = (await res.json()).phone; document.getElementById('requestOtpForm').classList.add('hidden'); document.getElementById('resetForm').classList.remove('hidden'); Swal.close(); } 
-        else { Swal.fire({ icon: 'error', title: 'Gagal', text: 'Nomor tidak terdaftar.' }); }
-      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.' }); }
-    });
-    document.getElementById('resetForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); const otp = document.getElementById('otp').value; const newPassword = document.getElementById('newPassword').value;
-      Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
-      try {
-        const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) });
-        if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.' }).then(() => { window.location.href = '/'; }); } 
-        else { Swal.fire({ icon: 'error', title: 'Gagal', text: 'OTP Salah.' }); }
-      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.' }); }
-    });
-  </script>
+<body class="flex flex-col items-center justify-center min-h-screen relative bg-[#fde047]">
+    <div class="centered-modal-box">
+        <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
+        <h2 class="text-lg font-bold text-white mb-1">RESET PASSWORD</h2>
+        <form id="requestOtpForm">
+            <p class="compact-text-small mb-5 text-center">Masukkan Nomor WA Anda untuk reset password.</p>
+            <div class="compact-input-wrapper"><input type="number" id="phone" class="compact-input-box text-center" required placeholder="Ketik disini (08123...)"></div>
+            <button type="submit" class="btn-yellow mt-2">Kirim OTP Reset</button>
+        </form>
+        <form id="resetForm" class="hidden mt-4">
+            <hr class="mb-5 border-gray-600">
+            <div class="compact-input-wrapper"><label class="compact-label text-center">Kode OTP (4 Digit)</label><input type="number" id="otp" class="compact-input-box text-center text-xl tracking-[0.5em] font-bold" required placeholder="XXXX"></div>
+            <div class="compact-input-wrapper"><label class="compact-label text-center mt-2">Password Baru</label>
+                <input type="password" id="newPassword" class="compact-input-box" required placeholder="Ketik disini">
+                <i class="fas fa-eye password-toggle" onclick="togglePassword('newPassword', this)" style="top:70%;"></i>
+            </div>
+            <button type="submit" class="btn-yellow mt-3">Simpan Password Baru</button>
+        </form>
+        <div class="mt-6 text-center compact-text-small">Kembali ke <a href="/" class="compact-link-small">Login</a></div>
+    </div>
+    <script>
+        function togglePassword(id, el) {
+            const input = document.getElementById(id);
+            if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
+            else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
+        }
+        let resetPhone = '';
+        document.getElementById('requestOtpForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); const phone = document.getElementById('phone').value;
+            Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
+            try {
+                const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
+                if (res.ok) {
+                    resetPhone = (await res.json()).phone; document.getElementById('requestOtpForm').classList.add('hidden'); document.getElementById('resetForm').classList.remove('hidden'); Swal.close();
+                } else { Swal.fire({ icon: 'error', title: 'Gagal', text: 'Nomor tidak terdaftar.', background: '#002147', color: '#fff' }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.', background: '#002147', color: '#fff' }); }
+        });
+        document.getElementById('resetForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); const otp = document.getElementById('otp').value; const newPassword = document.getElementById('newPassword').value;
+            Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
+            try {
+                const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) });
+                if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.', background: '#002147', color: '#fff' }).then(() => { window.location.href = '/'; }); } 
+                else { Swal.fire({ icon: 'error', title: 'Gagal', text: 'OTP Salah.', background: '#002147', color: '#fff' }); }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.', background: '#002147', color: '#fff' }); }
+        });
+    </script>
 </body>
 </html>
 EOF
@@ -257,244 +316,417 @@ cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - DIGITAL FIKY STORE</title>
-  <link rel="stylesheet" href="style.css"><script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script>tailwind.config={darkMode:'class'}</script>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - DIGITAL FIKY STORE</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
 </head>
 <body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
-  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
-    
-    <div class="flex justify-between items-center p-4 bg-white dark:bg-[#0b1320] shadow-sm dark:shadow-md sticky top-0 z-40">
-      <div class="flex items-center gap-4">
-        <i class="fas fa-bars text-xl cursor-pointer text-gray-600 dark:text-gray-300 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="toggleSidebar()"></i>
-        <h1 class="font-medium text-[17px] tracking-wide text-gray-800 dark:text-white" id="headerGreeting">Hai, Member</h1>
-      </div>
-      <div class="text-[11px] font-bold text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-white/10 px-3 py-1.5 rounded-full" id="headTrx">0 Trx</div>
-    </div>
+    <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden transition-colors duration-300">
+        
+        <div class="flex justify-between items-center p-4 bg-white dark:bg-[#0b1320] shadow-sm dark:shadow-md sticky top-0 z-40 transition-colors duration-300">
+            <div class="flex items-center gap-4"><i class="fas fa-bars text-xl cursor-pointer text-gray-600 dark:text-gray-300 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="toggleSidebar()"></i><h1 class="font-medium text-[17px] tracking-wide text-gray-800 dark:text-white" id="headerGreeting">Hai, Member</h1></div>
+            <div class="text-[11px] font-bold text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-white/10 px-3 py-1.5 rounded-full" id="headTrx">0 Trx</div>
+        </div>
 
-    <div id="sidebar" class="fixed inset-0 z-[100] transform -translate-x-full transition-transform duration-300 flex">
-      <div class="w-full bg-black/40 dark:bg-black/60 backdrop-blur-sm" onclick="toggleSidebar()"></div>
-      <div class="absolute top-0 left-0 w-[80%] max-w-[300px] h-full bg-white dark:bg-[#001730] shadow-2xl flex flex-col border-r border-gray-200 dark:border-[#0a2342]">
-        <div class="p-8 pb-4 flex flex-col items-center relative bg-gray-50 dark:bg-[#050b14] border-b border-gray-200 dark:border-gray-800">
-          <button class="absolute top-5 right-5 text-gray-400 hover:text-red-500" onclick="toggleSidebar()"><i class="fas fa-times text-xl"></i></button>
-          <div class="w-[4.5rem] h-[4.5rem] bg-white rounded-full flex justify-center items-center text-[#001730] font-extrabold text-3xl mb-3 shadow-md overflow-hidden" id="sidebarInitial">U</div>
-          <h3 class="font-bold text-lg text-gray-800 dark:text-white" id="sidebarName">User Name</h3>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5" id="sidebarPhone">08...</p>
-        </div>
-        <div class="flex-1 overflow-y-auto py-2">
-          <ul class="text-[14px]">
-            <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342]" onclick="location.href='/profile.html'"><i class="far fa-user w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Profil Akun</span></li>
-            <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342]" onclick="location.href='/riwayat.html'"><i class="far fa-clock w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Transaksi Saya</span></li>
-            <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342]" onclick="location.href='/mutasi.html'"><i class="fas fa-exchange-alt w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Mutasi Saldo</span></li>
-            <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342]" onclick="location.href='/info.html'"><i class="far fa-bell w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Pusat Informasi</span></li>
-            <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342]" onclick="bantuanAdmin()"><i class="fas fa-headset w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Hubungi Admin</span></li>
-            <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342]" onclick="toggleDarkMode()">
-              <div class="flex items-center gap-4"><i class="far fa-moon w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Mode Gelap</span></div>
-              <div class="w-11 h-[22px] bg-gray-300 dark:bg-blue-500 rounded-full relative" id="darkModeToggleBg"><div class="w-[18px] h-[18px] bg-white rounded-full absolute top-[2px] left-[2px] shadow-md transform transition-transform" id="darkModeToggleDot"></div></div>
-            </li>
-          </ul>
-        </div>
-        <div class="p-6">
-          <button onclick="logout()" class="w-full py-3.5 bg-transparent border border-red-500 text-red-500 font-bold rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 transition">Keluar Akun</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="mx-4 mt-4 bg-[#002147] dark:bg-[#111c2e] rounded-[1.2rem] p-4 text-white relative overflow-hidden shadow-lg border border-[#1e3a8a] dark:border-gray-800">
-      <div class="tech-bg opacity-30"></div> 
-      <div class="relative z-10 flex justify-between items-center">
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 shadow-sm border border-blue-400/20"><i class="fas fa-wallet text-xl"></i></div>
-          <div class="flex flex-col">
-            <div class="flex items-center gap-2 mb-0.5">
-              <span class="text-xs text-gray-300 font-medium">Saldo Aktif</span>
-              <i class="fas fa-eye-slash text-gray-400 text-xs cursor-pointer hover:text-white" onclick="toggleSaldo()" id="eyeSaldo"></i>
+        <div id="sidebar" class="fixed inset-0 z-[100] transform -translate-x-full transition-transform duration-300 flex">
+            <div class="w-full bg-black/40 dark:bg-black/60 backdrop-blur-sm" onclick="toggleSidebar()"></div>
+            <div class="absolute top-0 left-0 w-[80%] max-w-[300px] h-full bg-white dark:bg-[#001730] shadow-2xl flex flex-col transition-colors border-r border-gray-200 dark:border-[#0a2342]">
+                <div class="p-8 pb-4 flex flex-col items-center relative bg-gray-50 dark:bg-[#050b14] border-b border-gray-200 dark:border-gray-800 transition-colors">
+                    <button class="absolute top-5 right-5 text-gray-400 hover:text-red-500 transition" onclick="toggleSidebar()"><i class="fas fa-times text-xl"></i></button>
+                    <div class="w-[4.5rem] h-[4.5rem] bg-white rounded-full flex justify-center items-center text-[#001730] font-extrabold text-3xl mb-3 shadow-md border-2 border-gray-200 dark:border-none overflow-hidden" id="sidebarInitial">U</div>
+                    <h3 class="font-bold text-lg text-gray-800 dark:text-white tracking-wide" id="sidebarName">User Name</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5" id="sidebarPhone">08...</p>
+                </div>
+                <div class="flex-1 overflow-y-auto py-2">
+                    <ul class="text-[14px]">
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="location.href='/profile.html'"><i class="far fa-user w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Profil Akun</span></li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="location.href='/riwayat.html'"><i class="far fa-clock w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Transaksi Saya</span></li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="location.href='/mutasi.html'"><i class="fas fa-exchange-alt w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Mutasi Saldo</span></li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="location.href='/info.html'"><i class="far fa-bell w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Pusat Informasi</span></li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="bantuanAdmin()"><i class="fas fa-headset w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Hubungi Admin</span></li>
+                        <li class="px-6 py-4 border-b border-gray-100 dark:border-[#0a2342] flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0a2342] transition" onclick="toggleDarkMode()">
+                            <div class="flex items-center gap-4"><i class="far fa-moon w-6 text-center text-lg text-[#002147] dark:text-gray-300"></i> <span class="font-semibold text-gray-800 dark:text-gray-100">Mode Gelap</span></div>
+                            <div class="w-11 h-[22px] bg-gray-300 dark:bg-blue-500 rounded-full relative transition-colors duration-300" id="darkModeToggleBg"><div class="w-[18px] h-[18px] bg-white rounded-full absolute top-[2px] left-[2px] shadow-md transform transition-transform duration-300" id="darkModeToggleDot"></div></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="p-6">
+                    <button onclick="logout()" class="w-full py-3.5 bg-transparent border border-red-500 text-red-500 font-bold rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 transition">Keluar Akun</button>
+                </div>
             </div>
-            <h2 class="text-[19px] font-extrabold tracking-tight mt-0.5" id="displaySaldo">Rp •••••••</h2>
-          </div>
         </div>
-        <div class="flex items-center gap-2">
-          <button class="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center hover:bg-white/20 shadow-sm z-10 relative" onclick="bantuanAdmin()"><i class="fas fa-headset text-[14px]"></i></button>
-          <button class="bg-yellow-400 text-[#001229] px-5 py-2.5 rounded-full text-[13px] font-extrabold shadow-md hover:bg-yellow-500 z-10 relative" onclick="openTopUp()">Topup</button>
+
+        <div class="mx-4 mt-4 bg-[#002147] dark:bg-[#111c2e] rounded-[1.2rem] p-4 text-white relative overflow-hidden shadow-lg border border-[#1e3a8a] dark:border-gray-800 transition-colors">
+            <div class="tech-bg opacity-30"></div> 
+            <div class="relative z-10 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 shadow-sm border border-blue-400/20">
+                        <i class="fas fa-wallet text-xl"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="flex items-center gap-2 mb-0.5">
+                            <span class="text-xs text-gray-300 font-medium tracking-wide">Saldo Aktif</span>
+                            <i class="fas fa-eye-slash text-gray-400 text-xs cursor-pointer hover:text-white transition" onclick="toggleSaldo()" id="eyeSaldo"></i>
+                        </div>
+                        <h2 class="text-[19px] font-extrabold tracking-tight mt-0.5" id="displaySaldo">Rp •••••••</h2>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button class="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition shadow-sm z-10 relative" onclick="bantuanAdmin()" title="Bantuan CS">
+                        <i class="fas fa-headset text-[14px]"></i>
+                    </button>
+                    <button class="bg-yellow-400 text-[#001229] px-5 py-2.5 rounded-full text-[13px] font-extrabold shadow-md hover:bg-yellow-500 transition z-10 relative" onclick="openTopUp()">
+                        Topup
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <div id="bannerContainer" class="mx-4 mt-6 relative rounded-[1.2rem] h-[170px] overflow-hidden border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#111c2e] shadow-sm hidden">
-      <div id="promoSlider" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth"></div>
-      <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20" id="promoDots"></div>
-    </div>
-
-    <div class="mx-4 mt-4 bg-white dark:bg-[#111c2e] border border-gray-200 dark:border-gray-800 rounded-[1rem] p-3.5 shadow-sm flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-[#002147] dark:text-yellow-400 shadow-sm border border-blue-100 dark:border-blue-800/30"><i class="far fa-calendar-alt text-[15px]"></i></div>
-        <div class="flex flex-col"><span class="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Tanggal</span><span class="text-xs font-extrabold text-gray-800 dark:text-gray-200" id="realtimeDate">YYYY/MM/DD</span></div>
-      </div>
-      <div class="h-8 w-px bg-gray-200 dark:bg-gray-700 mx-2"></div>
-      <div class="flex items-center gap-3">
-        <div class="flex flex-col text-right"><span class="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Waktu</span><span class="text-xs font-extrabold text-gray-800 dark:text-gray-200 tracking-widest" id="realtimeClock">00:00:00</span></div>
-        <div class="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-[#002147] dark:text-yellow-400 shadow-sm border border-blue-100 dark:border-blue-800/30"><i class="far fa-clock text-[15px]"></i></div>
-      </div>
-    </div>
-
-    <div class="mx-4 mt-8 mb-4">
-      <h3 class="font-extrabold text-gray-800 dark:text-white mb-4 text-[16px] ml-1">Layanan Produk</h3>
-      <div class="grid grid-cols-4 gap-y-6 gap-x-3">
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=pulsa'"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-mobile-alt"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 uppercase">PULSA</span></div>
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=data'"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-globe"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 uppercase">DATA</span></div>
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/game.html'"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-gamepad"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 uppercase">GAME</span></div>
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu', text: 'Fitur sedang dikembangkan.'})"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-ticket-alt"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 uppercase">VOUCHER</span></div>
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=ewallet'"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-wallet"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 uppercase">E-WALLET</span></div>
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=pln'"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-bolt"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 uppercase">PLN</span></div>
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=masaaktif'"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-calendar-check"></i></div><span class="text-[10px] font-bold text-gray-600 dark:text-gray-300 uppercase text-center leading-tight">MASA<br>AKTIF</span></div>
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu', text: 'Fitur sedang dikembangkan.'})"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-sim-card"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 uppercase">PERDANA</span></div>
-      </div>
-    </div>
-
-    <div class="mx-4 mt-8 mb-8">
-      <h3 class="font-extrabold text-gray-800 dark:text-white mb-4 text-[16px] ml-1">Produk Digital</h3>
-      <div class="grid grid-cols-4 gap-y-6 gap-x-3">
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=tagihan'"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-file-invoice-dollar"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 uppercase">TAGIHAN</span></div>
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=etoll'"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-id-card"></i></div><span class="text-[10px] font-bold text-gray-600 dark:text-gray-300 uppercase text-center leading-tight">SALDO<br>E-TOLL</span></div>
-      </div>
-    </div>
-
-    <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.1)] z-40">
-      <div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/info.html'"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
-    </div>
-
-    <div id="topupOverlay" class="fixed inset-0 bg-black/60 z-[110] hidden opacity-0 transition-opacity duration-300" onclick="closeTopUp()"></div>
-    <div id="topupSheet" class="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#050b14] z-[120] rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] transform translate-y-full transition-transform duration-300 max-w-md mx-auto border-t border-gray-200 dark:border-gray-800 pb-safe">
-      <div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full mx-auto my-3"></div>
-      <div class="px-6 pb-6">
-        <div class="flex justify-between items-center mb-5"><h3 class="font-extrabold text-gray-800 dark:text-white text-[16px]">Isi Saldo</h3><i class="fas fa-times text-gray-400 hover:text-red-500 cursor-pointer text-xl" onclick="closeTopUp()"></i></div>
-        <div class="flex items-center gap-3 mb-4">
-          <div class="relative flex-1"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-sm">Rp</span><input type="number" id="inputNominal" class="w-full bg-gray-50 dark:bg-[#0b1320] border border-gray-200 dark:border-gray-700 rounded-xl py-3 pl-9 pr-3 text-gray-800 dark:text-white font-bold text-base focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 shadow-sm" placeholder="Ketik nominal..."></div>
-          <button onclick="prosesTopup()" class="bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#001229] font-extrabold px-6 py-3 rounded-xl text-sm shadow-md hover:opacity-90">OK</button>
+        <div id="bannerContainer" class="mx-4 mt-6 relative rounded-[1.2rem] h-[170px] overflow-hidden border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#111c2e] shadow-sm hidden">
+            <div id="promoSlider" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth"></div>
+            <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20" id="promoDots"></div>
         </div>
-        <div class="flex justify-between gap-2 mb-6">
-          <button onclick="setNominal(10000)" class="flex-1 bg-gray-50 dark:bg-[#0b1320] border border-gray-200 dark:border-gray-800 text-gray-800 dark:text-white font-extrabold py-2.5 rounded-xl hover:border-[#002147] dark:hover:border-yellow-400 text-sm shadow-sm">10K</button>
-          <button onclick="setNominal(20000)" class="flex-1 bg-gray-50 dark:bg-[#0b1320] border border-gray-200 dark:border-gray-800 text-gray-800 dark:text-white font-extrabold py-2.5 rounded-xl hover:border-[#002147] dark:hover:border-yellow-400 text-sm shadow-sm">20K</button>
-          <button onclick="setNominal(50000)" class="flex-1 bg-gray-50 dark:bg-[#0b1320] border border-gray-200 dark:border-gray-800 text-gray-800 dark:text-white font-extrabold py-2.5 rounded-xl hover:border-[#002147] dark:hover:border-yellow-400 text-sm shadow-sm">50K</button>
-          <button onclick="setNominal(100000)" class="flex-1 bg-gray-50 dark:bg-[#0b1320] border border-gray-200 dark:border-gray-800 text-gray-800 dark:text-white font-extrabold py-2.5 rounded-xl hover:border-[#002147] dark:hover:border-yellow-400 text-sm shadow-sm">100K</button>
+
+        <div class="mx-4 mt-4 bg-white dark:bg-[#111c2e] border border-gray-200 dark:border-gray-800 rounded-[1rem] p-3.5 shadow-sm flex justify-between items-center transition-colors">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-[#002147] dark:text-yellow-400 shadow-sm border border-blue-100 dark:border-blue-800/30">
+                    <i class="far fa-calendar-alt text-[15px]"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-[9px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Tanggal</span>
+                    <span class="text-xs font-extrabold text-gray-800 dark:text-gray-200 tracking-wide" id="realtimeDate">YYYY/MM/DD</span>
+                </div>
+            </div>
+            <div class="h-8 w-px bg-gray-200 dark:bg-gray-700 mx-2"></div>
+            <div class="flex items-center gap-3">
+                <div class="flex flex-col text-right">
+                    <span class="text-[9px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Waktu</span>
+                    <span class="text-xs font-extrabold text-gray-800 dark:text-gray-200 tracking-widest" id="realtimeClock">00:00:00</span>
+                </div>
+                <div class="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-[#002147] dark:text-yellow-400 shadow-sm border border-blue-100 dark:border-blue-800/30">
+                    <i class="far fa-clock text-[15px]"></i>
+                </div>
+            </div>
         </div>
-        <div class="flex flex-col gap-3">
-          <div id="method-wa" onclick="selectMethod('wa')" class="flex items-center justify-between bg-gray-50 dark:bg-[#0b1320] border border-gray-200 dark:border-gray-800 p-3 rounded-[1.2rem] cursor-pointer shadow-sm hover:border-[#002147] dark:hover:border-yellow-400">
-            <div class="flex items-center gap-3"><div class="w-10 h-10 bg-green-100/50 dark:bg-green-900/20 rounded-full flex items-center justify-center text-[#25D366] text-xl shrink-0"><i class="fab fa-whatsapp"></i></div><div class="flex flex-col"><span class="font-bold text-gray-800 dark:text-white text-[13px]">Top Up Manual WA</span><span class="text-[10px] text-gray-500 leading-tight">Transfer dengan admin</span></div></div><div id="radio-wa" class="w-5 h-5 rounded-full border-[3px] border-gray-300 dark:border-gray-600 bg-transparent shrink-0"></div>
-          </div>
-          <div id="method-qris" onclick="selectMethod('qris')" class="flex items-center justify-between bg-gray-50 dark:bg-[#0b1320] border border-gray-200 dark:border-gray-800 p-3 rounded-[1.2rem] cursor-pointer shadow-sm hover:border-[#002147] dark:hover:border-yellow-400">
-            <div class="flex items-center gap-3"><div class="w-10 h-10 bg-white rounded-full flex items-center justify-center p-2 border border-gray-200 dark:border-none shrink-0"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg" class="w-full"></div><div class="flex flex-col"><span class="font-bold text-gray-800 dark:text-white text-[13px]">Top Up QRIS</span><span class="text-[10px] text-gray-500 leading-tight">Otomatis masuk (Wajib 2 digit)</span></div></div><div id="radio-qris" class="w-5 h-5 rounded-full border-[3px] border-gray-300 dark:border-gray-600 bg-transparent shrink-0"></div>
-          </div>
+
+        <div class="mx-4 mt-8 mb-4">
+            <h3 class="font-extrabold text-gray-800 dark:text-white mb-4 text-[16px] tracking-wide ml-1 transition-colors">Layanan Produk</h3>
+            <div class="grid grid-cols-4 gap-y-6 gap-x-3">
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=pulsa'"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-mobile-alt"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">PULSA</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=data'"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-globe"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">DATA</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/game.html'"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-gamepad"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">GAME</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu', text: 'Fitur sedang dikembangkan.'})"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-ticket-alt"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">VOUCHER</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=ewallet'"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-wallet"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">E-WALLET</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=pln'"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-bolt"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">PLN</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=masaaktif'"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-calendar-check"></i></div><span class="text-[10px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase text-center leading-tight transition-colors">MASA<br>AKTIF</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu', text: 'Fitur sedang dikembangkan.'})"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-sim-card"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">PERDANA</span></div>
+            </div>
         </div>
-        <div class="mt-4"><button onclick="location.href='/riwayat_topup.html'" class="w-full py-3.5 bg-yellow-400 text-[#001229] font-extrabold rounded-xl text-sm shadow-md hover:bg-yellow-500">Cek Riwayat Top Up</button></div>
-      </div>
+
+        <div class="mx-4 mt-8 mb-8">
+            <h3 class="font-extrabold text-gray-800 dark:text-white mb-4 text-[16px] tracking-wide ml-1 transition-colors">Produk Digital</h3>
+            <div class="grid grid-cols-4 gap-y-6 gap-x-3">
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=tagihan'"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-file-invoice-dollar"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase transition-colors">TAGIHAN</span></div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=etoll'"><div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="fas fa-id-card"></i></div><span class="text-[10px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase text-center leading-tight transition-colors">SALDO<br>E-TOLL</span></div>
+            </div>
+        </div>
+
+        <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.5)] z-40 transition-colors">
+            <div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/info.html'"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div>
+            <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 transition" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
+        </div>
+
+        <div id="topupOverlay" class="fixed inset-0 bg-black/60 z-[110] hidden opacity-0 transition-opacity duration-300" onclick="closeTopUp()"></div>
+        <div id="topupSheet" class="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#050b14] z-[120] rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] transform translate-y-full transition-transform duration-300 max-w-md mx-auto border-t border-gray-200 dark:border-gray-800 pb-safe">
+            <div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full mx-auto my-3"></div>
+            <div class="px-6 pb-6">
+                <div class="flex justify-between items-center mb-5">
+                    <h3 class="font-extrabold text-gray-800 dark:text-white text-[16px] tracking-wide">Isi Saldo</h3>
+                    <i class="fas fa-times text-gray-400 hover:text-red-500 cursor-pointer text-xl" onclick="closeTopUp()"></i>
+                </div>
+                
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="relative flex-1">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-sm">Rp</span>
+                        <input type="number" id="inputNominal" class="w-full bg-gray-50 dark:bg-[#0b1320] border border-gray-200 dark:border-gray-700 rounded-xl py-3 pl-9 pr-3 text-gray-800 dark:text-white font-bold text-base focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition-colors shadow-sm" placeholder="Ketik nominal...">
+                    </div>
+                    <button onclick="prosesTopup()" class="bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#001229] font-extrabold px-6 py-3 rounded-xl text-sm shadow-md hover:opacity-90 transition-opacity">OK</button>
+                </div>
+                
+                <div class="flex justify-between gap-2 mb-6">
+                    <button onclick="setNominal(10000)" class="flex-1 bg-gray-50 dark:bg-[#0b1320] border border-gray-200 dark:border-gray-800 text-gray-800 dark:text-white font-extrabold py-2.5 rounded-xl hover:border-[#002147] dark:hover:border-yellow-400 transition-colors text-sm shadow-sm">10K</button>
+                    <button onclick="setNominal(20000)" class="flex-1 bg-gray-50 dark:bg-[#0b1320] border border-gray-200 dark:border-gray-800 text-gray-800 dark:text-white font-extrabold py-2.5 rounded-xl hover:border-[#002147] dark:hover:border-yellow-400 transition-colors text-sm shadow-sm">20K</button>
+                    <button onclick="setNominal(50000)" class="flex-1 bg-gray-50 dark:bg-[#0b1320] border border-gray-200 dark:border-gray-800 text-gray-800 dark:text-white font-extrabold py-2.5 rounded-xl hover:border-[#002147] dark:hover:border-yellow-400 transition-colors text-sm shadow-sm">50K</button>
+                    <button onclick="setNominal(100000)" class="flex-1 bg-gray-50 dark:bg-[#0b1320] border border-gray-200 dark:border-gray-800 text-gray-800 dark:text-white font-extrabold py-2.5 rounded-xl hover:border-[#002147] dark:hover:border-yellow-400 transition-colors text-sm shadow-sm">100K</button>
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    <div id="method-wa" onclick="selectMethod('wa')" class="flex items-center justify-between bg-gray-50 dark:bg-[#0b1320] border border-gray-200 dark:border-gray-800 p-3 rounded-[1.2rem] cursor-pointer shadow-sm transition-all hover:border-[#002147] dark:hover:border-yellow-400">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-green-100/50 dark:bg-green-900/20 rounded-full flex items-center justify-center text-[#25D366] text-xl shrink-0"><i class="fab fa-whatsapp"></i></div>
+                            <div class="flex flex-col">
+                                <span class="font-bold text-gray-800 dark:text-white text-[13px]">Top Up Manual WhatsApp</span>
+                                <span class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight mt-0.5">Transfer dengan panduan admin</span>
+                            </div>
+                        </div>
+                        <div id="radio-wa" class="w-5 h-5 rounded-full border-[3px] border-gray-300 dark:border-gray-600 transition-colors bg-transparent mr-1 shrink-0"></div>
+                    </div>
+
+                    <div id="method-qris" onclick="selectMethod('qris')" class="flex items-center justify-between bg-gray-50 dark:bg-[#0b1320] border border-gray-200 dark:border-gray-800 p-3 rounded-[1.2rem] cursor-pointer shadow-sm transition-all hover:border-[#002147] dark:hover:border-yellow-400">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center p-2 border border-gray-200 dark:border-none shrink-0"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg" class="w-full object-contain"></div>
+                            <div class="flex flex-col">
+                                <span class="font-bold text-gray-800 dark:text-white text-[13px]">Top Up Otomatis QRIS</span>
+                                <span class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight mt-0.5">Penting: Transfer wajib sesuai nominal<br>hingga 2 digit terakhir!</span>
+                            </div>
+                        </div>
+                        <div id="radio-qris" class="w-5 h-5 rounded-full border-[3px] border-gray-300 dark:border-gray-600 transition-colors bg-transparent mr-1 shrink-0"></div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                     <button onclick="location.href='/riwayat_topup.html'" class="w-full py-3.5 bg-yellow-400 text-[#001229] font-extrabold rounded-xl text-sm shadow-md hover:bg-yellow-500 transition-colors">Cek Riwayat Top Up</button>
+                </div>
+            </div>
+        </div>
+
     </div>
-  </div>
 
-  <script>
-    const user=JSON.parse(localStorage.getItem('user'));if(!user)window.location.href='/';
-    document.getElementById('headerGreeting').innerText="Hai, "+user.name;
-    document.getElementById('sidebarName').innerText=user.name;document.getElementById('sidebarPhone').innerText=user.phone;
-    if(user.avatar) document.getElementById('sidebarInitial').innerHTML=`<img src="${user.avatar}" class="w-full h-full rounded-full object-cover">`;
-    else document.getElementById('sidebarInitial').innerText=user.name.charAt(0).toUpperCase();
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) window.location.href = '/';
+        
+        document.getElementById('headerGreeting').innerText = "Hai, " + user.name; 
+        document.getElementById('sidebarName').innerText = user.name;
+        document.getElementById('sidebarPhone').innerText = user.phone;
+        
+        if(user.avatar) { document.getElementById('sidebarInitial').innerHTML = `<img src="${user.avatar}" class="w-full h-full rounded-full object-cover border-2 border-gray-200 dark:border-none">`; } 
+        else { document.getElementById('sidebarInitial').innerText = user.name.charAt(0).toUpperCase(); }
 
-    let qrisImageUrl='https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg';
-    let selectedMethod=''; let timerInterval; let currentSaldo=0; let isSaldoHidden=localStorage.getItem('hideSaldo')==='true';
+        let qrisImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg';
+        let selectedMethod = '';
+        let timerInterval;
+        let currentSaldo = 0;
+        let isSaldoHidden = localStorage.getItem('hideSaldo') === 'true';
 
-    function updateDateTime(){
-        const now=new Date(); const yr=now.getFullYear(); const mo=String(now.getMonth()+1).padStart(2,'0'); const dt=String(now.getDate()).padStart(2,'0');
-        const hr=String(now.getHours()).padStart(2,'0'); const mn=String(now.getMinutes()).padStart(2,'0'); const sc=String(now.getSeconds()).padStart(2,'0');
-        document.getElementById('realtimeDate').innerText=`${yr}/${mo}/${dt}`; document.getElementById('realtimeClock').innerText=`${hr}:${mn}:${sc}`;
-    } setInterval(updateDateTime,1000); updateDateTime();
-
-    function updateSaldoDisplay(){
-        const el=document.getElementById('displaySaldo'); const eye=document.getElementById('eyeSaldo');
-        if(isSaldoHidden){ el.innerText='Rp •••••••'; eye.className='fas fa-eye-slash text-gray-400 text-xs cursor-pointer hover:text-white'; }
-        else{ el.innerText='Rp '+currentSaldo.toLocaleString('id-ID'); eye.className='fas fa-eye text-gray-400 text-xs cursor-pointer hover:text-white'; }
-    }
-    function toggleSaldo(){ isSaldoHidden=!isSaldoHidden; localStorage.setItem('hideSaldo',isSaldoHidden); updateSaldoDisplay(); }
-    function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
-
-    function applyDarkMode(){
-        const isDark=localStorage.getItem('darkMode')==='true'; const root=document.getElementById('html-root'); const dot=document.getElementById('darkModeToggleDot'); const bg=document.getElementById('darkModeToggleBg');
-        if(isDark){ root.classList.add('dark'); if(dot)dot.classList.add('translate-x-5'); if(bg)bg.classList.replace('bg-gray-300','bg-blue-500'); }
-        else{ root.classList.remove('dark'); if(dot)dot.classList.remove('translate-x-5'); if(bg)bg.classList.replace('bg-blue-500','bg-gray-300'); }
-    }
-    function toggleDarkMode(){ localStorage.setItem('darkMode',!(localStorage.getItem('darkMode')==='true')); applyDarkMode(); }
-    if(localStorage.getItem('darkMode')===null) localStorage.setItem('darkMode','true'); applyDarkMode();
-
-    function logout(){ Swal.fire({title:'Keluar Akun?',icon:'warning',showCancelButton:true,confirmButtonColor:'#d33',background:localStorage.getItem('darkMode')==='true'?'#0b1320':'#fff',color:localStorage.getItem('darkMode')==='true'?'#fff':'#000'}).then((res)=>{if(res.isConfirmed){localStorage.removeItem('user');window.location.href='/';}}); }
-    function bantuanAdmin(){ window.open(`https://wa.me/6282231154407?text=`+encodeURIComponent(`Halo Admin`),'_blank'); }
-
-    fetch('/api/user/balance',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone})}).then(r=>r.json()).then(d=>{currentSaldo=d.saldo;updateSaldoDisplay();});
-    fetch('/api/user/transactions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone})}).then(r=>r.json()).then(d=>{document.getElementById('headTrx').innerText=d.transactions.length+' Trx';});
-
-    fetch('/api/config').then(r=>r.json()).then(data=>{
-        if(data.qrisUrl) qrisImageUrl=data.qrisUrl;
-        if(data.banners && data.banners.length>0 && data.banners[0]!==""){
-            document.getElementById('bannerContainer').classList.remove('hidden');
-            const slider=document.getElementById('promoSlider'); const dotsContainer=document.getElementById('promoDots');
-            slider.innerHTML=data.banners.map(url=>`<div class="w-full h-full shrink-0 snap-center relative"><img src="${url}" class="absolute inset-0 w-full h-full object-cover"></div>`).join('');
-            let dotsHTML=''; for(let i=0;i<data.banners.length;i++) dotsHTML+=`<div class="w-2 h-2 rounded-full bg-white opacity-${i===0?'100':'40'} dot-indicator shadow-sm"></div>`;
-            dotsContainer.innerHTML=dotsHTML;
-            let dots=document.querySelectorAll('.dot-indicator'); let currentSlide=0;
-            slider.addEventListener('scroll',()=>{ let slideIndex=Math.round(slider.scrollLeft/slider.clientWidth); dots.forEach((dot,idx)=>{dot.classList.toggle('opacity-100',idx===slideIndex);dot.classList.toggle('opacity-40',idx!==slideIndex);}); currentSlide=slideIndex; });
-            setInterval(()=>{ currentSlide=(currentSlide+1)%(dots.length||1); slider.scrollTo({left:currentSlide*slider.clientWidth,behavior:'smooth'}); },3500);
+        function updateDateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const date = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            const dateEl = document.getElementById('realtimeDate');
+            const clockEl = document.getElementById('realtimeClock');
+            
+            if(dateEl) dateEl.innerText = `${year}/${month}/${date}`;
+            if(clockEl) clockEl.innerText = `${hours}:${minutes}:${seconds}`;
         }
-    });
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
 
-    function openTopUp(){ document.getElementById('topupOverlay').classList.remove('hidden'); setTimeout(()=>{ document.getElementById('topupOverlay').classList.remove('opacity-0'); document.getElementById('topupSheet').classList.remove('translate-y-full'); },10); }
-    function closeTopUp(){ document.getElementById('topupSheet').classList.add('translate-y-full'); document.getElementById('topupOverlay').classList.add('opacity-0'); setTimeout(()=>{ document.getElementById('topupOverlay').classList.add('hidden'); },300); }
-    function setNominal(amt){ document.getElementById('inputNominal').value=amt; }
-    function selectMethod(mtd){
-        selectedMethod=method; const isDark=localStorage.getItem('darkMode')==='true';
-        const els = ['wa','qris'];
-        els.forEach(m => {
-            document.getElementById('radio-'+m).className='w-5 h-5 rounded-full border-[3px] border-gray-300 dark:border-gray-600 bg-transparent shrink-0';
-            let b = document.getElementById('method-'+m);
-            b.className='flex items-center justify-between bg-gray-50 dark:bg-[#0b1320] border border-gray-200 dark:border-gray-800 p-3 rounded-[1.2rem] cursor-pointer shadow-sm';
-            if(mtd === m) {
-                document.getElementById('radio-'+m).className='w-5 h-5 rounded-full border-[6px] border-[#002147] dark:border-yellow-400 bg-white dark:bg-[#050b14] shrink-0';
-                b.classList.add(isDark?'border-yellow-400':'border-[#002147]'); b.classList.remove('border-gray-200','dark:border-gray-800');
+        function updateSaldoDisplay() {
+            const el = document.getElementById('displaySaldo');
+            const eye = document.getElementById('eyeSaldo');
+            if(isSaldoHidden) {
+                el.innerText = 'Rp •••••••';
+                eye.className = 'fas fa-eye-slash text-gray-400 text-xs cursor-pointer hover:text-white transition';
+            } else {
+                el.innerText = 'Rp ' + currentSaldo.toLocaleString('id-ID');
+                eye.className = 'fas fa-eye text-gray-400 text-xs cursor-pointer hover:text-white transition';
+            }
+        }
+
+        function toggleSaldo() {
+            isSaldoHidden = !isSaldoHidden;
+            localStorage.setItem('hideSaldo', isSaldoHidden);
+            updateSaldoDisplay();
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
+
+        function applyDarkMode() {
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            const root = document.getElementById('html-root'); const dot = document.getElementById('darkModeToggleDot'); const bg = document.getElementById('darkModeToggleBg');
+            if (isDark) { root.classList.add('dark'); if(dot) dot.classList.add('translate-x-5'); if(bg) bg.classList.replace('bg-gray-300', 'bg-blue-500'); } 
+            else { root.classList.remove('dark'); if(dot) dot.classList.remove('translate-x-5'); if(bg) bg.classList.replace('bg-blue-500', 'bg-gray-300'); }
+        }
+        function toggleDarkMode() { localStorage.setItem('darkMode', !(localStorage.getItem('darkMode') === 'true')); applyDarkMode(); }
+        if(localStorage.getItem('darkMode') === null) localStorage.setItem('darkMode', 'true'); 
+        applyDarkMode();
+
+        function logout() { 
+            Swal.fire({ title: 'Keluar Akun?', text: "Apakah Anda yakin ingin keluar?", icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya, Keluar', cancelButtonText: 'Batal', confirmButtonColor: '#d33', cancelButtonColor: '#002147', background: localStorage.getItem('darkMode') === 'true' ? '#0b1320' : '#ffffff', color: localStorage.getItem('darkMode') === 'true' ? '#fff' : '#000'})
+            .then((result) => { if (result.isConfirmed) { localStorage.removeItem('user'); window.location.href = '/'; } });
+        }
+
+        function bantuanAdmin() {
+            const text = encodeURIComponent(`Halo Admin DIGITAL FIKY STORE,\n\nSaya butuh bantuan terkait akun saya (${user.phone}). Mohon dibantu ya min, terima kasih.`);
+            window.open(`https://wa.me/6282231154407?text=${text}`, '_blank');
+        }
+
+        fetch('/api/user/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) })
+        .then(res => res.json()).then(data => { 
+            currentSaldo = data.saldo; 
+            updateSaldoDisplay(); 
+        });
+
+        fetch('/api/user/transactions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) })
+        .then(res => res.json()).then(data => { 
+            document.getElementById('headTrx').innerText = data.transactions.length + ' Trx';
+        });
+
+        fetch('/api/config').then(res => res.json()).then(data => {
+            if(data.qrisUrl) qrisImageUrl = data.qrisUrl;
+            if(data.banners && data.banners.length > 0 && data.banners[0] !== "") {
+                document.getElementById('bannerContainer').classList.remove('hidden');
+                const slider = document.getElementById('promoSlider'); const dotsContainer = document.getElementById('promoDots');
+                slider.innerHTML = data.banners.map(url => `<div class="w-full h-full shrink-0 snap-center relative"><img src="${url}" class="absolute inset-0 w-full h-full object-cover"></div>`).join('');
+                let dotsHTML = ''; for(let i=0; i<data.banners.length; i++) dotsHTML += `<div class="w-2 h-2 rounded-full bg-white opacity-${i===0?'100':'40'} dot-indicator shadow-sm"></div>`;
+                dotsContainer.innerHTML = dotsHTML;
+                const sliderElement = document.getElementById('promoSlider'); let dots = document.querySelectorAll('.dot-indicator'); let currentSlide = 0;
+                sliderElement.addEventListener('scroll', () => {
+                    let slideIndex = Math.round(sliderElement.scrollLeft / sliderElement.clientWidth);
+                    dots.forEach((dot, idx) => { dot.classList.toggle('opacity-100', idx === slideIndex); dot.classList.toggle('opacity-40', idx !== slideIndex); });
+                    currentSlide = slideIndex;
+                });
+                setInterval(() => { currentSlide = (currentSlide + 1) % (dots.length||1); sliderElement.scrollTo({ left: currentSlide * sliderElement.clientWidth, behavior: 'smooth' }); }, 3500);
             }
         });
-    }
 
-    async function prosesTopup(){
-        const nom=parseInt(document.getElementById('inputNominal').value); const isDark=localStorage.getItem('darkMode')==='true'; const bg=isDark?'#0b1320':'#fff'; const col=isDark?'#fff':'#000';
-        if(!nom || nom<=0) return Swal.fire({icon:'warning',title:'Gagal',text:'Minimal Rp 1',background:bg,color:col});
-        if(!selectedMethod) return Swal.fire({icon:'warning',title:'Gagal',text:'Pilih metode!',background:bg,color:col});
-        const finalNom=nom+Math.floor(Math.random()*90)+10;
-        if(selectedMethod==='qris'){
-            if(nom<10000) return Swal.fire({icon:'warning',title:'Gagal',text:'Minimal QRIS 10.000',background:bg,color:col});
-            closeTopUp();
-            await fetch('/api/topup/request',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone,method:'QRIS Otomatis',nominal:finalNom})});
-            setTimeout(()=>{
-                Swal.fire({
-                    title:`<span class="font-bold text-lg">Scan QRIS</span>`,
-                    html:`<div class="flex flex-col items-center mt-2"><p class="text-sm">Total Pembayaran</p><p class="text-4xl text-yellow-500 font-extrabold mb-2">Rp ${finalNom.toLocaleString('id-ID')}</p><div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold mb-3">Sisa Waktu: <span id="qrisTimer">05:00</span></div><div class="bg-white p-3 rounded-xl mb-4"><img src="${qrisImageUrl}" class="w-48 h-48"></div><p class="text-[11px] text-blue-500">Transfer TEPAT sesuai nominal (termasuk 3 digit akhir).</p></div>`,
-                    showDenyButton:true,showCancelButton:true,confirmButtonText:'Sudah Transfer',denyButtonText:'Riwayat',cancelButtonText:'Tutup',
-                    background:bg,color:col, didOpen:()=>{
-                        let t=300; let tmr=document.getElementById('qrisTimer');
-                        timerInterval=setInterval(()=>{ t--; let m=Math.floor(t/60).toString().padStart(2,'0'); let s=(t%60).toString().padStart(2,'0'); if(tmr) tmr.innerText=`${m}:${s}`; if(t<=0){ clearInterval(timerInterval); Swal.close(); location.href='/riwayat_topup.html'; } },1000);
-                    }, willClose:()=>clearInterval(timerInterval)
-                }).then(r=>{ if(r.isConfirmed){ Swal.fire({icon:'success',title:'Diproses',timer:2000,background:bg,color:col}).then(()=>location.href='/riwayat_topup.html'); } else if(r.isDenied) location.href='/riwayat_topup.html'; });
-            },300);
-        }else{
-            closeTopUp();
-            fetch('/api/topup/request',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone,method:'Manual WA',nominal:finalNom})}).then(()=>{
-                window.open(`https://wa.me/6282231154407?text=`+encodeURIComponent(`Admin, mau Topup\nNominal: Rp ${finalNom.toLocaleString('id-ID')}`),'_blank');
-                setTimeout(()=>location.href='/riwayat_topup.html',1000);
-            });
+        function openTopUp() {
+            const sheet = document.getElementById('topupSheet');
+            const overlay = document.getElementById('topupOverlay');
+            overlay.classList.remove('hidden');
+            setTimeout(() => { overlay.classList.remove('opacity-0'); sheet.classList.remove('translate-y-full'); }, 10);
         }
-    }
-  </script>
+
+        function closeTopUp() {
+            const sheet = document.getElementById('topupSheet');
+            const overlay = document.getElementById('topupOverlay');
+            sheet.classList.add('translate-y-full');
+            overlay.classList.add('opacity-0');
+            setTimeout(() => { overlay.classList.add('hidden'); }, 300);
+        }
+
+        function setNominal(amount) { document.getElementById('inputNominal').value = amount; }
+
+        function selectMethod(method) {
+            selectedMethod = method;
+            const rWa = document.getElementById('radio-wa'); const rQris = document.getElementById('radio-qris');
+            const mWa = document.getElementById('method-wa'); const mQris = document.getElementById('method-qris');
+            const isDark = localStorage.getItem('darkMode') === 'true';
+
+            rWa.className = 'w-5 h-5 rounded-full border-[3px] border-gray-300 dark:border-gray-600 transition-colors bg-transparent mr-1 shrink-0';
+            rQris.className = 'w-5 h-5 rounded-full border-[3px] border-gray-300 dark:border-gray-600 transition-colors bg-transparent mr-1 shrink-0';
+            mWa.className = 'flex items-center justify-between bg-gray-50 dark:bg-[#0b1320] border border-gray-200 dark:border-gray-800 p-3 rounded-[1.2rem] cursor-pointer shadow-sm transition-all hover:border-[#002147] dark:hover:border-yellow-400';
+            mQris.className = 'flex items-center justify-between bg-gray-50 dark:bg-[#0b1320] border border-gray-200 dark:border-gray-800 p-3 rounded-[1.2rem] cursor-pointer shadow-sm transition-all hover:border-[#002147] dark:hover:border-yellow-400';
+            
+            if(method === 'wa') {
+                rWa.className = 'w-5 h-5 rounded-full border-[6px] border-[#002147] dark:border-yellow-400 bg-white dark:bg-[#050b14] transition-colors mr-1 shrink-0';
+                mWa.classList.add(isDark ? 'border-yellow-400' : 'border-[#002147]'); mWa.classList.remove('border-gray-200', 'dark:border-gray-800');
+            } else if(method === 'qris') {
+                rQris.className = 'w-5 h-5 rounded-full border-[6px] border-[#002147] dark:border-yellow-400 bg-white dark:bg-[#050b14] transition-colors mr-1 shrink-0';
+                mQris.classList.add(isDark ? 'border-yellow-400' : 'border-[#002147]'); mQris.classList.remove('border-gray-200', 'dark:border-gray-800');
+            }
+        }
+
+        async function prosesTopup() {
+            const nominalBase = parseInt(document.getElementById('inputNominal').value);
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            const bgPopup = isDark ? '#0b1320' : '#ffffff';
+
+            if(!nominalBase || nominalBase <= 0) return Swal.fire({icon:'warning', title:'Gagal', text:'Masukkan nominal yang valid!', background: bgPopup, color: isDark?'#fff':'#000'});
+            if(!selectedMethod) return Swal.fire({icon:'warning', title:'Gagal', text:'Pilih metode WA atau QRIS di bawah!', background: bgPopup, color: isDark?'#fff':'#000'});
+
+            const uniqueCode = Math.floor(Math.random() * 90) + 10; 
+            const finalNominal = nominalBase + uniqueCode;
+
+            if(selectedMethod === 'qris') {
+                if(nominalBase < 10000) return Swal.fire({icon:'warning', title:'Gagal', text:'Minimal top up QRIS adalah Rp 10.000', background: bgPopup, color: isDark?'#fff':'#000'});
+                
+                closeTopUp(); 
+                const formatted = 'Rp ' + finalNominal.toLocaleString('id-ID');
+
+                await fetch('/api/topup/request', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ phone: user.phone, method: 'QRIS Otomatis', nominal: finalNominal }) });
+                
+                setTimeout(() => {
+                    Swal.fire({
+                        title: `<span class="font-bold ${isDark ? 'text-white' : 'text-gray-800'} text-lg">Scan QRIS</span>`,
+                        html: `
+                            <div class="flex flex-col items-center mt-2">
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Total Pembayaran</p>
+                                <p class="text-4xl text-yellow-500 font-extrabold mb-2">${formatted}</p>
+                                <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold mb-3 flex items-center gap-1 animate-pulse">
+                                    <i class="far fa-clock"></i> Sisa Waktu: <span id="qrisTimer">05:00</span>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl shadow-md mb-4 inline-block border border-gray-200">
+                                    <img src="${qrisImageUrl}" alt="QRIS" class="w-48 h-48 object-cover rounded-lg">
+                                </div>
+                                <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 w-full text-left">
+                                    <p class="text-[11px] text-blue-600 dark:text-blue-400 m-0 leading-tight"><i class="fas fa-exclamation-triangle mr-1"></i><b>PENTING:</b> Pastikan transfer <b>TEPAT</b> sesuai nominal di atas (termasuk 2 digit terakhir) agar saldo masuk otomatis.</p>
+                                </div>
+                            </div>
+                        `,
+                        showDenyButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: 'Sudah Transfer', 
+                        denyButtonText: 'Cek Riwayat',
+                        cancelButtonText: 'Tutup', 
+                        confirmButtonColor: isDark ? '#facc15' : '#002147', 
+                        denyButtonColor: '#3b82f6',
+                        cancelButtonColor: '#ef4444', 
+                        background: bgPopup, 
+                        customClass: { 
+                            confirmButton: isDark ? 'text-[#001229] font-bold' : 'text-white font-bold',
+                            denyButton: 'text-white font-bold',
+                            cancelButton: 'text-white font-bold'
+                        },
+                        didOpen: () => {
+                            let timeLeft = 5 * 60;
+                            const timerEl = document.getElementById('qrisTimer');
+                            timerInterval = setInterval(() => {
+                                timeLeft--;
+                                let m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+                                let s = (timeLeft % 60).toString().padStart(2, '0');
+                                if(timerEl) timerEl.innerText = `${m}:${s}`;
+                                if(timeLeft <= 0) {
+                                    clearInterval(timerInterval);
+                                    Swal.close();
+                                    Swal.fire({icon: 'error', title: 'Waktu Habis', text: 'Sesi pembayaran QRIS Anda telah kedaluwarsa.', background: bgPopup, color: isDark?'#fff':'#000'}).then(() => { location.href = '/riwayat_topup.html'; });
+                                }
+                            }, 1000);
+                        },
+                        willClose: () => {
+                            if(timerInterval) clearInterval(timerInterval);
+                        }
+                    }).then((res) => { 
+                        if (res.isConfirmed) { 
+                            Swal.fire({icon: 'success', title: 'Sedang Diproses', text: 'Sistem memverifikasi pembayaran Anda...', timer: 3000, showConfirmButton: false, background: bgPopup, color: isDark ? '#fff' : '#000'}).then(() => { location.href = '/riwayat_topup.html'; }); 
+                        } else if (res.isDenied) {
+                            location.href = '/riwayat_topup.html';
+                        }
+                    });
+                }, 300);
+            } else if(selectedMethod === 'wa') {
+                closeTopUp(); 
+                const formattedNominal = finalNominal.toLocaleString('id-ID');
+                const text = encodeURIComponent(`Halo Admin DIGITAL FIKY STORE,\n\nSaya ingin Top Up Saldo Manual.\nNomor Akun: ${user.phone}\nNominal: *Rp ${formattedNominal}*\n\nMohon instruksi pembayarannya.`);
+                fetch('/api/topup/request', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ phone: user.phone, method: 'Manual WhatsApp', nominal: finalNominal }) }).then(() => {
+                    window.open(`https://wa.me/6282231154407?text=${text}`, '_blank');
+                    setTimeout(() => { location.href = '/riwayat_topup.html'; }, 1000);
+                });
+            }
+        }
+    </script>
 </body>
 </html>
 EOF
@@ -514,7 +746,7 @@ cat << 'EOF' > public/operator.html
 <body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
     <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative shadow-2xl overflow-x-hidden flex flex-col">
         
-        <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 shrink-0">
+        <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 transition-colors shrink-0">
             <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="goBack()"></i>
             <h1 class="text-[18px] font-bold tracking-wide text-gray-800 dark:text-white uppercase" id="pageTitle">Operator</h1>
         </div>
@@ -524,34 +756,37 @@ cat << 'EOF' > public/operator.html
             <div id="operatorContainer" class="block">
                 <div class="px-4 mt-6">
                     <h3 class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-3 uppercase" id="pageSubtitle">PILIH OPERATOR TUJUAN</h3>
-                    <div class="bg-white dark:bg-[#111c2e] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm" id="opListRender"></div>
+                    <div class="bg-white dark:bg-[#111c2e] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm transition-colors" id="opListRender">
+                    </div>
                 </div>
             </div>
 
             <div id="categoryContainer" class="hidden">
                 <div class="flex justify-between items-center px-5 py-4 bg-black dark:bg-[#001229] text-white">
                     <span class="font-bold text-[15px] tracking-wide" id="catSubtitle">Silahkan Di Pilih..</span>
-                    <i class="fas fa-home text-lg cursor-pointer hover:text-yellow-400" onclick="location.href='/dashboard.html'"></i>
+                    <i class="fas fa-home text-lg cursor-pointer hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"></i>
                 </div>
-                <div class="bg-white dark:bg-[#111c2e] shadow-sm pb-4" id="categoryList"></div>
+                <div class="bg-white dark:bg-[#111c2e] shadow-sm transition-colors pb-4" id="categoryList">
+                </div>
             </div>
 
             <div id="productContainer" class="hidden">
                 <div class="flex justify-between items-center px-5 py-4 bg-black dark:bg-[#001229] text-white">
                     <span class="font-bold text-[15px] tracking-wide" id="prodSubtitle">Silahkan Di Pilih..</span>
-                    <i class="fas fa-home text-lg cursor-pointer hover:text-yellow-400" onclick="location.href='/dashboard.html'"></i>
+                    <i class="fas fa-home text-lg cursor-pointer hover:text-yellow-400 transition" onclick="location.href='/dashboard.html'"></i>
                 </div>
                 
-                <div class="px-4 py-4 bg-white dark:bg-[#0b1320] border-b border-gray-200 dark:border-gray-800">
+                <div class="px-4 py-4 bg-white dark:bg-[#0b1320] border-b border-gray-200 dark:border-gray-800 transition-colors">
                     <label class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-2 block uppercase">Target / Tujuan</label>
                     <div class="relative flex items-center">
-                        <input type="text" id="inputTarget" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white rounded-xl py-3 pl-4 pr-24 text-sm font-bold focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 shadow-sm" placeholder="Ketik target disini...">
+                        <input type="text" id="inputTarget" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white rounded-xl py-3 pl-4 pr-24 text-sm font-bold focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400 transition shadow-sm" placeholder="Ketik target disini...">
                         <div id="prefixIcon" class="absolute right-12 font-bold text-[10px] uppercase px-2 py-1 rounded bg-blue-100 text-blue-700 dark:bg-[#002147] dark:text-yellow-400 hidden transition-all"></div>
-                        <i class="fas fa-address-book absolute right-4 text-gray-400 text-lg cursor-pointer hover:text-[#002147] dark:hover:text-yellow-400"></i>
+                        <i class="fas fa-address-book absolute right-4 text-gray-400 text-lg cursor-pointer hover:text-[#002147] dark:hover:text-yellow-400 transition"></i>
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-[#111c2e] shadow-sm pb-4" id="productList"></div>
+                <div class="bg-white dark:bg-[#111c2e] shadow-sm transition-colors pb-4" id="productList">
+                </div>
             </div>
             
         </div>
@@ -656,40 +891,51 @@ cat << 'EOF' > public/operator.html
         };
 
         const tagihanCategories = [
-            { id: 'tagihan_bpjs', name: 'BPJS', icon: 'fas fa-heartbeat', placeholder: 'Masukkan No BPJS...' },
-            { id: 'tagihan_pgn', name: 'Gas Negara', icon: 'fas fa-fire', placeholder: 'Masukkan ID Pelanggan...' },
-            { id: 'tagihan_gas', name: 'Pertagas', icon: 'fas fa-fire-alt', placeholder: 'Masukkan ID Pelanggan...' },
-            { id: 'tagihan_telkom', name: 'Telkom/Indihome', icon: 'fas fa-wifi', placeholder: 'Masukkan No Telepon...' },
-            { id: 'tagihan_tv', name: 'TV Berbayar', icon: 'fas fa-tv', placeholder: 'Masukkan ID Pelanggan...' },
-            { id: 'tagihan_pasca', name: 'Tagihan Seluler', icon: 'fas fa-mobile-alt', placeholder: 'Masukkan Nomor HP...' },
-            { id: 'tagihan_finance', name: 'Finance', icon: 'fas fa-hand-holding-usd', placeholder: 'Masukkan Nomor Kontrak...' },
-            { id: 'tagihan_internet', name: 'Internet', icon: 'fas fa-globe', placeholder: 'Masukkan ID Pelanggan...' },
-            { id: 'tagihan_pdam', name: 'PDAM', icon: 'fas fa-tint', placeholder: 'Masukkan Nomor Pelanggan...' }
+            { id: 'tagihan_bpjs', name: 'BPJS', icon: 'fas fa-heartbeat', placeholder: 'Masukkan No BPJS (13 Digit)...' },
+            { id: 'tagihan_pgn', name: 'Gas Negara (PGN)', icon: 'fas fa-fire', placeholder: 'Masukkan ID Pelanggan PGN...' },
+            { id: 'tagihan_gas', name: 'Pertagas (GAS)', icon: 'fas fa-fire-alt', placeholder: 'Masukkan ID Pelanggan Pertagas...' },
+            { id: 'tagihan_telkom', name: 'Telkom/<br>Indihome', icon: 'fas fa-wifi', placeholder: 'Masukkan No Telepon/Indihome...' },
+            { id: 'tagihan_tv', name: 'TV Berbayar', icon: 'fas fa-tv', placeholder: 'Masukkan ID Pelanggan TV...' },
+            { id: 'tagihan_pasca', name: 'Tagihan<br>Seluler', icon: 'fas fa-mobile-alt', placeholder: 'Masukkan Nomor HP Pascabayar...' },
+            { id: 'tagihan_finance', name: 'Cicilan<br>Finance', icon: 'fas fa-hand-holding-usd', placeholder: 'Masukkan Nomor Kontrak Kredit...' },
+            { id: 'tagihan_internet', name: 'Internet<br>Bulanan', icon: 'fas fa-globe', placeholder: 'Masukkan ID Pelanggan Internet...' },
+            { id: 'tagihan_pdam', name: 'PDAM', icon: 'fas fa-tint', placeholder: 'Masukkan Nomor Pelanggan PDAM...' }
         ];
 
         const allProviders = {};
         Object.assign(allProviders, baseOperators, dataCategories, ewalletCategories, etollCategories, plnCategories, gameCategories);
-        tagihanCategories.forEach(t => { allProviders[t.id] = { name: t.name, logo: t.icon, isIcon: true, placeholder: t.placeholder }; });
+        tagihanCategories.forEach(t => {
+            allProviders[t.id] = { name: t.name.replace('<br>', ' '), logo: t.icon, isIcon: true, placeholder: t.placeholder };
+        });
 
         let currentList = {};
 
-        if(type === 'ewallet') { originalTitle = 'E-Wallet'; subtitleEl.innerText = 'PILIH E-WALLET'; currentList = ewalletCategories; } 
-        else if(type === 'etoll') { originalTitle = 'Saldo E-Toll'; subtitleEl.innerText = 'PILIH KARTU E-TOLL'; currentList = etollCategories; } 
-        else if(type === 'pln') { originalTitle = 'PLN'; subtitleEl.innerText = 'PILIH LAYANAN PLN'; currentList = plnCategories; } 
-        else if(type === 'game') { originalTitle = 'Top Up Game'; subtitleEl.innerText = 'PILIH GAME'; currentList = gameCategories; } 
-        else if(type === 'tagihan') {
+        if(type === 'ewallet') {
+            originalTitle = 'E-Wallet'; subtitleEl.innerText = 'PILIH E-WALLET TUJUAN'; currentList = ewalletCategories;
+        } else if(type === 'etoll') {
+            originalTitle = 'Saldo E-Toll'; subtitleEl.innerText = 'PILIH KARTU E-TOLL'; currentList = etollCategories;
+        } else if(type === 'pln') {
+            originalTitle = 'PLN'; subtitleEl.innerText = 'PILIH JENIS LAYANAN PLN'; currentList = plnCategories;
+        } else if(type === 'game') {
+            originalTitle = 'Top Up Game'; subtitleEl.innerText = 'PILIH GAME'; currentList = gameCategories;
+        } else if(type === 'tagihan') {
             originalTitle = 'Tagihan'; subtitleEl.innerText = 'PILIH JENIS TAGIHAN';
             document.getElementById('operatorContainer').classList.replace('block', 'hidden');
             let gridHtml = '<div class="grid grid-cols-4 gap-y-6 gap-x-3 mt-4 mx-4">';
             tagihanCategories.forEach(item => {
-                gridHtml += `<div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="selectProvider('${item.id}')"><div class="w-[4.2rem] h-[4.2rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-[26px] shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="${item.icon}"></i></div><span class="text-[9px] font-bold text-gray-600 dark:text-gray-300 text-center leading-tight">${item.name}</span></div>`;
+                gridHtml += `<div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="selectProvider('${item.id}')"><div class="w-[4.2rem] h-[4.2rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-[26px] shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60 transition-colors"><i class="${item.icon}"></i></div><span class="text-[9px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase text-center leading-tight transition-colors">${item.name}</span></div>`;
             });
             gridHtml += '</div>';
+            const parent = document.getElementById('operatorContainer').parentElement;
             const tempDiv = document.createElement('div'); tempDiv.id = 'tagihanGridWrap';
-            tempDiv.innerHTML = `<h3 class="text-[10px] text-gray-500 dark:text-gray-400 font-bold mb-4 mx-4 mt-6">PILIH JENIS TAGIHAN</h3>` + gridHtml;
-            document.getElementById('operatorContainer').parentElement.insertBefore(tempDiv, document.getElementById('categoryContainer'));
-        } else if (type === 'data') { originalTitle = 'Paket Internet'; currentList = dataCategories; } 
-        else { originalTitle = 'Isi Pulsa'; currentList = baseOperators; }
+            tempDiv.innerHTML = `<h3 class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider mb-4 uppercase mx-4 mt-6">PILIH JENIS TAGIHAN</h3>` + gridHtml;
+            parent.insertBefore(tempDiv, document.getElementById('categoryContainer'));
+        } else if (type === 'data') {
+            originalTitle = 'Paket Internet'; subtitleEl.innerText = 'PILIH OPERATOR TUJUAN'; currentList = dataCategories; 
+        } else {
+            if(type === 'pulsa') originalTitle = 'Isi Pulsa'; else if(type === 'masaaktif') originalTitle = 'Masa Aktif'; else originalTitle = 'Pilih Operator';
+            subtitleEl.innerText = 'PILIH OPERATOR TUJUAN'; currentList = baseOperators; 
+        }
 
         titleEl.innerText = originalTitle;
 
@@ -699,12 +945,12 @@ cat << 'EOF' > public/operator.html
             let opHtml = '';
             for(let key in currentList){
                 let op = currentList[key];
-                opHtml += `<div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639]" onclick="selectProvider('${key}')"><div class="w-10 h-10 rounded-full border border-black dark:border-gray-400 flex items-center justify-center text-black dark:text-gray-300 font-bold text-[10px] shrink-0 text-center bg-white dark:bg-[#0b1320]">${op.isIcon ? `<i class="${op.logo} text-lg"></i>` : op.logo}</div><div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">${op.name}</div><i class="fas fa-chevron-right text-gray-400 text-sm"></i></div>`;
+                opHtml += `<div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('${key}')"><div class="w-10 h-10 rounded-full border border-black dark:border-gray-400 flex items-center justify-center text-black dark:text-gray-300 font-bold text-[10px] shrink-0 text-center leading-tight bg-white dark:bg-[#0b1320]">${op.isIcon ? `<i class="${op.logo} text-lg"></i>` : op.logo}</div><div class="flex-1 ml-4 text-[15px] font-bold text-gray-800 dark:text-gray-200">${op.name}</div><i class="fas fa-chevron-right text-gray-400 dark:text-gray-500 text-sm"></i></div>`;
             }
             document.getElementById('opListRender').innerHTML = opHtml;
         }
 
-        // V110: Prefix Auto-Detect Logo
+        // V110: Prefix Auto-Detect
         const prefixMap = {
             'Telkomsel': ['0811','0812','0813','0821','0822','0823','0851','0852','0853'],
             'Indosat': ['0814','0815','0816','0855','0856','0857','0858'],
@@ -738,13 +984,15 @@ cat << 'EOF' > public/operator.html
 
         async function fetchProducts(brand, categoryName) {
             const listEl = document.getElementById('productList');
-            listEl.innerHTML = `<div class="py-12 flex justify-center"><i class="fas fa-spinner fa-spin text-3xl text-gray-400"></i></div>`;
+            listEl.innerHTML = `<div class="py-12 flex justify-center"><i class="fas fa-spinner fa-spin text-3xl text-gray-400 dark:text-gray-600"></i></div>`;
+            
             try {
                 let res = await fetch('/api/products', {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ type: type, brand: brand, category: categoryName })
                 });
                 let data = await res.json();
+                
                 if(data.data && data.data.length > 0) {
                     let html = data.data.map(p => {
                         let safeName = p.name.replace(/'/g, "\\'").replace(/"/g, "&quot;");
@@ -752,15 +1000,15 @@ cat << 'EOF' > public/operator.html
                         let safeDesc = p.desc ? p.desc.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "<br>") : 'Deskripsi tidak tersedia.';
                         
                         let badge = p.is_open ? 
-                            `<span class="text-[8px] font-bold px-1.5 py-0.5 rounded bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400 uppercase">Tersedia</span>` : 
-                            `<span class="text-[8px] font-bold px-1.5 py-0.5 rounded bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 uppercase">Gangguan</span>`;
+                            `<span class="text-[8px] font-bold px-1.5 py-0.5 rounded bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400 uppercase tracking-wide">Tersedia</span>` : 
+                            `<span class="text-[8px] font-bold px-1.5 py-0.5 rounded bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 uppercase tracking-wide">Gangguan</span>`;
                         let clickAction = p.is_open ? `showProductDetail('${safeSku}', '${safeName}', ${p.price}, ${p.isLocal}, '${safeDesc}')` : `Swal.fire({icon:'error', title:'Gangguan', text:'Produk sedang gangguan dari provider.', background: localStorage.getItem('darkMode')==='true'?'#0b1320':'#fff', color: localStorage.getItem('darkMode')==='true'?'#fff':'#000'})`;
                         let opacityClass = p.is_open ? '' : 'opacity-50';
 
                         return `
                         <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition ${opacityClass}" onclick="${clickAction}">
                             <div class="flex flex-col pr-4 w-2/3">
-                                <span class="text-[12px] font-bold text-gray-800 dark:text-gray-100 leading-tight">${p.name} ${p.isLocal ? '<i class="fas fa-check-circle text-green-500 text-[10px]"></i>' : ''}</span>
+                                <span class="text-[12px] font-bold text-gray-800 dark:text-gray-100 leading-tight">${p.name} ${p.isLocal ? '<i class="fas fa-check-circle text-green-500 text-[10px] ml-1" title="Produk Lokal"></i>' : ''}</span>
                             </div>
                             <div class="text-right shrink-0 flex flex-col items-end">
                                 <div class="mb-1">${badge}</div>
@@ -769,11 +1017,14 @@ cat << 'EOF' > public/operator.html
                         </div>`;
                     }).join('');
                     listEl.innerHTML = html;
-                } else { listEl.innerHTML = `<div class="py-12 flex flex-col items-center justify-center text-gray-400"><i class="fas fa-box-open text-5xl mb-4 opacity-40"></i><p class="text-[11px] font-bold uppercase">Katalog Kosong</p></div>`; }
-            } catch(e) { listEl.innerHTML = `<div class="py-12 text-center text-red-500 text-xs font-bold">Gagal memuat data.</div>`; }
+                } else {
+                    listEl.innerHTML = `<div class="py-12 flex flex-col items-center justify-center text-gray-400 dark:text-gray-600"><i class="fas fa-box-open text-5xl mb-4 opacity-40"></i><p class="text-[11px] font-bold tracking-wide uppercase">Katalog Produk Kosong</p></div>`;
+                }
+            } catch(e) {
+                listEl.innerHTML = `<div class="py-12 text-center text-red-500 text-xs font-bold">Gagal memuat data dari server.</div>`;
+            }
         }
 
-        // V110: Bottom Sheet Popup Detail Mewah
         function showProductDetail(sku, name, price, isLocal, desc) {
             selectedSku = sku; selectedName = name; selectedPrice = price; selectedIsLocal = isLocal;
             document.getElementById('dtName').innerText = name;
@@ -875,7 +1126,7 @@ cat << 'EOF' > public/operator.html
 EOF
 
 # ==========================================
-# FILE NODE.JS (API BACKEND V110)
+# FILE NODE.JS (API + TELEGRAM COMMAND CENTER)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 cat << 'EOF' > index.js
@@ -915,10 +1166,19 @@ if (!fs.existsSync(webUsersFile)) saveJSON(webUsersFile, {});
 if (!fs.existsSync(localProductsFile)) saveJSON(localProductsFile, []);
 if (!fs.existsSync(digiCacheFile)) saveJSON(digiCacheFile, { time: 0, data: [] }); 
 
+// V109: FUNGSI KIRIM NOTIFIKASI TELEGRAM
 const sendTeleNotif = async (message) => {
     let cfg = loadJSON(configFile);
     if(!cfg.teleToken || !cfg.teleChatId) return;
-    try { await axios.post(`https://api.telegram.org/bot${cfg.teleToken}/sendMessage`, { chat_id: cfg.teleChatId, text: message, parse_mode: 'Markdown' }); } catch(e) {}
+    try {
+        await axios.post(`https://api.telegram.org/bot${cfg.teleToken}/sendMessage`, {
+            chat_id: cfg.teleChatId,
+            text: message,
+            parse_mode: 'Markdown'
+        });
+    } catch(e) {
+        console.log("[TELEGRAM] Gagal mengirim notifikasi admin.");
+    }
 };
 
 app.get('/api/config', (req, res) => { let cfg = loadJSON(configFile); res.json({ banners: cfg.banners || [], qrisUrl: cfg.qrisUrl || '' }); });
@@ -943,10 +1203,12 @@ app.post('/api/products', async (req, res) => {
                     digiCache.time = Date.now();
                     saveJSON(digiCacheFile, digiCache); 
                 }
-            } catch(e) {}
+            } catch(e) { console.log("[DIGIFLAZZ API] Timeout/Gagal Fetch Katalog."); }
         }
+
         let products = digiCache.data || [];
         filtered = products; 
+
         if (type === 'pulsa') filtered = filtered.filter(p => p.category === 'Pulsa' && p.brand.toLowerCase() === brand.toLowerCase());
         else if (type === 'data') {
             filtered = filtered.filter(p => p.category === 'Data' && p.brand.toLowerCase() === brand.toLowerCase());
@@ -997,6 +1259,7 @@ app.post('/api/transaction/create', async (req, res) => {
         let db = loadJSON(dbFile); let config = loadJSON(configFile);
         if (!db[phone]) return res.status(400).json({ error: 'Akun tidak ditemukan.' });
         if (db[phone].saldo < price) return res.status(400).json({ error: 'Saldo tidak mencukupi.' });
+
         if (!db[phone].mutasi) db[phone].mutasi = []; if (!db[phone].transactions) db[phone].transactions = [];
 
         db[phone].saldo -= price;
@@ -1073,9 +1336,11 @@ function startAutoBackup() {
         let zipName = `AutoBackup_FikyStore_${Date.now()}.zip`;
         exec(`zip -r ${zipName} database.json web_users.json config.json local_products.json`, async (error) => {
             if(!error) {
-                const form = new FormData(); form.append('chat_id', config.teleChatId);
-                form.append('caption', `⏳ *AUTO BACKUP (${config.autoBackupHours} Jam)*\n\nTanggal: ${new Date().toLocaleString('id-ID')}`);
-                form.append('parse_mode', 'Markdown'); form.append('document', fs.createReadStream(zipName));
+                const form = new FormData();
+                form.append('chat_id', config.teleChatId);
+                form.append('caption', `⏳ *AUTO BACKUP (${config.autoBackupHours} Jam)*\n\nTanggal: ${new Date().toLocaleString('id-ID')}\nData aman tersimpan di Telegram Bos! 🚀`);
+                form.append('parse_mode', 'Markdown');
+                form.append('document', fs.createReadStream(zipName));
                 try { await axios.post(`https://api.telegram.org/bot${config.teleToken}/sendDocument`, form, { headers: form.getHeaders() }); } catch(e) {}
                 fs.unlinkSync(zipName);
             }
@@ -1091,7 +1356,7 @@ app.post('/api/topup/request', (req, res) => {
     const expiry = method === 'QRIS Otomatis' ? Date.now() + 5*60*1000 : null; 
     const newTopup = { id: 'TU' + Date.now(), method, nominal, status: 'Proses', date: new Date().toLocaleString('id-ID'), expiry };
     db[phone].topup.push(newTopup); saveJSON(dbFile, db); 
-    sendTeleNotif(`💳 *PERMINTAAN TOP UP BARU*\n\n👤 Member: ${phone}\n💵 Nominal: Rp ${nominal.toLocaleString('id-ID')}\n🏦 Metode: ${method}`);
+    sendTeleNotif(`💳 *PERMINTAAN TOP UP BARU*\n\n👤 Member: ${phone}\n💵 Nominal: Rp ${nominal.toLocaleString('id-ID')}\n🏦 Metode: ${method}\n⏳ Status: Menunggu Pembayaran\n\n_Pantau mutasi / rekening bosku!_`);
     res.json({ message: 'Top up direkam' });
 });
 
@@ -1103,7 +1368,41 @@ app.post('/api/topup/history', (req, res) => {
 
 app.post('/api/user/transactions', (req, res) => { let db = loadJSON(dbFile); res.json({ transactions: db[req.body.phone]?.transactions || [] }); });
 
-// Auth (Full V110 logic kept)
+app.get('/api/admin/backup', async (req, res) => {
+    let config = loadJSON(configFile);
+    if(!config.teleToken || !config.teleChatId) return res.status(400).json({ error: "Token/Chat ID Telegram belum disetting di Panel VPS." });
+    try {
+        let zipName = `Backup_DigitalFikyStore_${Date.now()}.zip`;
+        exec(`zip -r ${zipName} database.json web_users.json config.json local_products.json`, async (error) => {
+            if(error) return res.status(500).json({ error: "Gagal membuat file ZIP." });
+            const form = new FormData();
+            form.append('chat_id', config.teleChatId);
+            form.append('caption', `📦 *BACKUP MANUAL BERHASIL*\n\nTanggal: ${new Date().toLocaleString('id-ID')}\nAman terkendali bosku! 🚀`);
+            form.append('parse_mode', 'Markdown');
+            form.append('document', fs.createReadStream(zipName));
+            await axios.post(`https://api.telegram.org/bot${config.teleToken}/sendDocument`, form, { headers: form.getHeaders() });
+            fs.unlinkSync(zipName);
+            res.json({ message: "Backup sukses terkirim ke Telegram!" });
+        });
+    } catch (e) { res.status(500).json({ error: "Gagal mengirim ke Telegram." }); }
+});
+
+app.post('/api/admin/add_balance', async (req, res) => {
+    const { identifier, amount } = req.body; let webUsers = loadJSON(webUsersFile); let db = loadJSON(dbFile);
+    let targetPhone = null;
+    if(identifier.includes('@')){ for(let p in webUsers){ if(webUsers[p].email === identifier){ targetPhone = p; break; } } } else { targetPhone = identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier; }
+    if(!targetPhone || !webUsers[targetPhone]) return res.json({ success: false, message: '\n❌ Member tidak ditemukan di database!' });
+    if(!db[targetPhone]) db[targetPhone] = { saldo: 0, jid: targetPhone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] };
+    if(!db[targetPhone].mutasi) db[targetPhone].mutasi = []; if(!db[targetPhone].topup) db[targetPhone].topup = [];
+    
+    db[targetPhone].saldo += parseInt(amount); const dateStr = new Date().toLocaleString('id-ID');
+    db[targetPhone].mutasi.push({ id: 'TRX'+Date.now(), type: 'in', amount: parseInt(amount), desc: 'Penambahan oleh Admin', date: dateStr });
+    db[targetPhone].topup.push({ id: 'TU'+Date.now(), method: 'Admin Fiky Store', nominal: parseInt(amount), status: 'Sukses', date: dateStr });
+    saveJSON(dbFile, db);
+    try { await global.waSocket?.sendMessage(targetPhone + '@c.us', { text: `Halo *${webUsers[targetPhone].name}*! 👋\n\n🎉 Saldo Anda berhasil ditambah oleh Admin sebesar *Rp ${parseInt(amount).toLocaleString('id-ID')}*.\n💰 Sisa Saldo: *Rp ${db[targetPhone].saldo.toLocaleString('id-ID')}*.\n\nSelamat bertransaksi! 🚀` }); } catch(e) {}
+    res.json({ success: true, message: `\n✅ Saldo ${webUsers[targetPhone].name} berhasil ditambah!` });
+});
+
 app.post('/api/auth/login-req', async (req, res) => {
     const { identifier, password } = req.body; let webUsers = loadJSON(webUsersFile); let fPhone = identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier;
     let foundPhone = Object.keys(webUsers).find(p => (p === fPhone || webUsers[p].email === identifier) && webUsers[p].password === password);
@@ -1114,6 +1413,7 @@ app.post('/api/auth/login-req', async (req, res) => {
         res.json({ message: 'OTP Terkirim', phone: foundPhone });
     } else res.status(400).json({ error: 'Data salah.' });
 });
+
 app.post('/api/auth/login-verify', (req, res) => {
     const { phone, otp } = req.body; let webUsers = loadJSON(webUsersFile);
     if (webUsers[phone] && webUsers[phone].loginOtp === otp) {
@@ -1121,13 +1421,15 @@ app.post('/api/auth/login-verify', (req, res) => {
         res.json({ message: 'Login sukses', user: { phone: phone, name: webUsers[phone].name, email: webUsers[phone].email } });
     } else res.status(400).json({ error: 'OTP Salah.' });
 });
+
 app.post('/api/auth/register', async (req, res) => {
     const { name, phone, email, password } = req.body; let webUsers = loadJSON(webUsersFile); let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
     if (webUsers[fPhone] && webUsers[fPhone].isVerified) return res.status(400).json({ error: 'Nomor terdaftar.' });
     const otp = Math.floor(1000 + Math.random() * 9000).toString(); 
     webUsers[fPhone] = { name, email, password, isVerified: false, otp, otpExpiry: Date.now() + 5 * 60 * 1000, avatar: null }; saveJSON(webUsersFile, webUsers);
-    try { await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Kode OTP Daftar: *${otp}*` }); res.json({ message: 'OTP Terkirim', phone: fPhone }); } catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); }
+    try { await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Kode OTP Daftar Anda:\n*${otp}*` }); res.json({ message: 'OTP Terkirim', phone: fPhone }); } catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); }
 });
+
 app.post('/api/auth/verify', (req, res) => {
     const { phone, otp } = req.body; let webUsers = loadJSON(webUsersFile);
     if (webUsers[phone] && webUsers[phone].otp === otp) {
@@ -1168,7 +1470,7 @@ NC='\033[0m'
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}          💎 PANEL DIGITAL FIKY STORE (V110) 💎       ${NC}"
+    echo -e "${YELLOW}          💎 PANEL DIGITAL FIKY STORE (V111) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
@@ -1305,7 +1607,7 @@ while true; do clear
             fi
             read -p "Enter..." ;;
         21) 
-            echo -e "${RED}Pastikan Anda sudah mem-push script V110 ke GitHub Anda!${NC}"
+            echo -e "${RED}Pastikan Anda sudah mem-push script V111 ke GitHub Anda!${NC}"
             read -p "Lanjutkan Update Sistem dari GitHub? (y/n): " confirm_pull
             if [[ "$confirm_pull" == "y" || "$confirm_pull" == "Y" ]]; then
                 cd "$HOME" && wget -qO- https://raw.githubusercontent.com/fikystorez/PROJECT-PPOB-FIKYSTORE/main/install.sh | tr -d '\r' > install.sh && chmod +x install.sh && ./install.sh && exit 0
@@ -1318,5 +1620,5 @@ EOF
 
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
-echo "  SISTEM WEB V110 BERHASIL DIPERBARUI SECARA PENUH!       "
+echo "  SISTEM WEB V111 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
