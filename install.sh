@@ -1,16 +1,13 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V140 (THE ABSOLUTE FINAL CLOUD)
+# DIGITAL FIKY STORE - V140 (THE ULTIMATE PERFECT EDITION)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
   echo "Tolong jalankan script ini sebagai root (ketik: sudo su)"
   exit
 fi
-
-if command -v dos2unix > /dev/null 2>&1; then 
-  dos2unix "$0" > /dev/null 2>&1
-fi
+if command -v dos2unix > /dev/null 2>&1; then dos2unix "$0" > /dev/null 2>&1; fi
 
 DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
@@ -21,29 +18,22 @@ echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
 apt update -y && apt install curl wget gnupg git dos2unix psmisc zip unzip nginx ufw -y > /dev/null 2>&1
-
 if ! command -v node > /dev/null 2>&1; then
   curl -fsSL https://deb.nodesource.com/setup_20.x | bash - > /dev/null 2>&1
   apt install -y nodejs > /dev/null 2>&1
 fi
 npm install -g pm2 > /dev/null 2>&1
 
-echo "[2/5] Membuat direktori aplikasi dan web..."
 mkdir -p "$HOME/$DIR_NAME/public"
 cd "$HOME/$DIR_NAME"
 
-# ==========================================
-# 1. PACKAGE.JSON
-# ==========================================
 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
   "version": "1.0.0",
   "description": "Aplikasi PPOB DIGITAL FIKY STORE",
   "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
-  },
+  "scripts": { "start": "node index.js" },
   "dependencies": {
     "@hapi/boom": "^10.0.1",
     "@whiskeysockets/baileys": "^6.7.5",
@@ -57,134 +47,30 @@ cat << 'EOF' > package.json
 }
 EOF
 
-# ==========================================
-# 2. STYLE CSS 
-# ==========================================
-echo "[3/5] Membangun Antarmuka CSS & HTML..."
+echo "[2/5] Membangun Antarmuka CSS..."
 cat << 'EOF' > public/style.css
-body { 
-    background-color: #fde047; 
-    margin: 0; 
-    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; 
-}
-.centered-modal-box { 
-    background-color: #002147; 
-    padding: 2.5rem 1.5rem 2rem 1.5rem; 
-    border-radius: 1.2rem; 
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); 
-    width: 90%; 
-    max-width: 360px; 
-    text-align: center; 
-    position: relative; 
-    z-index: 10; 
-    margin: auto; 
-    margin-top: 10vh; 
-}
-.brand-logo-text { 
-    font-size: 1.8rem; 
-    font-weight: 900; 
-    background: linear-gradient(135deg, #fde047 0%, #facc15 100%); 
-    -webkit-background-clip: text; 
-    -webkit-text-fill-color: transparent; 
-    margin-bottom: 1.5rem; 
-    letter-spacing: 1px; 
-    text-transform: uppercase; 
-}
-.compact-input-wrapper { 
-    position: relative; 
-    margin-bottom: 0.85rem; 
-    width: 100%; 
-}
-.compact-input-box { 
-    width: 100%; 
-    padding: 0.6rem 0.75rem; 
-    border: 1px solid #334155; 
-    border-radius: 0.5rem; 
-    font-size: 0.875rem; 
-    outline: none; 
-    background-color: #ffffff; 
-    color: #0f172a; 
-}
-.compact-input-box:focus { 
-    border-color: #fde047; 
-    box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3); 
-}
-.password-toggle { 
-    position: absolute; 
-    right: 12px; 
-    top: 50%; 
-    transform: translateY(-50%); 
-    cursor: pointer; 
-    color: #94a3b8; 
-}
-.compact-text-small { 
-    font-size: 0.8rem; 
-    color: #cbd5e1; 
-}
-.compact-link-small { 
-    font-size: 0.8rem; 
-    color: #fde047; 
-    text-decoration: none; 
-    font-weight: bold; 
-}
-.btn-yellow { 
-    width: 100%; 
-    padding: 0.625rem 1rem; 
-    background-color: #fde047; 
-    color: #002147; 
-    font-weight: bold; 
-    border-radius: 0.5rem; 
-    cursor: pointer; 
-    border: none; 
-    margin-top: 0.5rem; 
-    transition: all 0.2s; 
-}
-.btn-yellow:hover { 
-    background-color: #facc15; 
-}
-.hide-scrollbar::-webkit-scrollbar { 
-    display: none; 
-}
-.hide-scrollbar { 
-    -ms-overflow-style: none; 
-    scrollbar-width: none; 
-}
-.swal2-popup { 
-    background-color: #002147 !important; 
-    border-radius: 1.5rem !important; 
-    color: #ffffff !important; 
-    width: 320px !important; 
-    padding: 1.5rem 1.25rem 1.25rem !important; 
-}
-.swal2-title { 
-    color: #fde047 !important; 
-    font-size: 1.25rem !important; 
-    font-weight: 800 !important; 
-}
-.swal2-html-container { 
-    color: #cbd5e1 !important; 
-    font-size: 0.85rem !important; 
-}
-.swal2-confirm { 
-    background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important; 
-    color: #001229 !important; 
-    border-radius: 0.5rem !important; 
-    font-weight: 800 !important; 
-}
-.swal2-cancel { 
-    background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important; 
-    color: #ffffff !important; 
-    border-radius: 0.5rem !important; 
-    font-weight: 800 !important; 
-}
-.pb-safe { 
-    padding-bottom: calc(1rem + env(safe-area-inset-bottom)); 
-}
+body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
+.centered-modal-box { background-color: #002147; padding: 2.5rem 1.5rem 2rem 1.5rem; border-radius: 1.2rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); width: 90%; max-width: 360px; text-align: center; position: relative; z-index: 10; margin: auto; margin-top: 10vh; }
+.brand-logo-text { font-size: 1.8rem; font-weight: 900; background: linear-gradient(135deg, #fde047 0%, #facc15 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; letter-spacing: 1px; text-transform: uppercase; }
+.compact-input-wrapper { position: relative; margin-bottom: 0.85rem; width: 100%; }
+.compact-input-box { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #334155; border-radius: 0.5rem; font-size: 0.875rem; outline: none; background-color: #ffffff; color: #0f172a; }
+.compact-input-box:focus { border-color: #fde047; box-shadow: 0 0 0 3px rgba(253,224,71,0.3); }
+.password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #94a3b8; }
+.compact-text-small { font-size: 0.8rem; color: #cbd5e1; }
+.compact-link-small { font-size: 0.8rem; color: #fde047; text-decoration: none; font-weight: bold; }
+.btn-yellow { width: 100%; padding: 0.625rem 1rem; background-color: #fde047; color: #002147; font-weight: bold; border-radius: 0.5rem; cursor: pointer; border: none; margin-top: 0.5rem; transition: all 0.2s; }
+.btn-yellow:hover { background-color: #facc15; }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.swal2-popup { background-color: #002147 !important; border-radius: 1.5rem !important; color: #ffffff !important; width: 320px !important; padding: 1.5rem 1.25rem 1.25rem !important; }
+.swal2-title { color: #fde047 !important; font-size: 1.25rem !important; font-weight: 800 !important; }
+.swal2-html-container { color: #cbd5e1 !important; font-size: 0.85rem !important; }
+.swal2-confirm { background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important; color: #001229 !important; border-radius: 0.5rem !important; font-weight: 800 !important; }
+.swal2-cancel { background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important; color: #ffffff !important; border-radius: 0.5rem !important; font-weight: 800 !important; }
+.pb-safe { padding-bottom: calc(1rem + env(safe-area-inset-bottom)); }
 EOF
 
-# ==========================================
-# 3. HTML FILES (11 FILES - RAPI & FULL)
-# ==========================================
+echo "[3/5] Membangun Antarmuka HTML (Semua File Pasti Terbuat)..."
 
 cat << 'EOF' > public/index.html
 <!DOCTYPE html>
@@ -202,7 +88,7 @@ cat << 'EOF' > public/index.html
   <div class="centered-modal-box">
     <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
     <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
-    <p class="compact-text-small mb-6" id="loginDesc">Silahkan masukkan data akun kamu!</p>
+    <p class="compact-text-small mb-6" id="loginDesc">Silahkan masukkan email/no HP dan password kamu!</p>
     
     <form id="loginForm">
       <div class="compact-input-wrapper">
@@ -233,45 +119,27 @@ cat << 'EOF' > public/index.html
         if(savedPhone) document.getElementById('identifier').value = savedPhone;
       }
     }
-
     function togglePassword(id, el) {
       const input = document.getElementById(id);
-      if (input.type === 'password') { 
-        input.type = 'text'; 
-        el.classList.remove('fa-eye'); 
-        el.classList.add('fa-eye-slash'); 
-      } else { 
-        input.type = 'password'; 
-        el.classList.remove('fa-eye-slash'); 
-        el.classList.add('fa-eye'); 
-      }
+      if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
+      else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
     }
-    
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const identifier = document.getElementById('identifier').value; 
       const password = document.getElementById('password').value;
       localStorage.setItem('savedPhone', identifier);
-      
       Swal.fire({title: 'Memeriksa Data...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-      
       try {
         const res = await fetch('/api/auth/login', { 
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/json' }, 
-          body: JSON.stringify({ identifier, password }) 
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password }) 
         });
         const data = await res.json();
-        
         if (res.ok) { 
           localStorage.setItem('user', JSON.stringify(data.user)); 
           window.location.href = '/dashboard.html';
-        } else { 
-          Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.', background: '#002147', color: '#fff' }); 
-      }
+        } else { Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.', background: '#002147', color: '#fff' }); }
     });
   </script>
 </body>
@@ -295,112 +163,51 @@ cat << 'EOF' > public/register.html
     <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
     <h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2>
     <p class="compact-text-small mb-4">Silahkan lengkapi data untuk mendaftar!</p>
-    
     <form id="registerForm">
-      <div class="compact-input-wrapper">
-        <input type="text" id="name" name="name" class="compact-input-box" required placeholder="Nama Lengkap">
-      </div>
-      <div class="compact-input-wrapper">
-        <input type="number" id="phone" name="username" class="compact-input-box" required placeholder="Nomor WA (08123...)">
-      </div>
-      <div class="compact-input-wrapper">
-        <input type="email" id="email" name="email" class="compact-input-box" required placeholder="Email">
-      </div>
-      <div class="compact-input-wrapper">
-        <input type="password" id="password" name="password" class="compact-input-box" required placeholder="Password">
-        <i class="fas fa-eye password-toggle" onclick="togglePassword('password', this)"></i>
-      </div>
+      <div class="compact-input-wrapper"><input type="text" id="name" name="name" class="compact-input-box" required placeholder="Nama Lengkap"></div>
+      <div class="compact-input-wrapper"><input type="number" id="phone" name="username" class="compact-input-box" required placeholder="Nomor WA (08123...)"></div>
+      <div class="compact-input-wrapper"><input type="email" id="email" name="email" class="compact-input-box" required placeholder="Email"></div>
+      <div class="compact-input-wrapper"><input type="password" id="password" name="password" class="compact-input-box" required placeholder="Password"><i class="fas fa-eye password-toggle" onclick="togglePassword('password', this)"></i></div>
       <button type="submit" class="btn-yellow mt-1">Daftar Sekarang</button>
     </form>
-
-    <div class="mt-4 text-center compact-text-small">
-      Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a>
-    </div>
+    <div class="mt-4 text-center compact-text-small">Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a></div>
   </div>
-
   <div class="centered-modal-box hidden" id="box-otp">
     <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
     <h2 class="text-lg font-bold text-white mb-1">VERIFIKASI WA</h2>
     <p class="compact-text-small mb-5 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
-    
     <form id="otpForm">
-      <div class="compact-input-wrapper">
-        <input type="number" id="otpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX">
-      </div>
+      <div class="compact-input-wrapper"><input type="number" id="otpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX"></div>
       <button type="submit" class="btn-yellow mt-4">Verifikasi OTP</button>
     </form>
   </div>
-
   <script>
     function togglePassword(id, el) {
       const input = document.getElementById(id);
-      if (input.type === 'password') { 
-        input.type = 'text'; 
-        el.classList.remove('fa-eye'); 
-        el.classList.add('fa-eye-slash'); 
-      } else { 
-        input.type = 'password'; 
-        el.classList.remove('fa-eye-slash'); 
-        el.classList.add('fa-eye'); 
-      }
+      if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
+      else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
     }
-    
     let registeredPhone = '';
-
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const name = document.getElementById('name').value; 
-      const phone = document.getElementById('phone').value; 
-      const email = document.getElementById('email').value; 
-      const password = document.getElementById('password').value;
-      
+      const name = document.getElementById('name').value; const phone = document.getElementById('phone').value; const email = document.getElementById('email').value; const password = document.getElementById('password').value;
       Swal.fire({title: 'Memproses...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-      
       try {
-        const res = await fetch('/api/auth/register', { 
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/json' }, 
-          body: JSON.stringify({ name, phone, email, password }) 
-        });
+        const res = await fetch('/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, email, password }) });
         const data = await res.json();
-        
-        if (res.ok) {
-          registeredPhone = data.phone; 
-          document.getElementById('box-register').classList.add('hidden'); 
-          document.getElementById('box-otp').classList.remove('hidden'); 
-          Swal.close();
-        } else { 
-          Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error, background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses.', background: '#002147', color: '#fff' }); 
-      }
+        if (res.ok) { registeredPhone = data.phone; document.getElementById('box-register').classList.add('hidden'); document.getElementById('box-otp').classList.remove('hidden'); Swal.close(); } 
+        else { Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error, background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses.', background: '#002147', color: '#fff' }); }
     });
-
     document.getElementById('otpForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); 
-      const otp = document.getElementById('otpCode').value;
-      
+      e.preventDefault(); const otp = document.getElementById('otpCode').value;
       Swal.fire({title: 'Verifikasi...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-      
       try {
-        const res = await fetch('/api/auth/verify', { 
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/json' }, 
-          body: JSON.stringify({ phone: registeredPhone, otp }) 
-        });
+        const res = await fetch('/api/auth/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: registeredPhone, otp }) });
         const data = await res.json();
-        
-        if (res.ok) { 
-          Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun aktif.', background: '#002147', color: '#fff' }).then(() => { 
-            window.location.href = '/?phone=' + registeredPhone; 
-          }); 
-        } else { 
-          Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.', background: '#002147', color: '#fff' }); 
-      }
+        if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun aktif.', background: '#002147', color: '#fff' }).then(() => { window.location.href = '/?phone=' + registeredPhone; }); } 
+        else { Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.', background: '#002147', color: '#fff' }); }
     });
   </script>
 </body>
@@ -423,95 +230,44 @@ cat << 'EOF' > public/forgot.html
   <div class="centered-modal-box">
     <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
     <h2 class="text-lg font-bold text-white mb-1">RESET PASSWORD</h2>
-    
     <form id="requestOtpForm">
       <p class="compact-text-small mb-5 text-center">Masukkan Nomor WA Anda untuk reset password.</p>
-      <div class="compact-input-wrapper">
-        <input type="number" id="phone" class="compact-input-box text-center" required placeholder="08123...">
-      </div>
+      <div class="compact-input-wrapper"><input type="number" id="phone" class="compact-input-box text-center" required placeholder="08123..."></div>
       <button type="submit" class="btn-yellow mt-2">Kirim OTP Reset</button>
     </form>
-
     <form id="resetForm" class="hidden mt-4">
       <hr class="mb-5 border-gray-600">
-      <div class="compact-input-wrapper">
-        <label class="compact-label text-center">Kode OTP</label>
-        <input type="number" id="otp" class="compact-input-box text-center text-xl tracking-[0.5em] font-bold" required placeholder="XXXX">
-      </div>
-      <div class="compact-input-wrapper">
-        <label class="compact-label text-center mt-2">Password Baru</label>
-        <input type="password" id="newPassword" class="compact-input-box" required placeholder="Ketik disini">
-        <i class="fas fa-eye password-toggle" onclick="togglePassword('newPassword', this)" style="top:70%;"></i>
-      </div>
+      <div class="compact-input-wrapper"><label class="compact-label text-center text-white">Kode OTP</label><input type="number" id="otp" class="compact-input-box text-center text-xl tracking-[0.5em] font-bold" required placeholder="XXXX"></div>
+      <div class="compact-input-wrapper"><label class="compact-label text-center text-white mt-2">Password Baru</label><input type="password" id="newPassword" class="compact-input-box" required placeholder="Ketik disini"><i class="fas fa-eye password-toggle" onclick="togglePassword('newPassword', this)" style="top:70%;"></i></div>
       <button type="submit" class="btn-yellow mt-3">Simpan Password</button>
     </form>
-
-    <div class="mt-6 text-center compact-text-small">
-      <a href="/" class="compact-link-small">Kembali ke Login</a>
-    </div>
+    <div class="mt-6 text-center compact-text-small"><a href="/" class="compact-link-small">Kembali ke Login</a></div>
   </div>
-
   <script>
     function togglePassword(id, el) {
       const input = document.getElementById(id);
-      if (input.type === 'password') { 
-          input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); 
-      } else { 
-          input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); 
-      }
+      if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
+      else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
     }
-    
     let resetPhone = '';
-    
     document.getElementById('requestOtpForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); 
-      const phone = document.getElementById('phone').value;
+      e.preventDefault(); const phone = document.getElementById('phone').value;
       Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
-      
       try {
-        const res = await fetch('/api/auth/forgot', { 
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json' }, 
-            body: JSON.stringify({ phone }) 
-        });
+        const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
         const data = await res.json();
-        
-        if (res.ok) { 
-          resetPhone = data.phone; 
-          document.getElementById('requestOtpForm').classList.add('hidden'); 
-          document.getElementById('resetForm').classList.remove('hidden'); 
-          Swal.close(); 
-        } else { 
-          Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-          Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); 
-      }
+        if (res.ok) { resetPhone = data.phone; document.getElementById('requestOtpForm').classList.add('hidden'); document.getElementById('resetForm').classList.remove('hidden'); Swal.close(); } 
+        else { Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); }
     });
-
     document.getElementById('resetForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); 
-      const otp = document.getElementById('otp').value; 
-      const newPassword = document.getElementById('newPassword').value;
+      e.preventDefault(); const otp = document.getElementById('otp').value; const newPassword = document.getElementById('newPassword').value;
       Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
-      
       try {
-        const res = await fetch('/api/auth/reset', { 
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json' }, 
-            body: JSON.stringify({ phone: resetPhone, otp, newPassword }) 
-        });
-        
-        if (res.ok) { 
-          Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.', background: '#002147', color: '#fff' }).then(() => { 
-              window.location.href = '/'; 
-          }); 
-        } else { 
-          Swal.fire({ icon: 'error', title: 'Gagal', text: 'OTP Salah.', background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-          Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); 
-      }
+        const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) });
+        if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.', background: '#002147', color: '#fff' }).then(() => { window.location.href = '/'; }); } 
+        else { Swal.fire({ icon: 'error', title: 'Gagal', text: 'OTP Salah.', background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); }
     });
   </script>
 </body>
@@ -1297,7 +1053,6 @@ cat << 'EOF' > public/riwayat_topup.html
       </div>
     </div>
   </div>
-
   <script>
     const user = JSON.parse(localStorage.getItem('user'));
     if(!user) window.location.href='/';
@@ -1336,6 +1091,444 @@ cat << 'EOF' > public/riwayat_topup.html
             customClass: { confirmButton: isDark ? 'text-[#001229] font-bold px-8' : 'text-white font-bold px-8' }
         });
     }
+  </script>
+</body>
+</html>
+EOF
+
+cat << 'EOF' > public/mutasi.html
+<!DOCTYPE html>
+<html lang="id" id="html-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mutasi Saldo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>tailwind.config={darkMode:'class'}</script>
+</head>
+<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
+  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+    
+    <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
+      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="history.back()"></i>
+      <h1 class="text-[18px] font-bold text-gray-800 dark:text-white">Mutasi Saldo</h1>
+    </div>
+
+    <div class="p-4" id="mutasiList">
+      <div class="mt-20 flex flex-col items-center justify-center text-gray-400">
+        <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
+        <p>Memuat data mutasi...</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    if(!user) window.location.href='/';
+    if(localStorage.getItem('darkMode')==='true' || localStorage.getItem('darkMode')===null) document.getElementById('html-root').classList.add('dark');
+    fetch('/api/user/mutasi',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone})}).then(r=>r.json()).then(d=>{
+      const l = document.getElementById('mutasiList');
+      if(!d.mutasi || d.mutasi.length===0) {
+        l.innerHTML='<div class="mt-20 flex flex-col items-center justify-center text-center px-6"><div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-gray-800"><i class="fas fa-exchange-alt text-gray-400 text-4xl"></i></div><h2 class="text-gray-800 dark:text-white font-bold text-lg mb-2">Belum Ada Mutasi</h2></div>';
+      } else {
+        l.innerHTML = d.mutasi.reverse().map(m=>`<div class="bg-white dark:bg-[#111c2e] border border-gray-200 dark:border-gray-800 rounded-2xl p-4 mb-3 flex justify-between shadow-sm"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full ${m.type==='in'?'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400':'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'} flex items-center justify-center text-lg shrink-0"><i class="fas ${m.type==='in'?'fa-arrow-down':'fa-arrow-up'}"></i></div><div><h4 class="font-bold text-[13px] text-gray-800 dark:text-gray-200">${m.desc}</h4><p class="text-[10px] text-gray-500">${m.date}</p></div></div><div class="font-bold text-[14px] flex items-center ${m.type==='in'?'text-green-600 dark:text-green-500':'text-red-600 dark:text-red-500'}">${m.type==='in'?'+':'-'} Rp ${m.amount.toLocaleString('id-ID')}</div></div>`).join('');
+      }
+    });
+  </script>
+</body>
+</html>
+EOF
+
+cat << 'EOF' > public/profile.html
+<!DOCTYPE html>
+<html lang="id" id="html-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil - DIGITAL FIKY STORE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>tailwind.config={darkMode:'class'}</script>
+</head>
+<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
+  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+    
+    <div class="bg-white dark:bg-[#050b14] p-8 pb-10 flex flex-col items-center relative rounded-b-[2rem] shadow-sm dark:shadow-lg">
+      <div class="w-24 h-24 bg-gray-100 dark:bg-[#1e293b] rounded-full flex justify-center items-center text-[#002147] dark:text-white font-extrabold text-4xl mt-2 mb-3 shadow-md overflow-hidden border-2 border-transparent" id="profileCircle">U</div>
+      <div class="flex items-center gap-3">
+        <h2 class="text-2xl font-bold tracking-wide text-gray-800 dark:text-gray-100" id="profileName">User Name</h2>
+        <i class="fas fa-pencil-alt text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 cursor-pointer text-lg" onclick="openEditModal()"></i>
+      </div>
+    </div>
+
+    <div class="mt-4 px-2">
+      <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800">
+        <i class="fas fa-envelope text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
+        <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Email</div>
+        <div class="text-sm text-gray-500 dark:text-gray-400" id="profileEmail">-</div>
+      </div>
+      <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800">
+        <i class="fas fa-phone-alt text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
+        <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">No. Telp</div>
+        <div class="text-sm text-gray-500 dark:text-gray-400" id="profilePhoneData">08...</div>
+      </div>
+      <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800">
+        <i class="fas fa-wallet text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
+        <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Saldo Akun</div>
+        <div class="text-sm font-bold text-[#002147] dark:text-yellow-400" id="profileSaldo">Rp 0</div>
+      </div>
+      <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800">
+        <i class="fas fa-shopping-cart text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
+        <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Total Transaksi</div>
+        <div class="text-sm font-bold text-[#002147] dark:text-yellow-400" id="profileTrx">0 Trx</div>
+      </div>
+      <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#1a2639]" onclick="location.href='/mutasi.html'">
+        <i class="fas fa-exchange-alt text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
+        <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Mutasi Saldo</div>
+        <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
+      </div>
+      <div class="flex items-center px-4 py-5 cursor-pointer hover:bg-red-50 dark:hover:bg-gray-800/50" onclick="logout()">
+        <i class="fas fa-sign-out-alt text-red-600 w-10 text-xl text-center"></i>
+        <div class="flex-1 text-[15px] font-bold text-red-600 ml-2">Keluar Akun</div>
+      </div>
+    </div>
+
+    <div id="editProfileModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/70">
+        <div class="bg-white dark:bg-[#0b1320] w-[90%] max-w-[340px] rounded-[1.25rem] border border-gray-200 dark:border-gray-800 shadow-2xl relative p-6 animate-slide-up">
+            <button onclick="closeEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            <h3 class="text-center text-gray-800 dark:text-white font-bold text-lg mb-6">Ubah Profil</h3>
+            
+            <div class="relative w-20 h-20 mx-auto mb-8">
+                <div class="w-full h-full rounded-full border-2 border-[#002147] dark:border-yellow-400 flex items-center justify-center text-3xl font-bold bg-gray-100 dark:bg-[#1e293b] overflow-hidden text-[#002147] dark:text-white" id="editModalInitial">U</div>
+                <input type="file" id="avatarInput" accept="image/*" class="hidden" onchange="previewAvatar(event)">
+                <div class="absolute bottom-0 right-0 bg-[#002147] dark:bg-yellow-400 rounded-full w-7 h-7 flex items-center justify-center text-white dark:text-[#0b1320] border-[3px] border-white dark:border-[#0b1320] cursor-pointer z-10" onclick="document.getElementById('avatarInput').click()"><i class="fas fa-camera text-[10px]"></i></div>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-[10px] text-gray-500 mb-1">Email (Hanya Baca)</label>
+                <input type="email" id="editEmail" readonly class="w-full bg-gray-100 dark:bg-[#1e293b]/50 border border-gray-300 dark:border-gray-800 rounded-lg px-3 py-3 text-gray-500 dark:text-gray-400 text-sm focus:outline-none cursor-not-allowed">
+            </div>
+            <div class="mb-4">
+                <label class="block text-[10px] text-gray-500 mb-1">Nama Pengguna</label>
+                <input type="text" id="editName" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400">
+            </div>
+            <div class="mb-4">
+                <label class="block text-[10px] text-gray-500 mb-1">Nomor Telepon</label>
+                <input type="number" id="editPhone" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400">
+            </div>
+
+            <div class="mb-6 hidden slide-down" id="editOtpContainer">
+                <label class="block text-[10px] text-gray-500 mb-1 text-center">OTP dikirim ke WA baru</label>
+                <input type="number" id="editOtpInput" class="w-full bg-white dark:bg-[#0b1320] border border-green-500 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-lg tracking-[0.5em] text-center font-bold focus:outline-none" placeholder="XXXX">
+            </div>
+
+            <button id="btnSimpanProfil" onclick="saveProfile()" class="w-full py-3.5 bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#001229] font-bold rounded-xl mb-3 shadow-md">Simpan Profil</button>
+            <button onclick="deleteAccount()" class="w-full py-3.5 bg-red-500/10 text-red-500 font-bold rounded-xl border border-red-500/20">Hapus Akun Permanen</button>
+        </div>
+    </div>
+
+    <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/info.html'"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div>
+      <div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
+    </div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    if(!user) window.location.href='/';
+    if(localStorage.getItem('darkMode')==='true' || localStorage.getItem('darkMode')===null) document.getElementById('html-root').classList.add('dark');
+    
+    function loadProfileData() {
+      document.getElementById('profileName').innerText = user.name;
+      document.getElementById('profilePhoneData').innerText = user.phone;
+      document.getElementById('profileEmail').innerText = user.email || 'Tidak ada email';
+      const pCircle = document.getElementById('profileCircle');
+      if(user.avatar) pCircle.innerHTML = `<img src="${user.avatar}" class="w-full h-full rounded-full object-cover">`;
+      else pCircle.innerText = user.name.charAt(0).toUpperCase();
+    }
+    loadProfileData();
+
+    fetch('/api/user/balance',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone})}).then(r=>r.json()).then(d=>{
+      document.getElementById('profileSaldo').innerText = 'Rp ' + d.saldo.toLocaleString('id-ID');
+    });
+
+    fetch('/api/user/transactions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone})}).then(r=>r.json()).then(d=>{
+      document.getElementById('profileTrx').innerText = (d.transactions ? d.transactions.length : 0) + ' Trx';
+    });
+
+    function logout(){
+      Swal.fire({title:'Keluar Akun?', text:'Apakah kamu yakin ingin keluar?', icon:'warning',showCancelButton:true,background:localStorage.getItem('darkMode')==='true'?'#0b1320':'#fff',color:localStorage.getItem('darkMode')==='true'?'#fff':'#000'}).then(r=>{
+        if(r.isConfirmed){localStorage.removeItem('user');window.location.href='/';}
+      });
+    }
+
+    let tempAvatarBase64 = null;
+    let isRequestingOtp = false;
+
+    function previewAvatar(event) {
+        const file = event.target.files[0];
+        if(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) { tempAvatarBase64 = e.target.result; document.getElementById('editModalInitial').innerHTML = `<img src="${tempAvatarBase64}" class="w-full h-full object-cover">`; };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function openEditModal() {
+        tempAvatarBase64 = user.avatar || null;
+        const eCircle = document.getElementById('editModalInitial');
+        if(tempAvatarBase64) eCircle.innerHTML = `<img src="${tempAvatarBase64}" class="w-full h-full object-cover">`;
+        else eCircle.innerText = user.name.charAt(0).toUpperCase();
+        document.getElementById('editEmail').value = user.email || 'Tidak ada email';
+        document.getElementById('editName').value = user.name;
+        document.getElementById('editPhone').value = user.phone.replace('62', '0');
+        document.getElementById('editProfileModal').classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+        document.getElementById('editProfileModal').classList.add('hidden');
+        isRequestingOtp = false;
+        document.getElementById('editOtpContainer').classList.add('hidden');
+        document.getElementById('btnSimpanProfil').innerText = 'Simpan Profil';
+        document.getElementById('editOtpInput').value = '';
+    }
+
+    async function saveProfile() {
+        const oldPhone = user.phone; const newName = document.getElementById('editName').value; 
+        const rawPhone = document.getElementById('editPhone').value; 
+        const newPhone = rawPhone.startsWith('0') ? '62' + rawPhone.slice(1) : rawPhone; 
+        const otp = document.getElementById('editOtpInput').value;
+        const isDark = localStorage.getItem('darkMode')==='true';
+        const bg = isDark?'#0b1320':'#fff'; const col = isDark?'#fff':'#000';
+        
+        if(!newName || !rawPhone) return Swal.fire({icon:'warning', title:'Gagal', text:'Nama & No WA wajib diisi!', background:bg, color:col});
+        
+        if(newPhone !== oldPhone && !isRequestingOtp) {
+            Swal.fire({title: 'Mengirim OTP...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }, background:bg, color:col});
+            try {
+                const res = await fetch('/api/auth/request-update-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ oldPhone, newPhone }) });
+                if(res.ok) {
+                    isRequestingOtp = true; document.getElementById('editOtpContainer').classList.remove('hidden'); 
+                    document.getElementById('btnSimpanProfil').innerText = 'Verifikasi & Simpan'; 
+                    Swal.fire({icon:'success', title:'Terkirim!', text:'Cek WA nomor baru.', background:bg, color:col});
+                } else { Swal.fire({icon:'error', title:'Gagal', text: (await res.json()).error, background:bg, color:col}); }
+            } catch(e) { Swal.fire({icon:'error', title:'Oops', text:'Kesalahan jaringan.', background:bg, color:col}); }
+            return;
+        }
+        
+        if(newPhone !== oldPhone && isRequestingOtp && !otp) return Swal.fire({icon:'warning', title:'Gagal', text:'Masukkan kode OTP 4 digit!', background:bg, color:col});
+        
+        Swal.fire({title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }, background:bg, color:col});
+        try {
+            const res = await fetch('/api/auth/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ oldPhone, newPhone, newName, otp, avatar: tempAvatarBase64 }) });
+            if(res.ok) {
+                user.name = newName; user.phone = (await res.json()).phone || newPhone; user.avatar = tempAvatarBase64;
+                localStorage.setItem('user', JSON.stringify(user));
+                Swal.fire({icon:'success', title:'Berhasil', text:'Profil diperbarui!', background:bg, color:col}).then(() => { location.reload(); });
+            } else { Swal.fire({icon:'error', title:'Gagal', text: (await res.json()).error, background:bg, color:col}); }
+        } catch(e) { Swal.fire({icon:'error', title:'Oops', text:'Kesalahan jaringan.', background:bg, color:col}); }
+    }
+
+    function deleteAccount() {
+        const isDark = localStorage.getItem('darkMode')==='true';
+        Swal.fire({ title: 'Hapus Akun Permanen?', text: "Akun dan sisa saldo Anda akan hangus!", icon: 'error', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: isDark?'#111c2e':'#gray-200', confirmButtonText: 'Ya, Hapus!', background: isDark?'#0b1320':'#fff', color: isDark?'#fff':'#000' }).then(async (result) => {
+            if (result.isConfirmed) {
+                Swal.fire({title: 'Menghapus...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }, background: isDark?'#0b1320':'#fff', color: isDark?'#fff':'#000'});
+                try {
+                    const res = await fetch('/api/auth/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) });
+                    if(res.ok) { localStorage.removeItem('user'); Swal.fire({icon:'success', title:'Terhapus', text:'Akun dihapus.', background: isDark?'#0b1320':'#fff', color: isDark?'#fff':'#000'}).then(() => { location.href = '/'; }); }
+                } catch(e) { Swal.fire({icon:'error', title:'Error', text:'Gagal menghapus.', background: isDark?'#0b1320':'#fff', color: isDark?'#fff':'#000'}); }
+            }
+        });
+    }
+  </script>
+</body>
+</html>
+EOF
+
+cat << 'EOF' > public/riwayat.html
+<!DOCTYPE html>
+<html lang="id" id="html-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riwayat Transaksi - DIGITAL FIKY STORE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="style.css">
+  <script>tailwind.config={darkMode:'class'}</script>
+</head>
+<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
+  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+    
+    <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
+      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i>
+      <h1 class="text-[18px] font-bold text-gray-800 dark:text-white">Riwayat Transaksi</h1>
+    </div>
+
+    <div class="mx-4 mt-4 bg-white dark:bg-[#111c2e] p-4 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm">
+        <div class="relative mb-4">
+            <i class="fas fa-search absolute left-3.5 top-3 text-gray-400 text-sm"></i>
+            <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400" placeholder="Cari transaksi...">
+        </div>
+        <div class="flex justify-between mb-2 gap-2">
+            <div id="btn-Semua" onclick="setStatusFilter('Semua')" class="flex-1 bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#0b1320] text-center py-2 rounded-full text-[11px] font-bold cursor-pointer shadow-sm transition-colors">Semua</div>
+            <div id="btn-Sukses" onclick="setStatusFilter('Sukses')" class="flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors">Sukses</div>
+            <div id="btn-Proses" onclick="setStatusFilter('Proses')" class="flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors">Proses</div>
+            <div id="btn-Gagal" onclick="setStatusFilter('Gagal')" class="flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors">Gagal</div>
+        </div>
+    </div>
+
+    <div class="px-4 mt-4" id="historyContainer">
+      <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
+        <i class="fas fa-spinner fa-spin text-4xl mb-4 text-gray-400"></i>
+      </div>
+    </div>
+
+    <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
+      <div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/info.html'"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div>
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
+    </div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    if(!user) window.location.href='/';
+    if(localStorage.getItem('darkMode')==='true' || localStorage.getItem('darkMode')===null) document.getElementById('html-root').classList.add('dark');
+    
+    let allTrx = [];
+    let currentFilter = 'Semua';
+
+    fetch('/api/user/transactions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone})})
+    .then(r=>r.json())
+    .then(d=>{
+      allTrx = d.transactions ? d.transactions.reverse() : [];
+      renderHistory();
+    })
+    .catch(e => {
+      document.getElementById('historyContainer').innerHTML = `<div class="mt-10 text-center text-red-500 font-bold">Gagal memuat data.</div>`;
+    });
+
+    function setStatusFilter(status) {
+        currentFilter = status;
+        const isD = localStorage.getItem('darkMode') === 'true';
+        ['Semua', 'Sukses', 'Proses', 'Gagal'].forEach(btn => {
+            const el = document.getElementById('btn-' + btn);
+            el.className = 'flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors';
+        });
+        const activeBtn = document.getElementById('btn-' + status);
+        activeBtn.className = `flex-1 ${isD ? 'bg-yellow-400 text-[#0b1320]' : 'bg-[#002147] text-white'} text-center py-2 rounded-full text-[11px] font-bold cursor-pointer shadow-sm transition-colors`;
+        filterHistory();
+    }
+
+    function filterHistory() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        let filtered = allTrx;
+        
+        if(currentFilter !== 'Semua') {
+            filtered = filtered.filter(i => i.status === currentFilter);
+        }
+        
+        if(query) {
+            filtered = filtered.filter(i => (i.produk && i.produk.toLowerCase().includes(query)) || (i.no_tujuan && i.no_tujuan.includes(query)) || (i.sn_ref && i.sn_ref.toLowerCase().includes(query)));
+        }
+        
+        const c = document.getElementById('historyContainer');
+        if(!filtered || filtered.length === 0){
+            c.innerHTML=`<div class="mt-10 flex flex-col items-center justify-center text-center px-6"><div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-gray-800"><i class="fas fa-receipt text-gray-400 text-4xl"></i></div><h2 class="text-gray-800 dark:text-white font-bold text-lg tracking-wide mb-2">Transaksi Tidak Ditemukan</h2></div>`;
+        } else {
+            c.innerHTML = filtered.map((i)=>{
+                let sc = i.status==='Proses' ? 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-800' : (i.status==='Sukses' ? 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 border-green-200 dark:border-green-800' : 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-800');
+                let rawIdx = allTrx.indexOf(i);
+                return `<div onclick="showDetailTrx(${rawIdx})" class="bg-white dark:bg-[#111c2e] p-4 rounded-2xl mb-3 border border-gray-200 dark:border-gray-800 shadow-sm flex justify-between items-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-[#0b1320] flex items-center justify-center text-gray-500 dark:text-gray-400 text-lg"><i class="fas fa-box"></i></div><div><h4 class="font-bold text-[13px] text-gray-800 dark:text-gray-200">${i.produk}</h4><p class="text-[10px] text-gray-500">${i.date}</p></div></div><div class="text-right"><p class="font-extrabold text-[14px] text-[#002147] dark:text-yellow-400 mb-1">Rp ${(i.harga||0).toLocaleString('id-ID')}</p><span class="text-[9px] font-bold px-2 py-0.5 rounded border ${sc} uppercase tracking-wider">${i.status}</span></div></div>`;
+            }).join('');
+        }
+    }
+
+    function renderHistory() { filterHistory(); }
+
+    window.showDetailTrx = function(idx){
+      const i = allTrx[idx];
+      const isD = localStorage.getItem('darkMode')==='true';
+      Swal.fire({
+        title: `<span class="font-bold ${isD?'text-white':'text-gray-800'} text-lg">Detail Transaksi</span>`,
+        html: `<div class="text-left mt-2 text-sm space-y-3 border-t ${isD?'border-gray-800':'border-gray-200'} pt-4">
+                 <div class="flex justify-between border-b ${isD?'border-gray-800':'border-gray-200'} pb-2"><span class="${isD?'text-gray-400':'text-gray-500'}">Produk</span><span class="${isD?'text-white':'text-gray-800'} font-bold text-right">${i.produk}</span></div>
+                 <div class="flex justify-between border-b ${isD?'border-gray-800':'border-gray-200'} pb-2"><span class="${isD?'text-gray-400':'text-gray-500'}">Tujuan</span><span class="${isD?'text-white':'text-gray-800'} font-bold text-right">${i.no_tujuan}</span></div>
+                 <div class="flex justify-between border-b ${isD?'border-gray-800':'border-gray-200'} pb-2"><span class="${isD?'text-gray-400':'text-gray-500'}">Status</span><span class="${i.status==='Sukses'?'text-green-500':(i.status==='Proses'?'text-yellow-500':'text-red-500')} font-bold text-right uppercase">${i.status}</span></div>
+                 <div class="flex justify-between border-b ${isD?'border-gray-800':'border-gray-200'} pb-2"><span class="${isD?'text-gray-400':'text-gray-500'}">SN/Ref</span><span class="${isD?'text-white':'text-gray-800'} font-medium text-right">${i.sn_ref||'-'}</span></div>
+                 <div class="mt-5 text-center"><p class="${isD?'text-gray-400':'text-gray-500'} text-xs mb-1">Total Harga</p><p class="text-3xl font-extrabold ${isD?'text-yellow-400':'text-[#002147]'}">Rp ${(i.harga||0).toLocaleString('id-ID')}</p></div>
+               </div>`,
+        background: isD?'#0b1320':'#fff', confirmButtonColor: isD?'#facc15':'#002147', confirmButtonText: 'Tutup',
+        customClass: { confirmButton: isD ? 'text-[#001229] font-bold px-8' : 'text-white font-bold px-8' }
+      });
+    }
+  </script>
+</body>
+</html>
+EOF
+
+cat << 'EOF' > public/info.html
+<!DOCTYPE html>
+<html lang="id" id="html-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pusat Informasi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script>tailwind.config = { darkMode: 'class' }</script>
+</head>
+<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
+  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+    
+    <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
+      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i>
+      <h1 class="text-[18px] font-bold text-gray-800 dark:text-white">Pusat Informasi</h1>
+    </div>
+
+    <div class="p-4" id="infoList">
+      <div class="mt-20 flex flex-col items-center justify-center text-gray-400">
+        <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
+        <p>Memuat informasi...</p>
+      </div>
+    </div>
+
+    <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/dashboard.html'">
+        <i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span>
+      </div>
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/riwayat.html'">
+        <i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span>
+      </div>
+      <div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400">
+        <i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span>
+      </div>
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/profile.html'">
+        <i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span>
+      </div>
+    </div>
+  </div>
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    if(!user) window.location.href='/';
+    if(localStorage.getItem('darkMode')==='true' || localStorage.getItem('darkMode')===null) document.getElementById('html-root').classList.add('dark');
+    fetch('/api/info').then(r=>r.json()).then(d=>{
+      const l = document.getElementById('infoList');
+      if(!d.info || d.info.length===0) {
+        l.innerHTML='<div class="mt-20 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500"><i class="fas fa-bell-slash text-5xl mb-4 opacity-50"></i><p class="text-sm">Belum ada info terbaru.</p></div>';
+      } else {
+        l.innerHTML = d.info.reverse().map(i=>`<div class="relative bg-white dark:bg-[#111c2e] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 mb-4 shadow-sm overflow-hidden"><div class="absolute -right-2 top-4 text-7xl opacity-10 dark:opacity-20 select-none">📢</div><div class="flex justify-between items-start mb-3 relative z-10"><h3 class="font-bold text-[#002147] dark:text-yellow-400 text-[15px] pr-2">${i.judul}</h3><span class="text-[10px] text-gray-500 bg-gray-100 dark:bg-black px-2 py-1 rounded-md border border-gray-200 dark:border-gray-800">${i.date}</span></div><p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed relative z-10">${i.isi}</p></div>`).join('');
+      }
+    });
   </script>
 </body>
 </html>
@@ -1847,7 +2040,7 @@ NC='\033[0m'
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}          💎 PANEL DIGITAL FIKY STORE (V139) 💎       ${NC}"
+    echo -e "${YELLOW}          💎 PANEL DIGITAL FIKY STORE (V140) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
@@ -2203,6 +2396,6 @@ EOF
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
 echo "=========================================================="
-echo "  SISTEM WEB V139 BERHASIL DIPERBARUI SECARA PENUH!       "
+echo "  SISTEM WEB V140 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
