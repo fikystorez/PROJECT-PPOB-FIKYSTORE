@@ -1,20 +1,19 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V130 (THE PERFECT UNCOMPRESSED CLOUD)
+# DIGITAL FIKY STORE - V131 (THE FLAWLESS GITHUB EDITION)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
   echo "Tolong jalankan script ini sebagai root (ketik: sudo su)"
   exit
 fi
-
 if command -v dos2unix > /dev/null 2>&1; then dos2unix "$0" > /dev/null 2>&1; fi
 
 DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V130 (FULL UNCOMPRESSED)"
+echo "    MENGINSTAL DIGITAL FIKY STORE V131 (FULL UNCOMPRESSED)"
 echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
@@ -52,7 +51,7 @@ cat << 'EOF' > package.json
 }
 EOF
 
-echo "[3/5] Membangun Antarmuka CSS..."
+echo "[3/5] Membangun Antarmuka CSS & HTML..."
 cat << 'EOF' > public/style.css
 body { 
     background-color: #fde047; 
@@ -163,12 +162,16 @@ body {
     border-radius: 0.5rem !important; 
     font-weight: 800 !important; 
 }
+.swal2-cancel { 
+    background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important; 
+    color: #ffffff !important; 
+    border-radius: 0.5rem !important; 
+    font-weight: 800 !important; 
+}
 .pb-safe { 
     padding-bottom: calc(1rem + env(safe-area-inset-bottom)); 
 }
 EOF
-
-echo "[3/5] Membangun Antarmuka HTML (Dashboard, Info, Riwayat, dll)..."
 
 cat << 'EOF' > public/index.html
 <!DOCTYPE html>
@@ -313,15 +316,8 @@ cat << 'EOF' > public/register.html
   <script>
     function togglePassword(id, el) {
       const input = document.getElementById(id);
-      if (input.type === 'password') { 
-        input.type = 'text'; 
-        el.classList.remove('fa-eye'); 
-        el.classList.add('fa-eye-slash'); 
-      } else { 
-        input.type = 'password'; 
-        el.classList.remove('fa-eye-slash'); 
-        el.classList.add('fa-eye'); 
-      }
+      if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
+      else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
     }
     
     let registeredPhone = '';
@@ -335,9 +331,7 @@ cat << 'EOF' > public/register.html
       Swal.fire({title: 'Memproses...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
       try {
         const res = await fetch('/api/auth/register', { 
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/json' }, 
-          body: JSON.stringify({ name, phone, email, password }) 
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, email, password }) 
         });
         const data = await res.json();
         if (res.ok) {
@@ -345,35 +339,24 @@ cat << 'EOF' > public/register.html
           document.getElementById('box-register').classList.add('hidden'); 
           document.getElementById('box-otp').classList.remove('hidden'); 
           Swal.close();
-        } else { 
-          Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error, background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses.', background: '#002147', color: '#fff' }); 
-      }
+        } else { Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error, background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses.', background: '#002147', color: '#fff' }); }
     });
 
     document.getElementById('otpForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); 
-      const otp = document.getElementById('otpCode').value;
+      e.preventDefault(); const otp = document.getElementById('otpCode').value;
       Swal.fire({title: 'Verifikasi...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
       try {
         const res = await fetch('/api/auth/verify', { 
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/json' }, 
-          body: JSON.stringify({ phone: registeredPhone, otp }) 
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: registeredPhone, otp }) 
         });
         const data = await res.json();
         if (res.ok) { 
           Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun aktif.', background: '#002147', color: '#fff' }).then(() => { 
             window.location.href = '/?phone=' + registeredPhone; 
           }); 
-        } else { 
-          Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.', background: '#002147', color: '#fff' }); 
-      }
+        } else { Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.', background: '#002147', color: '#fff' }); }
     });
   </script>
 </body>
@@ -427,58 +410,28 @@ cat << 'EOF' > public/forgot.html
   <script>
     function togglePassword(id, el) {
       const input = document.getElementById(id);
-      if (input.type === 'password') { 
-          input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); 
-      } else { 
-          input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); 
-      }
+      if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
+      else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
     }
     let resetPhone = '';
     document.getElementById('requestOtpForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); 
-      const phone = document.getElementById('phone').value;
+      e.preventDefault(); const phone = document.getElementById('phone').value;
       Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
       try {
-        const res = await fetch('/api/auth/forgot', { 
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json' }, 
-            body: JSON.stringify({ phone }) 
-        });
+        const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
         const data = await res.json();
-        if (res.ok) { 
-          resetPhone = data.phone; 
-          document.getElementById('requestOtpForm').classList.add('hidden'); 
-          document.getElementById('resetForm').classList.remove('hidden'); 
-          Swal.close(); 
-        } else { 
-          Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-          Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); 
-      }
+        if (res.ok) { resetPhone = data.phone; document.getElementById('requestOtpForm').classList.add('hidden'); document.getElementById('resetForm').classList.remove('hidden'); Swal.close(); } 
+        else { Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); }
     });
-
     document.getElementById('resetForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); 
-      const otp = document.getElementById('otp').value; 
-      const newPassword = document.getElementById('newPassword').value;
+      e.preventDefault(); const otp = document.getElementById('otp').value; const newPassword = document.getElementById('newPassword').value;
       Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
       try {
-        const res = await fetch('/api/auth/reset', { 
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json' }, 
-            body: JSON.stringify({ phone: resetPhone, otp, newPassword }) 
-        });
-        if (res.ok) { 
-          Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.', background: '#002147', color: '#fff' }).then(() => { 
-              window.location.href = '/'; 
-          }); 
-        } else { 
-          Swal.fire({ icon: 'error', title: 'Gagal', text: 'OTP Salah.', background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-          Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); 
-      }
+        const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) });
+        if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.', background: '#002147', color: '#fff' }).then(() => { window.location.href = '/'; }); } 
+        else { Swal.fire({ icon: 'error', title: 'Gagal', text: 'OTP Salah.', background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); }
     });
   </script>
 </body>
@@ -549,7 +502,6 @@ cat << 'EOF' > public/dashboard.html
             <h2 class="text-[19px] font-extrabold mt-0.5" id="displaySaldo">Rp •••••••</h2>
           </div>
         </div>
-        
         <div class="flex items-center gap-2">
           <button class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 border border-blue-400/20 hover:bg-blue-500/30 transition-colors z-10" onclick="bantuanAdmin()">
             <i class="fas fa-headset text-lg"></i>
@@ -588,9 +540,6 @@ cat << 'EOF' > public/dashboard.html
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/game.html'">
           <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-gamepad"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300">GAME</span>
         </div>
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Voucher', text: 'Fitur sedang dikembangkan.', background: localStorage.getItem('darkMode')==='true'?'#0b1320':'#fff', color: localStorage.getItem('darkMode')==='true'?'#fff':'#000'})">
-          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-ticket-alt"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300">VOUCHER</span>
-        </div>
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=ewallet'">
           <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-wallet"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300">E-WALLET</span>
         </div>
@@ -605,21 +554,6 @@ cat << 'EOF' > public/dashboard.html
         </div>
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=masaaktif'">
           <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-calendar-check"></i></div><span class="text-[10px] font-bold text-gray-600 dark:text-gray-300 text-center">MASA AKTIF</span>
-        </div>
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Perdana', text: 'Fitur sedang dikembangkan.', background: localStorage.getItem('darkMode')==='true'?'#0b1320':'#fff', color: localStorage.getItem('darkMode')==='true'?'#fff':'#000'})">
-          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-sim-card"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 text-center">PERDANA</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="mx-4 mt-8 mb-8">
-      <h3 class="font-extrabold text-gray-800 dark:text-white mb-4 text-[16px] ml-1">Produk Digital</h3>
-      <div class="grid grid-cols-4 gap-y-6 gap-x-3">
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=tagihan'">
-          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-file-invoice-dollar"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300">TAGIHAN</span>
-        </div>
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=etoll'">
-          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-id-card"></i></div><span class="text-[10px] font-bold text-gray-600 dark:text-gray-300 text-center">SALDO<br>E-TOLL</span>
         </div>
       </div>
     </div>
@@ -960,10 +894,6 @@ cat << 'EOF' > public/operator.html
       mandiri: {name:'Mandiri Emoney',logo:'MDR',digiBrand:'E-MONEY'}
     };
 
-    const pln = {
-      pln_token: {name:'Token PLN',logo:'fas fa-bolt',isIcon:true,digiBrand:'PLN'}
-    };
-
     const tagihanCategories = [
       { id: 'tagihan_pln_pasca', name: 'PLN Pasca', icon: 'fas fa-lightbulb', placeholder: 'Masukkan ID Pelanggan PLN...' },
       { id: 'tagihan_bpjs', name: 'BPJS', icon: 'fas fa-heartbeat', placeholder: 'Masukkan No BPJS (13 Digit)...' },
@@ -976,6 +906,8 @@ cat << 'EOF' > public/operator.html
       { id: 'tagihan_internet', name: 'Internet', icon: 'fas fa-globe', placeholder: 'Masukkan ID Pelanggan...' },
       { id: 'tagihan_pdam', name: 'PDAM', icon: 'fas fa-tint', placeholder: 'Masukkan Nomor Pelanggan...' }
     ];
+
+    const pln = { pln_token: {name:'Token PLN',logo:'fas fa-bolt',isIcon:true,digiBrand:'PLN'} };
 
     const a = {...o,...dC,...g,...e,...etoll,...pln};
     tagihanCategories.forEach(t => { a[t.id] = { name: t.name, logo: t.icon, isIcon: true, placeholder: t.placeholder }; });
@@ -1141,7 +1073,7 @@ cat << 'EOF' > public/operator.html
           document.getElementById('pageTitle').innerText = pr.name;
           let h = '';
           pr.items.forEach(i => {
-            h += `<div class="flex items-center px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#1a2639] transition" onclick="selectCategory('${i}')"><div class="flex-1 text-[13px] font-bold text-gray-800 dark:text-gray-200 uppercase">${i}</div><i class="fas fa-chevron-right text-gray-400 text-xs"></i></div>`;
+            h += `<div class="flex items-center px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#1a2639] transition" onclick="selectCategory('${i}')"><div class="flex-1 text-[13px] font-medium text-gray-800 dark:text-gray-200 uppercase">${i}</div><i class="fas fa-chevron-right text-gray-400 text-xs"></i></div>`;
           });
           document.getElementById('categoryList').innerHTML = h;
         } else {
@@ -1558,134 +1490,11 @@ cat << 'EOF' > public/profile.html
 </html>
 EOF
 
-cat << 'EOF' > public/riwayat.html
-<!DOCTYPE html>
-<html lang="id" id="html-root">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Riwayat Transaksi</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script>tailwind.config={darkMode:'class'}</script>
-</head>
-<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
-  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
-    
-    <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
-      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i>
-      <h1 class="text-[18px] font-bold text-gray-800 dark:text-white">Riwayat Transaksi</h1>
-    </div>
-
-    <div class="mx-4 mt-4 bg-white dark:bg-[#111c2e] p-4 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm">
-        <div class="relative mb-4">
-            <i class="fas fa-search absolute left-3.5 top-3 text-gray-400 text-sm"></i>
-            <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400" placeholder="Cari transaksi...">
-        </div>
-        <div class="flex justify-between mb-2 gap-2">
-            <div id="btn-Semua" onclick="setStatusFilter('Semua')" class="flex-1 bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#0b1320] text-center py-2 rounded-full text-[11px] font-bold cursor-pointer shadow-sm transition-colors">Semua</div>
-            <div id="btn-Sukses" onclick="setStatusFilter('Sukses')" class="flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors">Sukses</div>
-            <div id="btn-Proses" onclick="setStatusFilter('Proses')" class="flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors">Proses</div>
-            <div id="btn-Gagal" onclick="setStatusFilter('Gagal')" class="flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors">Gagal</div>
-        </div>
-    </div>
-
-    <div class="px-4 mt-4" id="historyContainer">
-      <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
-        <i class="fas fa-spinner fa-spin text-4xl mb-4 text-gray-400"></i>
-      </div>
-    </div>
-
-    <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40">
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
-      <div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/info.html'"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
-    </div>
-  </div>
-
-  <script>
-    const user = JSON.parse(localStorage.getItem('user'));
-    if(!user) window.location.href='/';
-    if(localStorage.getItem('darkMode')==='true' || localStorage.getItem('darkMode')===null) document.getElementById('html-root').classList.add('dark');
-    
-    let allTrx = [];
-    let currentFilter = 'Semua';
-
-    fetch('/api/user/transactions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone})})
-    .then(r=>r.json())
-    .then(d=>{
-      allTrx = d.transactions ? d.transactions.reverse() : [];
-      renderHistory();
-    })
-    .catch(e => {
-      document.getElementById('historyContainer').innerHTML = `<div class="mt-10 text-center text-red-500 font-bold">Gagal memuat data.</div>`;
-    });
-
-    function setStatusFilter(status) {
-        currentFilter = status;
-        const isD = localStorage.getItem('darkMode') === 'true';
-        ['Semua', 'Sukses', 'Proses', 'Gagal'].forEach(btn => {
-            const el = document.getElementById('btn-' + btn);
-            el.className = 'flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors';
-        });
-        const activeBtn = document.getElementById('btn-' + status);
-        activeBtn.className = `flex-1 ${isD ? 'bg-yellow-400 text-[#0b1320]' : 'bg-[#002147] text-white'} text-center py-2 rounded-full text-[11px] font-bold cursor-pointer shadow-sm transition-colors`;
-        filterHistory();
-    }
-
-    function filterHistory() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        let filtered = allTrx;
-        
-        if(currentFilter !== 'Semua') {
-            filtered = filtered.filter(i => i.status === currentFilter);
-        }
-        
-        if(query) {
-            filtered = filtered.filter(i => (i.produk && i.produk.toLowerCase().includes(query)) || (i.no_tujuan && i.no_tujuan.includes(query)) || (i.sn_ref && i.sn_ref.toLowerCase().includes(query)));
-        }
-        
-        const c = document.getElementById('historyContainer');
-        if(filtered.length === 0){
-            c.innerHTML=`<div class="mt-10 flex flex-col items-center justify-center text-center px-6"><div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-gray-800"><i class="fas fa-receipt text-gray-400 text-4xl"></i></div><h2 class="text-gray-800 dark:text-white font-bold text-lg tracking-wide mb-2">Transaksi Tidak Ditemukan</h2></div>`;
-        } else {
-            c.innerHTML = filtered.map((i)=>{
-                let sc = i.status==='Proses' ? 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-800' : (i.status==='Sukses' ? 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 border-green-200 dark:border-green-800' : 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-800');
-                let rawIdx = allTrx.indexOf(i);
-                return `<div onclick="showDetailTrx(${rawIdx})" class="bg-white dark:bg-[#111c2e] p-4 rounded-2xl mb-3 border border-gray-200 dark:border-gray-800 shadow-sm flex justify-between items-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-[#0b1320] flex items-center justify-center text-gray-500 dark:text-gray-400 text-lg"><i class="fas fa-box"></i></div><div><h4 class="font-bold text-[13px] text-gray-800 dark:text-gray-200">${i.produk}</h4><p class="text-[10px] text-gray-500">${i.date}</p></div></div><div class="text-right"><p class="font-extrabold text-[14px] text-[#002147] dark:text-yellow-400 mb-1">Rp ${(i.harga||0).toLocaleString('id-ID')}</p><span class="text-[9px] font-bold px-2 py-0.5 rounded border ${sc} uppercase tracking-wider">${i.status}</span></div></div>`;
-            }).join('');
-        }
-    }
-
-    function renderHistory() { filterHistory(); }
-
-    window.showDetailTrx = function(idx){
-      const i = allTrx[idx];
-      const isD = localStorage.getItem('darkMode')==='true';
-      Swal.fire({
-        title: `<span class="font-bold ${isD?'text-white':'text-gray-800'} text-lg">Detail Transaksi</span>`,
-        html: `<div class="text-left mt-2 text-sm space-y-3 border-t ${isD?'border-gray-800':'border-gray-200'} pt-4">
-                 <div class="flex justify-between border-b ${isD?'border-gray-800':'border-gray-200'} pb-2"><span class="${isD?'text-gray-400':'text-gray-500'}">Produk</span><span class="${isD?'text-white':'text-gray-800'} font-bold text-right">${i.produk}</span></div>
-                 <div class="flex justify-between border-b ${isD?'border-gray-800':'border-gray-200'} pb-2"><span class="${isD?'text-gray-400':'text-gray-500'}">Tujuan</span><span class="${isD?'text-white':'text-gray-800'} font-bold text-right">${i.no_tujuan}</span></div>
-                 <div class="flex justify-between border-b ${isD?'border-gray-800':'border-gray-200'} pb-2"><span class="${isD?'text-gray-400':'text-gray-500'}">Status</span><span class="${i.status==='Sukses'?'text-green-500':(i.status==='Proses'?'text-yellow-500':'text-red-500')} font-bold text-right uppercase">${i.status}</span></div>
-                 <div class="flex justify-between border-b ${isD?'border-gray-800':'border-gray-200'} pb-2"><span class="${isD?'text-gray-400':'text-gray-500'}">SN/Ref</span><span class="${isD?'text-white':'text-gray-800'} font-medium text-right">${i.sn_ref||'-'}</span></div>
-                 <div class="mt-5 text-center"><p class="${isD?'text-gray-400':'text-gray-500'} text-xs mb-1">Total Harga</p><p class="text-3xl font-extrabold ${isD?'text-yellow-400':'text-[#002147]'}">Rp ${(i.harga||0).toLocaleString('id-ID')}</p></div>
-               </div>`,
-        background: isD?'#0b1320':'#fff', confirmButtonColor: isD?'#facc15':'#002147', confirmButtonText: 'Tutup',
-        customClass: { confirmButton: isD ? 'text-[#001229] font-bold px-8' : 'text-white font-bold px-8' }
-      });
-    }
-  </script>
-</body>
-</html>
-EOF
-
 # ==========================================
-# NODE.JS BACKEND (FIX CACHE SPINNING & CEK SALDO)
+# NODE.JS BACKEND (FIX API CEK SALDO MUTER & DIGIFLAZZ)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
+
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
 const fs = require('fs');
@@ -1747,28 +1556,24 @@ app.post('/api/admin/broadcast', (req, res) => {
     res.json({ success: true, message: "Broadcast ditambahkan ke Pusat Informasi." });
 });
 
-// FIX BUG CACHE MUTER 5 MENIT
 app.post('/api/products', async (req, res) => {
     const { type, brand, category } = req.body;
     let config = loadJSON(configFile);
     let digiCache = loadJSON(digiCacheFile); 
     let filtered = [];
     
+    // FETCH DIGIFLAZZ (DENGAN BYPASS JIKA ERROR AGAR TIDAK MUTER TERUS)
     if(config.digiUser && config.digiKey) {
         if (Date.now() - digiCache.time > 300000 || !digiCache.data || digiCache.data.length === 0) { 
             try {
                 let sign = crypto.createHash('md5').update(config.digiUser + config.digiKey + "pricelist").digest('hex');
                 let digiRes = await axios.post('https://api.digiflazz.com/v1/price-list', { cmd: 'prepaid', username: config.digiUser, sign: sign }, { timeout: 5000 });
                 if(digiRes.data && digiRes.data.data) {
-                    digiCache.data = digiRes.data.data; 
-                    digiCache.time = Date.now(); 
-                    saveJSON(digiCacheFile, digiCache); 
+                    digiCache.data = digiRes.data.data; digiCache.time = Date.now(); saveJSON(digiCacheFile, digiCache); 
                 }
             } catch(e) {
-                // JIKA GAGAL, UPDATE WAKTU CACHE AGAR TIDAK SPAM API DAN MUTER TERUS
-                console.log("[DIGIFLAZZ API] Gagal Fetch Katalog. Melewati tunggu API.");
-                digiCache.time = Date.now();
-                saveJSON(digiCacheFile, digiCache);
+                console.log("[DIGIFLAZZ API] Timeout/Gagal Fetch Katalog. Bypass agar web tidak stuck.");
+                digiCache.time = Date.now(); saveJSON(digiCacheFile, digiCache);
             }
         }
         let products = digiCache.data || [];
@@ -1799,13 +1604,8 @@ app.post('/api/products', async (req, res) => {
     let localProducts = loadJSON(localProductsFile);
     let myLocals = localProducts.filter(p => {
         if(p.type !== type) return false;
-        
-        if(brand && p.brand) {
-            if(p.brand.toLowerCase() !== brand.toLowerCase()) return false;
-        } else if (brand && !p.brand) {
-            return false;
-        }
-
+        if(brand && p.brand) { if(p.brand.toLowerCase() !== brand.toLowerCase()) return false; } 
+        else if (brand && !p.brand) { return false; }
         if(type === 'data' && category) {
             if (p.category && p.category.toLowerCase().trim() === category.toLowerCase().trim()) return true;
             let kw = category.toLowerCase().split(' ');
@@ -1948,7 +1748,7 @@ app.post('/api/topup/request', (req, res) => {
     const expiry = method === 'QRIS Otomatis' ? Date.now() + 5*60*1000 : null; 
     const newTopup = { id: 'TU' + Date.now(), method, nominal, status: 'Proses', date: new Date().toLocaleString('id-ID'), expiry };
     db[phone].topup.push(newTopup); saveJSON(dbFile, db); 
-    sendTeleNotif(`💳 *PERMINTAAN TOP UP BARU*\n\n👤 Member: ${phone}\n💵 Nominal: Rp ${nominal.toLocaleString('id-ID')}\n🏦 Metode: ${method}`);
+    sendTeleNotif(`💳 *PERMINTAAN TOP UP BARU*\n\n👤 Member: ${phone}\n💵 Nominal: Rp ${nominal.toLocaleString('id-ID')}\n🏦 Metode: ${method}\n⏳ Status: Menunggu Pembayaran`);
     res.json({ message: 'Top up direkam' });
 });
 
@@ -1958,7 +1758,26 @@ app.post('/api/topup/history', (req, res) => {
     if (changed) saveJSON(dbFile, db); res.json({ history: history }); 
 });
 
-app.post('/api/admin/add_balance', async (req, res) => {
+app.get('/api/admin/backup', async (req, res) => {
+    let config = loadJSON(configFile);
+    if(!config.teleToken || !config.teleChatId) return res.status(400).json({ error: "Token/Chat ID Telegram belum disetting." });
+    try {
+        let zipName = `Backup_DigitalFikyStore_${Date.now()}.zip`;
+        exec(`zip -r ${zipName} database.json web_users.json config.json local_products.json info.json`, async (error) => {
+            if(error) return res.status(500).json({ error: "Gagal membuat file ZIP." });
+            const form = new FormData();
+            form.append('chat_id', config.teleChatId);
+            form.append('caption', `📦 *BACKUP MANUAL BERHASIL*\n\nTanggal: ${new Date().toLocaleString('id-ID')}`);
+            form.append('parse_mode', 'Markdown');
+            form.append('document', fs.createReadStream(zipName));
+            await axios.post(`https://api.telegram.org/bot${config.teleToken}/sendDocument`, form, { headers: form.getHeaders() });
+            fs.unlinkSync(zipName);
+            res.json({ message: "Backup sukses terkirim ke Telegram!" });
+        });
+    } catch (e) { res.status(500).json({ error: "Gagal mengirim ke Telegram." }); }
+});
+
+app.post('/api/admin/balance', async (req, res) => {
     const { identifier, amount, action } = req.body; let webUsers = loadJSON(webUsersFile); let db = loadJSON(dbFile);
     let targetPhone = null;
     if(identifier.includes('@')){
@@ -2020,8 +1839,7 @@ app.post('/api/auth/verify', (req, res) => {
     if (webUsers[phone] && webUsers[phone].otp) {
         if (String(webUsers[phone].otp).trim() === String(otp).trim()) {
             if (Date.now() > (webUsers[phone].otpExpiry || Infinity)) return res.status(400).json({ error: 'OTP kedaluwarsa.' });
-            webUsers[phone].isVerified = true; 
-            delete webUsers[phone].otp; delete webUsers[phone].otpExpiry; saveJSON(webUsersFile, webUsers);
+            webUsers[phone].isVerified = true; delete webUsers[phone].otp; delete webUsers[phone].otpExpiry; saveJSON(webUsersFile, webUsers);
             
             let db = loadJSON(dbFile); 
             if (!db[phone]) { db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] }; saveJSON(dbFile, db); } 
@@ -2365,12 +2183,14 @@ EOFNGINX
             pm2 restart $BOT_NAME > /dev/null 2>&1
             read -p "Enter..." ;;
         14)
+            clear
             echo "Memeriksa koneksi dan saldo Digiflazz..."
+            cd "$HOME/$DIR_NAME"
             node -e "
             const axios=require('axios');
             const crypto=require('crypto');
             const fs=require('fs');
-            let cfg=fs.existsSync('$HOME/$DIR_NAME/config.json')?JSON.parse(fs.readFileSync('$HOME/$DIR_NAME/config.json')):{};
+            let cfg=fs.existsSync('./config.json')?JSON.parse(fs.readFileSync('./config.json')):{};
             if(!cfg.digiUser || !cfg.digiKey){
                 console.log('❌ API Digiflazz belum diatur! Isi di menu 13 terlebih dahulu.');
                 process.exit();
