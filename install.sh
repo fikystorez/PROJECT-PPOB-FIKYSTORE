@@ -1,10 +1,10 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V134 (THE PURE RAW CLOUD EDITION)
+# DIGITAL FIKY STORE - V136 (THE ULTIMATE OWNER'S EDITION)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
-  echo "Tolong jalankan script ini sebagai root (ketik: sudo su)"
+  echo "Tolong jalankan script ini sebagai root (sudo su)"
   exit
 fi
 
@@ -16,7 +16,7 @@ DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V134 (RAW SCRIPT)       "
+echo "    MENGINSTAL DIGITAL FIKY STORE V136 (FULL SCRIPT)      "
 echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
@@ -32,9 +32,6 @@ echo "[2/5] Membuat direktori aplikasi dan web..."
 mkdir -p "$HOME/$DIR_NAME/public"
 cd "$HOME/$DIR_NAME"
 
-# ==========================================
-# 1. PACKAGE.JSON
-# ==========================================
 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
@@ -57,134 +54,123 @@ cat << 'EOF' > package.json
 }
 EOF
 
-# ==========================================
-# 2. STYLE CSS 
-# ==========================================
-echo "[3/5] Membangun Antarmuka CSS & HTML (Rapi & Tidak di-compress)..."
+echo "[3/5] Membangun Antarmuka CSS & HTML..."
+
 cat << 'EOF' > public/style.css
-body { 
-  background-color: #fde047; 
-  margin: 0; 
-  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; 
+body {
+  background-color: #fde047;
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
-.centered-modal-box { 
-  background-color: #002147; 
-  padding: 2.5rem 1.5rem 2rem 1.5rem; 
-  border-radius: 1.2rem; 
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); 
-  width: 90%; 
-  max-width: 360px; 
-  text-align: center; 
-  position: relative; 
-  z-index: 10; 
-  margin: auto; 
-  margin-top: 10vh; 
+.centered-modal-box {
+  background-color: #002147;
+  padding: 2.5rem 1.5rem 2rem 1.5rem;
+  border-radius: 1.2rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 360px;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+  margin: auto;
+  margin-top: 10vh;
 }
-.brand-logo-text { 
-  font-size: 1.8rem; 
-  font-weight: 900; 
-  background: linear-gradient(135deg, #fde047 0%, #facc15 100%); 
-  -webkit-background-clip: text; 
-  -webkit-text-fill-color: transparent; 
-  margin-bottom: 1.5rem; 
-  letter-spacing: 1px; 
-  text-transform: uppercase; 
+.brand-logo-text {
+  font-size: 1.8rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #fde047 0%, #facc15 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
-.compact-input-wrapper { 
-  position: relative; 
-  margin-bottom: 0.85rem; 
-  width: 100%; 
+.compact-input-wrapper {
+  position: relative;
+  margin-bottom: 0.85rem;
+  width: 100%;
 }
-.compact-input-box { 
-  width: 100%; 
-  padding: 0.6rem 0.75rem; 
-  border: 1px solid #334155; 
-  border-radius: 0.5rem; 
-  font-size: 0.875rem; 
-  outline: none; 
-  background-color: #ffffff; 
-  color: #0f172a; 
+.compact-input-box {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  outline: none;
+  background-color: #ffffff;
+  color: #0f172a;
 }
-.compact-input-box:focus { 
-  border-color: #fde047; 
-  box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3); 
+.compact-input-box:focus {
+  border-color: #fde047;
+  box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3);
 }
-.password-toggle { 
-  position: absolute; 
-  right: 12px; 
-  top: 50%; 
-  transform: translateY(-50%); 
-  cursor: pointer; 
-  color: #94a3b8; 
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #94a3b8;
 }
-.compact-text-small { 
-  font-size: 0.8rem; 
-  color: #cbd5e1; 
+.compact-text-small {
+  font-size: 0.8rem;
+  color: #cbd5e1;
 }
-.compact-link-small { 
-  font-size: 0.8rem; 
-  color: #fde047; 
-  text-decoration: none; 
-  font-weight: bold; 
+.compact-link-small {
+  font-size: 0.8rem;
+  color: #fde047;
+  text-decoration: none;
+  font-weight: bold;
 }
-.btn-yellow { 
-  width: 100%; 
-  padding: 0.625rem 1rem; 
-  background-color: #fde047; 
-  color: #002147; 
-  font-weight: bold; 
-  border-radius: 0.5rem; 
-  cursor: pointer; 
-  border: none; 
-  margin-top: 0.5rem; 
-  transition: all 0.2s; 
+.btn-yellow {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  background-color: #fde047;
+  color: #002147;
+  font-weight: bold;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  border: none;
+  margin-top: 0.5rem;
+  transition: all 0.2s;
 }
-.btn-yellow:hover { 
-  background-color: #facc15; 
+.btn-yellow:hover {
+  background-color: #facc15;
 }
-.hide-scrollbar::-webkit-scrollbar { 
-  display: none; 
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
-.hide-scrollbar { 
-  -ms-overflow-style: none; 
-  scrollbar-width: none; 
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
-.swal2-popup { 
-  background-color: #002147 !important; 
-  border-radius: 1.5rem !important; 
-  color: #ffffff !important; 
-  width: 320px !important; 
-  padding: 1.5rem 1.25rem 1.25rem !important; 
+.swal2-popup {
+  background-color: #002147 !important;
+  border-radius: 1.5rem !important;
+  color: #ffffff !important;
+  width: 320px !important;
+  padding: 1.5rem 1.25rem 1.25rem !important;
 }
-.swal2-title { 
-  color: #fde047 !important; 
-  font-size: 1.25rem !important; 
-  font-weight: 800 !important; 
+.swal2-title {
+  color: #fde047 !important;
+  font-size: 1.25rem !important;
+  font-weight: 800 !important;
 }
-.swal2-html-container { 
-  color: #cbd5e1 !important; 
-  font-size: 0.85rem !important; 
+.swal2-html-container {
+  color: #cbd5e1 !important;
+  font-size: 0.85rem !important;
 }
-.swal2-confirm { 
-  background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important; 
-  color: #001229 !important; 
-  border-radius: 0.5rem !important; 
-  font-weight: 800 !important; 
+.swal2-confirm {
+  background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important;
+  color: #001229 !important;
+  border-radius: 0.5rem !important;
+  font-weight: 800 !important;
 }
-.swal2-cancel { 
-  background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important; 
-  color: #ffffff !important; 
-  border-radius: 0.5rem !important; 
-  font-weight: 800 !important; 
-}
-.pb-safe { 
-  padding-bottom: calc(1rem + env(safe-area-inset-bottom)); 
+.pb-safe {
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
 }
 EOF
 
-# ==========================================
-# 3. HTML FILES (11 FILES - RAPI & FULL)
-# ==========================================
 cat << 'EOF' > public/index.html
 <!DOCTYPE html>
 <html lang="id">
@@ -201,7 +187,7 @@ cat << 'EOF' > public/index.html
   <div class="centered-modal-box">
     <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
     <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
-    <p class="compact-text-small mb-6" id="loginDesc">Silahkan masukkan data akun kamu!</p>
+    <p class="compact-text-small mb-6">Silahkan masukkan data akun kamu!</p>
     
     <form id="loginForm">
       <div class="compact-input-wrapper">
@@ -217,7 +203,7 @@ cat << 'EOF' > public/index.html
       <button type="submit" class="btn-yellow">Login Sekarang</button>
     </form>
 
-    <div class="mt-6 text-center compact-text-small" id="registerLink">
+    <div class="mt-6 text-center compact-text-small">
       Belum punya akun? <a href="/register.html" class="compact-link-small">Daftar disini</a>
     </div>
   </div>
@@ -236,13 +222,9 @@ cat << 'EOF' > public/index.html
     function togglePassword(id, el) {
       const input = document.getElementById(id);
       if (input.type === 'password') { 
-        input.type = 'text'; 
-        el.classList.remove('fa-eye'); 
-        el.classList.add('fa-eye-slash'); 
+        input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); 
       } else { 
-        input.type = 'password'; 
-        el.classList.remove('fa-eye-slash'); 
-        el.classList.add('fa-eye'); 
+        input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); 
       }
     }
     
@@ -253,15 +235,11 @@ cat << 'EOF' > public/index.html
       localStorage.setItem('savedPhone', identifier);
       
       Swal.fire({title: 'Memeriksa Data...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-      
       try {
         const res = await fetch('/api/auth/login', { 
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/json' }, 
-          body: JSON.stringify({ identifier, password }) 
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password }) 
         });
         const data = await res.json();
-        
         if (res.ok) { 
           localStorage.setItem('user', JSON.stringify(data.user)); 
           window.location.href = '/dashboard.html';
@@ -294,7 +272,6 @@ cat << 'EOF' > public/register.html
     <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
     <h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2>
     <p class="compact-text-small mb-4">Silahkan lengkapi data untuk mendaftar!</p>
-    
     <form id="registerForm">
       <div class="compact-input-wrapper">
         <input type="text" id="name" name="name" class="compact-input-box" required placeholder="Nama Lengkap">
@@ -311,7 +288,6 @@ cat << 'EOF' > public/register.html
       </div>
       <button type="submit" class="btn-yellow mt-1">Daftar Sekarang</button>
     </form>
-
     <div class="mt-4 text-center compact-text-small">
       Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a>
     </div>
@@ -321,7 +297,6 @@ cat << 'EOF' > public/register.html
     <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
     <h2 class="text-lg font-bold text-white mb-1">VERIFIKASI WA</h2>
     <p class="compact-text-small mb-5 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
-    
     <form id="otpForm">
       <div class="compact-input-wrapper">
         <input type="number" id="otpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX">
@@ -333,15 +308,8 @@ cat << 'EOF' > public/register.html
   <script>
     function togglePassword(id, el) {
       const input = document.getElementById(id);
-      if (input.type === 'password') { 
-        input.type = 'text'; 
-        el.classList.remove('fa-eye'); 
-        el.classList.add('fa-eye-slash'); 
-      } else { 
-        input.type = 'password'; 
-        el.classList.remove('fa-eye-slash'); 
-        el.classList.add('fa-eye'); 
-      }
+      if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
+      else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
     }
     
     let registeredPhone = '';
@@ -354,52 +322,35 @@ cat << 'EOF' > public/register.html
       const password = document.getElementById('password').value;
       
       Swal.fire({title: 'Memproses...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-      
       try {
         const res = await fetch('/api/auth/register', { 
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/json' }, 
-          body: JSON.stringify({ name, phone, email, password }) 
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, email, password }) 
         });
         const data = await res.json();
-        
         if (res.ok) {
           registeredPhone = data.phone; 
           document.getElementById('box-register').classList.add('hidden'); 
           document.getElementById('box-otp').classList.remove('hidden'); 
           Swal.close();
-        } else { 
-          Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error, background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses.', background: '#002147', color: '#fff' }); 
-      }
+        } else { Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error, background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses.', background: '#002147', color: '#fff' }); }
     });
 
     document.getElementById('otpForm').addEventListener('submit', async (e) => {
       e.preventDefault(); 
       const otp = document.getElementById('otpCode').value;
-      
       Swal.fire({title: 'Verifikasi...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-      
       try {
         const res = await fetch('/api/auth/verify', { 
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/json' }, 
-          body: JSON.stringify({ phone: registeredPhone, otp }) 
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: registeredPhone, otp }) 
         });
         const data = await res.json();
-        
         if (res.ok) { 
           Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun aktif.', background: '#002147', color: '#fff' }).then(() => { 
             window.location.href = '/?phone=' + registeredPhone; 
           }); 
-        } else { 
-          Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.', background: '#002147', color: '#fff' }); 
-      }
+        } else { Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.', background: '#002147', color: '#fff' }); }
     });
   </script>
 </body>
@@ -453,64 +404,29 @@ cat << 'EOF' > public/forgot.html
   <script>
     function togglePassword(id, el) {
       const input = document.getElementById(id);
-      if (input.type === 'password') { 
-        input.type = 'text'; 
-        el.classList.remove('fa-eye'); 
-        el.classList.add('fa-eye-slash'); 
-      } else { 
-        input.type = 'password'; 
-        el.classList.remove('fa-eye-slash'); 
-        el.classList.add('fa-eye'); 
-      }
+      if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
+      else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
     }
-    
     let resetPhone = '';
-    
     document.getElementById('requestOtpForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); 
-      const phone = document.getElementById('phone').value;
+      e.preventDefault(); const phone = document.getElementById('phone').value;
       Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
-      
       try {
-        const res = await fetch('/api/auth/forgot', { 
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) 
-        });
+        const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
         const data = await res.json();
-        
-        if (res.ok) { 
-          resetPhone = data.phone; 
-          document.getElementById('requestOtpForm').classList.add('hidden'); 
-          document.getElementById('resetForm').classList.remove('hidden'); 
-          Swal.close(); 
-        } else { 
-          Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-        Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); 
-      }
+        if (res.ok) { resetPhone = data.phone; document.getElementById('requestOtpForm').classList.add('hidden'); document.getElementById('resetForm').classList.remove('hidden'); Swal.close(); } 
+        else { Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); }
     });
 
     document.getElementById('resetForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); 
-      const otp = document.getElementById('otp').value; 
-      const newPassword = document.getElementById('newPassword').value;
+      e.preventDefault(); const otp = document.getElementById('otp').value; const newPassword = document.getElementById('newPassword').value;
       Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
-      
       try {
-        const res = await fetch('/api/auth/reset', { 
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) 
-        });
-        
-        if (res.ok) { 
-          Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.', background: '#002147', color: '#fff' }).then(() => { 
-            window.location.href = '/'; 
-          }); 
-        } else { 
-          Swal.fire({ icon: 'error', title: 'Gagal', text: 'OTP Salah.', background: '#002147', color: '#fff' }); 
-        }
-      } catch (err) { 
-        Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); 
-      }
+        const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) });
+        if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.', background: '#002147', color: '#fff' }).then(() => { window.location.href = '/'; }); } 
+        else { Swal.fire({ icon: 'error', title: 'Gagal', text: 'OTP Salah.', background: '#002147', color: '#fff' }); }
+      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); }
     });
   </script>
 </body>
@@ -528,7 +444,6 @@ cat << 'EOF' > public/dashboard.html
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script>tailwind.config = { darkMode: 'class' }</script>
 </head>
 <body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
   <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
@@ -619,7 +534,7 @@ cat << 'EOF' > public/dashboard.html
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/game.html'">
           <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-gamepad"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300">GAME</span>
         </div>
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Voucher', text: 'Fitur sedang dikembangkan.', background: '#0b1320', color: '#fff'})">
+        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Voucher', text: 'Fitur sedang dikembangkan.', background: localStorage.getItem('darkMode')==='true'?'#0b1320':'#fff', color: localStorage.getItem('darkMode')==='true'?'#fff':'#000'})">
           <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-ticket-alt"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300">VOUCHER</span>
         </div>
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=ewallet'">
@@ -631,7 +546,7 @@ cat << 'EOF' > public/dashboard.html
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=masaaktif'">
           <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-calendar-check"></i></div><span class="text-[10px] font-bold text-gray-600 dark:text-gray-300 text-center">MASA AKTIF</span>
         </div>
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Perdana', text: 'Fitur sedang dikembangkan.', background: '#0b1320', color: '#fff'})">
+        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Perdana', text: 'Fitur sedang dikembangkan.', background: localStorage.getItem('darkMode')==='true'?'#0b1320':'#fff', color: localStorage.getItem('darkMode')==='true'?'#fff':'#000'})">
           <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-sim-card"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 text-center">PERDANA</span>
         </div>
       </div>
@@ -715,7 +630,7 @@ cat << 'EOF' > public/dashboard.html
   </div>
 
   <script>
-    const user=JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('user'));
     if(!user) window.location.href='/';
     
     document.getElementById('headerGreeting').innerText="Hai, "+user.name;
@@ -1262,7 +1177,6 @@ cat << 'EOF' > public/info.html
     const user = JSON.parse(localStorage.getItem('user'));
     if(!user) window.location.href='/';
     if(localStorage.getItem('darkMode')==='true' || localStorage.getItem('darkMode')===null) document.getElementById('html-root').classList.add('dark');
-    
     fetch('/api/info').then(r=>r.json()).then(d=>{
       const l = document.getElementById('infoList');
       if(!d.info || d.info.length===0) {
@@ -1306,7 +1220,6 @@ cat << 'EOF' > public/mutasi.html
     const user = JSON.parse(localStorage.getItem('user'));
     if(!user) window.location.href='/';
     if(localStorage.getItem('darkMode')==='true' || localStorage.getItem('darkMode')===null) document.getElementById('html-root').classList.add('dark');
-    
     fetch('/api/user/mutasi',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone})}).then(r=>r.json()).then(d=>{
       const l = document.getElementById('mutasiList');
       if(!d.mutasi || d.mutasi.length===0) {
@@ -1737,12 +1650,10 @@ cat << 'EOF' > public/game.html
 </head>
 <body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
   <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative shadow-2xl overflow-x-hidden">
-    
     <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
       <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 dark:text-white" onclick="history.back()"></i>
       <h1 class="text-[18px] font-bold dark:text-white">Top Up Game</h1>
     </div>
-
     <div class="px-4 mt-6">
       <div class="bg-white dark:bg-[#111c2e] rounded-b-2xl rounded-t-xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm mt-4">
         <div class="bg-black p-4 flex items-center gap-2">
@@ -1880,24 +1791,19 @@ app.post('/api/products', async (req, res) => {
         else if (type === 'masaaktif') { filtered = products.filter(p => p.category === 'Masa Aktif' && p.brand.toLowerCase() === safeBrand); }
     }
 
-    let markupTiers = config.markupTiers || { tier1: 0, tier2: 0, tier3: 0, tier4: 0 };
+    let markupRules = config.markupRules || { l1: 10000, m1: 0, l2: 50000, m2: 0, l3: 100000, m3: 0, m4: 0 };
     let getMarkup = (price) => {
-        if (price < 10000) return parseInt(markupTiers.tier1) || 0;
-        if (price <= 50000) return parseInt(markupTiers.tier2) || 0;
-        if (price <= 100000) return parseInt(markupTiers.tier3) || 0;
-        return parseInt(markupTiers.tier4) || 0;
+        if (price <= markupRules.l1) return markupRules.m1;
+        if (price <= markupRules.l2) return markupRules.m2;
+        if (price <= markupRules.l3) return markupRules.m3;
+        return markupRules.m4;
     };
 
     let localProducts = loadJSON(localProductsFile);
     let myLocals = localProducts.filter(p => {
         if(p.type !== type) return false;
-        
-        if(brand && p.brand) {
-            if(p.brand.toLowerCase() !== brand.toLowerCase()) return false;
-        } else if (brand && !p.brand) {
-            return false;
-        }
-
+        if(brand && p.brand) { if(p.brand.toLowerCase() !== brand.toLowerCase()) return false; } 
+        else if (brand && !p.brand) { return false; }
         if(type === 'data' && category) {
             if (p.category && p.category.toLowerCase().trim() === category.toLowerCase().trim()) return true;
             let kw = category.toLowerCase().split(' ');
@@ -2238,7 +2144,7 @@ NC='\033[0m'
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}          💎 PANEL DIGITAL FIKY STORE (V134) 💎       ${NC}"
+    echo -e "${YELLOW}          💎 PANEL DIGITAL FIKY STORE (V136) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
@@ -2369,10 +2275,37 @@ while true; do clear
             fi
             ;;
         9)
-            read -p "Pasang Harga Tambahan (Markup Keuntungan, cth: 1000): " m1
-            cd "$HOME/$DIR_NAME" && node -e "const fs=require('fs');let file='./config.json';let cfg=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};cfg.markupTiers={tier1:parseInt('$m1')||0,tier2:parseInt('$m1')||0,tier3:parseInt('$m1')||0,tier4:parseInt('$m1')||0};fs.writeFileSync(file,JSON.stringify(cfg,null,2));console.log('Seting Pasang Harga Disimpan!');"
+            clear
+            echo -e "${CYAN}===============================================${NC}"
+            echo -e "${YELLOW}    📈 SETING PASANG HARGA (MARKUP CUSTOM)     ${NC}"
+            echo -e "${CYAN}===============================================${NC}"
+            echo "Atur keuntungan berdasarkan rentang harga modal."
+            echo "Contoh: Modal 0 - 10000, untung 500."
+            echo ""
+            read -p "1. Batas Atas Modal Tier 1 (cth: 10000) : " l1
+            read -p "   -> Keuntungan Modal 0 s/d $l1        : " m1
+            read -p "2. Batas Atas Modal Tier 2 (cth: 50000) : " l2
+            read -p "   -> Keuntungan Modal $l1 s/d $l2      : " m2
+            read -p "3. Batas Atas Modal Tier 3 (cth: 100000): " l3
+            read -p "   -> Keuntungan Modal $l2 s/d $l3      : " m3
+            read -p "4. -> Keuntungan Modal diatas $l3       : " m4
+            
+            cd "$HOME/$DIR_NAME"
+            node -e "
+            const fs=require('fs'); let file='./config.json';
+            let cfg=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};
+            cfg.markupRules = {
+                l1: parseInt('$l1')||10000, m1: parseInt('$m1')||0,
+                l2: parseInt('$l2')||50000, m2: parseInt('$m2')||0,
+                l3: parseInt('$l3')||100000, m3: parseInt('$m3')||0,
+                m4: parseInt('$m4')||0
+            };
+            fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
+            console.log('\n✅ Seting Pasang Harga Berhasil Disimpan!');
+            "
             pm2 restart $BOT_NAME > /dev/null 2>&1
-            read -p "Enter..." ;;
+            read -p "Tekan Enter untuk kembali..."
+            ;;
         10)
             echo "1. Tambah Produk 2. Hapus Produk"
             read -p "Pilih: " pr_menu
@@ -2478,14 +2411,14 @@ EOFNGINX
             clear
             echo "Memeriksa koneksi dan saldo Digiflazz..."
             cd "$HOME/$DIR_NAME" && node -e "
-            const axios=require('axios');
-            const crypto=require('crypto');
             const fs=require('fs');
             let cfg=fs.existsSync('./config.json')?JSON.parse(fs.readFileSync('./config.json')):{};
             if(!cfg.digiUser || !cfg.digiKey){
                 console.log('❌ API Digiflazz belum diatur! Isi di menu 13 terlebih dahulu.');
                 process.exit();
             }
+            const axios=require('axios');
+            const crypto=require('crypto');
             let sign=crypto.createHash('md5').update(cfg.digiUser+cfg.digiKey+'depo').digest('hex');
             axios.post('https://api.digiflazz.com/v1/cek-saldo',{cmd:'deposit',username:cfg.digiUser,sign:sign})
             .then(r=>{
@@ -2545,6 +2478,6 @@ EOF
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
 echo "=========================================================="
-echo "  SISTEM WEB V134 BERHASIL DIPERBARUI SECARA PENUH!       "
+echo "  SISTEM WEB V136 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
