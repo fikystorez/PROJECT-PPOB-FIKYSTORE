@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V137 (THE TELEGRAM NOTIF MASTERPIECE)
+# DIGITAL FIKY STORE - V138 (THE MULTI-BOT CLOUD EDITION)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
@@ -8,15 +8,13 @@ if [ "$EUID" -ne 0 ]; then
   exit
 fi
 
-if command -v dos2unix > /dev/null 2>&1; then 
-  dos2unix "$0" > /dev/null 2>&1
-fi
+if command -v dos2unix > /dev/null 2>&1; then dos2unix "$0" > /dev/null 2>&1; fi
 
 DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V137 (FULL RAW SCRIPT)  "
+echo "    MENGINSTAL DIGITAL FIKY STORE V138 (FULL UNCOMPRESSED)"
 echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
@@ -32,9 +30,6 @@ echo "[2/5] Membuat direktori aplikasi dan web..."
 mkdir -p "$HOME/$DIR_NAME/public"
 cd "$HOME/$DIR_NAME"
 
-# ==========================================
-# 1. PACKAGE.JSON
-# ==========================================
 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
@@ -57,134 +52,130 @@ cat << 'EOF' > package.json
 }
 EOF
 
-# ==========================================
-# 2. STYLE CSS 
-# ==========================================
-echo "[3/5] Membangun Antarmuka CSS & HTML (Rapi & Tidak di-compress)..."
+echo "[3/5] Membangun Antarmuka CSS..."
 cat << 'EOF' > public/style.css
 body { 
-  background-color: #fde047; 
-  margin: 0; 
-  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; 
+    background-color: #fde047; 
+    margin: 0; 
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; 
 }
 .centered-modal-box { 
-  background-color: #002147; 
-  padding: 2.5rem 1.5rem 2rem 1.5rem; 
-  border-radius: 1.2rem; 
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); 
-  width: 90%; 
-  max-width: 360px; 
-  text-align: center; 
-  position: relative; 
-  z-index: 10; 
-  margin: auto; 
-  margin-top: 10vh; 
+    background-color: #002147; 
+    padding: 2.5rem 1.5rem 2rem 1.5rem; 
+    border-radius: 1.2rem; 
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); 
+    width: 90%; 
+    max-width: 360px; 
+    text-align: center; 
+    position: relative; 
+    z-index: 10; 
+    margin: auto; 
+    margin-top: 10vh; 
 }
 .brand-logo-text { 
-  font-size: 1.8rem; 
-  font-weight: 900; 
-  background: linear-gradient(135deg, #fde047 0%, #facc15 100%); 
-  -webkit-background-clip: text; 
-  -webkit-text-fill-color: transparent; 
-  margin-bottom: 1.5rem; 
-  letter-spacing: 1px; 
-  text-transform: uppercase; 
+    font-size: 1.8rem; 
+    font-weight: 900; 
+    background: linear-gradient(135deg, #fde047 0%, #facc15 100%); 
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; 
+    margin-bottom: 1.5rem; 
+    letter-spacing: 1px; 
+    text-transform: uppercase; 
 }
 .compact-input-wrapper { 
-  position: relative; 
-  margin-bottom: 0.85rem; 
-  width: 100%; 
+    position: relative; 
+    margin-bottom: 0.85rem; 
+    width: 100%; 
 }
 .compact-input-box { 
-  width: 100%; 
-  padding: 0.6rem 0.75rem; 
-  border: 1px solid #334155; 
-  border-radius: 0.5rem; 
-  font-size: 0.875rem; 
-  outline: none; 
-  background-color: #ffffff; 
-  color: #0f172a; 
+    width: 100%; 
+    padding: 0.6rem 0.75rem; 
+    border: 1px solid #334155; 
+    border-radius: 0.5rem; 
+    font-size: 0.875rem; 
+    outline: none; 
+    background-color: #ffffff; 
+    color: #0f172a; 
 }
 .compact-input-box:focus { 
-  border-color: #fde047; 
-  box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3); 
+    border-color: #fde047; 
+    box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3); 
 }
 .password-toggle { 
-  position: absolute; 
-  right: 12px; 
-  top: 50%; 
-  transform: translateY(-50%); 
-  cursor: pointer; 
-  color: #94a3b8; 
+    position: absolute; 
+    right: 12px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    cursor: pointer; 
+    color: #94a3b8; 
 }
 .compact-text-small { 
-  font-size: 0.8rem; 
-  color: #cbd5e1; 
+    font-size: 0.8rem; 
+    color: #cbd5e1; 
 }
 .compact-link-small { 
-  font-size: 0.8rem; 
-  color: #fde047; 
-  text-decoration: none; 
-  font-weight: bold; 
+    font-size: 0.8rem; 
+    color: #fde047; 
+    text-decoration: none; 
+    font-weight: bold; 
 }
 .btn-yellow { 
-  width: 100%; 
-  padding: 0.625rem 1rem; 
-  background-color: #fde047; 
-  color: #002147; 
-  font-weight: bold; 
-  border-radius: 0.5rem; 
-  cursor: pointer; 
-  border: none; 
-  margin-top: 0.5rem; 
-  transition: all 0.2s; 
+    width: 100%; 
+    padding: 0.625rem 1rem; 
+    background-color: #fde047; 
+    color: #002147; 
+    font-weight: bold; 
+    border-radius: 0.5rem; 
+    cursor: pointer; 
+    border: none; 
+    margin-top: 0.5rem; 
+    transition: all 0.2s; 
 }
 .btn-yellow:hover { 
-  background-color: #facc15; 
+    background-color: #facc15; 
 }
 .hide-scrollbar::-webkit-scrollbar { 
-  display: none; 
+    display: none; 
 }
 .hide-scrollbar { 
-  -ms-overflow-style: none; 
-  scrollbar-width: none; 
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
 }
 .swal2-popup { 
-  background-color: #002147 !important; 
-  border-radius: 1.5rem !important; 
-  color: #ffffff !important; 
-  width: 320px !important; 
-  padding: 1.5rem 1.25rem 1.25rem !important; 
+    background-color: #002147 !important; 
+    border-radius: 1.5rem !important; 
+    color: #ffffff !important; 
+    width: 320px !important; 
+    padding: 1.5rem 1.25rem 1.25rem !important; 
 }
 .swal2-title { 
-  color: #fde047 !important; 
-  font-size: 1.25rem !important; 
-  font-weight: 800 !important; 
+    color: #fde047 !important; 
+    font-size: 1.25rem !important; 
+    font-weight: 800 !important; 
 }
 .swal2-html-container { 
-  color: #cbd5e1 !important; 
-  font-size: 0.85rem !important; 
+    color: #cbd5e1 !important; 
+    font-size: 0.85rem !important; 
 }
 .swal2-confirm { 
-  background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important; 
-  color: #001229 !important; 
-  border-radius: 0.5rem !important; 
-  font-weight: 800 !important; 
+    background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important; 
+    color: #001229 !important; 
+    border-radius: 0.5rem !important; 
+    font-weight: 800 !important; 
 }
 .swal2-cancel { 
-  background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important; 
-  color: #ffffff !important; 
-  border-radius: 0.5rem !important; 
-  font-weight: 800 !important; 
+    background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important; 
+    color: #ffffff !important; 
+    border-radius: 0.5rem !important; 
+    font-weight: 800 !important; 
 }
 .pb-safe { 
-  padding-bottom: calc(1rem + env(safe-area-inset-bottom)); 
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom)); 
 }
 EOF
 
-# ==========================================
-# 3. HTML FILES (11 FILES - RAPI & FULL)
-# ==========================================
+echo "[3/5] Membangun Antarmuka HTML (Dashboard, Info, Riwayat, dll)..."
+
 cat << 'EOF' > public/index.html
 <!DOCTYPE html>
 <html lang="id">
@@ -201,7 +192,7 @@ cat << 'EOF' > public/index.html
   <div class="centered-modal-box">
     <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
     <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
-    <p class="compact-text-small mb-6" id="loginDesc">Silahkan masukkan data akun kamu!</p>
+    <p class="compact-text-small mb-6" id="loginDesc">Silahkan masukkan email/no HP dan password kamu!</p>
     
     <form id="loginForm">
       <div class="compact-input-wrapper">
@@ -236,13 +227,13 @@ cat << 'EOF' > public/index.html
     function togglePassword(id, el) {
       const input = document.getElementById(id);
       if (input.type === 'password') { 
-        input.type = 'text'; 
-        el.classList.remove('fa-eye'); 
-        el.classList.add('fa-eye-slash'); 
+          input.type = 'text'; 
+          el.classList.remove('fa-eye'); 
+          el.classList.add('fa-eye-slash'); 
       } else { 
-        input.type = 'password'; 
-        el.classList.remove('fa-eye-slash'); 
-        el.classList.add('fa-eye'); 
+          input.type = 'password'; 
+          el.classList.remove('fa-eye-slash'); 
+          el.classList.add('fa-eye'); 
       }
     }
     
@@ -253,7 +244,6 @@ cat << 'EOF' > public/index.html
       localStorage.setItem('savedPhone', identifier);
       
       Swal.fire({title: 'Memeriksa Data...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-      
       try {
         const res = await fetch('/api/auth/login', { 
           method: 'POST', 
@@ -261,7 +251,6 @@ cat << 'EOF' > public/index.html
           body: JSON.stringify({ identifier, password }) 
         });
         const data = await res.json();
-        
         if (res.ok) { 
           localStorage.setItem('user', JSON.stringify(data.user)); 
           window.location.href = '/dashboard.html';
@@ -269,7 +258,7 @@ cat << 'EOF' > public/index.html
           Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); 
         }
       } catch (err) { 
-        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.', background: '#002147', color: '#fff' }); 
+          Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.', background: '#002147', color: '#fff' }); 
       }
     });
   </script>
@@ -469,7 +458,9 @@ cat << 'EOF' > public/forgot.html
       
       try {
         const res = await fetch('/api/auth/forgot', { 
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify({ phone }) 
         });
         const data = await res.json();
         
@@ -494,12 +485,14 @@ cat << 'EOF' > public/forgot.html
       
       try {
         const res = await fetch('/api/auth/reset', { 
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify({ phone: resetPhone, otp, newPassword }) 
         });
         
         if (res.ok) { 
           Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.', background: '#002147', color: '#fff' }).then(() => { 
-            window.location.href = '/'; 
+              window.location.href = '/'; 
           }); 
         } else { 
           Swal.fire({ icon: 'error', title: 'Gagal', text: 'OTP Salah.', background: '#002147', color: '#fff' }); 
@@ -1316,210 +1309,120 @@ cat << 'EOF' > public/mutasi.html
 </html>
 EOF
 
-cat << 'EOF' > public/profile.html
+cat << 'EOF' > public/game.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profil</title>
+  <title>Top Up Game</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
+  <script>tailwind.config={darkMode:'class'}</script>
+</head>
+<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
+  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative shadow-2xl overflow-x-hidden">
+    <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
+      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 dark:text-white" onclick="history.back()"></i>
+      <h1 class="text-[18px] font-bold dark:text-white">Top Up Game</h1>
+    </div>
+    <div class="px-4 mt-6">
+      <div class="bg-white dark:bg-[#111c2e] rounded-b-2xl rounded-t-xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm mt-4">
+        <div class="bg-black p-4 flex items-center gap-2">
+          <i class="fas fa-gamepad text-yellow-400 text-lg"></i>
+          <span class="font-bold text-white text-sm">Pilih Game</span>
+        </div>
+        <div class="p-4 grid grid-cols-3 gap-3">
+          <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=free_fire'">
+            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold text-sm mb-2">FF</div>
+            <div class="text-[11px] font-medium dark:text-gray-300 text-center">Free Fire</div>
+          </div>
+          <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=mobile_legends'">
+            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold text-xs text-center">ML</div>
+            <div class="text-[11px] font-medium dark:text-gray-300 text-center">Mobile<br>Legends</div>
+          </div>
+          <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=pubg_mobile'">
+            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold text-[10px] text-center">PUBG</div>
+            <div class="text-[11px] font-medium dark:text-gray-300 text-center">PUBG<br>Mobile</div>
+          </div>
+          <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=valorant'">
+            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold text-[11px] text-center">VALO</div>
+            <div class="text-[11px] font-medium dark:text-gray-300 text-center">Valorant</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    if(!localStorage.getItem('user'))window.location.href='/';
+    if(localStorage.getItem('darkMode')==='true' || localStorage.getItem('darkMode')===null)document.getElementById('html-root').classList.add('dark');
+  </script>
+</body>
+</html>
+EOF
+
+cat << 'EOF' > public/riwayat_topup.html
+<!DOCTYPE html>
+<html lang="id" id="html-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riwayat Topup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script>tailwind.config={darkMode:'class'}</script>
 </head>
 <body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
   <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
     
-    <div class="bg-white dark:bg-[#050b14] p-8 pb-10 flex flex-col items-center relative rounded-b-[2rem] shadow-sm dark:shadow-lg">
-      <div class="w-24 h-24 bg-gray-100 dark:bg-[#1e293b] rounded-full flex justify-center items-center text-[#002147] dark:text-white font-extrabold text-4xl mt-2 mb-3 shadow-md overflow-hidden border-2 border-transparent" id="profileCircle">U</div>
-      <div class="flex items-center gap-3">
-        <h2 class="text-2xl font-bold tracking-wide text-gray-800 dark:text-gray-100" id="profileName">User Name</h2>
-        <i class="fas fa-pencil-alt text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 cursor-pointer text-lg" onclick="openEditModal()"></i>
-      </div>
+    <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
+      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i>
+      <h1 class="text-[18px] font-bold text-gray-800 dark:text-white">Riwayat Top Up</h1>
     </div>
 
-    <div class="mt-4 px-2">
-      <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800">
-        <i class="fas fa-envelope text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
-        <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Email</div>
-        <div class="text-sm text-gray-500 dark:text-gray-400" id="profileEmail">-</div>
+    <div class="px-4 mt-6" id="historyContainer">
+      <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
+        <i class="fas fa-spinner fa-spin text-4xl mb-4 text-gray-400"></i>
       </div>
-      <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800">
-        <i class="fas fa-phone-alt text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
-        <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">No. Telp</div>
-        <div class="text-sm text-gray-500 dark:text-gray-400" id="profilePhoneData">08...</div>
-      </div>
-      <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800">
-        <i class="fas fa-wallet text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
-        <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Saldo Akun</div>
-        <div class="text-sm font-bold text-[#002147] dark:text-yellow-400" id="profileSaldo">Rp 0</div>
-      </div>
-      <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800">
-        <i class="fas fa-shopping-cart text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
-        <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Total Transaksi</div>
-        <div class="text-sm font-bold text-[#002147] dark:text-yellow-400" id="profileTrx">0 Trx</div>
-      </div>
-      <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#1a2639]" onclick="location.href='/mutasi.html'">
-        <i class="fas fa-exchange-alt text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
-        <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Mutasi Saldo</div>
-        <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
-      </div>
-      <div class="flex items-center px-4 py-5 cursor-pointer hover:bg-red-50 dark:hover:bg-gray-800/50" onclick="logout()">
-        <i class="fas fa-sign-out-alt text-red-600 w-10 text-xl text-center"></i>
-        <div class="flex-1 text-[15px] font-bold text-red-600 ml-2">Keluar Akun</div>
-      </div>
-    </div>
-
-    <div id="editProfileModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/70">
-        <div class="bg-white dark:bg-[#0b1320] w-[90%] max-w-[340px] rounded-[1.25rem] border border-gray-200 dark:border-gray-800 shadow-2xl relative p-6 animate-slide-up">
-            <button onclick="closeEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
-            <h3 class="text-center text-gray-800 dark:text-white font-bold text-lg mb-6">Ubah Profil</h3>
-            
-            <div class="relative w-20 h-20 mx-auto mb-8">
-                <div class="w-full h-full rounded-full border-2 border-[#002147] dark:border-yellow-400 flex items-center justify-center text-3xl font-bold bg-gray-100 dark:bg-[#1e293b] overflow-hidden text-[#002147] dark:text-white" id="editModalInitial">U</div>
-                <input type="file" id="avatarInput" accept="image/*" class="hidden" onchange="previewAvatar(event)">
-                <div class="absolute bottom-0 right-0 bg-[#002147] dark:bg-yellow-400 rounded-full w-7 h-7 flex items-center justify-center text-white dark:text-[#0b1320] border-[3px] border-white dark:border-[#0b1320] cursor-pointer z-10" onclick="document.getElementById('avatarInput').click()"><i class="fas fa-camera text-[10px]"></i></div>
-            </div>
-
-            <div class="mb-4">
-                <label class="block text-[10px] text-gray-500 mb-1">Email (Hanya Baca)</label>
-                <input type="email" id="editEmail" readonly class="w-full bg-gray-100 dark:bg-[#1e293b]/50 border border-gray-300 dark:border-gray-800 rounded-lg px-3 py-3 text-gray-500 dark:text-gray-400 text-sm focus:outline-none cursor-not-allowed">
-            </div>
-            <div class="mb-4">
-                <label class="block text-[10px] text-gray-500 mb-1">Nama Pengguna</label>
-                <input type="text" id="editName" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400">
-            </div>
-            <div class="mb-4">
-                <label class="block text-[10px] text-gray-500 mb-1">Nomor Telepon</label>
-                <input type="number" id="editPhone" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400">
-            </div>
-
-            <div class="mb-6 hidden slide-down" id="editOtpContainer">
-                <label class="block text-[10px] text-gray-500 mb-1 text-center">OTP dikirim ke WA baru</label>
-                <input type="number" id="editOtpInput" class="w-full bg-white dark:bg-[#0b1320] border border-green-500 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-lg tracking-[0.5em] text-center font-bold focus:outline-none" placeholder="XXXX">
-            </div>
-
-            <button id="btnSimpanProfil" onclick="saveProfile()" class="w-full py-3.5 bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#001229] font-bold rounded-xl mb-3 shadow-md">Simpan Profil</button>
-            <button onclick="deleteAccount()" class="w-full py-3.5 bg-red-500/10 text-red-500 font-bold rounded-xl border border-red-500/20">Hapus Akun Permanen</button>
-        </div>
-    </div>
-
-    <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40">
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/riwayat.html'"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/info.html'"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div>
-      <div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
     </div>
   </div>
-
   <script>
     const user = JSON.parse(localStorage.getItem('user'));
     if(!user) window.location.href='/';
     if(localStorage.getItem('darkMode')==='true' || localStorage.getItem('darkMode')===null) document.getElementById('html-root').classList.add('dark');
     
-    function loadProfileData() {
-      document.getElementById('profileName').innerText = user.name;
-      document.getElementById('profilePhoneData').innerText = user.phone;
-      document.getElementById('profileEmail').innerText = user.email || 'Tidak ada email';
-      const pCircle = document.getElementById('profileCircle');
-      if(user.avatar) pCircle.innerHTML = `<img src="${user.avatar}" class="w-full h-full rounded-full object-cover">`;
-      else pCircle.innerText = user.name.charAt(0).toUpperCase();
-    }
-    loadProfileData();
-
-    fetch('/api/user/balance',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone})}).then(r=>r.json()).then(d=>{
-      document.getElementById('profileSaldo').innerText = 'Rp ' + d.saldo.toLocaleString('id-ID');
+    fetch('/api/topup/history',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone})})
+    .then(r=>r.json())
+    .then(d=>{
+      const c = document.getElementById('historyContainer');
+      if(!d.history || d.history.length===0){
+        c.innerHTML=`<div class="mt-14 flex flex-col items-center justify-center text-center px-6"><div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-gray-800"><i class="fas fa-wallet text-gray-400 text-4xl"></i></div><h2 class="text-gray-800 dark:text-white font-bold text-lg tracking-wide mb-2">Belum Ada Top Up</h2><p class="text-gray-500 dark:text-gray-400 text-[13px] leading-relaxed mb-8 px-2">Anda belum melakukan pengisian saldo. Ayo isi saldo sekarang!</p><button class="bg-[#002147] text-white dark:bg-[#0b1320] dark:text-yellow-400 border border-transparent dark:border-gray-700 font-bold py-3 px-8 rounded-full shadow-lg hover:opacity-90 transition" onclick="location.href='/dashboard.html'">Top Up Sekarang</button></div>`;
+      } else {
+        window.topupData = d.history.reverse();
+        c.innerHTML = window.topupData.map((i,idx)=>{
+          let isExp = i.status==='Expired';
+          let sc = i.status==='Proses' ? 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-800' : (i.status==='Sukses' ? 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 border-green-200 dark:border-green-800' : 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-800');
+          let iconMethod = i.method.includes('QRIS') ? '<i class="fas fa-qrcode"></i>' : (i.method.includes('Admin') ? '<i class="fas fa-check-circle"></i>' : '<i class="fab fa-whatsapp"></i>');
+          let titleText = i.method.includes('Admin') ? 'Saldo ditambah Admin' : `Top Up ${i.method}`;
+          return `<div onclick="showDetailTopup(${idx})" class="bg-white dark:bg-[#111c2e] p-4 rounded-2xl mb-3 border border-gray-200 dark:border-gray-800 shadow-sm flex justify-between items-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors ${isExp?'opacity-70':''}"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-[#0b1320] flex items-center justify-center text-gray-500 dark:text-gray-400 text-lg">${iconMethod}</div><div><h4 class="font-bold text-[13px] text-gray-800 dark:text-gray-200">${titleText}</h4><p class="text-[10px] text-gray-500">${i.date}</p></div></div><div class="text-right"><p class="font-extrabold text-[14px] text-[#002147] dark:text-yellow-400 mb-1">Rp ${(i.nominal||0).toLocaleString('id-ID')}</p><span class="text-[9px] font-bold px-2 py-0.5 rounded border ${sc} uppercase tracking-wider">${i.status}</span></div></div>`;
+        }).join('');
+      }
     });
 
-    fetch('/api/user/transactions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone})}).then(r=>r.json()).then(d=>{
-      document.getElementById('profileTrx').innerText = (d.transactions ? d.transactions.length : 0) + ' Trx';
-    });
-
-    function logout(){
-      Swal.fire({title:'Keluar Akun?', text:'Apakah kamu yakin ingin keluar?', icon:'warning',showCancelButton:true,background:localStorage.getItem('darkMode')==='true'?'#0b1320':'#fff',color:localStorage.getItem('darkMode')==='true'?'#fff':'#000'}).then(r=>{
-        if(r.isConfirmed){localStorage.removeItem('user');window.location.href='/';}
-      });
-    }
-
-    let tempAvatarBase64 = null;
-    let isRequestingOtp = false;
-
-    function previewAvatar(event) {
-        const file = event.target.files[0];
-        if(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) { tempAvatarBase64 = e.target.result; document.getElementById('editModalInitial').innerHTML = `<img src="${tempAvatarBase64}" class="w-full h-full object-cover">`; };
-            reader.readAsDataURL(file);
-        }
-    }
-
-    function openEditModal() {
-        tempAvatarBase64 = user.avatar || null;
-        const eCircle = document.getElementById('editModalInitial');
-        if(tempAvatarBase64) eCircle.innerHTML = `<img src="${tempAvatarBase64}" class="w-full h-full object-cover">`;
-        else eCircle.innerText = user.name.charAt(0).toUpperCase();
-        document.getElementById('editEmail').value = user.email || 'Tidak ada email';
-        document.getElementById('editName').value = user.name;
-        document.getElementById('editPhone').value = user.phone.replace('62', '0');
-        document.getElementById('editProfileModal').classList.remove('hidden');
-    }
-
-    function closeEditModal() {
-        document.getElementById('editProfileModal').classList.add('hidden');
-        isRequestingOtp = false;
-        document.getElementById('editOtpContainer').classList.add('hidden');
-        document.getElementById('btnSimpanProfil').innerText = 'Simpan Profil';
-        document.getElementById('editOtpInput').value = '';
-    }
-
-    async function saveProfile() {
-        const oldPhone = user.phone; const newName = document.getElementById('editName').value; 
-        const rawPhone = document.getElementById('editPhone').value; 
-        const newPhone = rawPhone.startsWith('0') ? '62' + rawPhone.slice(1) : rawPhone; 
-        const otp = document.getElementById('editOtpInput').value;
-        const isDark = localStorage.getItem('darkMode')==='true';
-        const bg = isDark?'#0b1320':'#fff'; const col = isDark?'#fff':'#000';
-        
-        if(!newName || !rawPhone) return Swal.fire({icon:'warning', title:'Gagal', text:'Nama & No WA wajib diisi!', background:bg, color:col});
-        
-        if(newPhone !== oldPhone && !isRequestingOtp) {
-            Swal.fire({title: 'Mengirim OTP...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }, background:bg, color:col});
-            try {
-                const res = await fetch('/api/auth/request-update-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ oldPhone, newPhone }) });
-                if(res.ok) {
-                    isRequestingOtp = true; document.getElementById('editOtpContainer').classList.remove('hidden'); 
-                    document.getElementById('btnSimpanProfil').innerText = 'Verifikasi & Simpan'; 
-                    Swal.fire({icon:'success', title:'Terkirim!', text:'Cek WA nomor baru.', background:bg, color:col});
-                } else { Swal.fire({icon:'error', title:'Gagal', text: (await res.json()).error, background:bg, color:col}); }
-            } catch(e) { Swal.fire({icon:'error', title:'Oops', text:'Kesalahan jaringan.', background:bg, color:col}); }
-            return;
-        }
-        
-        if(newPhone !== oldPhone && isRequestingOtp && !otp) return Swal.fire({icon:'warning', title:'Gagal', text:'Masukkan kode OTP 4 digit!', background:bg, color:col});
-        
-        Swal.fire({title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }, background:bg, color:col});
-        try {
-            const res = await fetch('/api/auth/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ oldPhone, newPhone, newName, otp, avatar: tempAvatarBase64 }) });
-            if(res.ok) {
-                user.name = newName; user.phone = (await res.json()).phone || newPhone; user.avatar = tempAvatarBase64;
-                localStorage.setItem('user', JSON.stringify(user));
-                Swal.fire({icon:'success', title:'Berhasil', text:'Profil diperbarui!', background:bg, color:col}).then(() => { location.reload(); });
-            } else { Swal.fire({icon:'error', title:'Gagal', text: (await res.json()).error, background:bg, color:col}); }
-        } catch(e) { Swal.fire({icon:'error', title:'Oops', text:'Kesalahan jaringan.', background:bg, color:col}); }
-    }
-
-    function deleteAccount() {
-        const isDark = localStorage.getItem('darkMode')==='true';
-        Swal.fire({ title: 'Hapus Akun Permanen?', text: "Akun dan sisa saldo Anda akan hangus!", icon: 'error', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: isDark?'#111c2e':'#gray-200', confirmButtonText: 'Ya, Hapus!', background: isDark?'#0b1320':'#fff', color: isDark?'#fff':'#000' }).then(async (result) => {
-            if (result.isConfirmed) {
-                Swal.fire({title: 'Menghapus...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }, background: isDark?'#0b1320':'#fff', color: isDark?'#fff':'#000'});
-                try {
-                    const res = await fetch('/api/auth/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) });
-                    if(res.ok) { localStorage.removeItem('user'); Swal.fire({icon:'success', title:'Terhapus', text:'Akun dihapus.', background: isDark?'#0b1320':'#fff', color: isDark?'#fff':'#000'}).then(() => { location.href = '/'; }); }
-                } catch(e) { Swal.fire({icon:'error', title:'Error', text:'Gagal menghapus.', background: isDark?'#0b1320':'#fff', color: isDark?'#fff':'#000'}); }
-            }
+    window.showDetailTopup = function(index) {
+        const item = window.topupData[index];
+        const isDark = localStorage.getItem('darkMode') === 'true';
+        const bgPopup = isDark ? '#0b1320' : '#ffffff';
+        const textColor = isDark ? 'text-gray-200' : 'text-gray-800';
+        const mutedColor = isDark ? 'text-gray-400' : 'text-gray-500';
+        const borderColor = isDark ? 'border-gray-800' : 'border-gray-200';
+        let statusColor = item.status === 'Proses' ? 'text-yellow-500' : (item.status === 'Sukses' ? 'text-green-500' : 'text-red-500');
+        Swal.fire({
+            title: `<span class="font-bold ${isDark ? 'text-white' : 'text-gray-800'} text-lg">Detail Top Up</span>`,
+            html: `<div class="text-left mt-2 space-y-3 text-sm border-t ${borderColor} pt-4"><div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Waktu</span><span class="font-medium ${textColor} text-right">${item.date}</span></div><div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Nominal</span><span class="font-medium ${textColor} text-right">Rp ${(item.nominal||0).toLocaleString('id-ID')}</span></div><div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Metode</span><span class="font-medium ${textColor} text-right">${item.method}</span></div><div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Status</span><span class="font-bold ${statusColor} text-right uppercase">${item.status}</span></div><div class="mt-5 text-center"><p class="${mutedColor} text-xs mb-1">Total Bayar</p><p class="text-3xl font-extrabold ${isDark ? 'text-yellow-400' : 'text-[#002147]'}">Rp ${(item.nominal||0).toLocaleString('id-ID')}</p></div></div>`,
+            showConfirmButton: true, confirmButtonText: 'Tutup', confirmButtonColor: isDark ? '#facc15' : '#002147', background: bgPopup,
+            customClass: { confirmButton: isDark ? 'text-[#001229] font-bold px-8' : 'text-white font-bold px-8' }
         });
     }
   </script>
@@ -1528,7 +1431,7 @@ cat << 'EOF' > public/profile.html
 EOF
 
 # ==========================================
-# 4. NODE.JS BACKEND (NOTIF TELEGRAM DETAIL PISAH-PISAH)
+# 4. NODE.JS BACKEND (API & TELEGRAM TRIPLE BOT)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 
@@ -1571,11 +1474,32 @@ if (!fs.existsSync(localProductsFile)) saveJSON(localProductsFile, []);
 if (!fs.existsSync(digiCacheFile)) saveJSON(digiCacheFile, { time: 0, data: [] }); 
 if (!fs.existsSync(infoFile)) saveJSON(infoFile, []);
 
-const sendTeleNotif = async (message) => {
+// SISTEM 3 BOT TELEGRAM
+const sendTeleNotif = async (message, type = 'trx') => {
     let cfg = loadJSON(configFile);
-    if(!cfg.teleToken || !cfg.teleChatId) return;
+    let token, chatId;
+
+    if (type === 'trx') { 
+        token = cfg.teleTokenTrx || cfg.teleToken; 
+        chatId = cfg.teleChatIdTrx || cfg.teleChatId; 
+    }
+    else if (type === 'topup') { 
+        token = cfg.teleTokenTopup || cfg.teleToken; 
+        chatId = cfg.teleChatIdTopup || cfg.teleChatId; 
+    }
+    else if (type === 'backup') { 
+        token = cfg.teleTokenBackup || cfg.teleToken; 
+        chatId = cfg.teleChatIdBackup || cfg.teleChatId; 
+    }
+
+    if (!token || !chatId) return;
+
     try {
-        await axios.post(`https://api.telegram.org/bot${cfg.teleToken}/sendMessage`, { chat_id: cfg.teleChatId, text: message, parse_mode: 'Markdown' });
+        await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, { 
+            chat_id: chatId, 
+            text: message, 
+            parse_mode: 'Markdown' 
+        });
     } catch(e) { }
 };
 
@@ -1714,7 +1638,7 @@ app.post('/api/transaction/create', async (req, res) => {
             }); 
         } catch(err) {}
         
-        sendTeleNotif(`🛒 *TRANSAKSI BARU (ORDER MASUK)* 🛒\n\n👤 Nama: ${uData.name}\n✉️ Email: ${uData.email}\n📱 WA: ${phone}\n\n📦 Produk: ${name}\n📱 Tujuan: ${target}\n💰 Harga: Rp ${price.toLocaleString('id-ID')}\n🔄 Status: ${trxStatus}\n🔖 Ref: ${ref_id}`);
+        sendTeleNotif(`🛒 *TRANSAKSI BARU (ORDER MASUK)* 🛒\n\n👤 Nama: ${uData.name}\n✉️ Email: ${uData.email}\n📱 WA: ${phone}\n\n📦 Produk: ${name}\n📱 Tujuan: ${target}\n💰 Harga: Rp ${price.toLocaleString('id-ID')}\n🔄 Status: ${trxStatus}\n🔖 Ref: ${ref_id}`, 'trx');
         res.json({ message: 'Transaksi berhasil diproses.' });
     } catch (fatalErr) { 
         res.status(500).json({ error: 'Terjadi kesalahan internal.' }); 
@@ -1744,14 +1668,14 @@ setInterval(async () => {
                     if (digiData.status === 'Sukses') {
                         trx.status = 'Sukses'; trx.sn_ref = digiData.sn || trx.sn_ref; changed = true;
                         try { global.waSocket?.sendMessage(user.jid || phone+'@s.whatsapp.net', { text: `✅ *TRANSAKSI SUKSES*\n\n📦 Produk: *${trx.produk}*\n📱 Tujuan: ${trx.no_tujuan}\n🔖 SN: ${trx.sn_ref}\n\nPesanan kamu sudah masuk ya kak!` }); } catch(e){}
-                        sendTeleNotif(`✅ *UPDATE: TRANSAKSI SUKSES* ✅\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n🔖 SN: ${trx.sn_ref}`);
+                        sendTeleNotif(`✅ *UPDATE: TRANSAKSI SUKSES* ✅\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n🔖 SN: ${trx.sn_ref}`, 'trx');
                     } else if (digiData.status === 'Gagal') {
                         trx.status = 'Gagal'; trx.sn_ref = digiData.sn || digiData.message || 'Gagal Pusat';
                         user.saldo += trx.harga; 
                         user.mutasi.push({ id: 'REF'+Date.now(), type: 'in', amount: trx.harga, desc: `Refund: ${trx.produk}`, date: new Date().toLocaleString('id-ID') }); 
                         changed = true;
                         try { global.waSocket?.sendMessage(user.jid || phone+'@s.whatsapp.net', { text: `❌ *TRANSAKSI GAGAL*\n\n📦 Produk: *${trx.produk}*\n📱 Tujuan: ${trx.no_tujuan}\n⚠️ Alasan: ${digiData.message || 'Gangguan Server'}\n\n💰 Saldo Rp ${trx.harga.toLocaleString('id-ID')} telah dikembalikan otomatis ke akun kamu.` }); } catch(e){}
-                        sendTeleNotif(`❌ *UPDATE: TRANSAKSI GAGAL (REFUND)* ❌\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n⚠️ Alasan: ${digiData.message || 'Gagal Pusat'}`);
+                        sendTeleNotif(`❌ *UPDATE: TRANSAKSI GAGAL (REFUND)* ❌\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n⚠️ Alasan: ${digiData.message || 'Gagal Pusat'}`, 'trx');
                     }
                 } catch(e) {}
             }
@@ -1762,17 +1686,20 @@ setInterval(async () => {
 
 function startAutoBackup() {
     let config = loadJSON(configFile);
-    if(!config.teleToken || !config.teleChatId || !config.autoBackupHours || config.autoBackupHours <= 0) return;
+    let t = config.teleTokenBackup || config.teleToken;
+    let c = config.teleChatIdBackup || config.teleChatId;
+    if(!t || !c || !config.autoBackupHours || config.autoBackupHours <= 0) return;
+    
     let intervalMs = config.autoBackupHours * 60 * 60 * 1000; 
     setInterval(() => {
         let zipName = `AutoBackup_FikyStore_${Date.now()}.zip`;
         exec(`zip -r ${zipName} database.json web_users.json config.json local_products.json info.json`, async (error) => {
             if(!error) {
                 const form = new FormData();
-                form.append('chat_id', config.teleChatId);
+                form.append('chat_id', c);
                 form.append('caption', `⏳ *AUTO BACKUP (${config.autoBackupHours} Jam)*\n\nTanggal: ${new Date().toLocaleString('id-ID')}`);
                 form.append('document', fs.createReadStream(zipName));
-                try { await axios.post(`https://api.telegram.org/bot${config.teleToken}/sendDocument`, form, { headers: form.getHeaders() }); } catch(e) {}
+                try { await axios.post(`https://api.telegram.org/bot${t}/sendDocument`, form, { headers: form.getHeaders() }); } catch(e) {}
                 fs.unlinkSync(zipName);
             }
         });
@@ -1799,7 +1726,7 @@ app.post('/api/topup/request', (req, res) => {
     let depositAsli = nominal - kodeUnik;
     let saldoSebelum = db[phone].saldo;
 
-    sendTeleNotif(`⏳ *TOP UP MENUNGGU PEMBAYARAN* ⏳\n\n👤 Nama: ${uData.name}\n✉️ Email: ${uData.email}\n📱 WA: ${phone}\n⌚ Waktu: ${dateStr}\n🏦 Metode: ${method}\n\n💰 Jumlah Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n🎫 Kode Unik: ${kodeUnik}\n💵 Total Saldo Diterima: Rp ${nominal.toLocaleString('id-ID')}\n\n💳 *Riwayat Saldo*\n📉 Saldo Sebelum: Rp ${saldoSebelum.toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${saldoSebelum.toLocaleString('id-ID')} (Pending)`);
+    sendTeleNotif(`⏳ *TOP UP MENUNGGU PEMBAYARAN* ⏳\n\n👤 Nama: ${uData.name}\n✉️ Email: ${uData.email}\n📱 WA: ${phone}\n⌚ Waktu: ${dateStr}\n🏦 Metode: ${method}\n\n💰 Jumlah Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n🎫 Kode Unik: ${kodeUnik}\n💵 Total Saldo Diterima: Rp ${nominal.toLocaleString('id-ID')}\n\n💳 *Riwayat Saldo*\n📉 Saldo Sebelum: Rp ${saldoSebelum.toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${saldoSebelum.toLocaleString('id-ID')} (Pending)`, 'topup');
     res.json({ message: 'Top up direkam' });
 });
 
@@ -1811,17 +1738,19 @@ app.post('/api/topup/history', (req, res) => {
 
 app.get('/api/admin/backup', async (req, res) => {
     let config = loadJSON(configFile);
-    if(!config.teleToken || !config.teleChatId) return res.status(400).json({ error: "Token/Chat ID Telegram belum disetting." });
+    let t = config.teleTokenBackup || config.teleToken;
+    let c = config.teleChatIdBackup || config.teleChatId;
+    if(!t || !c) return res.status(400).json({ error: "Token/Chat ID Telegram Backup belum disetting." });
     try {
         let zipName = `Backup_DigitalFikyStore_${Date.now()}.zip`;
         exec(`zip -r ${zipName} database.json web_users.json config.json local_products.json info.json`, async (error) => {
             if(error) return res.status(500).json({ error: "Gagal membuat file ZIP." });
             const form = new FormData();
-            form.append('chat_id', config.teleChatId);
+            form.append('chat_id', c);
             form.append('caption', `📦 *BACKUP MANUAL BERHASIL*\n\nTanggal: ${new Date().toLocaleString('id-ID')}`);
             form.append('parse_mode', 'Markdown');
             form.append('document', fs.createReadStream(zipName));
-            await axios.post(`https://api.telegram.org/bot${config.teleToken}/sendDocument`, form, { headers: form.getHeaders() });
+            await axios.post(`https://api.telegram.org/bot${t}/sendDocument`, form, { headers: form.getHeaders() });
             fs.unlinkSync(zipName);
             res.json({ message: "Backup sukses terkirim ke Telegram!" });
         });
@@ -1855,7 +1784,7 @@ app.post('/api/admin/balance', async (req, res) => {
         
         try { await global.waSocket?.sendMessage(targetPhone + '@c.us', { text: `🎉 Saldo Anda berhasil ditambah Admin sebesar *Rp ${parseInt(amount).toLocaleString('id-ID')}*.\n💰 Sisa Saldo: *Rp ${db[targetPhone].saldo.toLocaleString('id-ID')}*` }); } catch(e) {}
         
-        sendTeleNotif(`✅ *PEMBAYARAN DITERIMA (TOP UP BERHASIL)* ✅\n\n👤 Nama: ${uData.name}\n✉️ Email: ${uData.email}\n📱 WA: ${targetPhone}\n⌚ Waktu: ${dateStr}\n🏦 Metode: Admin Fiky Store\n\n💰 Total Saldo Masuk: Rp ${parseInt(amount).toLocaleString('id-ID')}\n\n💳 *Riwayat Saldo*\n📉 Saldo Sebelum: Rp ${saldoSebelum.toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${saldoSesudah.toLocaleString('id-ID')}`);
+        sendTeleNotif(`✅ *PEMBAYARAN DITERIMA (TOP UP BERHASIL)* ✅\n\n👤 Nama: ${uData.name}\n✉️ Email: ${uData.email}\n📱 WA: ${targetPhone}\n⌚ Waktu: ${dateStr}\n🏦 Metode: Admin Fiky Store\n\n💰 Total Saldo Masuk: Rp ${parseInt(amount).toLocaleString('id-ID')}\n\n💳 *Riwayat Saldo*\n📉 Saldo Sebelum: Rp ${saldoSebelum.toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${saldoSesudah.toLocaleString('id-ID')}`, 'topup');
         
         res.json({ success: true, message: `\n✅ Saldo ${webUsers[targetPhone].name} berhasil ditambah!` });
     } else if (action === 'reduce') {
@@ -1904,8 +1833,7 @@ app.post('/api/auth/verify', (req, res) => {
             let db = loadJSON(dbFile); 
             if (!db[phone]) { db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] }; saveJSON(dbFile, db); } 
             
-            // PISAH NOTIF MEMBER BARU SUPER DETAIL
-            sendTeleNotif(`🎉 *MEMBER BARU BERGABUNG* 🎉\n\n👤 Nama: ${webUsers[phone].name}\n📱 WA: ${phone}\n✉️ Email: ${webUsers[phone].email}`);
+            sendTeleNotif(`🎊 *MEMBER BARU BERGABUNG* 🎊\n\n👤 Nama: ${webUsers[phone].name}\n📱 WA: ${phone}\n✉️ Email: ${webUsers[phone].email}`, 'trx');
             
             res.json({ message: 'Sukses!' });
         } else { res.status(400).json({ error: 'OTP Salah.' }); }
@@ -2009,7 +1937,7 @@ NC='\033[0m'
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}          💎 PANEL DIGITAL FIKY STORE (V137) 💎       ${NC}"
+    echo -e "${YELLOW}          💎 PANEL DIGITAL FIKY STORE (V138) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
@@ -2034,7 +1962,7 @@ while true; do clear
     echo -e "  ${GREEN}15.${NC} 🔄 Refresh Katalog Digiflazz (Hapus Cache API)"
     echo ""
     echo -e "${PURPLE}[ 🛡️ PUSAT KOMANDO TELEGRAM ]${NC}"
-    echo -e "  ${GREEN}16.${NC} ⚙️ Setup Telegram Bot (Token & Chat ID)"
+    echo -e "  ${GREEN}16.${NC} ⚙️ Setup Telegram Bot (Trx, Topup, Backup)"
     echo -e "  ${GREEN}17.${NC} ⏳ Setting Auto-Backup Telegram (Tiap X Jam)"
     echo -e "  ${GREEN}18.${NC} 💾 BACKUP DATA MANUAL KE TELEGRAM"
     echo -e "  ${GREEN}19.${NC} 📥 RESTORE DATA DARI DIRECT LINK"
@@ -2276,14 +2204,14 @@ EOFNGINX
             clear
             echo "Memeriksa koneksi dan saldo Digiflazz..."
             cd "$HOME/$DIR_NAME" && node -e "
+            const axios=require('axios');
+            const crypto=require('crypto');
             const fs=require('fs');
             let cfg=fs.existsSync('./config.json')?JSON.parse(fs.readFileSync('./config.json')):{};
             if(!cfg.digiUser || !cfg.digiKey){
                 console.log('❌ API Digiflazz belum diatur! Isi di menu 13 terlebih dahulu.');
                 process.exit();
             }
-            const axios=require('axios');
-            const crypto=require('crypto');
             let sign=crypto.createHash('md5').update(cfg.digiUser+cfg.digiKey+'depo').digest('hex');
             axios.post('https://api.digiflazz.com/v1/cek-saldo',{cmd:'deposit',username:cfg.digiUser,sign:sign})
             .then(r=>{
@@ -2300,9 +2228,31 @@ EOFNGINX
             pm2 restart all > /dev/null 2>&1
             read -p "Enter..." ;;
         16)
-            read -p "Token Bot Telegram: " tele_token
-            read -p "Chat ID Telegram: " tele_chatid
-            cd "$HOME/$DIR_NAME" && node -e "const fs=require('fs');let file='./config.json';let cfg=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};cfg.teleToken='$tele_token';cfg.teleChatId='$tele_chatid';fs.writeFileSync(file,JSON.stringify(cfg,null,2));"
+            clear
+            echo -e "${CYAN}===============================================${NC}"
+            echo -e "${YELLOW}      ⚙️ SETUP 3 BOT TELEGRAM (PISAH)           ${NC}"
+            echo -e "${CYAN}===============================================${NC}"
+            echo "1. Bot Transaksi (Order Masuk, Sukses, Gagal, Member Baru)"
+            echo "2. Bot Top Up (Request Top Up, Saldo Admin)"
+            echo "3. Bot Backup (Auto Backup & Manual Backup)"
+            echo "0. Kembali"
+            read -p "Pilih Bot yang mau disetting [0-3]: " bot_sel
+            if [ "$bot_sel" == "1" ]; then
+                read -p "Token Bot Transaksi: " t_trx
+                read -p "Chat ID Transaksi: " c_trx
+                cd "$HOME/$DIR_NAME" && node -e "const fs=require('fs');let file='./config.json';let cfg=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};cfg.teleTokenTrx='$t_trx';cfg.teleChatIdTrx='$c_trx';fs.writeFileSync(file,JSON.stringify(cfg,null,2));"
+                echo -e "${GREEN}✅ Bot Transaksi Disimpan!${NC}"
+            elif [ "$bot_sel" == "2" ]; then
+                read -p "Token Bot Top Up: " t_topup
+                read -p "Chat ID Top Up: " c_topup
+                cd "$HOME/$DIR_NAME" && node -e "const fs=require('fs');let file='./config.json';let cfg=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};cfg.teleTokenTopup='$t_topup';cfg.teleChatIdTopup='$c_topup';fs.writeFileSync(file,JSON.stringify(cfg,null,2));"
+                echo -e "${GREEN}✅ Bot Top Up Disimpan!${NC}"
+            elif [ "$bot_sel" == "3" ]; then
+                read -p "Token Bot Backup: " t_backup
+                read -p "Chat ID Backup: " c_backup
+                cd "$HOME/$DIR_NAME" && node -e "const fs=require('fs');let file='./config.json';let cfg=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};cfg.teleTokenBackup='$t_backup';cfg.teleChatIdBackup='$c_backup';fs.writeFileSync(file,JSON.stringify(cfg,null,2));"
+                echo -e "${GREEN}✅ Bot Backup Disimpan!${NC}"
+            fi
             pm2 restart all > /dev/null 2>&1
             read -p "Enter..." ;;
         17)
@@ -2313,7 +2263,7 @@ EOFNGINX
             read -p "Enter..." ;;
         18)
             cd "$HOME/$DIR_NAME"
-            node -e "const axios=require('axios');const fs=require('fs');const FormData=require('form-data');const {exec}=require('child_process');let cfg=fs.existsSync('./config.json')?JSON.parse(fs.readFileSync('./config.json')):{};let zipName='Backup_FikyStore_'+Date.now()+'.zip';exec('zip -r '+zipName+' database.json web_users.json config.json local_products.json info.json',(err)=>{const form=new FormData();form.append('chat_id',cfg.teleChatId);form.append('document',fs.createReadStream(zipName));axios.post('https://api.telegram.org/bot'+cfg.teleToken+'/sendDocument',form,{headers:form.getHeaders()}).then(()=>{console.log('Terkirim ke Telegram!');fs.unlinkSync(zipName);});});"
+            node -e "const axios=require('axios');const fs=require('fs');const FormData=require('form-data');const {exec}=require('child_process');let cfg=fs.existsSync('./config.json')?JSON.parse(fs.readFileSync('./config.json')):{};let t=cfg.teleTokenBackup||cfg.teleToken;let c=cfg.teleChatIdBackup||cfg.teleChatId;if(!t||!c){console.log('❌ Token/Chat ID Bot Backup belum disetting (Menu 16)');process.exit();}let zipName='Backup_FikyStore_'+Date.now()+'.zip';exec('zip -r '+zipName+' database.json web_users.json config.json local_products.json info.json',(err)=>{const form=new FormData();form.append('chat_id',c);form.append('document',fs.createReadStream(zipName));form.append('caption','📦 *BACKUP MANUAL BERHASIL*\n\nTanggal: '+new Date().toLocaleString('id-ID'));form.append('parse_mode','Markdown');axios.post('https://api.telegram.org/bot'+t+'/sendDocument',form,{headers:form.getHeaders()}).then(()=>{console.log('✅ Terkirim ke Telegram!');fs.unlinkSync(zipName);}).catch(e=>{console.log('❌ Gagal Kirim');});});"
             read -p "Tunggu sebentar lalu tekan Enter..." ;;
         19)
             read -p "Masukkan Direct Link (URL) File ZIP: " link_zip
@@ -2343,6 +2293,6 @@ EOF
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
 echo "=========================================================="
-echo "  SISTEM WEB V137 BERHASIL DIPERBARUI SECARA PENUH!       "
+echo "  SISTEM WEB V138 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
