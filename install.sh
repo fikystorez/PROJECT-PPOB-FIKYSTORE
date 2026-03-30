@@ -1,10 +1,10 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V136 (THE ULTIMATE OWNER'S EDITION)
+# DIGITAL FIKY STORE - V137 (THE TELEGRAM NOTIF MASTERPIECE)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
-  echo "Tolong jalankan script ini sebagai root (sudo su)"
+  echo "Tolong jalankan script ini sebagai root (ketik: sudo su)"
   exit
 fi
 
@@ -16,7 +16,7 @@ DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V136 (FULL SCRIPT)      "
+echo "    MENGINSTAL DIGITAL FIKY STORE V137 (FULL RAW SCRIPT)  "
 echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
@@ -32,6 +32,9 @@ echo "[2/5] Membuat direktori aplikasi dan web..."
 mkdir -p "$HOME/$DIR_NAME/public"
 cd "$HOME/$DIR_NAME"
 
+# ==========================================
+# 1. PACKAGE.JSON
+# ==========================================
 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
@@ -54,123 +57,134 @@ cat << 'EOF' > package.json
 }
 EOF
 
-echo "[3/5] Membangun Antarmuka CSS & HTML..."
-
+# ==========================================
+# 2. STYLE CSS 
+# ==========================================
+echo "[3/5] Membangun Antarmuka CSS & HTML (Rapi & Tidak di-compress)..."
 cat << 'EOF' > public/style.css
-body {
-  background-color: #fde047;
-  margin: 0;
-  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+body { 
+  background-color: #fde047; 
+  margin: 0; 
+  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; 
 }
-.centered-modal-box {
-  background-color: #002147;
-  padding: 2.5rem 1.5rem 2rem 1.5rem;
-  border-radius: 1.2rem;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-  width: 90%;
-  max-width: 360px;
-  text-align: center;
-  position: relative;
-  z-index: 10;
-  margin: auto;
-  margin-top: 10vh;
+.centered-modal-box { 
+  background-color: #002147; 
+  padding: 2.5rem 1.5rem 2rem 1.5rem; 
+  border-radius: 1.2rem; 
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); 
+  width: 90%; 
+  max-width: 360px; 
+  text-align: center; 
+  position: relative; 
+  z-index: 10; 
+  margin: auto; 
+  margin-top: 10vh; 
 }
-.brand-logo-text {
-  font-size: 1.8rem;
-  font-weight: 900;
-  background: linear-gradient(135deg, #fde047 0%, #facc15 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 1.5rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+.brand-logo-text { 
+  font-size: 1.8rem; 
+  font-weight: 900; 
+  background: linear-gradient(135deg, #fde047 0%, #facc15 100%); 
+  -webkit-background-clip: text; 
+  -webkit-text-fill-color: transparent; 
+  margin-bottom: 1.5rem; 
+  letter-spacing: 1px; 
+  text-transform: uppercase; 
 }
-.compact-input-wrapper {
-  position: relative;
-  margin-bottom: 0.85rem;
-  width: 100%;
+.compact-input-wrapper { 
+  position: relative; 
+  margin-bottom: 0.85rem; 
+  width: 100%; 
 }
-.compact-input-box {
-  width: 100%;
-  padding: 0.6rem 0.75rem;
-  border: 1px solid #334155;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  outline: none;
-  background-color: #ffffff;
-  color: #0f172a;
+.compact-input-box { 
+  width: 100%; 
+  padding: 0.6rem 0.75rem; 
+  border: 1px solid #334155; 
+  border-radius: 0.5rem; 
+  font-size: 0.875rem; 
+  outline: none; 
+  background-color: #ffffff; 
+  color: #0f172a; 
 }
-.compact-input-box:focus {
-  border-color: #fde047;
-  box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3);
+.compact-input-box:focus { 
+  border-color: #fde047; 
+  box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3); 
 }
-.password-toggle {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: #94a3b8;
+.password-toggle { 
+  position: absolute; 
+  right: 12px; 
+  top: 50%; 
+  transform: translateY(-50%); 
+  cursor: pointer; 
+  color: #94a3b8; 
 }
-.compact-text-small {
-  font-size: 0.8rem;
-  color: #cbd5e1;
+.compact-text-small { 
+  font-size: 0.8rem; 
+  color: #cbd5e1; 
 }
-.compact-link-small {
-  font-size: 0.8rem;
-  color: #fde047;
-  text-decoration: none;
-  font-weight: bold;
+.compact-link-small { 
+  font-size: 0.8rem; 
+  color: #fde047; 
+  text-decoration: none; 
+  font-weight: bold; 
 }
-.btn-yellow {
-  width: 100%;
-  padding: 0.625rem 1rem;
-  background-color: #fde047;
-  color: #002147;
-  font-weight: bold;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  border: none;
-  margin-top: 0.5rem;
-  transition: all 0.2s;
+.btn-yellow { 
+  width: 100%; 
+  padding: 0.625rem 1rem; 
+  background-color: #fde047; 
+  color: #002147; 
+  font-weight: bold; 
+  border-radius: 0.5rem; 
+  cursor: pointer; 
+  border: none; 
+  margin-top: 0.5rem; 
+  transition: all 0.2s; 
 }
-.btn-yellow:hover {
-  background-color: #facc15;
+.btn-yellow:hover { 
+  background-color: #facc15; 
 }
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
+.hide-scrollbar::-webkit-scrollbar { 
+  display: none; 
 }
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.hide-scrollbar { 
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
 }
-.swal2-popup {
-  background-color: #002147 !important;
-  border-radius: 1.5rem !important;
-  color: #ffffff !important;
-  width: 320px !important;
-  padding: 1.5rem 1.25rem 1.25rem !important;
+.swal2-popup { 
+  background-color: #002147 !important; 
+  border-radius: 1.5rem !important; 
+  color: #ffffff !important; 
+  width: 320px !important; 
+  padding: 1.5rem 1.25rem 1.25rem !important; 
 }
-.swal2-title {
-  color: #fde047 !important;
-  font-size: 1.25rem !important;
-  font-weight: 800 !important;
+.swal2-title { 
+  color: #fde047 !important; 
+  font-size: 1.25rem !important; 
+  font-weight: 800 !important; 
 }
-.swal2-html-container {
-  color: #cbd5e1 !important;
-  font-size: 0.85rem !important;
+.swal2-html-container { 
+  color: #cbd5e1 !important; 
+  font-size: 0.85rem !important; 
 }
-.swal2-confirm {
-  background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important;
-  color: #001229 !important;
-  border-radius: 0.5rem !important;
-  font-weight: 800 !important;
+.swal2-confirm { 
+  background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important; 
+  color: #001229 !important; 
+  border-radius: 0.5rem !important; 
+  font-weight: 800 !important; 
 }
-.pb-safe {
-  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+.swal2-cancel { 
+  background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important; 
+  color: #ffffff !important; 
+  border-radius: 0.5rem !important; 
+  font-weight: 800 !important; 
+}
+.pb-safe { 
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom)); 
 }
 EOF
 
+# ==========================================
+# 3. HTML FILES (11 FILES - RAPI & FULL)
+# ==========================================
 cat << 'EOF' > public/index.html
 <!DOCTYPE html>
 <html lang="id">
@@ -187,7 +201,7 @@ cat << 'EOF' > public/index.html
   <div class="centered-modal-box">
     <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
     <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
-    <p class="compact-text-small mb-6">Silahkan masukkan data akun kamu!</p>
+    <p class="compact-text-small mb-6" id="loginDesc">Silahkan masukkan data akun kamu!</p>
     
     <form id="loginForm">
       <div class="compact-input-wrapper">
@@ -203,7 +217,7 @@ cat << 'EOF' > public/index.html
       <button type="submit" class="btn-yellow">Login Sekarang</button>
     </form>
 
-    <div class="mt-6 text-center compact-text-small">
+    <div class="mt-6 text-center compact-text-small" id="registerLink">
       Belum punya akun? <a href="/register.html" class="compact-link-small">Daftar disini</a>
     </div>
   </div>
@@ -222,9 +236,13 @@ cat << 'EOF' > public/index.html
     function togglePassword(id, el) {
       const input = document.getElementById(id);
       if (input.type === 'password') { 
-        input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); 
+        input.type = 'text'; 
+        el.classList.remove('fa-eye'); 
+        el.classList.add('fa-eye-slash'); 
       } else { 
-        input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); 
+        input.type = 'password'; 
+        el.classList.remove('fa-eye-slash'); 
+        el.classList.add('fa-eye'); 
       }
     }
     
@@ -235,11 +253,15 @@ cat << 'EOF' > public/index.html
       localStorage.setItem('savedPhone', identifier);
       
       Swal.fire({title: 'Memeriksa Data...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+      
       try {
         const res = await fetch('/api/auth/login', { 
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password }) 
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json' }, 
+          body: JSON.stringify({ identifier, password }) 
         });
         const data = await res.json();
+        
         if (res.ok) { 
           localStorage.setItem('user', JSON.stringify(data.user)); 
           window.location.href = '/dashboard.html';
@@ -272,6 +294,7 @@ cat << 'EOF' > public/register.html
     <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
     <h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2>
     <p class="compact-text-small mb-4">Silahkan lengkapi data untuk mendaftar!</p>
+    
     <form id="registerForm">
       <div class="compact-input-wrapper">
         <input type="text" id="name" name="name" class="compact-input-box" required placeholder="Nama Lengkap">
@@ -288,6 +311,7 @@ cat << 'EOF' > public/register.html
       </div>
       <button type="submit" class="btn-yellow mt-1">Daftar Sekarang</button>
     </form>
+
     <div class="mt-4 text-center compact-text-small">
       Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a>
     </div>
@@ -297,6 +321,7 @@ cat << 'EOF' > public/register.html
     <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
     <h2 class="text-lg font-bold text-white mb-1">VERIFIKASI WA</h2>
     <p class="compact-text-small mb-5 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
+    
     <form id="otpForm">
       <div class="compact-input-wrapper">
         <input type="number" id="otpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX">
@@ -308,8 +333,15 @@ cat << 'EOF' > public/register.html
   <script>
     function togglePassword(id, el) {
       const input = document.getElementById(id);
-      if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
-      else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
+      if (input.type === 'password') { 
+        input.type = 'text'; 
+        el.classList.remove('fa-eye'); 
+        el.classList.add('fa-eye-slash'); 
+      } else { 
+        input.type = 'password'; 
+        el.classList.remove('fa-eye-slash'); 
+        el.classList.add('fa-eye'); 
+      }
     }
     
     let registeredPhone = '';
@@ -322,35 +354,52 @@ cat << 'EOF' > public/register.html
       const password = document.getElementById('password').value;
       
       Swal.fire({title: 'Memproses...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+      
       try {
         const res = await fetch('/api/auth/register', { 
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, email, password }) 
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json' }, 
+          body: JSON.stringify({ name, phone, email, password }) 
         });
         const data = await res.json();
+        
         if (res.ok) {
           registeredPhone = data.phone; 
           document.getElementById('box-register').classList.add('hidden'); 
           document.getElementById('box-otp').classList.remove('hidden'); 
           Swal.close();
-        } else { Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error, background: '#002147', color: '#fff' }); }
-      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses.', background: '#002147', color: '#fff' }); }
+        } else { 
+          Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error, background: '#002147', color: '#fff' }); 
+        }
+      } catch (err) { 
+        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses.', background: '#002147', color: '#fff' }); 
+      }
     });
 
     document.getElementById('otpForm').addEventListener('submit', async (e) => {
       e.preventDefault(); 
       const otp = document.getElementById('otpCode').value;
+      
       Swal.fire({title: 'Verifikasi...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+      
       try {
         const res = await fetch('/api/auth/verify', { 
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: registeredPhone, otp }) 
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json' }, 
+          body: JSON.stringify({ phone: registeredPhone, otp }) 
         });
         const data = await res.json();
+        
         if (res.ok) { 
           Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun aktif.', background: '#002147', color: '#fff' }).then(() => { 
             window.location.href = '/?phone=' + registeredPhone; 
           }); 
-        } else { Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: '#002147', color: '#fff' }); }
-      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.', background: '#002147', color: '#fff' }); }
+        } else { 
+          Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: '#002147', color: '#fff' }); 
+        }
+      } catch (err) { 
+        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.', background: '#002147', color: '#fff' }); 
+      }
     });
   </script>
 </body>
@@ -404,29 +453,60 @@ cat << 'EOF' > public/forgot.html
   <script>
     function togglePassword(id, el) {
       const input = document.getElementById(id);
-      if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
-      else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
+      if (input.type === 'password') { 
+          input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); 
+      } else { 
+          input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); 
+      }
     }
+    
     let resetPhone = '';
+    
     document.getElementById('requestOtpForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); const phone = document.getElementById('phone').value;
+      e.preventDefault(); 
+      const phone = document.getElementById('phone').value;
       Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
+      
       try {
-        const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
+        const res = await fetch('/api/auth/forgot', { 
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) 
+        });
         const data = await res.json();
-        if (res.ok) { resetPhone = data.phone; document.getElementById('requestOtpForm').classList.add('hidden'); document.getElementById('resetForm').classList.remove('hidden'); Swal.close(); } 
-        else { Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); }
-      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); }
+        
+        if (res.ok) { 
+          resetPhone = data.phone; 
+          document.getElementById('requestOtpForm').classList.add('hidden'); 
+          document.getElementById('resetForm').classList.remove('hidden'); 
+          Swal.close(); 
+        } else { 
+          Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); 
+        }
+      } catch (err) { 
+          Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); 
+      }
     });
 
     document.getElementById('resetForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); const otp = document.getElementById('otp').value; const newPassword = document.getElementById('newPassword').value;
+      e.preventDefault(); 
+      const otp = document.getElementById('otp').value; 
+      const newPassword = document.getElementById('newPassword').value;
       Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
+      
       try {
-        const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) });
-        if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.', background: '#002147', color: '#fff' }).then(() => { window.location.href = '/'; }); } 
-        else { Swal.fire({ icon: 'error', title: 'Gagal', text: 'OTP Salah.', background: '#002147', color: '#fff' }); }
-      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); }
+        const res = await fetch('/api/auth/reset', { 
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) 
+        });
+        
+        if (res.ok) { 
+          Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.', background: '#002147', color: '#fff' }).then(() => { 
+            window.location.href = '/'; 
+          }); 
+        } else { 
+          Swal.fire({ icon: 'error', title: 'Gagal', text: 'OTP Salah.', background: '#002147', color: '#fff' }); 
+        }
+      } catch (err) { 
+          Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); 
+      }
     });
   </script>
 </body>
@@ -444,6 +524,7 @@ cat << 'EOF' > public/dashboard.html
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
 </head>
 <body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
   <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
@@ -623,6 +704,8 @@ cat << 'EOF' > public/dashboard.html
           </div>
         </div>
 
+        <p class="text-center text-[10px] text-gray-500 dark:text-gray-400 mb-3">💡 Jika butuh bantuan, gunakan tombol <i class="fas fa-headset"></i> di menu Dashboard.</p>
+        
         <button onclick="prosesTopup()" class="w-full py-3.5 bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#001229] font-extrabold rounded-xl shadow-md hover:opacity-90 mb-3">Lanjutkan Pembayaran</button>
         <button onclick="location.href='/riwayat_topup.html'" class="w-full py-3.5 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 font-extrabold rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700">Riwayat Top Up</button>
       </div>
@@ -630,7 +713,7 @@ cat << 'EOF' > public/dashboard.html
   </div>
 
   <script>
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user=JSON.parse(localStorage.getItem('user'));
     if(!user) window.location.href='/';
     
     document.getElementById('headerGreeting').innerText="Hai, "+user.name;
@@ -1444,253 +1527,8 @@ cat << 'EOF' > public/profile.html
 </html>
 EOF
 
-cat << 'EOF' > public/riwayat.html
-<!DOCTYPE html>
-<html lang="id" id="html-root">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Riwayat Transaksi</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script>tailwind.config={darkMode:'class'}</script>
-</head>
-<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
-  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
-    
-    <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
-      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i>
-      <h1 class="text-[18px] font-bold text-gray-800 dark:text-white">Riwayat Transaksi</h1>
-    </div>
-
-    <div class="mx-4 mt-4 bg-white dark:bg-[#111c2e] p-4 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm">
-        <div class="relative mb-4">
-            <i class="fas fa-search absolute left-3.5 top-3 text-gray-400 text-sm"></i>
-            <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400" placeholder="Cari transaksi...">
-        </div>
-        <div class="flex justify-between mb-2 gap-2">
-            <div id="btn-Semua" onclick="setStatusFilter('Semua')" class="flex-1 bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#0b1320] text-center py-2 rounded-full text-[11px] font-bold cursor-pointer shadow-sm transition-colors">Semua</div>
-            <div id="btn-Sukses" onclick="setStatusFilter('Sukses')" class="flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors">Sukses</div>
-            <div id="btn-Proses" onclick="setStatusFilter('Proses')" class="flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors">Proses</div>
-            <div id="btn-Gagal" onclick="setStatusFilter('Gagal')" class="flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors">Gagal</div>
-        </div>
-    </div>
-
-    <div class="px-4 mt-4" id="historyContainer">
-      <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
-        <i class="fas fa-spinner fa-spin text-4xl mb-4 text-gray-400"></i>
-      </div>
-    </div>
-
-    <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40">
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
-      <div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/info.html'"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
-    </div>
-  </div>
-
-  <script>
-    const user = JSON.parse(localStorage.getItem('user'));
-    if(!user) window.location.href='/';
-    if(localStorage.getItem('darkMode')==='true' || localStorage.getItem('darkMode')===null) document.getElementById('html-root').classList.add('dark');
-    
-    let allTrx = [];
-    let currentFilter = 'Semua';
-
-    fetch('/api/user/transactions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone})})
-    .then(r=>r.json())
-    .then(d=>{
-      allTrx = d.transactions ? d.transactions.reverse() : [];
-      renderHistory();
-    })
-    .catch(e => {
-      document.getElementById('historyContainer').innerHTML = `<div class="mt-10 text-center text-red-500 font-bold">Gagal memuat data.</div>`;
-    });
-
-    function setStatusFilter(status) {
-        currentFilter = status;
-        const isD = localStorage.getItem('darkMode') === 'true';
-        ['Semua', 'Sukses', 'Proses', 'Gagal'].forEach(btn => {
-            const el = document.getElementById('btn-' + btn);
-            el.className = 'flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors';
-        });
-        const activeBtn = document.getElementById('btn-' + status);
-        activeBtn.className = `flex-1 ${isD ? 'bg-yellow-400 text-[#0b1320]' : 'bg-[#002147] text-white'} text-center py-2 rounded-full text-[11px] font-bold cursor-pointer shadow-sm transition-colors`;
-        filterHistory();
-    }
-
-    function filterHistory() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        let filtered = allTrx;
-        
-        if(currentFilter !== 'Semua') {
-            filtered = filtered.filter(i => i.status === currentFilter);
-        }
-        
-        if(query) {
-            filtered = filtered.filter(i => (i.produk && i.produk.toLowerCase().includes(query)) || (i.no_tujuan && i.no_tujuan.includes(query)) || (i.sn_ref && i.sn_ref.toLowerCase().includes(query)));
-        }
-        
-        const c = document.getElementById('historyContainer');
-        if(!filtered || filtered.length === 0){
-            c.innerHTML=`<div class="mt-10 flex flex-col items-center justify-center text-center px-6"><div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-gray-800"><i class="fas fa-receipt text-gray-400 text-4xl"></i></div><h2 class="text-gray-800 dark:text-white font-bold text-lg tracking-wide mb-2">Transaksi Tidak Ditemukan</h2></div>`;
-        } else {
-            c.innerHTML = filtered.map((i)=>{
-                let sc = i.status==='Proses' ? 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-800' : (i.status==='Sukses' ? 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 border-green-200 dark:border-green-800' : 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-800');
-                let rawIdx = allTrx.indexOf(i);
-                return `<div onclick="showDetailTrx(${rawIdx})" class="bg-white dark:bg-[#111c2e] p-4 rounded-2xl mb-3 border border-gray-200 dark:border-gray-800 shadow-sm flex justify-between items-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-[#0b1320] flex items-center justify-center text-gray-500 dark:text-gray-400 text-lg"><i class="fas fa-box"></i></div><div><h4 class="font-bold text-[13px] text-gray-800 dark:text-gray-200">${i.produk}</h4><p class="text-[10px] text-gray-500">${i.date}</p></div></div><div class="text-right"><p class="font-extrabold text-[14px] text-[#002147] dark:text-yellow-400 mb-1">Rp ${(i.harga||0).toLocaleString('id-ID')}</p><span class="text-[9px] font-bold px-2 py-0.5 rounded border ${sc} uppercase tracking-wider">${i.status}</span></div></div>`;
-            }).join('');
-        }
-    }
-
-    function renderHistory() { filterHistory(); }
-
-    window.showDetailTrx = function(idx){
-      const i = allTrx[idx];
-      const isD = localStorage.getItem('darkMode')==='true';
-      Swal.fire({
-        title: `<span class="font-bold ${isD?'text-white':'text-gray-800'} text-lg">Detail Transaksi</span>`,
-        html: `<div class="text-left mt-2 text-sm space-y-3 border-t ${isD?'border-gray-800':'border-gray-200'} pt-4">
-                 <div class="flex justify-between border-b ${isD?'border-gray-800':'border-gray-200'} pb-2"><span class="${isD?'text-gray-400':'text-gray-500'}">Produk</span><span class="${isD?'text-white':'text-gray-800'} font-bold text-right">${i.produk}</span></div>
-                 <div class="flex justify-between border-b ${isD?'border-gray-800':'border-gray-200'} pb-2"><span class="${isD?'text-gray-400':'text-gray-500'}">Tujuan</span><span class="${isD?'text-white':'text-gray-800'} font-bold text-right">${i.no_tujuan}</span></div>
-                 <div class="flex justify-between border-b ${isD?'border-gray-800':'border-gray-200'} pb-2"><span class="${isD?'text-gray-400':'text-gray-500'}">Status</span><span class="${i.status==='Sukses'?'text-green-500':(i.status==='Proses'?'text-yellow-500':'text-red-500')} font-bold text-right uppercase">${i.status}</span></div>
-                 <div class="flex justify-between border-b ${isD?'border-gray-800':'border-gray-200'} pb-2"><span class="${isD?'text-gray-400':'text-gray-500'}">SN/Ref</span><span class="${isD?'text-white':'text-gray-800'} font-medium text-right">${i.sn_ref||'-'}</span></div>
-                 <div class="mt-5 text-center"><p class="${isD?'text-gray-400':'text-gray-500'} text-xs mb-1">Total Harga</p><p class="text-3xl font-extrabold ${isD?'text-yellow-400':'text-[#002147]'}">Rp ${(i.harga||0).toLocaleString('id-ID')}</p></div>
-               </div>`,
-        background: isD?'#0b1320':'#fff', confirmButtonColor: isD?'#facc15':'#002147', confirmButtonText: 'Tutup',
-        customClass: { confirmButton: isD ? 'text-[#001229] font-bold px-8' : 'text-white font-bold px-8' }
-      });
-    }
-  </script>
-</body>
-</html>
-EOF
-
-cat << 'EOF' > public/riwayat_topup.html
-<!DOCTYPE html>
-<html lang="id" id="html-root">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Riwayat Topup</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script>tailwind.config={darkMode:'class'}</script>
-</head>
-<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
-  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
-    
-    <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
-      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i>
-      <h1 class="text-[18px] font-bold text-gray-800 dark:text-white">Riwayat Top Up</h1>
-    </div>
-
-    <div class="px-4 mt-6" id="historyContainer">
-      <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
-        <i class="fas fa-spinner fa-spin text-4xl mb-4 text-gray-400"></i>
-      </div>
-    </div>
-  </div>
-  <script>
-    const user = JSON.parse(localStorage.getItem('user'));
-    if(!user) window.location.href='/';
-    if(localStorage.getItem('darkMode')==='true' || localStorage.getItem('darkMode')===null) document.getElementById('html-root').classList.add('dark');
-    
-    fetch('/api/topup/history',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone})})
-    .then(r=>r.json())
-    .then(d=>{
-      const c = document.getElementById('historyContainer');
-      if(!d.history || d.history.length===0){
-        c.innerHTML=`<div class="mt-14 flex flex-col items-center justify-center text-center px-6"><div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-gray-800"><i class="fas fa-wallet text-gray-400 text-4xl"></i></div><h2 class="text-gray-800 dark:text-white font-bold text-lg tracking-wide mb-2">Belum Ada Top Up</h2><p class="text-gray-500 dark:text-gray-400 text-[13px] leading-relaxed mb-8 px-2">Anda belum melakukan pengisian saldo. Ayo isi saldo sekarang!</p><button class="bg-[#002147] text-white dark:bg-[#0b1320] dark:text-yellow-400 border border-transparent dark:border-gray-700 font-bold py-3 px-8 rounded-full shadow-lg hover:opacity-90 transition" onclick="location.href='/dashboard.html'">Top Up Sekarang</button></div>`;
-      } else {
-        window.topupData = d.history.reverse();
-        c.innerHTML = window.topupData.map((i,idx)=>{
-          let isExp = i.status==='Expired';
-          let sc = i.status==='Proses' ? 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-800' : (i.status==='Sukses' ? 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 border-green-200 dark:border-green-800' : 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-800');
-          let iconMethod = i.method.includes('QRIS') ? '<i class="fas fa-qrcode"></i>' : (i.method.includes('Admin') ? '<i class="fas fa-check-circle"></i>' : '<i class="fab fa-whatsapp"></i>');
-          let titleText = i.method.includes('Admin') ? 'Saldo ditambah Admin' : `Top Up ${i.method}`;
-          return `<div onclick="showDetailTopup(${idx})" class="bg-white dark:bg-[#111c2e] p-4 rounded-2xl mb-3 border border-gray-200 dark:border-gray-800 shadow-sm flex justify-between items-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors ${isExp?'opacity-70':''}"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-[#0b1320] flex items-center justify-center text-gray-500 dark:text-gray-400 text-lg">${iconMethod}</div><div><h4 class="font-bold text-[13px] text-gray-800 dark:text-gray-200">${titleText}</h4><p class="text-[10px] text-gray-500">${i.date}</p></div></div><div class="text-right"><p class="font-extrabold text-[14px] text-[#002147] dark:text-yellow-400 mb-1">Rp ${(i.nominal||0).toLocaleString('id-ID')}</p><span class="text-[9px] font-bold px-2 py-0.5 rounded border ${sc} uppercase tracking-wider">${i.status}</span></div></div>`;
-        }).join('');
-      }
-    });
-
-    window.showDetailTopup = function(index) {
-        const item = window.topupData[index];
-        const isDark = localStorage.getItem('darkMode') === 'true';
-        const bgPopup = isDark ? '#0b1320' : '#ffffff';
-        const textColor = isDark ? 'text-gray-200' : 'text-gray-800';
-        const mutedColor = isDark ? 'text-gray-400' : 'text-gray-500';
-        const borderColor = isDark ? 'border-gray-800' : 'border-gray-200';
-        let statusColor = item.status === 'Proses' ? 'text-yellow-500' : (item.status === 'Sukses' ? 'text-green-500' : 'text-red-500');
-        Swal.fire({
-            title: `<span class="font-bold ${isDark ? 'text-white' : 'text-gray-800'} text-lg">Detail Top Up</span>`,
-            html: `<div class="text-left mt-2 space-y-3 text-sm border-t ${borderColor} pt-4"><div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Waktu</span><span class="font-medium ${textColor} text-right">${item.date}</span></div><div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Nominal</span><span class="font-medium ${textColor} text-right">Rp ${(item.nominal||0).toLocaleString('id-ID')}</span></div><div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Metode</span><span class="font-medium ${textColor} text-right">${item.method}</span></div><div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Status</span><span class="font-bold ${statusColor} text-right uppercase">${item.status}</span></div><div class="mt-5 text-center"><p class="${mutedColor} text-xs mb-1">Total Bayar</p><p class="text-3xl font-extrabold ${isDark ? 'text-yellow-400' : 'text-[#002147]'}">Rp ${(item.nominal||0).toLocaleString('id-ID')}</p></div></div>`,
-            showConfirmButton: true, confirmButtonText: 'Tutup', confirmButtonColor: isDark ? '#facc15' : '#002147', background: bgPopup,
-            customClass: { confirmButton: isDark ? 'text-[#001229] font-bold px-8' : 'text-white font-bold px-8' }
-        });
-    }
-  </script>
-</body>
-</html>
-EOF
-
-cat << 'EOF' > public/game.html
-<!DOCTYPE html>
-<html lang="id" id="html-root">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Top Up Game</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script>tailwind.config={darkMode:'class'}</script>
-</head>
-<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
-  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative shadow-2xl overflow-x-hidden">
-    <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
-      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 dark:text-white" onclick="history.back()"></i>
-      <h1 class="text-[18px] font-bold dark:text-white">Top Up Game</h1>
-    </div>
-    <div class="px-4 mt-6">
-      <div class="bg-white dark:bg-[#111c2e] rounded-b-2xl rounded-t-xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm mt-4">
-        <div class="bg-black p-4 flex items-center gap-2">
-          <i class="fas fa-gamepad text-yellow-400 text-lg"></i>
-          <span class="font-bold text-white text-sm">Pilih Game</span>
-        </div>
-        <div class="p-4 grid grid-cols-3 gap-3">
-          <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=free_fire'">
-            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold text-sm mb-2">FF</div>
-            <div class="text-[11px] font-medium dark:text-gray-300 text-center">Free Fire</div>
-          </div>
-          <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=mobile_legends'">
-            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold text-xs text-center">ML</div>
-            <div class="text-[11px] font-medium dark:text-gray-300 text-center">Mobile<br>Legends</div>
-          </div>
-          <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=pubg_mobile'">
-            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold text-[10px] text-center">PUBG</div>
-            <div class="text-[11px] font-medium dark:text-gray-300 text-center">PUBG<br>Mobile</div>
-          </div>
-          <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=valorant'">
-            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold text-[11px] text-center">VALO</div>
-            <div class="text-[11px] font-medium dark:text-gray-300 text-center">Valorant</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <script>
-    if(!localStorage.getItem('user'))window.location.href='/';
-    if(localStorage.getItem('darkMode')==='true' || localStorage.getItem('darkMode')===null)document.getElementById('html-root').classList.add('dark');
-  </script>
-</body>
-</html>
-EOF
-
 # ==========================================
-# 4. NODE.JS BACKEND (API & TELEGRAM)
+# 4. NODE.JS BACKEND (NOTIF TELEGRAM DETAIL PISAH-PISAH)
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 
@@ -1765,7 +1603,7 @@ app.post('/api/products', async (req, res) => {
         if (Date.now() - digiCache.time > 300000 || !digiCache.data || digiCache.data.length === 0) { 
             try {
                 let sign = crypto.createHash('md5').update(config.digiUser + config.digiKey + "pricelist").digest('hex');
-                let digiRes = await axios.post('https://api.digiflazz.com/v1/price-list', { cmd: 'prepaid', username: config.digiUser, sign: sign }, { timeout: 10000 });
+                let digiRes = await axios.post('https://api.digiflazz.com/v1/price-list', { cmd: 'prepaid', username: config.digiUser, sign: sign }, { timeout: 5000 });
                 if(digiRes.data && digiRes.data.data) {
                     digiCache.data = digiRes.data.data; digiCache.time = Date.now(); saveJSON(digiCacheFile, digiCache); 
                 }
@@ -1827,7 +1665,8 @@ app.post('/api/products', async (req, res) => {
 app.post('/api/transaction/create', async (req, res) => {
     try {
         const { phone, target, sku, name, price, isLocal } = req.body;
-        let db = loadJSON(dbFile); let config = loadJSON(configFile);
+        let db = loadJSON(dbFile); let config = loadJSON(configFile); let webUsers = loadJSON(webUsersFile);
+        let uData = webUsers[phone] || { name: 'Unknown', email: 'Unknown' };
 
         if (!db[phone]) return res.status(400).json({ error: 'Akun tidak ditemukan.' });
         if (db[phone].saldo < price) return res.status(400).json({ error: 'Saldo tidak mencukupi.' });
@@ -1875,7 +1714,7 @@ app.post('/api/transaction/create', async (req, res) => {
             }); 
         } catch(err) {}
         
-        sendTeleNotif(`🛒 *TRANSAKSI BARU*\n\n👤 Member: ${phone}\n📦 Produk: ${name}\n📱 Tujuan: ${target}\n💰 Harga: Rp ${price.toLocaleString('id-ID')}\n🔄 Status: ${trxStatus}\n🔖 Ref: ${ref_id}`);
+        sendTeleNotif(`🛒 *TRANSAKSI BARU (ORDER MASUK)* 🛒\n\n👤 Nama: ${uData.name}\n✉️ Email: ${uData.email}\n📱 WA: ${phone}\n\n📦 Produk: ${name}\n📱 Tujuan: ${target}\n💰 Harga: Rp ${price.toLocaleString('id-ID')}\n🔄 Status: ${trxStatus}\n🔖 Ref: ${ref_id}`);
         res.json({ message: 'Transaksi berhasil diproses.' });
     } catch (fatalErr) { 
         res.status(500).json({ error: 'Terjadi kesalahan internal.' }); 
@@ -1883,11 +1722,13 @@ app.post('/api/transaction/create', async (req, res) => {
 });
 
 setInterval(async () => {
-    let db = loadJSON(dbFile); let config = loadJSON(configFile); let changed = false;
+    let db = loadJSON(dbFile); let config = loadJSON(configFile); let webUsers = loadJSON(webUsersFile); let changed = false;
     if(!config.digiUser || !config.digiKey) return;
     
     for (let phone in db) {
         let user = db[phone]; if (!user.transactions) continue;
+        let uData = webUsers[phone] || { name: 'Unknown', email: 'Unknown' };
+        
         for (let i = 0; i < user.transactions.length; i++) {
             let trx = user.transactions[i];
             if (trx.status === 'Proses' && !trx.isLocal && trx.sku) {
@@ -1903,14 +1744,14 @@ setInterval(async () => {
                     if (digiData.status === 'Sukses') {
                         trx.status = 'Sukses'; trx.sn_ref = digiData.sn || trx.sn_ref; changed = true;
                         try { global.waSocket?.sendMessage(user.jid || phone+'@s.whatsapp.net', { text: `✅ *TRANSAKSI SUKSES*\n\n📦 Produk: *${trx.produk}*\n📱 Tujuan: ${trx.no_tujuan}\n🔖 SN: ${trx.sn_ref}\n\nPesanan kamu sudah masuk ya kak!` }); } catch(e){}
-                        sendTeleNotif(`✅ *UPDATE: TRANSAKSI SUKSES*\n\n👤 Member: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n🔖 SN: ${trx.sn_ref}`);
+                        sendTeleNotif(`✅ *UPDATE: TRANSAKSI SUKSES* ✅\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n🔖 SN: ${trx.sn_ref}`);
                     } else if (digiData.status === 'Gagal') {
                         trx.status = 'Gagal'; trx.sn_ref = digiData.sn || digiData.message || 'Gagal Pusat';
                         user.saldo += trx.harga; 
                         user.mutasi.push({ id: 'REF'+Date.now(), type: 'in', amount: trx.harga, desc: `Refund: ${trx.produk}`, date: new Date().toLocaleString('id-ID') }); 
                         changed = true;
                         try { global.waSocket?.sendMessage(user.jid || phone+'@s.whatsapp.net', { text: `❌ *TRANSAKSI GAGAL*\n\n📦 Produk: *${trx.produk}*\n📱 Tujuan: ${trx.no_tujuan}\n⚠️ Alasan: ${digiData.message || 'Gangguan Server'}\n\n💰 Saldo Rp ${trx.harga.toLocaleString('id-ID')} telah dikembalikan otomatis ke akun kamu.` }); } catch(e){}
-                        sendTeleNotif(`❌ *UPDATE: TRANSAKSI GAGAL (REFUND)*\n\n👤 Member: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n⚠️ Alasan: ${digiData.message || 'Gagal Pusat'}`);
+                        sendTeleNotif(`❌ *UPDATE: TRANSAKSI GAGAL (REFUND)* ❌\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n⚠️ Alasan: ${digiData.message || 'Gagal Pusat'}`);
                     }
                 } catch(e) {}
             }
@@ -1940,13 +1781,25 @@ function startAutoBackup() {
 setTimeout(startAutoBackup, 15000); 
 
 app.post('/api/topup/request', (req, res) => {
-    const { phone, method, nominal } = req.body; let db = loadJSON(dbFile);
+    const { phone, method, nominal } = req.body; 
+    let db = loadJSON(dbFile);
+    let webUsers = loadJSON(webUsersFile);
+    let uData = webUsers[phone] || { name: 'Unknown', email: 'Unknown' };
+
     if (!db[phone]) db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] };
     if (!db[phone].topup) db[phone].topup = [];
+    
     const expiry = method === 'QRIS Otomatis' ? Date.now() + 5*60*1000 : null; 
-    const newTopup = { id: 'TU' + Date.now(), method, nominal, status: 'Proses', date: new Date().toLocaleString('id-ID'), expiry };
-    db[phone].topup.push(newTopup); saveJSON(dbFile, db); 
-    sendTeleNotif(`💳 *PERMINTAAN TOP UP BARU*\n\n👤 Member: ${phone}\n💵 Nominal: Rp ${nominal.toLocaleString('id-ID')}\n🏦 Metode: ${method}`);
+    let dateStr = new Date().toLocaleString('id-ID');
+    const newTopup = { id: 'TU' + Date.now(), method, nominal, status: 'Proses', date: dateStr, expiry };
+    db[phone].topup.push(newTopup); 
+    saveJSON(dbFile, db); 
+
+    let kodeUnik = nominal % 1000;
+    let depositAsli = nominal - kodeUnik;
+    let saldoSebelum = db[phone].saldo;
+
+    sendTeleNotif(`⏳ *TOP UP MENUNGGU PEMBAYARAN* ⏳\n\n👤 Nama: ${uData.name}\n✉️ Email: ${uData.email}\n📱 WA: ${phone}\n⌚ Waktu: ${dateStr}\n🏦 Metode: ${method}\n\n💰 Jumlah Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n🎫 Kode Unik: ${kodeUnik}\n💵 Total Saldo Diterima: Rp ${nominal.toLocaleString('id-ID')}\n\n💳 *Riwayat Saldo*\n📉 Saldo Sebelum: Rp ${saldoSebelum.toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${saldoSebelum.toLocaleString('id-ID')} (Pending)`);
     res.json({ message: 'Top up direkam' });
 });
 
@@ -1988,13 +1841,22 @@ app.post('/api/admin/balance', async (req, res) => {
     if(!db[targetPhone].mutasi) db[targetPhone].mutasi = [];
     if(!db[targetPhone].topup) db[targetPhone].topup = [];
     
+    let uData = webUsers[targetPhone];
+    let saldoSebelum = db[targetPhone].saldo;
     const dateStr = new Date().toLocaleString('id-ID');
+
     if (action === 'add') {
         db[targetPhone].saldo += parseInt(amount);
+        let saldoSesudah = db[targetPhone].saldo;
+        
         db[targetPhone].mutasi.push({ id: 'TRX'+Date.now(), type: 'in', amount: parseInt(amount), desc: 'Penambahan oleh Admin', date: dateStr });
         db[targetPhone].topup.push({ id: 'TU'+Date.now(), method: 'Admin Fiky Store', nominal: parseInt(amount), status: 'Sukses', date: dateStr });
         saveJSON(dbFile, db);
+        
         try { await global.waSocket?.sendMessage(targetPhone + '@c.us', { text: `🎉 Saldo Anda berhasil ditambah Admin sebesar *Rp ${parseInt(amount).toLocaleString('id-ID')}*.\n💰 Sisa Saldo: *Rp ${db[targetPhone].saldo.toLocaleString('id-ID')}*` }); } catch(e) {}
+        
+        sendTeleNotif(`✅ *PEMBAYARAN DITERIMA (TOP UP BERHASIL)* ✅\n\n👤 Nama: ${uData.name}\n✉️ Email: ${uData.email}\n📱 WA: ${targetPhone}\n⌚ Waktu: ${dateStr}\n🏦 Metode: Admin Fiky Store\n\n💰 Total Saldo Masuk: Rp ${parseInt(amount).toLocaleString('id-ID')}\n\n💳 *Riwayat Saldo*\n📉 Saldo Sebelum: Rp ${saldoSebelum.toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${saldoSesudah.toLocaleString('id-ID')}`);
+        
         res.json({ success: true, message: `\n✅ Saldo ${webUsers[targetPhone].name} berhasil ditambah!` });
     } else if (action === 'reduce') {
         db[targetPhone].saldo -= parseInt(amount);
@@ -2041,7 +1903,10 @@ app.post('/api/auth/verify', (req, res) => {
             
             let db = loadJSON(dbFile); 
             if (!db[phone]) { db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] }; saveJSON(dbFile, db); } 
-            sendTeleNotif(`🎊 *MEMBER BARU BERGABUNG!*\n\n👤 Nama: ${webUsers[phone].name}\n📱 WA: ${phone}`);
+            
+            // PISAH NOTIF MEMBER BARU SUPER DETAIL
+            sendTeleNotif(`🎉 *MEMBER BARU BERGABUNG* 🎉\n\n👤 Nama: ${webUsers[phone].name}\n📱 WA: ${phone}\n✉️ Email: ${webUsers[phone].email}`);
+            
             res.json({ message: 'Sukses!' });
         } else { res.status(400).json({ error: 'OTP Salah.' }); }
     } else { res.status(400).json({ error: 'Sesi tidak valid.' }); }
@@ -2144,7 +2009,7 @@ NC='\033[0m'
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}          💎 PANEL DIGITAL FIKY STORE (V136) 💎       ${NC}"
+    echo -e "${YELLOW}          💎 PANEL DIGITAL FIKY STORE (V137) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
@@ -2478,6 +2343,6 @@ EOF
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
 echo "=========================================================="
-echo "  SISTEM WEB V136 BERHASIL DIPERBARUI SECARA PENUH!       "
+echo "  SISTEM WEB V137 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
