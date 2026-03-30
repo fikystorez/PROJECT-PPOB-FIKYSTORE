@@ -1,29 +1,32 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V128 (THE PERFECT GITHUB CLOUD EDITION)
+# DIGITAL FIKY STORE - V129 (THE ABSOLUTE UNCOMPRESSED)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
   echo "Tolong jalankan script ini sebagai root (ketik: sudo su)"
   exit
 fi
+
 if command -v dos2unix > /dev/null 2>&1; then dos2unix "$0" > /dev/null 2>&1; fi
 
 DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V128 (FULL SCRIPT)      "
+echo "    MENGINSTAL DIGITAL FIKY STORE V129 (FULL UNCOMPRESSED)"
 echo "=========================================================="
 
 echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
 apt update -y && apt install curl wget gnupg git dos2unix psmisc zip unzip nginx ufw -y > /dev/null 2>&1
+
 if ! command -v node > /dev/null 2>&1; then
   curl -fsSL https://deb.nodesource.com/setup_20.x | bash - > /dev/null 2>&1
   apt install -y nodejs > /dev/null 2>&1
 fi
 npm install -g pm2 > /dev/null 2>&1
 
+echo "[2/5] Membuat direktori aplikasi dan web..."
 mkdir -p "$HOME/$DIR_NAME/public"
 cd "$HOME/$DIR_NAME"
 
@@ -33,7 +36,9 @@ cat << 'EOF' > package.json
   "version": "1.0.0",
   "description": "Aplikasi PPOB DIGITAL FIKY STORE",
   "main": "index.js",
-  "scripts": { "start": "node index.js" },
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "@hapi/boom": "^10.0.1",
     "@whiskeysockets/baileys": "^6.7.5",
@@ -47,30 +52,124 @@ cat << 'EOF' > package.json
 }
 EOF
 
-echo "[2/5] Membangun Antarmuka CSS..."
+echo "[3/5] Membangun Antarmuka CSS..."
 cat << 'EOF' > public/style.css
-body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
-.centered-modal-box { background-color: #002147; padding: 2.5rem 1.5rem 2rem 1.5rem; border-radius: 1.2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); width: 90%; max-width: 360px; text-align: center; position: relative; z-index: 10; margin: auto; margin-top: 10vh; }
-.brand-logo-text { font-size: 1.8rem; font-weight: 900; background: linear-gradient(135deg, #fde047 0%, #facc15 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; letter-spacing: 1px; text-transform: uppercase; }
-.compact-input-wrapper { position: relative; margin-bottom: 0.85rem; width: 100%; }
-.compact-input-box { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #334155; border-radius: 0.5rem; font-size: 0.875rem; outline: none; background-color: #ffffff; color: #0f172a; }
-.compact-input-box:focus { border-color: #fde047; box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3); }
-.password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #94a3b8; }
-.compact-text-small { font-size: 0.8rem; color: #cbd5e1; }
-.compact-link-small { font-size: 0.8rem; color: #fde047; text-decoration: none; font-weight: bold; }
-.btn-yellow { width: 100%; padding: 0.625rem 1rem; background-color: #fde047; color: #002147; font-weight: bold; border-radius: 0.5rem; cursor: pointer; border: none; margin-top: 0.5rem; transition: all 0.2s; }
-.btn-yellow:hover { background-color: #facc15; }
-.hide-scrollbar::-webkit-scrollbar { display: none; }
-.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-.swal2-popup { background-color: #002147 !important; border-radius: 1.5rem !important; color: #ffffff !important; width: 320px !important; padding: 1.5rem 1.25rem 1.25rem !important; }
-.swal2-title { color: #fde047 !important; font-size: 1.25rem !important; font-weight: 800 !important; }
-.swal2-html-container { color: #cbd5e1 !important; font-size: 0.85rem !important; }
-.swal2-confirm { background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important; color: #001229 !important; border-radius: 0.5rem !important; font-weight: 800 !important; }
-.swal2-cancel { background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important; color: #ffffff !important; border-radius: 0.5rem !important; font-weight: 800 !important; }
-.pb-safe { padding-bottom: calc(1rem + env(safe-area-inset-bottom)); }
+body { 
+    background-color: #fde047; 
+    margin: 0; 
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; 
+}
+.centered-modal-box { 
+    background-color: #002147; 
+    padding: 2.5rem 1.5rem 2rem 1.5rem; 
+    border-radius: 1.2rem; 
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); 
+    width: 90%; 
+    max-width: 360px; 
+    text-align: center; 
+    position: relative; 
+    z-index: 10; 
+    margin: auto; 
+    margin-top: 10vh; 
+}
+.brand-logo-text { 
+    font-size: 1.8rem; 
+    font-weight: 900; 
+    background: linear-gradient(135deg, #fde047 0%, #facc15 100%); 
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; 
+    margin-bottom: 1.5rem; 
+    letter-spacing: 1px; 
+    text-transform: uppercase; 
+}
+.compact-input-wrapper { 
+    position: relative; 
+    margin-bottom: 0.85rem; 
+    width: 100%; 
+}
+.compact-input-box { 
+    width: 100%; 
+    padding: 0.6rem 0.75rem; 
+    border: 1px solid #334155; 
+    border-radius: 0.5rem; 
+    font-size: 0.875rem; 
+    outline: none; 
+    background-color: #ffffff; 
+    color: #0f172a; 
+}
+.compact-input-box:focus { 
+    border-color: #fde047; 
+    box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3); 
+}
+.password-toggle { 
+    position: absolute; 
+    right: 12px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    cursor: pointer; 
+    color: #94a3b8; 
+}
+.compact-text-small { 
+    font-size: 0.8rem; 
+    color: #cbd5e1; 
+}
+.compact-link-small { 
+    font-size: 0.8rem; 
+    color: #fde047; 
+    text-decoration: none; 
+    font-weight: bold; 
+}
+.btn-yellow { 
+    width: 100%; 
+    padding: 0.625rem 1rem; 
+    background-color: #fde047; 
+    color: #002147; 
+    font-weight: bold; 
+    border-radius: 0.5rem; 
+    cursor: pointer; 
+    border: none; 
+    margin-top: 0.5rem; 
+    transition: all 0.2s; 
+}
+.btn-yellow:hover { 
+    background-color: #facc15; 
+}
+.hide-scrollbar::-webkit-scrollbar { 
+    display: none; 
+}
+.hide-scrollbar { 
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
+}
+.swal2-popup { 
+    background-color: #002147 !important; 
+    border-radius: 1.5rem !important; 
+    color: #ffffff !important; 
+    width: 320px !important; 
+    padding: 1.5rem 1.25rem 1.25rem !important; 
+}
+.swal2-title { 
+    color: #fde047 !important; 
+    font-size: 1.25rem !important; 
+    font-weight: 800 !important; 
+}
+.swal2-html-container { 
+    color: #cbd5e1 !important; 
+    font-size: 0.85rem !important; 
+}
+.swal2-confirm { 
+    background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important; 
+    color: #001229 !important; 
+    border-radius: 0.5rem !important; 
+    font-weight: 800 !important; 
+}
+.pb-safe { 
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom)); 
+}
 EOF
 
-echo "[3/5] Membangun Antarmuka HTML..."
+echo "[3/5] Membangun Antarmuka HTML (Dashboard, Info, Riwayat, dll)..."
+
 cat << 'EOF' > public/index.html
 <!DOCTYPE html>
 <html lang="id">
@@ -87,7 +186,7 @@ cat << 'EOF' > public/index.html
   <div class="centered-modal-box">
     <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
     <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
-    <p class="compact-text-small mb-6" id="loginDesc">Silahkan masukkan data akun kamu!</p>
+    <p class="compact-text-small mb-6" id="loginDesc">Silahkan masukkan email/no HP dan password kamu!</p>
     
     <form id="loginForm">
       <div class="compact-input-wrapper">
@@ -121,8 +220,15 @@ cat << 'EOF' > public/index.html
 
     function togglePassword(id, el) {
       const input = document.getElementById(id);
-      if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
-      else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
+      if (input.type === 'password') { 
+          input.type = 'text'; 
+          el.classList.remove('fa-eye'); 
+          el.classList.add('fa-eye-slash'); 
+      } else { 
+          input.type = 'password'; 
+          el.classList.remove('fa-eye-slash'); 
+          el.classList.add('fa-eye'); 
+      }
     }
     
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -134,7 +240,9 @@ cat << 'EOF' > public/index.html
       Swal.fire({title: 'Memeriksa Data...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
       try {
         const res = await fetch('/api/auth/login', { 
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password }) 
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json' }, 
+          body: JSON.stringify({ identifier, password }) 
         });
         const data = await res.json();
         if (res.ok) { 
@@ -143,7 +251,9 @@ cat << 'EOF' > public/index.html
         } else { 
           Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); 
         }
-      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.', background: '#002147', color: '#fff' }); }
+      } catch (err) { 
+          Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.', background: '#002147', color: '#fff' }); 
+      }
     });
   </script>
 </body>
@@ -203,8 +313,11 @@ cat << 'EOF' > public/register.html
   <script>
     function togglePassword(id, el) {
       const input = document.getElementById(id);
-      if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
-      else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
+      if (input.type === 'password') { 
+          input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); 
+      } else { 
+          input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); 
+      }
     }
     
     let registeredPhone = '';
@@ -226,12 +339,17 @@ cat << 'EOF' > public/register.html
           document.getElementById('box-register').classList.add('hidden'); 
           document.getElementById('box-otp').classList.remove('hidden'); 
           Swal.close();
-        } else { Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error, background: '#002147', color: '#fff' }); }
-      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses.', background: '#002147', color: '#fff' }); }
+        } else { 
+            Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error, background: '#002147', color: '#fff' }); 
+        }
+      } catch (err) { 
+          Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses.', background: '#002147', color: '#fff' }); 
+      }
     });
 
     document.getElementById('otpForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); const otp = document.getElementById('otpCode').value;
+      e.preventDefault(); 
+      const otp = document.getElementById('otpCode').value;
       Swal.fire({title: 'Verifikasi...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
       try {
         const res = await fetch('/api/auth/verify', { 
@@ -242,8 +360,12 @@ cat << 'EOF' > public/register.html
           Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun aktif.', background: '#002147', color: '#fff' }).then(() => { 
             window.location.href = '/?phone=' + registeredPhone; 
           }); 
-        } else { Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: '#002147', color: '#fff' }); }
-      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.', background: '#002147', color: '#fff' }); }
+        } else { 
+            Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: '#002147', color: '#fff' }); 
+        }
+      } catch (err) { 
+          Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.', background: '#002147', color: '#fff' }); 
+      }
     });
   </script>
 </body>
@@ -297,28 +419,48 @@ cat << 'EOF' > public/forgot.html
   <script>
     function togglePassword(id, el) {
       const input = document.getElementById(id);
-      if (input.type === 'password') { input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); } 
-      else { input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); }
+      if (input.type === 'password') { 
+          input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); 
+      } else { 
+          input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); 
+      }
     }
     let resetPhone = '';
     document.getElementById('requestOtpForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); const phone = document.getElementById('phone').value;
+      e.preventDefault(); 
+      const phone = document.getElementById('phone').value;
       Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
       try {
         const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
         const data = await res.json();
-        if (res.ok) { resetPhone = data.phone; document.getElementById('requestOtpForm').classList.add('hidden'); document.getElementById('resetForm').classList.remove('hidden'); Swal.close(); } 
-        else { Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); }
-      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); }
+        if (res.ok) { 
+          resetPhone = data.phone; 
+          document.getElementById('requestOtpForm').classList.add('hidden'); 
+          document.getElementById('resetForm').classList.remove('hidden'); 
+          Swal.close(); 
+        } else { 
+          Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); 
+        }
+      } catch (err) { 
+          Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); 
+      }
     });
+
     document.getElementById('resetForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); const otp = document.getElementById('otp').value; const newPassword = document.getElementById('newPassword').value;
+      e.preventDefault(); 
+      const otp = document.getElementById('otp').value; 
+      const newPassword = document.getElementById('newPassword').value;
       Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
       try {
         const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) });
-        if (res.ok) { Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.', background: '#002147', color: '#fff' }).then(() => { window.location.href = '/'; }); } 
-        else { Swal.fire({ icon: 'error', title: 'Gagal', text: 'OTP Salah.', background: '#002147', color: '#fff' }); }
-      } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); }
+        if (res.ok) { 
+          Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.', background: '#002147', color: '#fff' }).then(() => { window.location.href = '/'; }); 
+        } else { 
+          Swal.fire({ icon: 'error', title: 'Gagal', text: 'OTP Salah.', background: '#002147', color: '#fff' }); 
+        }
+      } catch (err) { 
+          Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); 
+      }
     });
   </script>
 </body>
@@ -378,7 +520,7 @@ cat << 'EOF' > public/dashboard.html
     </div>
 
     <div class="mx-4 mt-4 bg-[#002147] dark:bg-[#111c2e] rounded-[1.2rem] p-4 text-white relative overflow-hidden shadow-lg border border-[#1e3a8a] dark:border-gray-800">
-      <div class="tech-bg opacity-30"></div> 
+      <div class="absolute top-0 left-0 right-0 bottom-0 opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\' fill-rule=\'evenodd\'%3E%3Ccircle cx=\'3\' cy=\'3\' r=\'3\'/%3E%3Ccircle cx=\'13\' cy=\'13\' r=\'3\'/%3E%3C/g%3E%3C/svg%3E');"></div>
       <div class="relative z-10 flex justify-between items-center">
         <div class="flex items-center gap-3">
           <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 border border-blue-400/20"><i class="fas fa-wallet text-xl"></i></div>
@@ -389,7 +531,11 @@ cat << 'EOF' > public/dashboard.html
             <h2 class="text-[19px] font-extrabold mt-0.5" id="displaySaldo">Rp •••••••</h2>
           </div>
         </div>
+        
         <div class="flex items-center gap-2">
+          <button class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 border border-blue-400/20 hover:bg-blue-500/30 transition-colors z-10" onclick="bantuanAdmin()">
+            <i class="fas fa-headset text-lg"></i>
+          </button>
           <button class="bg-yellow-400 text-[#001229] px-5 py-2.5 rounded-full text-[13px] font-extrabold shadow-md hover:bg-yellow-500 z-10 relative" onclick="openTopUp()">Topup</button>
         </div>
       </div>
@@ -424,7 +570,7 @@ cat << 'EOF' > public/dashboard.html
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/game.html'">
           <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-gamepad"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300">GAME</span>
         </div>
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Voucher', text: 'Fitur sedang dikembangkan.', background: localStorage.getItem('darkMode')==='true'?'#0b1320':'#fff', color: localStorage.getItem('darkMode')==='true'?'#fff':'#000'})">
+        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu', text: 'Fitur sedang dikembangkan.', background: '#0b1320', color: '#fff'})">
           <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-ticket-alt"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300">VOUCHER</span>
         </div>
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=ewallet'">
@@ -433,17 +579,23 @@ cat << 'EOF' > public/dashboard.html
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=pln'">
           <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-bolt"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300">PLN</span>
         </div>
+        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=masaaktif'">
+          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-calendar-check"></i></div><span class="text-[10px] font-bold text-gray-600 dark:text-gray-300 text-center">MASA AKTIF</span>
+        </div>
+        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Menu', text: 'Fitur sedang dikembangkan.', background: localStorage.getItem('darkMode')==='true'?'#0b1320':'#fff', color: localStorage.getItem('darkMode')==='true'?'#fff':'#000'})">
+          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-sim-card"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 text-center">PERDANA</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mx-4 mt-8 mb-8">
+      <h3 class="font-extrabold text-gray-800 dark:text-white mb-4 text-[16px] ml-1">Produk Digital</h3>
+      <div class="grid grid-cols-4 gap-y-6 gap-x-3">
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=tagihan'">
           <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-file-invoice-dollar"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300">TAGIHAN</span>
         </div>
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=etoll'">
-          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-id-card"></i></div><span class="text-[10px] font-bold text-gray-600 dark:text-gray-300 text-center">E-TOLL</span>
-        </div>
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=masaaktif'">
-          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-calendar-check"></i></div><span class="text-[10px] font-bold text-gray-600 dark:text-gray-300 text-center">MASA AKTIF</span>
-        </div>
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="Swal.fire({icon: 'info', title: 'Perdana', text: 'Fitur sedang dikembangkan.', background: localStorage.getItem('darkMode')==='true'?'#0b1320':'#fff', color: localStorage.getItem('darkMode')==='true'?'#fff':'#000'})">
-          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-sim-card"></i></div><span class="text-[11px] font-bold text-gray-600 dark:text-gray-300 text-center">PERDANA</span>
+          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60"><i class="fas fa-id-card"></i></div><span class="text-[10px] font-bold text-gray-600 dark:text-gray-300 text-center">SALDO<br>E-TOLL</span>
         </div>
       </div>
     </div>
@@ -639,57 +791,6 @@ cat << 'EOF' > public/dashboard.html
         });
       }
     }
-  </script>
-</body>
-</html>
-EOF
-
-cat << 'EOF' > public/game.html
-<!DOCTYPE html>
-<html lang="id" id="html-root">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Top Up Game</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script>tailwind.config={darkMode:'class'}</script>
-</head>
-<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
-  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative shadow-2xl overflow-x-hidden">
-    <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
-      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 dark:text-white" onclick="history.back()"></i>
-      <h1 class="text-[18px] font-bold dark:text-white">Top Up Game</h1>
-    </div>
-    <div class="px-4 mt-6">
-      <div class="bg-white dark:bg-[#111c2e] rounded-b-2xl rounded-t-xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm mt-4">
-        <div class="bg-black p-4 flex items-center gap-2">
-          <i class="fas fa-gamepad text-yellow-400 text-lg"></i><span class="font-bold text-white text-sm">Pilih Game</span>
-        </div>
-        <div class="p-4 grid grid-cols-3 gap-3">
-          <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=free_fire'">
-            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold text-sm mb-2">FF</div>
-            <div class="text-[11px] font-medium dark:text-gray-300 text-center">Free Fire</div>
-          </div>
-          <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=mobile_legends'">
-            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold text-xs text-center">ML</div>
-            <div class="text-[11px] font-medium dark:text-gray-300 text-center">Mobile<br>Legends</div>
-          </div>
-          <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=pubg_mobile'">
-            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold text-[10px] text-center">PUBG</div>
-            <div class="text-[11px] font-medium dark:text-gray-300 text-center">PUBG<br>Mobile</div>
-          </div>
-          <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=valorant'">
-            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold text-[11px] text-center">VALO</div>
-            <div class="text-[11px] font-medium dark:text-gray-300 text-center">Valorant</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <script>
-    if(!localStorage.getItem('user'))window.location.href='/';
-    if(localStorage.getItem('darkMode')==='true' || localStorage.getItem('darkMode')===null)document.getElementById('html-root').classList.add('dark');
   </script>
 </body>
 </html>
@@ -1014,7 +1115,7 @@ cat << 'EOF' > public/operator.html
           document.getElementById('pageTitle').innerText = pr.name;
           let h = '';
           pr.items.forEach(i => {
-            h += `<div class="flex items-center px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#1a2639] transition" onclick="selectCategory('${i}')"><div class="flex-1 text-[13px] font-bold text-gray-800 dark:text-gray-200 uppercase">${i}</div><i class="fas fa-chevron-right text-gray-400 text-xs"></i></div>`;
+            h += `<div class="flex items-center px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#1a2639] transition" onclick="selectCategory('${i}')"><div class="flex-1 text-[13px] font-medium text-gray-800 dark:text-gray-200 uppercase">${i}</div><i class="fas fa-chevron-right text-gray-400 text-xs"></i></div>`;
           });
           document.getElementById('categoryList').innerHTML = h;
         } else {
@@ -1135,7 +1236,7 @@ cat << 'EOF' > public/profile.html
             </div>
 
             <div class="mb-4">
-                <label class="block text-[10px] text-gray-500 mb-1">Email (Hanya Baca)</label>
+                <label class="block text-[10px] text-gray-500 mb-1">Email (Bawaan Pabrik/Hanya Baca)</label>
                 <input type="email" id="editEmail" readonly class="w-full bg-gray-100 dark:bg-[#1e293b]/50 border border-gray-300 dark:border-gray-800 rounded-lg px-3 py-3 text-gray-500 dark:text-gray-400 text-sm focus:outline-none cursor-not-allowed">
             </div>
             <div class="mb-4">
@@ -1189,7 +1290,7 @@ cat << 'EOF' > public/profile.html
     });
 
     function logout(){
-      Swal.fire({title:'Keluar?',icon:'warning',showCancelButton:true,background:localStorage.getItem('darkMode')==='true'?'#0b1320':'#fff',color:localStorage.getItem('darkMode')==='true'?'#fff':'#000'}).then(r=>{
+      Swal.fire({title:'Keluar Akun?', text:'Apakah kamu yakin ingin keluar?', icon:'warning',showCancelButton:true,background:localStorage.getItem('darkMode')==='true'?'#0b1320':'#fff',color:localStorage.getItem('darkMode')==='true'?'#fff':'#000'}).then(r=>{
         if(r.isConfirmed){localStorage.removeItem('user');window.location.href='/';}
       });
     }
@@ -1278,8 +1379,258 @@ cat << 'EOF' > public/profile.html
 </html>
 EOF
 
+cat << 'EOF' > public/riwayat.html
+<!DOCTYPE html>
+<html lang="id" id="html-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riwayat Transaksi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>tailwind.config={darkMode:'class'}</script>
+</head>
+<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
+  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+    
+    <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
+      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i>
+      <h1 class="text-[18px] font-bold text-gray-800 dark:text-white">Riwayat Transaksi</h1>
+    </div>
+
+    <div class="mx-4 mt-4 bg-white dark:bg-[#111c2e] p-4 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm">
+        <div class="relative mb-4">
+            <i class="fas fa-search absolute left-3.5 top-3 text-gray-400 text-sm"></i>
+            <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400" placeholder="Cari transaksi...">
+        </div>
+        <div class="flex justify-between mb-2 gap-2">
+            <div id="btn-Semua" onclick="setStatusFilter('Semua')" class="flex-1 bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#0b1320] text-center py-2 rounded-full text-[11px] font-bold cursor-pointer shadow-sm transition-colors">Semua</div>
+            <div id="btn-Sukses" onclick="setStatusFilter('Sukses')" class="flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors">Sukses</div>
+            <div id="btn-Proses" onclick="setStatusFilter('Proses')" class="flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors">Proses</div>
+            <div id="btn-Gagal" onclick="setStatusFilter('Gagal')" class="flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors">Gagal</div>
+        </div>
+    </div>
+
+    <div class="px-4 mt-4" id="historyContainer">
+      <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
+        <i class="fas fa-spinner fa-spin text-4xl mb-4 text-gray-400"></i>
+      </div>
+    </div>
+
+    <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/dashboard.html'"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span></div>
+      <div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400"><i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span></div>
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/info.html'"><i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span></div>
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/profile.html'"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span></div>
+    </div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    if(!user) window.location.href='/';
+    if(localStorage.getItem('darkMode')==='true' || localStorage.getItem('darkMode')===null) document.getElementById('html-root').classList.add('dark');
+    
+    let allTrx = [];
+    let currentFilter = 'Semua';
+
+    fetch('/api/user/transactions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone})})
+    .then(r=>r.json())
+    .then(d=>{
+      allTrx = d.transactions ? d.transactions.reverse() : [];
+      renderHistory();
+    })
+    .catch(e => {
+      document.getElementById('historyContainer').innerHTML = `<div class="mt-10 text-center text-red-500 font-bold">Gagal memuat data.</div>`;
+    });
+
+    function setStatusFilter(status) {
+        currentFilter = status;
+        const isD = localStorage.getItem('darkMode') === 'true';
+        ['Semua', 'Sukses', 'Proses', 'Gagal'].forEach(btn => {
+            const el = document.getElementById('btn-' + btn);
+            el.className = 'flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors';
+        });
+        const activeBtn = document.getElementById('btn-' + status);
+        activeBtn.className = `flex-1 ${isD ? 'bg-yellow-400 text-[#0b1320]' : 'bg-[#002147] text-white'} text-center py-2 rounded-full text-[11px] font-bold cursor-pointer shadow-sm transition-colors`;
+        filterHistory();
+    }
+
+    function filterHistory() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        let filtered = allTrx;
+        
+        if(currentFilter !== 'Semua') {
+            filtered = filtered.filter(i => i.status === currentFilter);
+        }
+        
+        if(query) {
+            filtered = filtered.filter(i => (i.produk && i.produk.toLowerCase().includes(query)) || (i.no_tujuan && i.no_tujuan.includes(query)) || (i.sn_ref && i.sn_ref.toLowerCase().includes(query)));
+        }
+        
+        const c = document.getElementById('historyContainer');
+        if(filtered.length === 0){
+            c.innerHTML=`<div class="mt-10 flex flex-col items-center justify-center text-center px-6"><div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-gray-800"><i class="fas fa-receipt text-gray-400 text-4xl"></i></div><h2 class="text-gray-800 dark:text-white font-bold text-lg tracking-wide mb-2">Transaksi Tidak Ditemukan</h2></div>`;
+        } else {
+            c.innerHTML = filtered.map((i)=>{
+                let sc = i.status==='Proses' ? 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-800' : (i.status==='Sukses' ? 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 border-green-200 dark:border-green-800' : 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-800');
+                let rawIdx = allTrx.indexOf(i);
+                return `<div onclick="showDetailTrx(${rawIdx})" class="bg-white dark:bg-[#111c2e] p-4 rounded-2xl mb-3 border border-gray-200 dark:border-gray-800 shadow-sm flex justify-between items-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-[#0b1320] flex items-center justify-center text-gray-500 dark:text-gray-400 text-lg"><i class="fas fa-box"></i></div><div><h4 class="font-bold text-[13px] text-gray-800 dark:text-gray-200">${i.produk}</h4><p class="text-[10px] text-gray-500">${i.date}</p></div></div><div class="text-right"><p class="font-extrabold text-[14px] text-[#002147] dark:text-yellow-400 mb-1">Rp ${(i.harga||0).toLocaleString('id-ID')}</p><span class="text-[9px] font-bold px-2 py-0.5 rounded border ${sc} uppercase tracking-wider">${i.status}</span></div></div>`;
+            }).join('');
+        }
+    }
+
+    function renderHistory() { filterHistory(); }
+
+    window.showDetailTrx = function(idx){
+      const i = allTrx[idx];
+      const isD = localStorage.getItem('darkMode')==='true';
+      Swal.fire({
+        title: `<span class="font-bold ${isD?'text-white':'text-gray-800'} text-lg">Detail Transaksi</span>`,
+        html: `<div class="text-left mt-2 text-sm space-y-3 border-t ${isD?'border-gray-800':'border-gray-200'} pt-4">
+                 <div class="flex justify-between border-b ${isD?'border-gray-800':'border-gray-200'} pb-2"><span class="${isD?'text-gray-400':'text-gray-500'}">Produk</span><span class="${isD?'text-white':'text-gray-800'} font-bold text-right">${i.produk}</span></div>
+                 <div class="flex justify-between border-b ${isD?'border-gray-800':'border-gray-200'} pb-2"><span class="${isD?'text-gray-400':'text-gray-500'}">Tujuan</span><span class="${isD?'text-white':'text-gray-800'} font-bold text-right">${i.no_tujuan}</span></div>
+                 <div class="flex justify-between border-b ${isD?'border-gray-800':'border-gray-200'} pb-2"><span class="${isD?'text-gray-400':'text-gray-500'}">Status</span><span class="${i.status==='Sukses'?'text-green-500':(i.status==='Proses'?'text-yellow-500':'text-red-500')} font-bold text-right uppercase">${i.status}</span></div>
+                 <div class="flex justify-between border-b ${isD?'border-gray-800':'border-gray-200'} pb-2"><span class="${isD?'text-gray-400':'text-gray-500'}">SN/Ref</span><span class="${isD?'text-white':'text-gray-800'} font-medium text-right">${i.sn_ref||'-'}</span></div>
+                 <div class="mt-5 text-center"><p class="${isD?'text-gray-400':'text-gray-500'} text-xs mb-1">Total Harga</p><p class="text-3xl font-extrabold ${isD?'text-yellow-400':'text-[#002147]'}">Rp ${(i.harga||0).toLocaleString('id-ID')}</p></div>
+               </div>`,
+        background: isD?'#0b1320':'#fff', confirmButtonColor: isD?'#facc15':'#002147', confirmButtonText: 'Tutup',
+        customClass: { confirmButton: isD ? 'text-[#001229] font-bold px-8' : 'text-white font-bold px-8' }
+      });
+    }
+  </script>
+</body>
+</html>
+EOF
+
+cat << 'EOF' > public/info.html
+<!DOCTYPE html>
+<html lang="id" id="html-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pusat Informasi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script>tailwind.config = { darkMode: 'class' }</script>
+</head>
+<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
+  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+    
+    <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
+      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i>
+      <h1 class="text-[18px] font-bold text-gray-800 dark:text-white">Pusat Informasi</h1>
+    </div>
+
+    <div class="p-4" id="infoList">
+      <div class="mt-20 flex flex-col items-center justify-center text-gray-400">
+        <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
+        <p>Memuat informasi...</p>
+      </div>
+    </div>
+
+    <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/dashboard.html'">
+        <i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">HOME</span>
+      </div>
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/riwayat.html'">
+        <i class="fas fa-file-alt text-xl"></i><span class="text-[10px] mt-1 font-bold">RIWAYAT</span>
+      </div>
+      <div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400">
+        <i class="fas fa-bell text-xl"></i><span class="text-[10px] mt-1 font-bold">INFO</span>
+      </div>
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/profile.html'">
+        <i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">PROFIL</span>
+      </div>
+    </div>
+  </div>
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    if(!user) window.location.href='/';
+    if(localStorage.getItem('darkMode')==='true' || localStorage.getItem('darkMode')===null) document.getElementById('html-root').classList.add('dark');
+    fetch('/api/info').then(r=>r.json()).then(d=>{
+      const l = document.getElementById('infoList');
+      if(!d.info || d.info.length===0) {
+        l.innerHTML='<div class="mt-20 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500"><i class="fas fa-bell-slash text-5xl mb-4 opacity-50"></i><p class="text-sm">Belum ada info terbaru.</p></div>';
+      } else {
+        l.innerHTML = d.info.reverse().map(i=>`<div class="relative bg-white dark:bg-[#111c2e] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 mb-4 shadow-sm overflow-hidden"><div class="absolute -right-2 top-4 text-7xl opacity-10 dark:opacity-20 select-none">📢</div><div class="flex justify-between items-start mb-3 relative z-10"><h3 class="font-bold text-[#002147] dark:text-yellow-400 text-[15px] pr-2">${i.judul}</h3><span class="text-[10px] text-gray-500 bg-gray-100 dark:bg-black px-2 py-1 rounded-md border border-gray-200 dark:border-gray-800">${i.date}</span></div><p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed relative z-10">${i.isi}</p></div>`).join('');
+      }
+    });
+  </script>
+</body>
+</html>
+EOF
+
+cat << 'EOF' > public/riwayat_topup.html
+<!DOCTYPE html>
+<html lang="id" id="html-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riwayat Topup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>tailwind.config={darkMode:'class'}</script>
+</head>
+<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
+  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+    
+    <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
+      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i>
+      <h1 class="text-[18px] font-bold text-gray-800 dark:text-white">Riwayat Top Up</h1>
+    </div>
+
+    <div class="px-4 mt-6" id="historyContainer">
+      <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
+        <i class="fas fa-spinner fa-spin text-4xl mb-4 text-gray-400"></i>
+      </div>
+    </div>
+  </div>
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    if(!user) window.location.href='/';
+    if(localStorage.getItem('darkMode')==='true' || localStorage.getItem('darkMode')===null) document.getElementById('html-root').classList.add('dark');
+    
+    fetch('/api/topup/history',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone})}).then(r=>r.json()).then(d=>{
+      const c = document.getElementById('historyContainer');
+      if(d.history.length===0){
+        c.innerHTML=`<div class="mt-14 flex flex-col items-center justify-center text-center px-6"><div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-gray-800"><i class="fas fa-wallet text-gray-400 text-4xl"></i></div><h2 class="text-gray-800 dark:text-white font-bold text-lg tracking-wide mb-2">Belum Ada Top Up</h2><p class="text-gray-500 dark:text-gray-400 text-[13px] leading-relaxed mb-8 px-2">Anda belum melakukan pengisian saldo. Ayo isi saldo sekarang!</p><button class="bg-[#002147] text-white dark:bg-[#0b1320] dark:text-yellow-400 border border-transparent dark:border-gray-700 font-bold py-3 px-8 rounded-full shadow-lg hover:opacity-90 transition" onclick="location.href='/dashboard.html'">Top Up Sekarang</button></div>`;
+      } else {
+        window.topupData = d.history.reverse();
+        c.innerHTML = window.topupData.map((i,idx)=>{
+          let isExp = i.status==='Expired';
+          let sc = i.status==='Proses' ? 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-800' : (i.status==='Sukses' ? 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 border-green-200 dark:border-green-800' : 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-800');
+          let iconMethod = i.method.includes('QRIS') ? '<i class="fas fa-qrcode"></i>' : (i.method.includes('Admin') ? '<i class="fas fa-check-circle"></i>' : '<i class="fab fa-whatsapp"></i>');
+          let titleText = i.method.includes('Admin') ? 'Saldo ditambah Admin' : `Top Up ${i.method}`;
+          return `<div onclick="showDetailTopup(${idx})" class="bg-white dark:bg-[#111c2e] p-4 rounded-2xl mb-3 border border-gray-200 dark:border-gray-800 shadow-sm flex justify-between items-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors ${isExp?'opacity-70':''}"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-[#0b1320] flex items-center justify-center text-gray-500 dark:text-gray-400 text-lg">${iconMethod}</div><div><h4 class="font-bold text-[13px] text-gray-800 dark:text-gray-200">${titleText}</h4><p class="text-[10px] text-gray-500">${i.date}</p></div></div><div class="text-right"><p class="font-extrabold text-[14px] text-[#002147] dark:text-yellow-400 mb-1">Rp ${i.nominal.toLocaleString('id-ID')}</p><span class="text-[9px] font-bold px-2 py-0.5 rounded border ${sc} uppercase tracking-wider">${i.status}</span></div></div>`;
+        }).join('');
+      }
+    });
+
+    window.showDetailTopup = function(index) {
+        const item = window.topupData[index];
+        const isDark = localStorage.getItem('darkMode') === 'true';
+        const bgPopup = isDark ? '#0b1320' : '#ffffff';
+        const textColor = isDark ? 'text-gray-200' : 'text-gray-800';
+        const mutedColor = isDark ? 'text-gray-400' : 'text-gray-500';
+        const borderColor = isDark ? 'border-gray-800' : 'border-gray-200';
+        let statusColor = item.status === 'Proses' ? 'text-yellow-500' : (item.status === 'Sukses' ? 'text-green-500' : 'text-red-500');
+        Swal.fire({
+            title: `<span class="font-bold ${isDark ? 'text-white' : 'text-gray-800'} text-lg">Detail Top Up</span>`,
+            html: `<div class="text-left mt-2 space-y-3 text-sm border-t ${borderColor} pt-4"><div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Waktu</span><span class="font-medium ${textColor} text-right">${item.date}</span></div><div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Nominal</span><span class="font-medium ${textColor} text-right">Rp ${item.nominal.toLocaleString('id-ID')}</span></div><div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Metode</span><span class="font-medium ${textColor} text-right">${item.method}</span></div><div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Status</span><span class="font-bold ${statusColor} text-right uppercase">${item.status}</span></div><div class="mt-5 text-center"><p class="${mutedColor} text-xs mb-1">Total Bayar</p><p class="text-3xl font-extrabold ${isDark ? 'text-yellow-400' : 'text-[#002147]'}">Rp ${item.nominal.toLocaleString('id-ID')}</p></div></div>`,
+            showConfirmButton: true, confirmButtonText: 'Tutup', confirmButtonColor: isDark ? '#facc15' : '#002147', background: bgPopup,
+            customClass: { confirmButton: isDark ? 'text-[#001229] font-bold px-8' : 'text-white font-bold px-8' }
+        });
+    }
+  </script>
+</body>
+</html>
+EOF
+
 # ==========================================
-# NODE.JS BACKEND V126
+# NODE.JS BACKEND 
 # ==========================================
 echo "[4/5] Menulis ulang logika Backend Node.js..."
 
@@ -1545,7 +1896,26 @@ app.post('/api/topup/history', (req, res) => {
     if (changed) saveJSON(dbFile, db); res.json({ history: history }); 
 });
 
-app.post('/api/admin/add_balance', async (req, res) => {
+app.get('/api/admin/backup', async (req, res) => {
+    let config = loadJSON(configFile);
+    if(!config.teleToken || !config.teleChatId) return res.status(400).json({ error: "Token/Chat ID Telegram belum disetting." });
+    try {
+        let zipName = `Backup_DigitalFikyStore_${Date.now()}.zip`;
+        exec(`zip -r ${zipName} database.json web_users.json config.json local_products.json info.json`, async (error) => {
+            if(error) return res.status(500).json({ error: "Gagal membuat file ZIP." });
+            const form = new FormData();
+            form.append('chat_id', config.teleChatId);
+            form.append('caption', `📦 *BACKUP MANUAL BERHASIL*\n\nTanggal: ${new Date().toLocaleString('id-ID')}`);
+            form.append('parse_mode', 'Markdown');
+            form.append('document', fs.createReadStream(zipName));
+            await axios.post(`https://api.telegram.org/bot${config.teleToken}/sendDocument`, form, { headers: form.getHeaders() });
+            fs.unlinkSync(zipName);
+            res.json({ message: "Backup sukses terkirim ke Telegram!" });
+        });
+    } catch (e) { res.status(500).json({ error: "Gagal mengirim ke Telegram." }); }
+});
+
+app.post('/api/admin/balance', async (req, res) => {
     const { identifier, amount, action } = req.body; let webUsers = loadJSON(webUsersFile); let db = loadJSON(dbFile);
     let targetPhone = null;
     if(identifier.includes('@')){
@@ -1607,7 +1977,8 @@ app.post('/api/auth/verify', (req, res) => {
     if (webUsers[phone] && webUsers[phone].otp) {
         if (String(webUsers[phone].otp).trim() === String(otp).trim()) {
             if (Date.now() > (webUsers[phone].otpExpiry || Infinity)) return res.status(400).json({ error: 'OTP kedaluwarsa.' });
-            webUsers[phone].isVerified = true; delete webUsers[phone].otp; delete webUsers[phone].otpExpiry; saveJSON(webUsersFile, webUsers);
+            webUsers[phone].isVerified = true; 
+            delete webUsers[phone].otp; delete webUsers[phone].otpExpiry; saveJSON(webUsersFile, webUsers);
             
             let db = loadJSON(dbFile); 
             if (!db[phone]) { db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] }; saveJSON(dbFile, db); } 
@@ -1714,7 +2085,7 @@ NC='\033[0m'
 
 while true; do clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}          💎 PANEL DIGITAL FIKY STORE (V128) 💎       ${NC}"
+    echo -e "${YELLOW}          💎 PANEL DIGITAL FIKY STORE (V129) 💎       ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
     echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
@@ -1951,8 +2322,9 @@ EOFNGINX
             pm2 restart $BOT_NAME > /dev/null 2>&1
             read -p "Enter..." ;;
         14)
-            node -e "const axios=require('axios');const crypto=require('crypto');const fs=require('fs');let cfg=fs.existsSync('$HOME/$DIR_NAME/config.json')?JSON.parse(fs.readFileSync('$HOME/$DIR_NAME/config.json')):{};let sign=crypto.createHash('md5').update(cfg.digiUser+cfg.digiKey+'depo').digest('hex');axios.post('https://api.digiflazz.com/v1/cek-saldo',{cmd:'deposit',username:cfg.digiUser,sign:sign}).then(r=>console.log('Saldo: Rp '+r.data.data.deposit));"
-            read -p "Enter..." ;;
+            echo "Memeriksa koneksi dan saldo Digiflazz..."
+            node -e "const axios=require('axios');const crypto=require('crypto');const fs=require('fs');let cfg=fs.existsSync('$HOME/$DIR_NAME/config.json')?JSON.parse(fs.readFileSync('$HOME/$DIR_NAME/config.json')):{};if(!cfg.digiUser||!cfg.digiKey){console.log('❌ API Digiflazz belum disetting!');process.exit();}let sign=crypto.createHash('md5').update(cfg.digiUser+cfg.digiKey+'depo').digest('hex');axios.post('https://api.digiflazz.com/v1/cek-saldo',{cmd:'deposit',username:cfg.digiUser,sign:sign}).then(r=>{if(r.data&&r.data.data)console.log('\n✅ Koneksi Sukses! Saldo: Rp '+r.data.data.deposit);else console.log('\n❌ Respon tidak valid dari server.');}).catch(e=>console.log('\n❌ Gagal koneksi! Pastikan Username & Key benar, dan IP VPS tidak terblokir.'));"
+            read -p "Tekan Enter untuk kembali..." ;;
         15)
             node -e "const fs=require('fs'); let f='$HOME/$DIR_NAME/digi_cache.json'; if(fs.existsSync(f)){ fs.unlinkSync(f); console.log('Cache dihapus!'); }"
             pm2 restart all > /dev/null 2>&1
@@ -2001,6 +2373,6 @@ EOF
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
 echo "=========================================================="
-echo "  SISTEM WEB V128 BERHASIL DIPERBARUI SECARA PENUH!       "
+echo "  SISTEM WEB V129 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
