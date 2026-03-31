@@ -1905,7 +1905,7 @@ EOF
 # DIGITAL FIKY STORE - V146 (PART 4 - BACKEND & MENU FULL UNCOMPRESSED)
 # ==========================================
 
-echo "[4/5] Menulis ulang logika Backend Node.js (Full Uncompressed)..."
+echo "[4/5] Menulis ulang logika Backend Node.js (SUPER UNCOMPRESSED)..."
 
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
@@ -1922,10 +1922,16 @@ const { exec } = require('child_process');
 
 const app = express();
 
+// ==========================================
+// PENGATURAN EXPRESS & MIDLEWARE
+// ==========================================
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// ==========================================
+// DATABASE & KONFIGURASI FILE
+// ==========================================
 const configFile = './config.json';
 const dbFile = './database.json';
 const webUsersFile = './web_users.json'; 
@@ -1948,6 +1954,7 @@ const saveJSON = (file, data) => {
     fs.writeFileSync(file, JSON.stringify(data, null, 2));
 };
 
+// INISIALISASI FILE JIKA BELUM ADA
 let configAwal = loadJSON(configFile);
 configAwal.botName = configAwal.botName || "DIGITAL FIKY STORE";
 saveJSON(configFile, configAwal);
@@ -1959,7 +1966,7 @@ if (!fs.existsSync(digiCacheFile)) saveJSON(digiCacheFile, { time: 0, data: [] }
 if (!fs.existsSync(infoFile)) saveJSON(infoFile, []);
 
 // ==========================================
-// 3 BOT TELEGRAM LOGIC
+// 3 BOT TELEGRAM LOGIC (SUPER DETAIL)
 // ==========================================
 const sendTeleNotif = async (message, type = 'trx') => {
     let cfg = loadJSON(configFile);
@@ -1977,7 +1984,9 @@ const sendTeleNotif = async (message, type = 'trx') => {
         chatId = cfg.teleChatIdBackup || cfg.teleChatId; 
     }
 
-    if (!token || !chatId) return;
+    if (!token || !chatId) {
+        return; // ABAIKAN JIKA BELUM DISETTING
+    }
 
     try {
         await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, { 
@@ -1986,31 +1995,46 @@ const sendTeleNotif = async (message, type = 'trx') => {
             parse_mode: 'Markdown' 
         });
     } catch(e) { 
-        console.log("Gagal Notif Telegram", e.message); 
+        console.log("❌ Gagal Mengirim Notifikasi Telegram: ", e.message); 
     }
 };
 
+// ==========================================
+// API DASAR & INFORMASI
+// ==========================================
 app.get('/api/config', (req, res) => { 
+    let cfg = loadJSON(configFile);
     res.json({ 
-        banners: loadJSON(configFile).banners || [], 
-        qrisUrl: loadJSON(configFile).qrisUrl || '' 
+        banners: cfg.banners || [], 
+        qrisUrl: cfg.qrisUrl || '' 
     }); 
 });
 
 app.get('/api/info', (req, res) => { 
-    res.json({ info: loadJSON(infoFile) }); 
+    res.json({ 
+        info: loadJSON(infoFile) 
+    }); 
 });
 
 app.post('/api/user/balance', (req, res) => { 
-    res.json({ saldo: loadJSON(dbFile)[req.body.phone]?.saldo || 0 }); 
+    let db = loadJSON(dbFile);
+    let phone = req.body.phone;
+    let saldo = db[phone]?.saldo || 0;
+    res.json({ saldo: saldo }); 
 });
 
 app.post('/api/user/mutasi', (req, res) => { 
-    res.json({ mutasi: loadJSON(dbFile)[req.body.phone]?.mutasi || [] }); 
+    let db = loadJSON(dbFile);
+    let phone = req.body.phone;
+    let mutasi = db[phone]?.mutasi || [];
+    res.json({ mutasi: mutasi }); 
 });
 
 app.post('/api/user/transactions', (req, res) => { 
-    res.json({ transactions: loadJSON(dbFile)[req.body.phone]?.transactions || [] }); 
+    let db = loadJSON(dbFile);
+    let phone = req.body.phone;
+    let transactions = db[phone]?.transactions || [];
+    res.json({ transactions: transactions }); 
 });
 
 app.post('/api/admin/broadcast', (req, res) => {
@@ -2026,7 +2050,7 @@ app.post('/api/admin/broadcast', (req, res) => {
 });
 
 // ==========================================
-// PULL CATALOG & CUSTOM MARKUP
+// PULL CATALOG DIGIFLAZZ & PRODUK LOKAL
 // ==========================================
 app.post('/api/products', async (req, res) => {
     const { type, brand, category } = req.body;
@@ -2034,8 +2058,11 @@ app.post('/api/products', async (req, res) => {
     let digiCache = loadJSON(digiCacheFile); 
     let filtered = [];
     
-    if(config.digiUser && config.digiKey) {
+    // FETCH DARI DIGIFLAZZ JIKA DISETTING
+    if (config.digiUser && config.digiKey) {
         let timeDiff = Date.now() - digiCache.time;
+        
+        // CACHE 5 MENIT AGAR TIDAK SPAM API DIGIFLAZZ
         if (timeDiff > 300000 || !digiCache.data || digiCache.data.length === 0) { 
             try {
                 let sign = crypto.createHash('md5').update(config.digiUser + config.digiKey + "pricelist").digest('hex');
@@ -2043,15 +2070,15 @@ app.post('/api/products', async (req, res) => {
                     cmd: 'prepaid', 
                     username: config.digiUser, 
                     sign: sign 
-                }, { timeout: 5000 });
+                }, { timeout: 8000 });
                 
-                if(digiRes.data && digiRes.data.data) {
+                if (digiRes.data && digiRes.data.data) {
                     digiCache.data = digiRes.data.data; 
                     digiCache.time = Date.now(); 
                     saveJSON(digiCacheFile, digiCache); 
                 }
             } catch(e) {
-                console.log("[DIGIFLAZZ API] Timeout/Gagal Fetch Katalog.");
+                console.log("⚠️ [DIGIFLAZZ API] Timeout/Gagal Fetch Katalog.");
                 digiCache.time = Date.now(); 
                 saveJSON(digiCacheFile, digiCache);
             }
@@ -2060,6 +2087,7 @@ app.post('/api/products', async (req, res) => {
         let products = digiCache.data || [];
         const safeBrand = brand ? brand.toLowerCase() : '';
         
+        // LOGIKA FILTER PRODUK
         if (type === 'pulsa') { 
             filtered = products.filter(p => p.category === 'Pulsa' && p.brand.toLowerCase() === safeBrand); 
         } else if (type === 'data') {
@@ -2092,6 +2120,7 @@ app.post('/api/products', async (req, res) => {
         }
     }
 
+    // LOGIKA MARKUP / KEUNTUNGAN
     let markupRules = config.markupRules || { 
         l1: 10000, m1: 0, 
         l2: 50000, m2: 0, 
@@ -2106,16 +2135,18 @@ app.post('/api/products', async (req, res) => {
         return markupRules.m4;
     };
 
+    // GABUNGKAN DENGAN PRODUK LOKAL VPS
     let localProducts = loadJSON(localProductsFile);
     let myLocals = localProducts.filter(p => {
-        if(p.type !== type) return false;
-        if(brand && p.brand) { 
-            if(p.brand.toLowerCase() !== brand.toLowerCase()) return false; 
+        if (p.type !== type) return false;
+        
+        if (brand && p.brand) { 
+            if (p.brand.toLowerCase() !== brand.toLowerCase()) return false; 
         } else if (brand && !p.brand) { 
             return false; 
         }
         
-        if((type === 'data' || type === 'game') && category) {
+        if ((type === 'data' || type === 'game') && category) {
             if (p.category && p.category.toLowerCase().trim() === category.toLowerCase().trim()) return true;
             let kw = category.toLowerCase().split(' ');
             return kw.every(k => p.name.toLowerCase().includes(k) || (p.category && p.category.toLowerCase().includes(k)));
@@ -2147,7 +2178,7 @@ app.post('/api/products', async (req, res) => {
 });
 
 // ==========================================
-// TRANSAKSI LOGIC
+// TRANSAKSI LOGIC (SANGAT DETAIL)
 // ==========================================
 app.post('/api/transaction/create', async (req, res) => {
     try {
@@ -2167,12 +2198,14 @@ app.post('/api/transaction/create', async (req, res) => {
         if (!db[phone].mutasi) db[phone].mutasi = []; 
         if (!db[phone].transactions) db[phone].transactions = [];
 
+        // POTONG SALDO DIAWAL
         db[phone].saldo -= price;
         let ref_id = 'TRX' + Date.now(); 
         let dateStr = new Date().toLocaleString('id-ID');
         let trxStatus = 'Proses'; 
         let sn_ref = '';
 
+        // TEMBAK KE DIGIFLAZZ JIKA BUKAN PRODUK LOKAL
         if (!isLocal && config.digiUser && config.digiKey) {
             try {
                 let sign = crypto.createHash('md5').update(config.digiUser + config.digiKey + ref_id).digest('hex');
@@ -2184,12 +2217,14 @@ app.post('/api/transaction/create', async (req, res) => {
                     ref_id: ref_id, 
                     sign: sign 
                 };
+                
                 if (isDev) digiPayload.testing = true;
 
                 let digiRes = await axios.post('https://api.digiflazz.com/v1/transaction', digiPayload, { timeout: 8000 });
                 let digiData = digiRes.data.data;
 
                 if (digiData.status === 'Gagal') {
+                    // KEMBALIKAN SALDO
                     db[phone].saldo += price; 
                     saveJSON(dbFile, db); 
                     return res.status(400).json({ error: digiData.message || 'Gagal dari provider.' });
@@ -2201,12 +2236,14 @@ app.post('/api/transaction/create', async (req, res) => {
                     sn_ref = digiData.sn || ''; 
                 }
             } catch(e) {
+                // JIKA TIMEOUT, KEMBALIKAN SALDO OTOMATIS
                 db[phone].saldo += price; 
                 saveJSON(dbFile, db);
                 return res.status(400).json({ error: 'Koneksi ke Digiflazz Timeout. Saldo dikembalikan otomatis.' });
             }
         }
         
+        // SIMPAN MUTASI & TRX
         db[phone].mutasi.push({ 
             id: ref_id, 
             type: 'out', 
@@ -2230,12 +2267,16 @@ app.post('/api/transaction/create', async (req, res) => {
         
         saveJSON(dbFile, db);
         
+        // KIRIM NOTIF WA KE MEMBER
         try { 
             global.waSocket?.sendMessage(db[phone].jid || phone + '@s.whatsapp.net', { 
                 text: `Halo kak, *TRANSAKSI ${trxStatus.toUpperCase()}* 🚀\n\n📦 Produk: *${name}*\n📱 Tujuan: ${target}\n💰 Harga: Rp ${price.toLocaleString('id-ID')}\n🔖 Ref: ${ref_id}\n\nTerima kasih telah bertransaksi di DIGITAL FIKY STORE!` 
             }); 
-        } catch(err) {}
+        } catch(err) {
+            console.log("Gagal kirim pesan WA Member:", err.message);
+        }
         
+        // KIRIM NOTIF TELEGRAM KE ADMIN
         let msgTeleTrx = `🛒 *TRANSAKSI BARU (ORDER MASUK)* 🛒\n\n`;
         msgTeleTrx += `👤 Nama: ${uData.name}\n`;
         msgTeleTrx += `✉️ Email: ${uData.email}\n`;
@@ -2245,6 +2286,7 @@ app.post('/api/transaction/create', async (req, res) => {
         msgTeleTrx += `💰 Harga: Rp ${price.toLocaleString('id-ID')}\n`;
         msgTeleTrx += `🔄 Status: ${trxStatus}\n`;
         msgTeleTrx += `🔖 Ref: ${ref_id}`;
+        
         sendTeleNotif(msgTeleTrx, 'trx');
         
         res.json({ message: 'Transaksi berhasil diproses.' });
@@ -2253,13 +2295,14 @@ app.post('/api/transaction/create', async (req, res) => {
     }
 });
 
+// INTERVAL PENGECEKAN STATUS TRANSAKSI DIGIFLAZZ (TIAP 20 DETIK)
 setInterval(async () => {
     let db = loadJSON(dbFile); 
     let config = loadJSON(configFile); 
     let webUsers = loadJSON(webUsersFile); 
     let changed = false;
     
-    if(!config.digiUser || !config.digiKey) return;
+    if (!config.digiUser || !config.digiKey) return;
     
     for (let phone in db) {
         let user = db[phone]; 
@@ -2273,6 +2316,7 @@ setInterval(async () => {
                 try {
                     let sign = crypto.createHash('md5').update(config.digiUser + config.digiKey + trx.id).digest('hex');
                     let isDev = (config.digiKey || '').toLowerCase().startsWith('dev');
+                    
                     let digiPayload = { 
                         username: config.digiUser, 
                         buyer_sku_code: trx.sku, 
@@ -2333,40 +2377,55 @@ setInterval(async () => {
                         msgTeleGagal += `⚠️ Alasan: ${digiData.message || 'Gagal Pusat'}`;
                         sendTeleNotif(msgTeleGagal, 'trx');
                     }
-                } catch(e) {}
+                } catch(e) {
+                    console.log("Error Cronjob Digiflazz:", e.message);
+                }
             }
         }
     }
     if (changed) saveJSON(dbFile, db);
 }, 20000); 
 
+// ==========================================
+// FUNGSI AUTO BACKUP TELEGRAM
+// ==========================================
 function startAutoBackup() {
     let config = loadJSON(configFile);
     let t = config.teleTokenBackup || config.teleToken;
     let c = config.teleChatIdBackup || config.teleChatId;
-    if(!t || !c || !config.autoBackupHours || config.autoBackupHours <= 0) return;
+    
+    if (!t || !c || !config.autoBackupHours || config.autoBackupHours <= 0) {
+        return;
+    }
     
     let intervalMs = config.autoBackupHours * 60 * 60 * 1000; 
+    
     setInterval(() => {
         let zipName = `AutoBackup_FikyStore_${Date.now()}.zip`;
         exec(`zip -r ${zipName} database.json web_users.json config.json local_products.json info.json`, async (error) => {
-            if(!error) {
+            if (!error) {
                 const form = new FormData();
                 form.append('chat_id', c);
                 form.append('caption', `⏳ *AUTO BACKUP (${config.autoBackupHours} Jam)*\n\nTanggal: ${new Date().toLocaleString('id-ID')}`);
                 form.append('document', fs.createReadStream(zipName));
+                
                 try { 
                     await axios.post(`https://api.telegram.org/bot${t}/sendDocument`, form, { headers: form.getHeaders() }); 
-                } catch(e) {}
+                } catch(e) {
+                    console.log("Gagal Auto Backup Telegram");
+                }
+                
                 fs.unlinkSync(zipName);
             }
         });
     }, intervalMs);
 }
+
+// Mulai Auto Backup 15 Detik setelah server nyala
 setTimeout(startAutoBackup, 15000); 
 
 // ==========================================
-// TOPUP & ADMIN & AUTH LOGIC
+// API TOPUP LOGIC
 // ==========================================
 app.post('/api/topup/request', (req, res) => {
     const { phone, method, nominal } = req.body; 
@@ -2382,7 +2441,16 @@ app.post('/api/topup/request', (req, res) => {
     
     const expiry = method === 'QRIS Otomatis' ? Date.now() + 5*60*1000 : null; 
     let dateStr = new Date().toLocaleString('id-ID');
-    const newTopup = { id: 'TU' + Date.now(), method, nominal, status: 'Proses', date: dateStr, expiry };
+    
+    const newTopup = { 
+        id: 'TU' + Date.now(), 
+        method: method, 
+        nominal: nominal, 
+        status: 'Proses', 
+        date: dateStr, 
+        expiry: expiry 
+    };
+    
     db[phone].topup.push(newTopup); 
     saveJSON(dbFile, db); 
 
@@ -2424,6 +2492,9 @@ app.post('/api/topup/history', (req, res) => {
     res.json({ history: history }); 
 });
 
+// ==========================================
+// API ADMIN
+// ==========================================
 app.get('/api/admin/backup', async (req, res) => {
     let config = loadJSON(configFile);
     let t = config.teleTokenBackup || config.teleToken;
@@ -2465,9 +2536,14 @@ app.post('/api/admin/balance', async (req, res) => {
         targetPhone = identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier; 
     }
     
-    if(!targetPhone || !webUsers[targetPhone]) return res.json({ success: false, message: '\n❌ Member tidak ditemukan!' });
+    if(!targetPhone || !webUsers[targetPhone]) {
+        return res.json({ success: false, message: '\n❌ Member tidak ditemukan!' });
+    }
 
-    if(!db[targetPhone]) db[targetPhone] = { saldo: 0, jid: targetPhone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] };
+    if(!db[targetPhone]) {
+        db[targetPhone] = { saldo: 0, jid: targetPhone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] };
+    }
+    
     if(!db[targetPhone].mutasi) db[targetPhone].mutasi = [];
     if(!db[targetPhone].topup) db[targetPhone].topup = [];
     
@@ -2479,12 +2555,28 @@ app.post('/api/admin/balance', async (req, res) => {
         db[targetPhone].saldo += parseInt(amount);
         let saldoSesudah = db[targetPhone].saldo;
         
-        db[targetPhone].mutasi.push({ id: 'TRX'+Date.now(), type: 'in', amount: parseInt(amount), desc: 'Penambahan oleh Admin', date: dateStr });
-        db[targetPhone].topup.push({ id: 'TU'+Date.now(), method: 'Admin Fiky Store', nominal: parseInt(amount), status: 'Sukses', date: dateStr });
+        db[targetPhone].mutasi.push({ 
+            id: 'TRX'+Date.now(), 
+            type: 'in', 
+            amount: parseInt(amount), 
+            desc: 'Penambahan oleh Admin', 
+            date: dateStr 
+        });
+        
+        db[targetPhone].topup.push({ 
+            id: 'TU'+Date.now(), 
+            method: 'Admin Fiky Store', 
+            nominal: parseInt(amount), 
+            status: 'Sukses', 
+            date: dateStr 
+        });
+        
         saveJSON(dbFile, db);
         
         try { 
-            await global.waSocket?.sendMessage(targetPhone + '@c.us', { text: `🎉 Saldo Anda berhasil ditambah Admin sebesar *Rp ${parseInt(amount).toLocaleString('id-ID')}*.\n💰 Sisa Saldo: *Rp ${db[targetPhone].saldo.toLocaleString('id-ID')}*` }); 
+            await global.waSocket?.sendMessage(targetPhone + '@c.us', { 
+                text: `🎉 Saldo Anda berhasil ditambah Admin sebesar *Rp ${parseInt(amount).toLocaleString('id-ID')}*.\n💰 Sisa Saldo: *Rp ${db[targetPhone].saldo.toLocaleString('id-ID')}*` 
+            }); 
         } catch(e) {}
         
         let msgAdd = `✅ *PEMBAYARAN DITERIMA (TOP UP BERHASIL)* ✅\n\n`;
@@ -2503,17 +2595,28 @@ app.post('/api/admin/balance', async (req, res) => {
         
     } else if (action === 'reduce') {
         db[targetPhone].saldo -= parseInt(amount);
-        db[targetPhone].mutasi.push({ id: 'TRX'+Date.now(), type: 'out', amount: parseInt(amount), desc: 'Penarikan oleh Admin', date: dateStr });
+        db[targetPhone].mutasi.push({ 
+            id: 'TRX'+Date.now(), 
+            type: 'out', 
+            amount: parseInt(amount), 
+            desc: 'Penarikan oleh Admin', 
+            date: dateStr 
+        });
         saveJSON(dbFile, db);
         
         try { 
-            await global.waSocket?.sendMessage(targetPhone + '@c.us', { text: `⚠️ Saldo Anda telah dikurangi Admin sebesar *Rp ${parseInt(amount).toLocaleString('id-ID')}*.\n💰 Sisa Saldo: *Rp ${db[targetPhone].saldo.toLocaleString('id-ID')}*` }); 
+            await global.waSocket?.sendMessage(targetPhone + '@c.us', { 
+                text: `⚠️ Saldo Anda telah dikurangi Admin sebesar *Rp ${parseInt(amount).toLocaleString('id-ID')}*.\n💰 Sisa Saldo: *Rp ${db[targetPhone].saldo.toLocaleString('id-ID')}*` 
+            }); 
         } catch(e) {}
         
         res.json({ success: true, message: `\n✅ Saldo ${webUsers[targetPhone].name} berhasil dikurangi!` });
     }
 });
 
+// ==========================================
+// API AUTH LOGIC (LOGIN, DAFTAR, LUPA PASSWORD)
+// ==========================================
 app.post('/api/auth/login', (req, res) => {
     const { identifier, password } = req.body; 
     let webUsers = loadJSON(webUsersFile);
@@ -2521,7 +2624,9 @@ app.post('/api/auth/login', (req, res) => {
     let foundPhone = Object.keys(webUsers).find(p => (p === fPhone || webUsers[p].email === identifier) && webUsers[p].password === password);
     
     if (foundPhone) {
-        if (!webUsers[foundPhone].isVerified) return res.status(400).json({ error: 'Akun belum diverifikasi OTP.' });
+        if (!webUsers[foundPhone].isVerified) {
+            return res.status(400).json({ error: 'Akun belum diverifikasi OTP.' });
+        }
         res.json({ 
             message: 'Login sukses', 
             user: { 
@@ -2546,11 +2651,21 @@ app.post('/api/auth/register', async (req, res) => {
     }
     
     const otp = Math.floor(1000 + Math.random() * 9000).toString(); 
-    webUsers[fPhone] = { name, email, password, isVerified: false, otp, otpExpiry: Date.now() + 300000, avatar: null }; 
+    webUsers[fPhone] = { 
+        name, 
+        email, 
+        password, 
+        isVerified: false, 
+        otp, 
+        otpExpiry: Date.now() + 300000, 
+        avatar: null 
+    }; 
     saveJSON(webUsersFile, webUsers);
     
     try { 
-        await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Halo kak *${name}* 👋\n\nTerima kasih telah mendaftar di *DIGITAL FIKY STORE* 👑\n\nBerikut adalah kode rahasia (OTP) untuk mengaktifkan akun kakak:\n\n*${otp}*\n\n⏳ _Kode ini hanya berlaku selama 5 menit._\n⚠️ _Jangan pernah memberikan kode ini kepada siapapun!_` }); 
+        await global.waSocket?.sendMessage(fPhone + '@c.us', { 
+            text: `Halo kak *${name}* 👋\n\nTerima kasih telah mendaftar di *DIGITAL FIKY STORE* 👑\n\nBerikut adalah kode rahasia (OTP) untuk mengaktifkan akun kakak:\n\n*${otp}*\n\n⏳ _Kode ini hanya berlaku selama 5 menit._\n⚠️ _Jangan pernah memberikan kode ini kepada siapapun!_` 
+        }); 
         res.json({ message: 'OTP Terkirim', phone: fPhone }); 
     } catch(e) { 
         res.status(500).json({ error: 'Gagal kirim WA. Pastikan nomor bot di Panel VPS sudah terhubung.' }); 
@@ -2563,7 +2678,9 @@ app.post('/api/auth/verify', (req, res) => {
     
     if (webUsers[phone] && webUsers[phone].otp) {
         if (String(webUsers[phone].otp).trim() === String(otp).trim()) {
-            if (Date.now() > (webUsers[phone].otpExpiry || Infinity)) return res.status(400).json({ error: 'OTP kedaluwarsa.' });
+            if (Date.now() > (webUsers[phone].otpExpiry || Infinity)) {
+                return res.status(400).json({ error: 'OTP kedaluwarsa.' });
+            }
             
             webUsers[phone].isVerified = true; 
             delete webUsers[phone].otp; 
@@ -2576,7 +2693,12 @@ app.post('/api/auth/verify', (req, res) => {
                 saveJSON(dbFile, db); 
             } 
             
-            sendTeleNotif(`🎊 *MEMBER BARU BERGABUNG* 🎊\n\n👤 Nama: ${webUsers[phone].name}\n📱 WA: ${phone}\n✉️ Email: ${webUsers[phone].email}`, 'trx');
+            let msgNew = `🎊 *MEMBER BARU BERGABUNG* 🎊\n\n`;
+            msgNew += `👤 Nama: ${webUsers[phone].name}\n`;
+            msgNew += `📱 WA: ${phone}\n`;
+            msgNew += `✉️ Email: ${webUsers[phone].email}`;
+            sendTeleNotif(msgNew, 'trx');
+            
             res.json({ message: 'Sukses!' });
         } else { 
             res.status(400).json({ error: 'OTP Salah.' }); 
@@ -2591,7 +2713,9 @@ app.post('/api/auth/forgot', async (req, res) => {
     let webUsers = loadJSON(webUsersFile); 
     let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
     
-    if (!webUsers[fPhone]) return res.status(400).json({ error: 'Nomor tidak terdaftar.' });
+    if (!webUsers[fPhone]) {
+        return res.status(400).json({ error: 'Nomor tidak terdaftar.' });
+    }
     
     const otp = Math.floor(1000 + Math.random() * 9000).toString(); 
     webUsers[fPhone].otp = otp; 
@@ -2599,7 +2723,9 @@ app.post('/api/auth/forgot', async (req, res) => {
     saveJSON(webUsersFile, webUsers);
     
     try { 
-        await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Halo kak 👋\n\nKami menerima permintaan reset password akun *DIGITAL FIKY STORE*.\n\nKode OTP Anda:\n\n*${otp}*\n\n⏳ _Berlaku selama 5 menit._` }); 
+        await global.waSocket?.sendMessage(fPhone + '@c.us', { 
+            text: `Halo kak 👋\n\nKami menerima permintaan reset password akun *DIGITAL FIKY STORE*.\n\nKode OTP Anda:\n\n*${otp}*\n\n⏳ _Berlaku selama 5 menit._` 
+        }); 
         res.json({ message: 'OTP Terkirim' }); 
     } catch(e) { 
         res.status(500).json({ error: 'Gagal kirim WA.' }); 
@@ -2612,7 +2738,9 @@ app.post('/api/auth/reset', (req, res) => {
     
     if (webUsers[phone] && webUsers[phone].otp) {
         if (String(webUsers[phone].otp).trim() === String(otp).trim()) {
-            if(Date.now() > (webUsers[phone].otpExpiry || Infinity)) return res.status(400).json({ error: 'OTP kedaluwarsa.' });
+            if(Date.now() > (webUsers[phone].otpExpiry || Infinity)) {
+                return res.status(400).json({ error: 'OTP kedaluwarsa.' });
+            }
             
             webUsers[phone].password = newPassword; 
             delete webUsers[phone].otp; 
@@ -2633,8 +2761,12 @@ app.post('/api/auth/request-update-otp', async (req, res) => {
     let fOld = oldPhone.startsWith('0') ? '62' + oldPhone.slice(1) : oldPhone; 
     let fNew = newPhone.startsWith('0') ? '62' + newPhone.slice(1) : newPhone;
     
-    if (webUsers[fNew] && fNew !== fOld) return res.status(400).json({ error: 'Nomor baru sudah terdaftar.' });
-    if(!webUsers[fOld]) return res.status(400).json({ error: 'Akun tidak ditemukan.' });
+    if (webUsers[fNew] && fNew !== fOld) {
+        return res.status(400).json({ error: 'Nomor baru sudah terdaftar.' });
+    }
+    if(!webUsers[fOld]) {
+        return res.status(400).json({ error: 'Akun tidak ditemukan.' });
+    }
 
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
     webUsers[fOld].updateOtp = otp; 
@@ -2643,7 +2775,9 @@ app.post('/api/auth/request-update-otp', async (req, res) => {
     
     let targetWA = fNew !== fOld ? fNew : fOld;
     try { 
-        await global.waSocket?.sendMessage(targetWA + '@c.us', { text: `Halo kak 👋\n\nBerikut kode OTP untuk verifikasi perubahan keamanan akun (Nomor/Password) di *DIGITAL FIKY STORE*:\n\n*${otp}*\n\n⏳ _Berlaku 5 menit._` }); 
+        await global.waSocket?.sendMessage(targetWA + '@c.us', { 
+            text: `Halo kak 👋\n\nBerikut kode OTP untuk verifikasi perubahan keamanan akun (Nomor/Password) di *DIGITAL FIKY STORE*:\n\n*${otp}*\n\n⏳ _Berlaku 5 menit._` 
+        }); 
         res.json({ message: 'OTP Terkirim' }); 
     } catch(e) { 
         res.status(500).json({ error: 'Gagal kirim WA.' }); 
@@ -2657,21 +2791,32 @@ app.post('/api/auth/update', (req, res) => {
     let fOld = oldPhone.startsWith('0') ? '62' + oldPhone.slice(1) : oldPhone; 
     let fNew = newPhone.startsWith('0') ? '62' + newPhone.slice(1) : newPhone;
     
-    if (!webUsers[fOld]) return res.status(400).json({ error: 'Akun tidak ditemukan.' });
+    if (!webUsers[fOld]) {
+        return res.status(400).json({ error: 'Akun tidak ditemukan.' });
+    }
     
     let isSecureChange = (fOld !== fNew) || (newPassword && newPassword.trim() !== '');
     
     if (isSecureChange) {
-        if (fOld !== fNew && webUsers[fNew]) return res.status(400).json({ error: 'Nomor sudah dipakai.' });
-        if (String(webUsers[fOld].updateOtp).trim() !== String(otp).trim()) return res.status(400).json({ error: 'Kode OTP Salah.' });
-        if (Date.now() > (webUsers[fOld].updateOtpExpiry||Infinity)) return res.status(400).json({ error: 'OTP kedaluwarsa.' });
+        if (fOld !== fNew && webUsers[fNew]) {
+            return res.status(400).json({ error: 'Nomor sudah dipakai.' });
+        }
+        if (String(webUsers[fOld].updateOtp).trim() !== String(otp).trim()) {
+            return res.status(400).json({ error: 'Kode OTP Salah.' });
+        }
+        if (Date.now() > (webUsers[fOld].updateOtpExpiry||Infinity)) {
+            return res.status(400).json({ error: 'OTP kedaluwarsa.' });
+        }
         
         if (fOld !== fNew) {
             webUsers[fNew] = { ...webUsers[fOld], name: newName, avatar: avatar || webUsers[fOld].avatar }; 
-            if (newPassword && newPassword.trim() !== '') webUsers[fNew].password = newPassword;
+            if (newPassword && newPassword.trim() !== '') {
+                webUsers[fNew].password = newPassword;
+            }
             delete webUsers[fNew].updateOtp; 
             delete webUsers[fNew].updateOtpExpiry; 
             delete webUsers[fOld];
+            
             if (db[fOld]) { 
                 db[fNew] = { ...db[fOld], jid: fNew + '@s.whatsapp.net' }; 
                 delete db[fOld]; 
@@ -2679,7 +2824,9 @@ app.post('/api/auth/update', (req, res) => {
         } else {
             webUsers[fOld].name = newName; 
             if(avatar !== undefined) webUsers[fOld].avatar = avatar;
-            if (newPassword && newPassword.trim() !== '') webUsers[fOld].password = newPassword;
+            if (newPassword && newPassword.trim() !== '') {
+                webUsers[fOld].password = newPassword;
+            }
             delete webUsers[fOld].updateOtp; 
             delete webUsers[fOld].updateOtpExpiry;
         }
@@ -2706,7 +2853,9 @@ app.post('/api/auth/delete', (req, res) => {
     res.json({ message: 'Akun dihapus.' });
 });
 
-// START BAILEYS BOT (WITH PROPER ERROR HANDLING AND EXPANDED FORMAT)
+// ==========================================
+// START BAILEYS WHATSAPP BOT (ERROR HANDLING FULL)
+// ==========================================
 async function startBot() {
     try {
         const { state, saveCreds } = await useMultiFileAuthState('sesi_bot');
@@ -2728,7 +2877,7 @@ async function startBot() {
                         const code = await sock.requestPairingCode(config.botNumber.replace(/[^0-9]/g, '')); 
                         console.log(`\n🔑 KODE PAIRING: ${code}\n`); 
                     } catch (error) {
-                        console.error("Gagal request pairing code:", error);
+                        console.log("❌ Gagal request pairing code:", error.message);
                     } 
                 }, 5000); 
             } 
@@ -2737,6 +2886,7 @@ async function startBot() {
         sock.ev.on('connection.update', (update) => { 
             const { connection } = update; 
             if (connection === 'close') {
+                console.log("Koneksi terputus, mencoba menyambung kembali...");
                 setTimeout(startBot, 3000); 
             } else if (connection === 'open') {
                 console.log('\n✅ BOT WHATSAPP BERHASIL TERHUBUNG!\n');
@@ -2745,9 +2895,9 @@ async function startBot() {
         
         sock.ev.on('creds.update', saveCreds); 
         global.waSocket = sock; 
-
-    } catch (err) {
-        console.error("Fatal error di Bot WhatsApp:", err);
+        
+    } catch (error) {
+        console.log("❌ Fatal Error Bot WA:", error.message);
     }
 }
 
@@ -2822,7 +2972,14 @@ while true; do clear
             read -p "Masukkan Nomor WA Bot (Awalan 62, cth: 62812...): " botnum
             if [ ! -z "$botnum" ]; then
                 cd "$HOME/$DIR_NAME"
-                node -e "const fs=require('fs');let f='./config.json';let c=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):{};c.botNumber='$botnum';fs.writeFileSync(f,JSON.stringify(c,null,2));"
+                node -e "
+                const fs = require('fs');
+                const file = './config.json';
+                let config = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
+                config.botNumber = '$botnum';
+                fs.writeFileSync(file, JSON.stringify(config, null, 2));
+                console.log('Nomor disimpan!');
+                "
                 echo -e "${GREEN}Nomor disimpan! Meminta kode pairing ke WhatsApp...${NC}"
                 echo -e "${CYAN}(Tunggu sekitar 5-10 detik. Jika kode sudah muncul, catat kodenya.)${NC}"
                 echo -e "${RED}(Tekan CTRL+C di keyboard jika sudah selesai untuk kembali ke menu)${NC}"
@@ -2834,6 +2991,8 @@ while true; do clear
             pm2 delete $BOT_NAME 2>/dev/null
             pm2 start index.js --name "$BOT_NAME"
             pm2 save 
+            echo -e "${GREEN}Bot dijalankan di latar belakang!${NC}"
+            read -p "Enter..."
             ;;
         3)
             clear
@@ -2868,7 +3027,17 @@ while true; do clear
             read -p "Isi Pengumuman  : " b_isi
             if [ ! -z "$b_isi" ]; then
                 cd "$HOME/$DIR_NAME"
-                node -e "const http=require('http');const data=JSON.stringify({judul:'$b_judul', message:'$b_isi'});const req=http.request({hostname:'localhost',port:3000,path:'/api/admin/broadcast',method:'POST',headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(data)}},res=>{let b='';res.on('data',c=>b+=c);res.on('end',()=>console.log(b));});req.write(data);req.end();"
+                node -e "
+                const http = require('http');
+                const data = JSON.stringify({judul: '$b_judul', message: '$b_isi'});
+                const req = http.request({
+                    hostname: 'localhost', port: 3000, path: '/api/admin/broadcast', method: 'POST',
+                    headers: {'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data)}
+                }, res => {
+                    let b = ''; res.on('data', c => b += c); res.on('end', () => console.log('Terkirim ke Server!'));
+                });
+                req.write(data); req.end();
+                "
                 echo -e "\n${GREEN}✅ Pesan Broadcast berhasil ditambahkan ke Pusat Informasi Aplikasi!${NC}"
             fi
             read -p "Tekan Enter untuk kembali..."
@@ -2885,19 +3054,48 @@ while true; do clear
             read -p "Pilih [0-3]: " s_menu
             if [ "$s_menu" == "1" ]; then
                 cd "$HOME/$DIR_NAME"
-                node -e "const fs=require('fs');const db=fs.existsSync('./database.json')?JSON.parse(fs.readFileSync('./database.json')):{};const users=fs.existsSync('./web_users.json')?JSON.parse(fs.readFileSync('./web_users.json')):{};for(let p in users){if(users[p].isVerified){console.log('- '+users[p].name+' ('+p+') : Rp '+(db[p]?db[p].saldo:0));}}"
+                node -e "
+                const fs = require('fs');
+                const db = fs.existsSync('./database.json') ? JSON.parse(fs.readFileSync('./database.json')) : {};
+                const users = fs.existsSync('./web_users.json') ? JSON.parse(fs.readFileSync('./web_users.json')) : {};
+                for (let p in users) {
+                    if (users[p].isVerified) {
+                        console.log('- ' + users[p].name + ' (' + p + ') : Rp ' + (db[p] ? db[p].saldo : 0));
+                    }
+                }
+                "
                 read -p "Enter..."
             elif [ "$s_menu" == "2" ]; then
                 read -p "No WA Member: " no_mem
                 read -p "Jumlah Tambah: " jm_mem
                 cd "$HOME/$DIR_NAME"
-                node -e "const http=require('http');const data=JSON.stringify({identifier:'$no_mem',amount:parseInt('$jm_mem'),action:'add'});const req=http.request({hostname:'localhost',port:3000,path:'/api/admin/balance',method:'POST',headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(data)}},res=>{res.on('data',c=>console.log(c.toString()));});req.write(data);req.end();"
+                node -e "
+                const http = require('http');
+                const data = JSON.stringify({identifier: '$no_mem', amount: parseInt('$jm_mem'), action: 'add'});
+                const req = http.request({
+                    hostname: 'localhost', port: 3000, path: '/api/admin/balance', method: 'POST',
+                    headers: {'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data)}
+                }, res => {
+                    res.on('data', c => console.log(c.toString()));
+                });
+                req.write(data); req.end();
+                "
                 read -p "Enter..."
             elif [ "$s_menu" == "3" ]; then
                 read -p "No WA Member: " no_mem
                 read -p "Jumlah Kurangi: " jm_mem
                 cd "$HOME/$DIR_NAME"
-                node -e "const http=require('http');const data=JSON.stringify({identifier:'$no_mem',amount:parseInt('$jm_mem'),action:'reduce'});const req=http.request({hostname:'localhost',port:3000,path:'/api/admin/balance',method:'POST',headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(data)}},res=>{res.on('data',c=>console.log(c.toString()));});req.write(data);req.end();"
+                node -e "
+                const http = require('http');
+                const data = JSON.stringify({identifier: '$no_mem', amount: parseInt('$jm_mem'), action: 'reduce'});
+                const req = http.request({
+                    hostname: 'localhost', port: 3000, path: '/api/admin/balance', method: 'POST',
+                    headers: {'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data)}
+                }, res => {
+                    res.on('data', c => console.log(c.toString()));
+                });
+                req.write(data); req.end();
+                "
                 read -p "Enter..."
             fi
             ;;
@@ -2916,23 +3114,23 @@ while true; do clear
             if [ "$b_menu" == "1" ]; then
                 cd "$HOME/$DIR_NAME"
                 node -e "
-                const fs=require('fs'); 
-                const path='./public/banners';
+                const fs = require('fs'); 
+                const path = './public/banners';
                 if(!fs.existsSync(path)) fs.mkdirSync(path, {recursive:true});
                 let files = fs.readdirSync(path).filter(f => f.match(/\.(jpg|jpeg|png|gif)$/i));
-                let cfg=fs.existsSync('./config.json')?JSON.parse(fs.readFileSync('./config.json')):{};
+                let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {};
                 cfg.banners = files;
                 fs.writeFileSync('./config.json', JSON.stringify(cfg, null, 2));
-                console.log('✅ Berhasil menyinkronkan '+files.length+' banner!');
+                console.log('✅ Berhasil menyinkronkan ' + files.length + ' banner!');
                 "
                 pm2 restart $BOT_NAME > /dev/null 2>&1
                 read -p "Enter..."
             elif [ "$b_menu" == "2" ]; then
                 cd "$HOME/$DIR_NAME"
                 node -e "
-                const fs=require('fs'); 
-                let cfg=fs.existsSync('./config.json')?JSON.parse(fs.readFileSync('./config.json')):{};
-                cfg.banners=[];
+                const fs = require('fs'); 
+                let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {};
+                cfg.banners = [];
                 fs.writeFileSync('./config.json', JSON.stringify(cfg, null, 2));
                 console.log('✅ Semua banner telah disembunyikan dari aplikasi.');
                 "
@@ -2959,13 +3157,14 @@ while true; do clear
             
             cd "$HOME/$DIR_NAME"
             node -e "
-            const fs=require('fs'); let file='./config.json';
-            let cfg=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};
+            const fs = require('fs');
+            const file = './config.json';
+            let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
             cfg.markupRules = {
-                l1: parseInt('$l1')||10000, m1: parseInt('$m1')||0,
-                l2: parseInt('$l2')||50000, m2: parseInt('$m2')||0,
-                l3: parseInt('$l3')||100000, m3: parseInt('$m3')||0,
-                m4: parseInt('$m4')||0
+                l1: parseInt('$l1') || 10000, m1: parseInt('$m1') || 0,
+                l2: parseInt('$l2') || 50000, m2: parseInt('$m2') || 0,
+                l3: parseInt('$l3') || 100000, m3: parseInt('$m3') || 0,
+                m4: parseInt('$m4') || 0
             };
             fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
             console.log('\n✅ Seting Pasang Harga Berhasil Disimpan!');
@@ -2989,15 +3188,45 @@ while true; do clear
                 read -p "Harga Modal: " p_price
                 read -p "SKU Digiflazz: " p_sku
                 cd "$HOME/$DIR_NAME" 
-                node -e "const fs=require('fs');let f='./local_products.json';let data=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[];data.push({id:'LOC'+Date.now(),type:'$tp',brand:'$p_brand',category:'$p_cat',name:'$p_name',price:parseInt('$p_price')||0,sku:'$p_sku',isDigi:true});fs.writeFileSync(f,JSON.stringify(data,null,2));console.log('Berhasil!');"
+                node -e "
+                const fs = require('fs');
+                let f = './local_products.json';
+                let data = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f)) : [];
+                data.push({
+                    id: 'LOC' + Date.now(), type: '$tp', brand: '$p_brand', category: '$p_cat',
+                    name: '$p_name', price: parseInt('$p_price') || 0, sku: '$p_sku', isDigi: true
+                });
+                fs.writeFileSync(f, JSON.stringify(data, null, 2));
+                console.log('✅ Produk Berhasil Ditambahkan!');
+                "
                 read -p "Enter..."
             elif [ "$pr_menu" == "2" ]; then
                 cd "$HOME/$DIR_NAME" 
-                node -e "const fs=require('fs');let f='./local_products.json';let data=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[];if(data.length===0)console.log('\nBelum ada produk.');else data.forEach((p,i)=>console.log('['+i+'] '+p.name));"
+                node -e "
+                const fs = require('fs');
+                let f = './local_products.json';
+                let data = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f)) : [];
+                if (data.length === 0) {
+                    console.log('\nBelum ada produk.');
+                } else {
+                    data.forEach((p, i) => console.log('[' + i + '] ' + p.name));
+                }
+                "
                 read -p "Masukkan Nomor Produk yang mau dihapus: " del_id
                 if [ ! -z "$del_id" ]; then
                     cd "$HOME/$DIR_NAME" 
-                    node -e "const fs=require('fs');let f='./local_products.json';let data=fs.existsSync(f)?JSON.parse(fs.readFileSync(f)):[];if(data['$del_id']){data.splice('$del_id',1);fs.writeFileSync(f,JSON.stringify(data,null,2));console.log('\n✅ Produk berhasil dihapus!');}else{console.log('\n❌ Nomor tidak valid.');}"
+                    node -e "
+                    const fs = require('fs');
+                    let f = './local_products.json';
+                    let data = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f)) : [];
+                    if (data['$del_id']) {
+                        data.splice('$del_id', 1);
+                        fs.writeFileSync(f, JSON.stringify(data, null, 2));
+                        console.log('\n✅ Produk berhasil dihapus!');
+                    } else {
+                        console.log('\n❌ Nomor tidak valid.');
+                    }
+                    "
                 fi
                 read -p "Enter..."
             fi
@@ -3075,7 +3304,15 @@ EOFNGINX
             read -p "Username Digiflazz: " digi_user
             read -p "API Key Digiflazz (Prod Key): " digi_key
             cd "$HOME/$DIR_NAME"
-            node -e "const fs=require('fs');let file='./config.json';let cfg=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};cfg.digiUser='$digi_user';cfg.digiKey='$digi_key';fs.writeFileSync(file,JSON.stringify(cfg,null,2));"
+            node -e "
+            const fs = require('fs');
+            let file = './config.json';
+            let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
+            cfg.digiUser = '$digi_user';
+            cfg.digiKey = '$digi_key';
+            fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
+            console.log('✅ Konfigurasi API Disimpan!');
+            "
             pm2 restart $BOT_NAME > /dev/null 2>&1
             read -p "Enter..." 
             ;;
@@ -3084,21 +3321,25 @@ EOFNGINX
             echo "Memeriksa koneksi dan saldo Digiflazz..."
             cd "$HOME/$DIR_NAME" 
             node -e "
-            const fs=require('fs');
-            let cfg=fs.existsSync('./config.json')?JSON.parse(fs.readFileSync('./config.json')):{};
-            if(!cfg.digiUser || !cfg.digiKey){
+            const fs = require('fs');
+            let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {};
+            if(!cfg.digiUser || !cfg.digiKey) {
                 console.log('❌ API Digiflazz belum diatur! Isi di menu 13 terlebih dahulu.');
                 process.exit();
             }
-            const axios=require('axios');
-            const crypto=require('crypto');
-            let sign=crypto.createHash('md5').update(cfg.digiUser+cfg.digiKey+'depo').digest('hex');
-            axios.post('https://api.digiflazz.com/v1/cek-saldo',{cmd:'deposit',username:cfg.digiUser,sign:sign})
-            .then(r=>{
-                if(r.data && r.data.data && r.data.data.deposit !== undefined) console.log('\n✅ Koneksi Sukses! Saldo Anda: Rp ' + r.data.data.deposit);
-                else console.log('\n❌ Respon server Digiflazz tidak valid. Cek Username & Key.');
+            const axios = require('axios');
+            const crypto = require('crypto');
+            let sign = crypto.createHash('md5').update(cfg.digiUser + cfg.digiKey + 'depo').digest('hex');
+            
+            axios.post('https://api.digiflazz.com/v1/cek-saldo', { cmd: 'deposit', username: cfg.digiUser, sign: sign })
+            .then(r => {
+                if(r.data && r.data.data && r.data.data.deposit !== undefined) {
+                    console.log('\n✅ Koneksi Sukses! Saldo Anda: Rp ' + r.data.data.deposit);
+                } else {
+                    console.log('\n❌ Respon server Digiflazz tidak valid. Cek Username & Key.');
+                }
             })
-            .catch(e=>{
+            .catch(e => {
                 console.log('\n❌ Gagal terhubung! Pastikan Username/Key benar, dan IP VPS sudah ditambahkan di web Digiflazz.');
             });
             "
@@ -3106,7 +3347,16 @@ EOFNGINX
             ;;
         15)
             cd "$HOME/$DIR_NAME" 
-            node -e "const fs=require('fs'); let f='./digi_cache.json'; if(fs.existsSync(f)){ fs.unlinkSync(f); console.log('Cache dihapus!'); }"
+            node -e "
+            const fs = require('fs'); 
+            let f = './digi_cache.json'; 
+            if(fs.existsSync(f)) { 
+                fs.unlinkSync(f); 
+                console.log('✅ Cache Katalog berhasil dihapus!'); 
+            } else {
+                console.log('✅ Cache sudah bersih.');
+            }
+            "
             pm2 restart all > /dev/null 2>&1
             read -p "Enter..." 
             ;;
@@ -3124,19 +3374,40 @@ EOFNGINX
                 read -p "Token Bot Transaksi: " t_trx
                 read -p "Chat ID Transaksi: " c_trx
                 cd "$HOME/$DIR_NAME"
-                node -e "const fs=require('fs');let file='./config.json';let cfg=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};cfg.teleTokenTrx='$t_trx';cfg.teleChatIdTrx='$c_trx';fs.writeFileSync(file,JSON.stringify(cfg,null,2));"
+                node -e "
+                const fs = require('fs');
+                let file = './config.json';
+                let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
+                cfg.teleTokenTrx = '$t_trx';
+                cfg.teleChatIdTrx = '$c_trx';
+                fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
+                "
                 echo -e "${GREEN}✅ Bot Transaksi Disimpan!${NC}"
             elif [ "$bot_sel" == "2" ]; then
                 read -p "Token Bot Top Up: " t_topup
                 read -p "Chat ID Top Up: " c_topup
                 cd "$HOME/$DIR_NAME"
-                node -e "const fs=require('fs');let file='./config.json';let cfg=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};cfg.teleTokenTopup='$t_topup';cfg.teleChatIdTopup='$c_topup';fs.writeFileSync(file,JSON.stringify(cfg,null,2));"
+                node -e "
+                const fs = require('fs');
+                let file = './config.json';
+                let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
+                cfg.teleTokenTopup = '$t_topup';
+                cfg.teleChatIdTopup = '$c_topup';
+                fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
+                "
                 echo -e "${GREEN}✅ Bot Top Up Disimpan!${NC}"
             elif [ "$bot_sel" == "3" ]; then
                 read -p "Token Bot Backup: " t_backup
                 read -p "Chat ID Backup: " c_backup
                 cd "$HOME/$DIR_NAME"
-                node -e "const fs=require('fs');let file='./config.json';let cfg=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};cfg.teleTokenBackup='$t_backup';cfg.teleChatIdBackup='$c_backup';fs.writeFileSync(file,JSON.stringify(cfg,null,2));"
+                node -e "
+                const fs = require('fs');
+                let file = './config.json';
+                let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
+                cfg.teleTokenBackup = '$t_backup';
+                cfg.teleChatIdBackup = '$c_backup';
+                fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
+                "
                 echo -e "${GREEN}✅ Bot Backup Disimpan!${NC}"
             fi
             pm2 restart all > /dev/null 2>&1
@@ -3146,13 +3417,52 @@ EOFNGINX
             echo "Format: 1 untuk tiap 1 jam, 0.5 untuk 30 menit."
             read -p "Berapa Jam Sekali Auto-Backup?: " tele_jam
             cd "$HOME/$DIR_NAME"
-            node -e "const fs=require('fs');let file='./config.json';let cfg=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{};cfg.autoBackupHours=parseFloat('$tele_jam');fs.writeFileSync(file,JSON.stringify(cfg,null,2));console.log('Disimpan: Auto Backup Tiap $tele_jam Jam!');"
+            node -e "
+            const fs = require('fs');
+            let file = './config.json';
+            let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
+            cfg.autoBackupHours = parseFloat('$tele_jam');
+            fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
+            console.log('✅ Disimpan: Auto Backup Tiap $tele_jam Jam!');
+            "
             pm2 restart all > /dev/null 2>&1
             read -p "Enter..." 
             ;;
         18)
             cd "$HOME/$DIR_NAME"
-            node -e "const axios=require('axios');const fs=require('fs');const FormData=require('form-data');const {exec}=require('child_process');let cfg=fs.existsSync('./config.json')?JSON.parse(fs.readFileSync('./config.json')):{};let t=cfg.teleTokenBackup||cfg.teleToken;let c=cfg.teleChatIdBackup||cfg.teleChatId;if(!t||!c){console.log('❌ Token/Chat ID Bot Backup belum disetting (Menu 16)');process.exit();}let zipName='Backup_FikyStore_'+Date.now()+'.zip';exec('zip -r '+zipName+' database.json web_users.json config.json local_products.json info.json',(err)=>{const form=new FormData();form.append('chat_id',c);form.append('document',fs.createReadStream(zipName));form.append('caption','📦 *BACKUP MANUAL BERHASIL*\n\nTanggal: '+new Date().toLocaleString('id-ID'));form.append('parse_mode','Markdown');axios.post('https://api.telegram.org/bot'+t+'/sendDocument',form,{headers:form.getHeaders()}).then(()=>{console.log('✅ Terkirim ke Telegram!');fs.unlinkSync(zipName);}).catch(e=>{console.log('❌ Gagal Kirim');});});"
+            node -e "
+            const axios = require('axios');
+            const fs = require('fs');
+            const FormData = require('form-data');
+            const {exec} = require('child_process');
+            
+            let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {};
+            let t = cfg.teleTokenBackup || cfg.teleToken;
+            let c = cfg.teleChatIdBackup || cfg.teleChatId;
+            
+            if(!t || !c) {
+                console.log('❌ Token/Chat ID Bot Backup belum disetting (Menu 16)');
+                process.exit();
+            }
+            
+            let zipName = 'Backup_FikyStore_' + Date.now() + '.zip';
+            exec('zip -r ' + zipName + ' database.json web_users.json config.json local_products.json info.json', (err) => {
+                const form = new FormData();
+                form.append('chat_id', c);
+                form.append('document', fs.createReadStream(zipName));
+                form.append('caption', '📦 *BACKUP MANUAL BERHASIL*\n\nTanggal: ' + new Date().toLocaleString('id-ID'));
+                form.append('parse_mode', 'Markdown');
+                
+                axios.post('https://api.telegram.org/bot' + t + '/sendDocument', form, { headers: form.getHeaders() })
+                .then(() => {
+                    console.log('✅ File Backup Terkirim ke Telegram!');
+                    fs.unlinkSync(zipName);
+                })
+                .catch(e => {
+                    console.log('❌ Gagal Kirim ke Telegram');
+                });
+            });
+            "
             read -p "Tunggu sebentar lalu tekan Enter..." 
             ;;
         19)
@@ -3162,7 +3472,7 @@ EOFNGINX
             if [ -f "restore.zip" ]; then
                 unzip -o restore.zip && rm -f restore.zip
                 pm2 restart all > /dev/null 2>&1
-                echo -e "${GREEN}Restore Selesai!${NC}"
+                echo -e "${GREEN}✅ Restore Data Selesai!${NC}"
             fi
             read -p "Enter..." 
             ;;
@@ -3174,7 +3484,7 @@ EOFNGINX
             chmod +x menu
             cp menu /usr/bin/menu
             pm2 restart all > /dev/null 2>&1
-            echo -e "${GREEN}Update Selesai! Sistem sudah diperbarui.${NC}"
+            echo -e "${GREEN}✅ Update Selesai! Sistem sudah diperbarui.${NC}"
             read -p "Enter..."
             ;;
         0) exit 0 ;;
