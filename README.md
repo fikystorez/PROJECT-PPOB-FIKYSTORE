@@ -17,4 +17,4 @@ Selamat datang di repositori resmi **DIGITAL FIKY STORE**. Script Aplikasi Web P
 Siapkan VPS kosong (Rebuild OS Ubuntu/Debian), login sebagai `root` via Termius/SSH, lalu jalankan perintah sakti di bawah ini:
 
 ```bash
-wget -qO install.sh [https://raw.githubusercontent.com/USERNAME_GITHUB/NAMA_REPO/main/install.sh](https://raw.githubusercontent.com/USERNAME_GITHUB/NAMA_REPO/main/install.sh) && chmod +x install.sh && ./install.sh
+wget -qO install.sh https://raw.githubusercontent.com/fikystorez/PROJECT-PPOB-FIKYSTORE/main/install.sh && chmod +x install.sh && ./install.sh
