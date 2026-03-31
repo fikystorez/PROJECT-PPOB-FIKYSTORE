@@ -3580,5 +3580,3 @@ echo "=========================================================="
 echo "  SISTEM WEB V146 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
-
-EOF
