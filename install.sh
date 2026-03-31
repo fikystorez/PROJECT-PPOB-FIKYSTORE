@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V146 (PART 1 - CORE SYSTEM)
+# DIGITAL FIKY STORE - V147 (PART 1 - SETUP & UI LOGIN)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
@@ -8,17 +8,27 @@ if [ "$EUID" -ne 0 ]; then
   exit
 fi
 
-if command -v dos2unix > /dev/null 2>&1; then dos2unix "$0" > /dev/null 2>&1; fi
+if command -v dos2unix > /dev/null 2>&1; then 
+  dos2unix "$0" > /dev/null 2>&1
+fi
 
 DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V146 (PART 1/4)         "
+echo "    MENGINSTAL DIGITAL FIKY STORE V147 (PART 1)           "
 echo "=========================================================="
 
-echo "[1/5] Memperbarui sistem dan direktori..."
+echo "[1/5] Memperbarui sistem dan menginstal Node.js..."
 apt update -y && apt install curl wget gnupg git dos2unix psmisc zip unzip nginx ufw -y > /dev/null 2>&1
+
+if ! command -v node > /dev/null 2>&1; then
+  curl -fsSL https://deb.nodesource.com/setup_20.x | bash - > /dev/null 2>&1
+  apt install -y nodejs > /dev/null 2>&1
+fi
+npm install -g pm2 > /dev/null 2>&1
+
+echo "[2/5] Membuat direktori aplikasi dan web..."
 mkdir -p "$HOME/$DIR_NAME/public/banners"
 cd "$HOME/$DIR_NAME"
 
@@ -26,8 +36,11 @@ cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
   "version": "1.0.0",
+  "description": "Aplikasi PPOB DIGITAL FIKY STORE",
   "main": "index.js",
-  "scripts": { "start": "node index.js" },
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "@hapi/boom": "^10.0.1",
     "@whiskeysockets/baileys": "^6.7.5",
@@ -41,17 +54,145 @@ cat << 'EOF' > package.json
 }
 EOF
 
+echo "[3/5] Membangun Antarmuka CSS & HTML Dasar..."
+
 cat << 'EOF' > public/style.css
-body { background-color: #fde047; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
-.centered-modal-box { background-color: #002147; padding: 2.5rem 1.5rem 2rem 1.5rem; border-radius: 1.2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); width: 90%; max-width: 360px; text-align: center; position: relative; z-index: 10; margin: auto; margin-top: 10vh; }
-.brand-logo-text { font-size: 1.8rem; font-weight: 900; background: linear-gradient(135deg, #fde047 0%, #facc15 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; letter-spacing: 1px; text-transform: uppercase; }
-.compact-input-wrapper { position: relative; margin-bottom: 0.85rem; width: 100%; }
-.compact-input-box { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #334155; border-radius: 0.5rem; font-size: 0.875rem; outline: none; background-color: #ffffff; color: #0f172a; }
-.compact-input-box:focus { border-color: #fde047; box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3); }
-.password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #94a3b8; }
-.btn-yellow { width: 100%; padding: 0.625rem 1rem; background-color: #fde047; color: #002147; font-weight: bold; border-radius: 0.5rem; cursor: pointer; border: none; margin-top: 0.5rem; transition: all 0.2s; }
-.btn-yellow:hover { background-color: #facc15; }
-.swal2-popup { background-color: #002147 !important; border-radius: 1.5rem !important; color: #ffffff !important; width: 320px !important; }
+body { 
+    background-color: #fde047; 
+    margin: 0; 
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; 
+}
+
+.centered-modal-box { 
+    background-color: #002147; 
+    padding: 2.5rem 1.5rem 2rem 1.5rem; 
+    border-radius: 1.2rem; 
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); 
+    width: 90%; 
+    max-width: 360px; 
+    text-align: center; 
+    position: relative; 
+    z-index: 10; 
+    margin: auto; 
+    margin-top: 10vh; 
+}
+
+.brand-logo-text { 
+    font-size: 1.8rem; 
+    font-weight: 900; 
+    background: linear-gradient(135deg, #fde047 0%, #facc15 100%); 
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; 
+    margin-bottom: 1.5rem; 
+    letter-spacing: 1px; 
+    text-transform: uppercase; 
+}
+
+.compact-input-wrapper { 
+    position: relative; 
+    margin-bottom: 0.85rem; 
+    width: 100%; 
+}
+
+.compact-input-box { 
+    width: 100%; 
+    padding: 0.6rem 0.75rem; 
+    border: 1px solid #334155; 
+    border-radius: 0.5rem; 
+    font-size: 0.875rem; 
+    outline: none; 
+    background-color: #ffffff; 
+    color: #0f172a; 
+}
+
+.compact-input-box:focus { 
+    border-color: #fde047; 
+    box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3); 
+}
+
+.password-toggle { 
+    position: absolute; 
+    right: 12px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    cursor: pointer; 
+    color: #94a3b8; 
+}
+
+.compact-text-small { 
+    font-size: 0.8rem; 
+    color: #cbd5e1; 
+}
+
+.compact-link-small { 
+    font-size: 0.8rem; 
+    color: #fde047; 
+    text-decoration: none; 
+    font-weight: bold; 
+}
+
+.btn-yellow { 
+    width: 100%; 
+    padding: 0.625rem 1rem; 
+    background-color: #fde047; 
+    color: #002147; 
+    font-weight: bold; 
+    border-radius: 0.5rem; 
+    cursor: pointer; 
+    border: none; 
+    margin-top: 0.5rem; 
+    transition: all 0.2s; 
+}
+
+.btn-yellow:hover { 
+    background-color: #facc15; 
+}
+
+.hide-scrollbar::-webkit-scrollbar { 
+    display: none; 
+}
+
+.hide-scrollbar { 
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
+}
+
+.swal2-popup { 
+    background-color: #002147 !important; 
+    border-radius: 1.5rem !important; 
+    color: #ffffff !important; 
+    width: 320px !important; 
+    padding: 1.5rem 1.25rem 1.25rem !important; 
+}
+
+.swal2-title { 
+    color: #fde047 !important; 
+    font-size: 1.25rem !important; 
+    font-weight: 800 !important; 
+}
+
+.swal2-html-container { 
+    color: #cbd5e1 !important; 
+    font-size: 0.85rem !important; 
+}
+
+.swal2-confirm { 
+    background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important; 
+    color: #001229 !important; 
+    border-radius: 0.5rem !important; 
+    font-weight: 800 !important; 
+}
+
+.swal2-cancel { 
+    background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important; 
+    color: #ffffff !important; 
+    border-radius: 0.5rem !important; 
+    font-weight: 800 !important; 
+}
+
+.pb-safe { 
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom)); 
+}
 EOF
 
 cat << 'EOF' > public/index.html
@@ -59,34 +200,94 @@ cat << 'EOF' > public/index.html
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - DIGITAL FIKY STORE</title>
   <link rel="stylesheet" href="style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-[#fde047] flex flex-col min-h-screen">
   <div class="centered-modal-box">
     <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
     <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
+    <p class="compact-text-small mb-6" id="loginDesc">Silahkan masukkan email/no HP dan password kamu!</p>
+    
     <form id="loginForm">
-      <div class="compact-input-wrapper"><input type="text" id="identifier" class="compact-input-box" required placeholder="Email / No. HP"></div>
-      <div class="compact-input-wrapper"><input type="password" id="password" class="compact-input-box" required placeholder="Password"><i class="fas fa-eye password-toggle" onclick="tglPw('password', this)"></i></div>
-      <div class="text-right mb-5 mt-1"><a href="/forgot.html" class="text-[0.8rem] text-[#fde047] font-bold">Lupa password?</a></div>
+      <div class="compact-input-wrapper">
+        <input type="text" id="identifier" name="username" autocomplete="username" class="compact-input-box" required placeholder="Email / No. HP">
+      </div>
+      <div class="compact-input-wrapper">
+        <input type="password" id="password" name="password" autocomplete="current-password" class="compact-input-box" required placeholder="Password">
+        <i class="fas fa-eye password-toggle" onclick="togglePassword('password', this)"></i>
+      </div>
+      <div class="text-right mb-5 mt-1">
+        <a href="/forgot.html" class="compact-link-small">Lupa password?</a>
+      </div>
       <button type="submit" class="btn-yellow">Login Sekarang</button>
     </form>
-    <div class="mt-6 text-center text-[0.8rem] text-white">Belum punya akun? <a href="/register.html" class="text-[#fde047] font-bold">Daftar disini</a></div>
+
+    <div class="mt-6 text-center compact-text-small" id="registerLink">
+      Belum punya akun? <a href="/register.html" class="compact-link-small">Daftar disini</a>
+    </div>
   </div>
+
   <script>
-    function tglPw(id,el){const i=document.getElementById(id);if(i.type==='password'){i.type='text';el.classList.replace('fa-eye','fa-eye-slash');}else{i.type='password';el.classList.replace('fa-eye-slash','fa-eye');}}
-    document.getElementById('loginForm').addEventListener('submit', async(e)=>{
-      e.preventDefault(); const identifier=document.getElementById('identifier').value; const password=document.getElementById('password').value;
-      Swal.fire({title:'Checking...',didOpen:()=>Swal.showLoading()});
-      const res=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identifier,password})});
-      const data=await res.json();
-      if(res.ok){ localStorage.setItem('user',JSON.stringify(data.user)); window.location.href='/dashboard.html'; }
-      else{ Swal.fire({icon:'error',title:'Gagal',text:data.error,background:'#002147',color:'#fff'}); }
+    window.onload = function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const registeredPhone = urlParams.get('phone');
+      if (registeredPhone) {
+          document.getElementById('identifier').value = registeredPhone;
+      } else {
+        const savedPhone = localStorage.getItem('savedPhone');
+        if (savedPhone) {
+            document.getElementById('identifier').value = savedPhone;
+        }
+      }
+    }
+
+    function togglePassword(id, el) {
+      const input = document.getElementById(id);
+      if (input.type === 'password') { 
+          input.type = 'text'; 
+          el.classList.remove('fa-eye'); 
+          el.classList.add('fa-eye-slash'); 
+      } else { 
+          input.type = 'password'; 
+          el.classList.remove('fa-eye-slash'); 
+          el.classList.add('fa-eye'); 
+      }
+    }
+    
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const identifier = document.getElementById('identifier').value; 
+      const password = document.getElementById('password').value;
+      localStorage.setItem('savedPhone', identifier);
+      
+      Swal.fire({
+          title: 'Memeriksa Data...', 
+          allowOutsideClick: false, 
+          didOpen: () => { Swal.showLoading() }
+      });
+      
+      try {
+        const res = await fetch('/api/auth/login', { 
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json' }, 
+          body: JSON.stringify({ identifier, password }) 
+        });
+        const data = await res.json();
+        
+        if (res.ok) { 
+          localStorage.setItem('user', JSON.stringify(data.user)); 
+          window.location.href = '/dashboard.html';
+        } else { 
+          Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); 
+        }
+      } catch (err) { 
+          Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.', background: '#002147', color: '#fff' }); 
+      }
     });
   </script>
 </body>
@@ -98,46 +299,124 @@ cat << 'EOF' > public/register.html
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Daftar - DIGITAL FIKY STORE</title>
   <link rel="stylesheet" href="style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-[#fde047] flex flex-col min-h-screen">
-  <div class="centered-modal-box" id="box-reg">
+  <div class="centered-modal-box" id="box-register">
     <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
-    <h2 class="text-lg font-bold text-white mb-4">DAFTAR AKUN</h2>
-    <form id="regForm">
-      <div class="compact-input-wrapper"><input type="text" id="name" class="compact-input-box" required placeholder="Nama Lengkap"></div>
-      <div class="compact-input-wrapper"><input type="number" id="phone" class="compact-input-box" required placeholder="Nomor WA"></div>
-      <div class="compact-input-wrapper"><input type="email" id="email" class="compact-input-box" required placeholder="Email"></div>
-      <div class="compact-input-wrapper"><input type="password" id="password" class="compact-input-box" required placeholder="Password"></div>
-      <button type="submit" class="btn-yellow">Daftar Sekarang</button>
+    <h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2>
+    <p class="compact-text-small mb-4">Silahkan lengkapi data untuk mendaftar!</p>
+    
+    <form id="registerForm">
+      <div class="compact-input-wrapper">
+        <input type="text" id="name" name="name" class="compact-input-box" required placeholder="Nama Lengkap">
+      </div>
+      <div class="compact-input-wrapper">
+        <input type="number" id="phone" name="username" class="compact-input-box" required placeholder="Nomor WA (08123...)">
+      </div>
+      <div class="compact-input-wrapper">
+        <input type="email" id="email" name="email" class="compact-input-box" required placeholder="Email">
+      </div>
+      <div class="compact-input-wrapper">
+        <input type="password" id="password" name="password" class="compact-input-box" required placeholder="Password">
+        <i class="fas fa-eye password-toggle" onclick="togglePassword('password', this)"></i>
+      </div>
+      <button type="submit" class="btn-yellow mt-1">Daftar Sekarang</button>
     </form>
+
+    <div class="mt-4 text-center compact-text-small">
+      Sudah punya akun? <a href="/" class="compact-link-small">Login disini</a>
+    </div>
   </div>
+
   <div class="centered-modal-box hidden" id="box-otp">
-    <h1 class="brand-logo-text">VERIFIKASI OTP</h1>
+    <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
+    <h2 class="text-lg font-bold text-white mb-1">VERIFIKASI WA</h2>
+    <p class="compact-text-small mb-5 text-center">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
+    
     <form id="otpForm">
-      <div class="compact-input-wrapper"><input type="number" id="otp" class="compact-input-box text-center text-2xl font-bold" required placeholder="XXXX"></div>
-      <button type="submit" class="btn-yellow">Verifikasi</button>
+      <div class="compact-input-wrapper">
+        <input type="number" id="otpCode" class="compact-input-box text-center text-2xl tracking-[0.5em] font-bold" required placeholder="XXXX">
+      </div>
+      <button type="submit" class="btn-yellow mt-4">Verifikasi OTP</button>
     </form>
   </div>
+
   <script>
-    let regPh='';
-    document.getElementById('regForm').addEventListener('submit',async(e)=>{
+    function togglePassword(id, el) {
+      const input = document.getElementById(id);
+      if (input.type === 'password') { 
+        input.type = 'text'; 
+        el.classList.remove('fa-eye'); 
+        el.classList.add('fa-eye-slash'); 
+      } else { 
+        input.type = 'password'; 
+        el.classList.remove('fa-eye-slash'); 
+        el.classList.add('fa-eye'); 
+      }
+    }
+    
+    let registeredPhone = '';
+
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const n=document.getElementById('name').value; const p=document.getElementById('phone').value; const em=document.getElementById('email').value; const pw=document.getElementById('password').value;
-      Swal.fire({title:'Proses...',didOpen:()=>Swal.showLoading()});
-      const res=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,phone:p,email:em,password:pw})});
-      if(res.ok){ regPh=(await res.json()).phone; document.getElementById('box-reg').classList.add('hidden'); document.getElementById('box-otp').classList.remove('hidden'); Swal.close(); }
-      else { Swal.fire({icon:'error',text:'Gagal Daftar'}); }
+      const name = document.getElementById('name').value; 
+      const phone = document.getElementById('phone').value; 
+      const email = document.getElementById('email').value; 
+      const password = document.getElementById('password').value;
+      
+      Swal.fire({title: 'Memproses...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+      
+      try {
+        const res = await fetch('/api/auth/register', { 
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json' }, 
+          body: JSON.stringify({ name, phone, email, password }) 
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          registeredPhone = data.phone; 
+          document.getElementById('box-register').classList.add('hidden'); 
+          document.getElementById('box-otp').classList.remove('hidden'); 
+          Swal.close();
+        } else { 
+          Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error, background: '#002147', color: '#fff' }); 
+        }
+      } catch (err) { 
+        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses.', background: '#002147', color: '#fff' }); 
+      }
     });
-    document.getElementById('otpForm').addEventListener('submit',async(e)=>{
-      e.preventDefault(); const otp=document.getElementById('otp').value;
-      const res=await fetch('/api/auth/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:regPh,otp})});
-      if(res.ok){ Swal.fire({icon:'success',title:'Berhasil'}).then(()=>window.location.href='/'); }
-      else { Swal.fire({icon:'error',text:'OTP Salah'}); }
+
+    document.getElementById('otpForm').addEventListener('submit', async (e) => {
+      e.preventDefault(); 
+      const otp = document.getElementById('otpCode').value;
+      
+      Swal.fire({title: 'Verifikasi...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+      
+      try {
+        const res = await fetch('/api/auth/verify', { 
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json' }, 
+          body: JSON.stringify({ phone: registeredPhone, otp }) 
+        });
+        const data = await res.json();
+        
+        if (res.ok) { 
+          Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun aktif.', background: '#002147', color: '#fff' }).then(() => { 
+            window.location.href = '/?phone=' + registeredPhone; 
+          }); 
+        } else { 
+          Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: '#002147', color: '#fff' }); 
+        }
+      } catch (err) { 
+        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.', background: '#002147', color: '#fff' }); 
+      }
     });
   </script>
 </body>
@@ -149,36 +428,106 @@ cat << 'EOF' > public/forgot.html
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Reset - DIGITAL FIKY STORE</title>
-  <link rel="stylesheet" href="style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lupa Password - DIGITAL FIKY STORE</title>
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-[#fde047] flex flex-col min-h-screen">
   <div class="centered-modal-box">
-    <h1 class="brand-logo-text">RESET PASSWORD</h1>
-    <form id="fForm">
-      <div class="compact-input-wrapper"><input type="number" id="phone" class="compact-input-box" required placeholder="Nomor WA"></div>
-      <button type="submit" class="btn-yellow">Kirim OTP</button>
+    <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
+    <h2 class="text-lg font-bold text-white mb-1">RESET PASSWORD</h2>
+    
+    <form id="requestOtpForm">
+      <p class="compact-text-small mb-5 text-center">Masukkan Nomor WA Anda untuk reset password.</p>
+      <div class="compact-input-wrapper">
+        <input type="number" id="phone" class="compact-input-box text-center" required placeholder="08123...">
+      </div>
+      <button type="submit" class="btn-yellow mt-2">Kirim OTP Reset</button>
     </form>
-    <form id="rForm" class="hidden mt-4">
-      <div class="compact-input-wrapper"><input type="number" id="otp" class="compact-input-box text-center" required placeholder="OTP"></div>
-      <div class="compact-input-wrapper"><input type="password" id="new" class="compact-input-box" required placeholder="Password Baru"></div>
-      <button type="submit" class="btn-yellow">Simpan</button>
+
+    <form id="resetForm" class="hidden mt-4">
+      <hr class="mb-5 border-gray-600">
+      <div class="compact-input-wrapper">
+        <label class="compact-label text-center text-white">Kode OTP</label>
+        <input type="number" id="otp" class="compact-input-box text-center text-xl tracking-[0.5em] font-bold" required placeholder="XXXX">
+      </div>
+      <div class="compact-input-wrapper">
+        <label class="compact-label text-center text-white mt-2">Password Baru</label>
+        <input type="password" id="newPassword" class="compact-input-box" required placeholder="Ketik disini">
+        <i class="fas fa-eye password-toggle" onclick="togglePassword('newPassword', this)" style="top:70%;"></i>
+      </div>
+      <button type="submit" class="btn-yellow mt-3">Simpan Password</button>
     </form>
+
+    <div class="mt-6 text-center compact-text-small">
+      <a href="/" class="compact-link-small">Kembali ke Login</a>
+    </div>
   </div>
+
   <script>
-    let fPh='';
-    document.getElementById('fForm').addEventListener('submit',async(e)=>{
-      e.preventDefault(); const p=document.getElementById('phone').value;
-      const res=await fetch('/api/auth/forgot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:p})});
-      if(res.ok){ fPh=(await res.json()).phone; document.getElementById('fForm').classList.add('hidden'); document.getElementById('rForm').classList.remove('hidden'); }
+    function togglePassword(id, el) {
+      const input = document.getElementById(id);
+      if (input.type === 'password') { 
+          input.type = 'text'; el.classList.remove('fa-eye'); el.classList.add('fa-eye-slash'); 
+      } else { 
+          input.type = 'password'; el.classList.remove('fa-eye-slash'); el.classList.add('fa-eye'); 
+      }
+    }
+    
+    let resetPhone = '';
+    
+    document.getElementById('requestOtpForm').addEventListener('submit', async (e) => {
+      e.preventDefault(); 
+      const phone = document.getElementById('phone').value;
+      Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
+      
+      try {
+        const res = await fetch('/api/auth/forgot', { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify({ phone }) 
+        });
+        const data = await res.json();
+        
+        if (res.ok) { 
+          resetPhone = data.phone; 
+          document.getElementById('requestOtpForm').classList.add('hidden'); 
+          document.getElementById('resetForm').classList.remove('hidden'); 
+          Swal.close(); 
+        } else { 
+          Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: '#002147', color: '#fff' }); 
+        }
+      } catch (err) { 
+          Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); 
+      }
     });
-    document.getElementById('rForm').addEventListener('submit',async(e)=>{
-      e.preventDefault(); const o=document.getElementById('otp').value; const n=document.getElementById('new').value;
-      const res=await fetch('/api/auth/reset',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:fPh,otp:o,newPassword:n})});
-      if(res.ok){ window.location.href='/'; }
+
+    document.getElementById('resetForm').addEventListener('submit', async (e) => {
+      e.preventDefault(); 
+      const otp = document.getElementById('otp').value; 
+      const newPassword = document.getElementById('newPassword').value;
+      Swal.fire({title: 'Memproses...', didOpen: () => { Swal.showLoading() }});
+      
+      try {
+        const res = await fetch('/api/auth/reset', { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify({ phone: resetPhone, otp, newPassword }) 
+        });
+        
+        if (res.ok) { 
+          Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.', background: '#002147', color: '#fff' }).then(() => { 
+              window.location.href = '/'; 
+          }); 
+        } else { 
+          Swal.fire({ icon: 'error', title: 'Gagal', text: 'OTP Salah.', background: '#002147', color: '#fff' }); 
+        }
+      } catch (err) { 
+          Swal.fire({ icon: 'error', title: 'Oops...', background: '#002147', color: '#fff' }); 
+      }
     });
   </script>
 </body>
@@ -463,18 +812,16 @@ cat << 'EOF' > public/dashboard.html
       document.getElementById('headTrx').innerText = trxs.length + ' Trx';
       
       let now = new Date();
-      let todayStr = now.toLocaleString('id-ID').split(' ')[0]; // Ambil DD/MM/YYYY
+      let todayStr = now.toLocaleString('id-ID').split(' ')[0]; 
       
       let startOfWeek = new Date(now);
-      startOfWeek.setDate(now.getDate() - now.getDay()); // Mulai dari minggu berjalan
+      startOfWeek.setDate(now.getDate() - now.getDay()); 
       
       let tToday = 0; let tWeek = 0; let tMonth = 0;
       
       trxs.forEach(trx => {
           if(trx.status === 'Sukses' || trx.status === 'Proses') {
               let trxDateStr = trx.date.split(' ')[0]; 
-              
-              // Parse DD/MM/YYYY ke Date Object
               let dParts = trxDateStr.split('/');
               let trxDateObj = new Date(dParts[2], dParts[1]-1, dParts[0]);
 
@@ -1738,7 +2085,7 @@ cat << 'EOF' > public/riwayat.html
     <div class="mx-4 mt-4 bg-white dark:bg-[#111c2e] p-4 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm">
         <div class="relative mb-4">
             <i class="fas fa-search absolute left-3.5 top-3 text-gray-400 text-sm"></i>
-            <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400" placeholder="Cari transaksi...">
+            <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm font-bold focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400" placeholder="Cari transaksi...">
         </div>
         <div class="flex justify-between mb-2 gap-2">
             <div id="btn-Semua" onclick="setStatusFilter('Semua')" class="flex-1 bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#0b1320] text-center py-2 rounded-full text-[11px] font-bold cursor-pointer shadow-sm transition-colors">Semua</div>
@@ -1901,11 +2248,13 @@ cat << 'EOF' > public/riwayat.html
 </body>
 </html>
 EOF
+
+echo "[PART 3 SELESAI DITULIS. TINGGAL 1 PART LAGI!]"
 # ==========================================
 # DIGITAL FIKY STORE - V146 (PART 4 - BACKEND & MENU FULL UNCOMPRESSED)
 # ==========================================
 
-echo "[4/5] Menulis ulang logika Backend Node.js (SUPER UNCOMPRESSED)..."
+echo "[4/5] Menulis logika Backend Node.js (SUPER UNCOMPRESSED)..."
 
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
@@ -1943,9 +2292,7 @@ const loadJSON = (file) => {
     if (fs.existsSync(file)) {
         return JSON.parse(fs.readFileSync(file));
     } else {
-        if (file === localProductsFile || file === infoFile) {
-            return [];
-        }
+        if (file === localProductsFile || file === infoFile) return [];
         return {};
     }
 };
@@ -2011,9 +2358,7 @@ app.get('/api/config', (req, res) => {
 });
 
 app.get('/api/info', (req, res) => { 
-    res.json({ 
-        info: loadJSON(infoFile) 
-    }); 
+    res.json({ info: loadJSON(infoFile) }); 
 });
 
 app.post('/api/user/balance', (req, res) => { 
@@ -2244,27 +2589,8 @@ app.post('/api/transaction/create', async (req, res) => {
         }
         
         // SIMPAN MUTASI & TRX
-        db[phone].mutasi.push({ 
-            id: ref_id, 
-            type: 'out', 
-            amount: price, 
-            desc: `Beli ${name}`, 
-            date: dateStr 
-        });
-        
-        db[phone].transactions.push({ 
-            id: ref_id, 
-            sku: sku, 
-            isLocal: isLocal, 
-            produk: name, 
-            nominal: price, 
-            no_tujuan: target, 
-            status: trxStatus, 
-            sn_ref: sn_ref, 
-            harga: price, 
-            date: dateStr 
-        });
-        
+        db[phone].mutasi.push({ id: ref_id, type: 'out', amount: price, desc: `Beli ${name}`, date: dateStr });
+        db[phone].transactions.push({ id: ref_id, sku: sku, isLocal: isLocal, produk: name, nominal: price, no_tujuan: target, status: trxStatus, sn_ref: sn_ref, harga: price, date: dateStr });
         saveJSON(dbFile, db);
         
         // KIRIM NOTIF WA KE MEMBER
@@ -2288,7 +2614,6 @@ app.post('/api/transaction/create', async (req, res) => {
         msgTeleTrx += `🔖 Ref: ${ref_id}`;
         
         sendTeleNotif(msgTeleTrx, 'trx');
-        
         res.json({ message: 'Transaksi berhasil diproses.' });
     } catch (fatalErr) { 
         res.status(500).json({ error: 'Terjadi kesalahan internal.' }); 
@@ -2324,7 +2649,6 @@ setInterval(async () => {
                         ref_id: trx.id, 
                         sign: sign 
                     };
-                    
                     if (isDev) digiPayload.testing = true;
 
                     let digiRes = await axios.post('https://api.digiflazz.com/v1/transaction', digiPayload, { timeout: 10000 });
@@ -2342,11 +2666,7 @@ setInterval(async () => {
                         } catch(e){}
                         
                         let msgTeleSukses = `✅ *UPDATE: TRANSAKSI SUKSES* ✅\n\n`;
-                        msgTeleSukses += `👤 Nama: ${uData.name}\n`;
-                        msgTeleSukses += `📱 WA: ${phone}\n`;
-                        msgTeleSukses += `📦 Produk: ${trx.produk}\n`;
-                        msgTeleSukses += `📱 Tujuan: ${trx.no_tujuan}\n`;
-                        msgTeleSukses += `🔖 SN: ${trx.sn_ref}`;
+                        msgTeleSukses += `👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n🔖 SN: ${trx.sn_ref}`;
                         sendTeleNotif(msgTeleSukses, 'trx');
 
                     } else if (digiData.status === 'Gagal') {
@@ -2370,11 +2690,7 @@ setInterval(async () => {
                         } catch(e){}
                         
                         let msgTeleGagal = `❌ *UPDATE: TRANSAKSI GAGAL (REFUND)* ❌\n\n`;
-                        msgTeleGagal += `👤 Nama: ${uData.name}\n`;
-                        msgTeleGagal += `📱 WA: ${phone}\n`;
-                        msgTeleGagal += `📦 Produk: ${trx.produk}\n`;
-                        msgTeleGagal += `📱 Tujuan: ${trx.no_tujuan}\n`;
-                        msgTeleGagal += `⚠️ Alasan: ${digiData.message || 'Gagal Pusat'}`;
+                        msgTeleGagal += `👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n⚠️ Alasan: ${digiData.message || 'Gagal Pusat'}`;
                         sendTeleNotif(msgTeleGagal, 'trx');
                     }
                 } catch(e) {
@@ -2394,9 +2710,7 @@ function startAutoBackup() {
     let t = config.teleTokenBackup || config.teleToken;
     let c = config.teleChatIdBackup || config.teleChatId;
     
-    if (!t || !c || !config.autoBackupHours || config.autoBackupHours <= 0) {
-        return;
-    }
+    if (!t || !c || !config.autoBackupHours || config.autoBackupHours <= 0) return;
     
     let intervalMs = config.autoBackupHours * 60 * 60 * 1000; 
     
@@ -2414,14 +2728,11 @@ function startAutoBackup() {
                 } catch(e) {
                     console.log("Gagal Auto Backup Telegram");
                 }
-                
                 fs.unlinkSync(zipName);
             }
         });
     }, intervalMs);
 }
-
-// Mulai Auto Backup 15 Detik setelah server nyala
 setTimeout(startAutoBackup, 15000); 
 
 // ==========================================
@@ -2433,428 +2744,198 @@ app.post('/api/topup/request', (req, res) => {
     let webUsers = loadJSON(webUsersFile);
     let uData = webUsers[phone] || { name: 'Unknown', email: 'Unknown' };
 
-    if (!db[phone]) {
-        db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] };
-    }
-    
+    if (!db[phone]) db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] };
     if (!db[phone].topup) db[phone].topup = [];
     
     const expiry = method === 'QRIS Otomatis' ? Date.now() + 5*60*1000 : null; 
     let dateStr = new Date().toLocaleString('id-ID');
     
-    const newTopup = { 
-        id: 'TU' + Date.now(), 
-        method: method, 
-        nominal: nominal, 
-        status: 'Proses', 
-        date: dateStr, 
-        expiry: expiry 
-    };
-    
-    db[phone].topup.push(newTopup); 
-    saveJSON(dbFile, db); 
+    const newTopup = { id: 'TU' + Date.now(), method: method, nominal: nominal, status: 'Proses', date: dateStr, expiry: expiry };
+    db[phone].topup.push(newTopup); saveJSON(dbFile, db); 
 
     let kodeUnik = nominal % 1000;
     let depositAsli = nominal - kodeUnik;
     let saldoSebelum = db[phone].saldo;
 
-    let msgTopup = `⏳ *TOP UP MENUNGGU PEMBAYARAN* ⏳\n\n`;
-    msgTopup += `👤 Nama: ${uData.name}\n`;
-    msgTopup += `✉️ Email: ${uData.email}\n`;
-    msgTopup += `📱 WA: ${phone}\n`;
-    msgTopup += `⌚ Waktu: ${dateStr}\n`;
-    msgTopup += `🏦 Metode: ${method}\n\n`;
-    msgTopup += `💰 Jumlah Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n`;
-    msgTopup += `🎫 Kode Unik: ${kodeUnik}\n`;
-    msgTopup += `💵 Total Saldo Diterima: Rp ${nominal.toLocaleString('id-ID')}\n\n`;
-    msgTopup += `💳 *Riwayat Saldo*\n`;
-    msgTopup += `📉 Saldo Sebelum: Rp ${saldoSebelum.toLocaleString('id-ID')}\n`;
-    msgTopup += `📈 Saldo Sesudah: Rp ${saldoSebelum.toLocaleString('id-ID')} (Pending)`;
+    let msgTopup = `⏳ *TOP UP MENUNGGU PEMBAYARAN* ⏳\n\n👤 Nama: ${uData.name}\n✉️ Email: ${uData.email}\n📱 WA: ${phone}\n⌚ Waktu: ${dateStr}\n🏦 Metode: ${method}\n\n💰 Jumlah Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n🎫 Kode Unik: ${kodeUnik}\n💵 Total Saldo Diterima: Rp ${nominal.toLocaleString('id-ID')}\n\n💳 *Riwayat Saldo*\n📉 Saldo Sebelum: Rp ${saldoSebelum.toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${saldoSebelum.toLocaleString('id-ID')} (Pending)`;
     
     sendTeleNotif(msgTopup, 'topup');
     res.json({ message: 'Top up direkam' });
 });
 
 app.post('/api/topup/history', (req, res) => { 
-    let db = loadJSON(dbFile); 
-    let history = db[req.body.phone]?.topup || []; 
-    let changed = false; 
-    let now = Date.now();
-    
-    history.forEach(t => { 
-        if (t.status === 'Proses' && t.method === 'QRIS Otomatis' && t.expiry && now > t.expiry) { 
-            t.status = 'Expired'; 
-            changed = true; 
-        }
-    });
-    
-    if (changed) saveJSON(dbFile, db); 
-    res.json({ history: history }); 
+    let db = loadJSON(dbFile); let history = db[req.body.phone]?.topup || []; let changed = false; let now = Date.now();
+    history.forEach(t => { if (t.status === 'Proses' && t.method === 'QRIS Otomatis' && t.expiry && now > t.expiry) { t.status = 'Expired'; changed = true; }});
+    if (changed) saveJSON(dbFile, db); res.json({ history: history }); 
 });
 
 // ==========================================
-// API ADMIN
+// API ADMIN LOGIC
 // ==========================================
 app.get('/api/admin/backup', async (req, res) => {
-    let config = loadJSON(configFile);
-    let t = config.teleTokenBackup || config.teleToken;
-    let c = config.teleChatIdBackup || config.teleChatId;
-    
+    let config = loadJSON(configFile); let t = config.teleTokenBackup || config.teleToken; let c = config.teleChatIdBackup || config.teleChatId;
     if(!t || !c) return res.status(400).json({ error: "Token/Chat ID Telegram Backup belum disetting." });
     
     try {
         let zipName = `Backup_DigitalFikyStore_${Date.now()}.zip`;
         exec(`zip -r ${zipName} database.json web_users.json config.json local_products.json info.json`, async (error) => {
             if(error) return res.status(500).json({ error: "Gagal membuat file ZIP." });
-            
-            const form = new FormData();
-            form.append('chat_id', c);
-            form.append('caption', `📦 *BACKUP MANUAL BERHASIL*\n\nTanggal: ${new Date().toLocaleString('id-ID')}`);
-            form.append('parse_mode', 'Markdown');
-            form.append('document', fs.createReadStream(zipName));
-            
+            const form = new FormData(); form.append('chat_id', c); form.append('caption', `📦 *BACKUP MANUAL BERHASIL*\n\nTanggal: ${new Date().toLocaleString('id-ID')}`); form.append('parse_mode', 'Markdown'); form.append('document', fs.createReadStream(zipName));
             await axios.post(`https://api.telegram.org/bot${t}/sendDocument`, form, { headers: form.getHeaders() });
             fs.unlinkSync(zipName);
             res.json({ message: "Backup sukses terkirim ke Telegram!" });
         });
-    } catch (e) { 
-        res.status(500).json({ error: "Gagal mengirim ke Telegram." }); 
-    }
+    } catch (e) { res.status(500).json({ error: "Gagal mengirim ke Telegram." }); }
 });
 
 app.post('/api/admin/balance', async (req, res) => {
     const { identifier, amount, action } = req.body; 
-    let webUsers = loadJSON(webUsersFile); 
-    let db = loadJSON(dbFile); 
-    let targetPhone = null;
+    let webUsers = loadJSON(webUsersFile); let db = loadJSON(dbFile); let targetPhone = null;
     
     if(identifier.includes('@')){
-        for(let p in webUsers){ 
-            if(webUsers[p].email === identifier){ targetPhone = p; break; } 
-        }
-    } else { 
-        targetPhone = identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier; 
-    }
+        for(let p in webUsers){ if(webUsers[p].email === identifier){ targetPhone = p; break; } }
+    } else { targetPhone = identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier; }
     
-    if(!targetPhone || !webUsers[targetPhone]) {
-        return res.json({ success: false, message: '\n❌ Member tidak ditemukan!' });
-    }
-
-    if(!db[targetPhone]) {
-        db[targetPhone] = { saldo: 0, jid: targetPhone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] };
-    }
+    if(!targetPhone || !webUsers[targetPhone]) return res.json({ success: false, message: '\n❌ Member tidak ditemukan!' });
+    if(!db[targetPhone]) db[targetPhone] = { saldo: 0, jid: targetPhone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] };
+    if(!db[targetPhone].mutasi) db[targetPhone].mutasi = []; if(!db[targetPhone].topup) db[targetPhone].topup = [];
     
-    if(!db[targetPhone].mutasi) db[targetPhone].mutasi = [];
-    if(!db[targetPhone].topup) db[targetPhone].topup = [];
-    
-    let uData = webUsers[targetPhone];
-    let saldoSebelum = db[targetPhone].saldo;
-    const dateStr = new Date().toLocaleString('id-ID');
+    let uData = webUsers[targetPhone]; let saldoSebelum = db[targetPhone].saldo; const dateStr = new Date().toLocaleString('id-ID');
 
     if (action === 'add') {
-        db[targetPhone].saldo += parseInt(amount);
-        let saldoSesudah = db[targetPhone].saldo;
-        
-        db[targetPhone].mutasi.push({ 
-            id: 'TRX'+Date.now(), 
-            type: 'in', 
-            amount: parseInt(amount), 
-            desc: 'Penambahan oleh Admin', 
-            date: dateStr 
-        });
-        
-        db[targetPhone].topup.push({ 
-            id: 'TU'+Date.now(), 
-            method: 'Admin Fiky Store', 
-            nominal: parseInt(amount), 
-            status: 'Sukses', 
-            date: dateStr 
-        });
-        
+        db[targetPhone].saldo += parseInt(amount); let saldoSesudah = db[targetPhone].saldo;
+        db[targetPhone].mutasi.push({ id: 'TRX'+Date.now(), type: 'in', amount: parseInt(amount), desc: 'Penambahan oleh Admin', date: dateStr });
+        db[targetPhone].topup.push({ id: 'TU'+Date.now(), method: 'Admin Fiky Store', nominal: parseInt(amount), status: 'Sukses', date: dateStr });
         saveJSON(dbFile, db);
+        try { await global.waSocket?.sendMessage(targetPhone + '@c.us', { text: `🎉 Saldo Anda berhasil ditambah Admin sebesar *Rp ${parseInt(amount).toLocaleString('id-ID')}*.\n💰 Sisa Saldo: *Rp ${db[targetPhone].saldo.toLocaleString('id-ID')}*` }); } catch(e) {}
         
-        try { 
-            await global.waSocket?.sendMessage(targetPhone + '@c.us', { 
-                text: `🎉 Saldo Anda berhasil ditambah Admin sebesar *Rp ${parseInt(amount).toLocaleString('id-ID')}*.\n💰 Sisa Saldo: *Rp ${db[targetPhone].saldo.toLocaleString('id-ID')}*` 
-            }); 
-        } catch(e) {}
-        
-        let msgAdd = `✅ *PEMBAYARAN DITERIMA (TOP UP BERHASIL)* ✅\n\n`;
-        msgAdd += `👤 Nama: ${uData.name}\n`;
-        msgAdd += `✉️ Email: ${uData.email}\n`;
-        msgAdd += `📱 WA: ${targetPhone}\n`;
-        msgAdd += `⌚ Waktu: ${dateStr}\n`;
-        msgAdd += `🏦 Metode: Admin Fiky Store\n\n`;
-        msgAdd += `💰 Total Saldo Masuk: Rp ${parseInt(amount).toLocaleString('id-ID')}\n\n`;
-        msgAdd += `💳 *Riwayat Saldo*\n`;
-        msgAdd += `📉 Saldo Sebelum: Rp ${saldoSebelum.toLocaleString('id-ID')}\n`;
-        msgAdd += `📈 Saldo Sesudah: Rp ${saldoSesudah.toLocaleString('id-ID')}`;
-        
+        let msgAdd = `✅ *PEMBAYARAN DITERIMA (TOP UP BERHASIL)* ✅\n\n👤 Nama: ${uData.name}\n✉️ Email: ${uData.email}\n📱 WA: ${targetPhone}\n⌚ Waktu: ${dateStr}\n🏦 Metode: Admin Fiky Store\n\n💰 Total Saldo Masuk: Rp ${parseInt(amount).toLocaleString('id-ID')}\n\n💳 *Riwayat Saldo*\n📉 Saldo Sebelum: Rp ${saldoSebelum.toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${saldoSesudah.toLocaleString('id-ID')}`;
         sendTeleNotif(msgAdd, 'topup');
         res.json({ success: true, message: `\n✅ Saldo ${webUsers[targetPhone].name} berhasil ditambah!` });
-        
     } else if (action === 'reduce') {
         db[targetPhone].saldo -= parseInt(amount);
-        db[targetPhone].mutasi.push({ 
-            id: 'TRX'+Date.now(), 
-            type: 'out', 
-            amount: parseInt(amount), 
-            desc: 'Penarikan oleh Admin', 
-            date: dateStr 
-        });
+        db[targetPhone].mutasi.push({ id: 'TRX'+Date.now(), type: 'out', amount: parseInt(amount), desc: 'Penarikan oleh Admin', date: dateStr });
         saveJSON(dbFile, db);
-        
-        try { 
-            await global.waSocket?.sendMessage(targetPhone + '@c.us', { 
-                text: `⚠️ Saldo Anda telah dikurangi Admin sebesar *Rp ${parseInt(amount).toLocaleString('id-ID')}*.\n💰 Sisa Saldo: *Rp ${db[targetPhone].saldo.toLocaleString('id-ID')}*` 
-            }); 
-        } catch(e) {}
-        
+        try { await global.waSocket?.sendMessage(targetPhone + '@c.us', { text: `⚠️ Saldo Anda telah dikurangi Admin sebesar *Rp ${parseInt(amount).toLocaleString('id-ID')}*.\n💰 Sisa Saldo: *Rp ${db[targetPhone].saldo.toLocaleString('id-ID')}*` }); } catch(e) {}
         res.json({ success: true, message: `\n✅ Saldo ${webUsers[targetPhone].name} berhasil dikurangi!` });
     }
 });
 
 // ==========================================
-// API AUTH LOGIC (LOGIN, DAFTAR, LUPA PASSWORD)
+// API AUTHENTICATION
 // ==========================================
 app.post('/api/auth/login', (req, res) => {
-    const { identifier, password } = req.body; 
-    let webUsers = loadJSON(webUsersFile);
+    const { identifier, password } = req.body; let webUsers = loadJSON(webUsersFile);
     let fPhone = identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier;
     let foundPhone = Object.keys(webUsers).find(p => (p === fPhone || webUsers[p].email === identifier) && webUsers[p].password === password);
     
     if (foundPhone) {
-        if (!webUsers[foundPhone].isVerified) {
-            return res.status(400).json({ error: 'Akun belum diverifikasi OTP.' });
-        }
-        res.json({ 
-            message: 'Login sukses', 
-            user: { 
-                phone: foundPhone, 
-                name: webUsers[foundPhone].name, 
-                email: webUsers[foundPhone].email, 
-                avatar: webUsers[foundPhone].avatar || null 
-            } 
-        });
-    } else { 
-        res.status(400).json({ error: 'Email/No HP atau Password salah.' }); 
-    }
+        if (!webUsers[foundPhone].isVerified) return res.status(400).json({ error: 'Akun belum diverifikasi OTP.' });
+        res.json({ message: 'Login sukses', user: { phone: foundPhone, name: webUsers[foundPhone].name, email: webUsers[foundPhone].email, avatar: webUsers[foundPhone].avatar || null } });
+    } else { res.status(400).json({ error: 'Email/No HP atau Password salah.' }); }
 });
 
 app.post('/api/auth/register', async (req, res) => {
-    const { name, phone, email, password } = req.body; 
-    let webUsers = loadJSON(webUsersFile); 
-    let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
-    
-    if (webUsers[fPhone] && webUsers[fPhone].isVerified) {
-        return res.status(400).json({ error: 'Nomor sudah terdaftar.' });
-    }
+    const { name, phone, email, password } = req.body; let webUsers = loadJSON(webUsersFile); let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
+    if (webUsers[fPhone] && webUsers[fPhone].isVerified) return res.status(400).json({ error: 'Nomor sudah terdaftar.' });
     
     const otp = Math.floor(1000 + Math.random() * 9000).toString(); 
-    webUsers[fPhone] = { 
-        name, 
-        email, 
-        password, 
-        isVerified: false, 
-        otp, 
-        otpExpiry: Date.now() + 300000, 
-        avatar: null 
-    }; 
+    webUsers[fPhone] = { name, email, password, isVerified: false, otp, otpExpiry: Date.now() + 300000, avatar: null }; 
     saveJSON(webUsersFile, webUsers);
     
     try { 
-        await global.waSocket?.sendMessage(fPhone + '@c.us', { 
-            text: `Halo kak *${name}* 👋\n\nTerima kasih telah mendaftar di *DIGITAL FIKY STORE* 👑\n\nBerikut adalah kode rahasia (OTP) untuk mengaktifkan akun kakak:\n\n*${otp}*\n\n⏳ _Kode ini hanya berlaku selama 5 menit._\n⚠️ _Jangan pernah memberikan kode ini kepada siapapun!_` 
-        }); 
+        await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Halo kak *${name}* 👋\n\nTerima kasih telah mendaftar di *DIGITAL FIKY STORE* 👑\n\nBerikut adalah kode rahasia (OTP) untuk mengaktifkan akun kakak:\n\n*${otp}*\n\n⏳ _Kode ini hanya berlaku selama 5 menit._\n⚠️ _Jangan pernah memberikan kode ini kepada siapapun!_` }); 
         res.json({ message: 'OTP Terkirim', phone: fPhone }); 
-    } catch(e) { 
-        res.status(500).json({ error: 'Gagal kirim WA. Pastikan nomor bot di Panel VPS sudah terhubung.' }); 
-    }
+    } catch(e) { res.status(500).json({ error: 'Gagal kirim WA. Pastikan nomor bot di Panel VPS sudah terhubung.' }); }
 });
 
 app.post('/api/auth/verify', (req, res) => {
-    const { phone, otp } = req.body; 
-    let webUsers = loadJSON(webUsersFile);
-    
+    const { phone, otp } = req.body; let webUsers = loadJSON(webUsersFile);
     if (webUsers[phone] && webUsers[phone].otp) {
         if (String(webUsers[phone].otp).trim() === String(otp).trim()) {
-            if (Date.now() > (webUsers[phone].otpExpiry || Infinity)) {
-                return res.status(400).json({ error: 'OTP kedaluwarsa.' });
-            }
+            if (Date.now() > (webUsers[phone].otpExpiry || Infinity)) return res.status(400).json({ error: 'OTP kedaluwarsa.' });
             
-            webUsers[phone].isVerified = true; 
-            delete webUsers[phone].otp; 
-            delete webUsers[phone].otpExpiry; 
-            saveJSON(webUsersFile, webUsers);
+            webUsers[phone].isVerified = true; delete webUsers[phone].otp; delete webUsers[phone].otpExpiry; saveJSON(webUsersFile, webUsers);
+            let db = loadJSON(dbFile); if (!db[phone]) { db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] }; saveJSON(dbFile, db); } 
             
-            let db = loadJSON(dbFile); 
-            if (!db[phone]) { 
-                db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] }; 
-                saveJSON(dbFile, db); 
-            } 
-            
-            let msgNew = `🎊 *MEMBER BARU BERGABUNG* 🎊\n\n`;
-            msgNew += `👤 Nama: ${webUsers[phone].name}\n`;
-            msgNew += `📱 WA: ${phone}\n`;
-            msgNew += `✉️ Email: ${webUsers[phone].email}`;
-            sendTeleNotif(msgNew, 'trx');
-            
+            sendTeleNotif(`🎊 *MEMBER BARU BERGABUNG* 🎊\n\n👤 Nama: ${webUsers[phone].name}\n📱 WA: ${phone}\n✉️ Email: ${webUsers[phone].email}`, 'trx');
             res.json({ message: 'Sukses!' });
-        } else { 
-            res.status(400).json({ error: 'OTP Salah.' }); 
-        }
-    } else { 
-        res.status(400).json({ error: 'Sesi tidak valid.' }); 
-    }
+        } else { res.status(400).json({ error: 'OTP Salah.' }); }
+    } else { res.status(400).json({ error: 'Sesi tidak valid.' }); }
 });
 
 app.post('/api/auth/forgot', async (req, res) => {
-    const { phone } = req.body; 
-    let webUsers = loadJSON(webUsersFile); 
-    let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
+    const { phone } = req.body; let webUsers = loadJSON(webUsersFile); let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
+    if (!webUsers[fPhone]) return res.status(400).json({ error: 'Nomor tidak terdaftar.' });
     
-    if (!webUsers[fPhone]) {
-        return res.status(400).json({ error: 'Nomor tidak terdaftar.' });
-    }
-    
-    const otp = Math.floor(1000 + Math.random() * 9000).toString(); 
-    webUsers[fPhone].otp = otp; 
-    webUsers[fPhone].otpExpiry = Date.now() + 300000; 
-    saveJSON(webUsersFile, webUsers);
-    
+    const otp = Math.floor(1000 + Math.random() * 9000).toString(); webUsers[fPhone].otp = otp; webUsers[fPhone].otpExpiry = Date.now() + 300000; saveJSON(webUsersFile, webUsers);
     try { 
-        await global.waSocket?.sendMessage(fPhone + '@c.us', { 
-            text: `Halo kak 👋\n\nKami menerima permintaan reset password akun *DIGITAL FIKY STORE*.\n\nKode OTP Anda:\n\n*${otp}*\n\n⏳ _Berlaku selama 5 menit._` 
-        }); 
+        await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Halo kak 👋\n\nKami menerima permintaan reset password akun *DIGITAL FIKY STORE*.\n\nKode OTP Anda:\n\n*${otp}*\n\n⏳ _Berlaku selama 5 menit._` }); 
         res.json({ message: 'OTP Terkirim' }); 
-    } catch(e) { 
-        res.status(500).json({ error: 'Gagal kirim WA.' }); 
-    }
+    } catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); }
 });
 
 app.post('/api/auth/reset', (req, res) => {
-    const { phone, otp, newPassword } = req.body; 
-    let webUsers = loadJSON(webUsersFile);
-    
+    const { phone, otp, newPassword } = req.body; let webUsers = loadJSON(webUsersFile);
     if (webUsers[phone] && webUsers[phone].otp) {
         if (String(webUsers[phone].otp).trim() === String(otp).trim()) {
-            if(Date.now() > (webUsers[phone].otpExpiry || Infinity)) {
-                return res.status(400).json({ error: 'OTP kedaluwarsa.' });
-            }
-            
-            webUsers[phone].password = newPassword; 
-            delete webUsers[phone].otp; 
-            delete webUsers[phone].otpExpiry; 
-            saveJSON(webUsersFile, webUsers); 
-            res.json({ message: 'Diubah!' }); 
-        } else { 
-            res.status(400).json({ error: 'OTP Salah.' }); 
-        }
-    } else { 
-        res.status(400).json({ error: 'Sesi tidak valid.' }); 
-    }
+            if(Date.now() > (webUsers[phone].otpExpiry || Infinity)) return res.status(400).json({ error: 'OTP kedaluwarsa.' });
+            webUsers[phone].password = newPassword; delete webUsers[phone].otp; delete webUsers[phone].otpExpiry; saveJSON(webUsersFile, webUsers); res.json({ message: 'Diubah!' }); 
+        } else { res.status(400).json({ error: 'OTP Salah.' }); }
+    } else { res.status(400).json({ error: 'Sesi tidak valid.' }); }
 });
 
 app.post('/api/auth/request-update-otp', async (req, res) => {
-    const { oldPhone, newPhone } = req.body; 
-    let webUsers = loadJSON(webUsersFile);
-    let fOld = oldPhone.startsWith('0') ? '62' + oldPhone.slice(1) : oldPhone; 
-    let fNew = newPhone.startsWith('0') ? '62' + newPhone.slice(1) : newPhone;
+    const { oldPhone, newPhone } = req.body; let webUsers = loadJSON(webUsersFile);
+    let fOld = oldPhone.startsWith('0') ? '62' + oldPhone.slice(1) : oldPhone; let fNew = newPhone.startsWith('0') ? '62' + newPhone.slice(1) : newPhone;
     
-    if (webUsers[fNew] && fNew !== fOld) {
-        return res.status(400).json({ error: 'Nomor baru sudah terdaftar.' });
-    }
-    if(!webUsers[fOld]) {
-        return res.status(400).json({ error: 'Akun tidak ditemukan.' });
-    }
+    if (webUsers[fNew] && fNew !== fOld) return res.status(400).json({ error: 'Nomor baru sudah terdaftar.' });
+    if(!webUsers[fOld]) return res.status(400).json({ error: 'Akun tidak ditemukan.' });
 
-    const otp = Math.floor(1000 + Math.random() * 9000).toString();
-    webUsers[fOld].updateOtp = otp; 
-    webUsers[fOld].updateOtpExpiry = Date.now() + 300000; 
-    saveJSON(webUsersFile, webUsers); 
+    const otp = Math.floor(1000 + Math.random() * 9000).toString(); webUsers[fOld].updateOtp = otp; webUsers[fOld].updateOtpExpiry = Date.now() + 300000; saveJSON(webUsersFile, webUsers); 
     
     let targetWA = fNew !== fOld ? fNew : fOld;
     try { 
-        await global.waSocket?.sendMessage(targetWA + '@c.us', { 
-            text: `Halo kak 👋\n\nBerikut kode OTP untuk verifikasi perubahan keamanan akun (Nomor/Password) di *DIGITAL FIKY STORE*:\n\n*${otp}*\n\n⏳ _Berlaku 5 menit._` 
-        }); 
+        await global.waSocket?.sendMessage(targetWA + '@c.us', { text: `Halo kak 👋\n\nBerikut kode OTP untuk verifikasi perubahan keamanan akun (Nomor/Password) di *DIGITAL FIKY STORE*:\n\n*${otp}*\n\n⏳ _Berlaku 5 menit._` }); 
         res.json({ message: 'OTP Terkirim' }); 
-    } catch(e) { 
-        res.status(500).json({ error: 'Gagal kirim WA.' }); 
-    } 
+    } catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); } 
 });
 
 app.post('/api/auth/update', (req, res) => {
-    const { oldPhone, newPhone, newName, otp, avatar, newPassword } = req.body; 
-    let webUsers = loadJSON(webUsersFile); 
-    let db = loadJSON(dbFile);
-    let fOld = oldPhone.startsWith('0') ? '62' + oldPhone.slice(1) : oldPhone; 
-    let fNew = newPhone.startsWith('0') ? '62' + newPhone.slice(1) : newPhone;
+    const { oldPhone, newPhone, newName, otp, avatar, newPassword } = req.body; let webUsers = loadJSON(webUsersFile); let db = loadJSON(dbFile);
+    let fOld = oldPhone.startsWith('0') ? '62' + oldPhone.slice(1) : oldPhone; let fNew = newPhone.startsWith('0') ? '62' + newPhone.slice(1) : newPhone;
     
-    if (!webUsers[fOld]) {
-        return res.status(400).json({ error: 'Akun tidak ditemukan.' });
-    }
+    if (!webUsers[fOld]) return res.status(400).json({ error: 'Akun tidak ditemukan.' });
     
     let isSecureChange = (fOld !== fNew) || (newPassword && newPassword.trim() !== '');
-    
     if (isSecureChange) {
-        if (fOld !== fNew && webUsers[fNew]) {
-            return res.status(400).json({ error: 'Nomor sudah dipakai.' });
-        }
-        if (String(webUsers[fOld].updateOtp).trim() !== String(otp).trim()) {
-            return res.status(400).json({ error: 'Kode OTP Salah.' });
-        }
-        if (Date.now() > (webUsers[fOld].updateOtpExpiry||Infinity)) {
-            return res.status(400).json({ error: 'OTP kedaluwarsa.' });
-        }
+        if (fOld !== fNew && webUsers[fNew]) return res.status(400).json({ error: 'Nomor sudah dipakai.' });
+        if (String(webUsers[fOld].updateOtp).trim() !== String(otp).trim()) return res.status(400).json({ error: 'Kode OTP Salah.' });
+        if (Date.now() > (webUsers[fOld].updateOtpExpiry||Infinity)) return res.status(400).json({ error: 'OTP kedaluwarsa.' });
         
         if (fOld !== fNew) {
             webUsers[fNew] = { ...webUsers[fOld], name: newName, avatar: avatar || webUsers[fOld].avatar }; 
-            if (newPassword && newPassword.trim() !== '') {
-                webUsers[fNew].password = newPassword;
-            }
-            delete webUsers[fNew].updateOtp; 
-            delete webUsers[fNew].updateOtpExpiry; 
-            delete webUsers[fOld];
-            
-            if (db[fOld]) { 
-                db[fNew] = { ...db[fOld], jid: fNew + '@s.whatsapp.net' }; 
-                delete db[fOld]; 
-            }
+            if (newPassword && newPassword.trim() !== '') webUsers[fNew].password = newPassword;
+            delete webUsers[fNew].updateOtp; delete webUsers[fNew].updateOtpExpiry; delete webUsers[fOld];
+            if (db[fOld]) { db[fNew] = { ...db[fOld], jid: fNew + '@s.whatsapp.net' }; delete db[fOld]; }
         } else {
-            webUsers[fOld].name = newName; 
-            if(avatar !== undefined) webUsers[fOld].avatar = avatar;
-            if (newPassword && newPassword.trim() !== '') {
-                webUsers[fOld].password = newPassword;
-            }
-            delete webUsers[fOld].updateOtp; 
-            delete webUsers[fOld].updateOtpExpiry;
+            webUsers[fOld].name = newName; if(avatar !== undefined) webUsers[fOld].avatar = avatar;
+            if (newPassword && newPassword.trim() !== '') webUsers[fOld].password = newPassword;
+            delete webUsers[fOld].updateOtp; delete webUsers[fOld].updateOtpExpiry;
         }
-    } else { 
-        webUsers[fOld].name = newName; 
-        if(avatar !== undefined) webUsers[fOld].avatar = avatar; 
-    }
+    } else { webUsers[fOld].name = newName; if(avatar !== undefined) webUsers[fOld].avatar = avatar; }
     
-    saveJSON(webUsersFile, webUsers); 
-    saveJSON(dbFile, db); 
-    res.json({ message: 'Profil diperbarui.', phone: fNew });
+    saveJSON(webUsersFile, webUsers); saveJSON(dbFile, db); res.json({ message: 'Profil diperbarui.', phone: fNew });
 });
 
 app.post('/api/auth/delete', (req, res) => {
-    const { phone } = req.body; 
-    let webUsers = loadJSON(webUsersFile); 
-    let db = loadJSON(dbFile);
-    
-    if(webUsers[phone]) delete webUsers[phone]; 
-    if(db[phone]) delete db[phone];
-    
-    saveJSON(webUsersFile, webUsers); 
-    saveJSON(dbFile, db); 
-    res.json({ message: 'Akun dihapus.' });
+    const { phone } = req.body; let webUsers = loadJSON(webUsersFile); let db = loadJSON(dbFile);
+    if(webUsers[phone]) delete webUsers[phone]; if(db[phone]) delete db[phone];
+    saveJSON(webUsersFile, webUsers); saveJSON(dbFile, db); res.json({ message: 'Akun dihapus.' });
 });
 
 // ==========================================
-// START BAILEYS WHATSAPP BOT (ERROR HANDLING FULL)
+// START BAILEYS BOT WA (DENGAN ERROR HANDLING)
 // ==========================================
 async function startBot() {
     try {
@@ -2877,7 +2958,7 @@ async function startBot() {
                         const code = await sock.requestPairingCode(config.botNumber.replace(/[^0-9]/g, '')); 
                         console.log(`\n🔑 KODE PAIRING: ${code}\n`); 
                     } catch (error) {
-                        console.log("❌ Gagal request pairing code:", error.message);
+                        console.error("Gagal request pairing code:", error.message);
                     } 
                 }, 5000); 
             } 
@@ -2895,9 +2976,9 @@ async function startBot() {
         
         sock.ev.on('creds.update', saveCreds); 
         global.waSocket = sock; 
-        
-    } catch (error) {
-        console.log("❌ Fatal Error Bot WA:", error.message);
+
+    } catch (err) {
+        console.error("Fatal error di Bot WhatsApp:", err.message);
     }
 }
 
@@ -2971,18 +3052,19 @@ while true; do clear
             echo -e "${YELLOW}--- SETUP PAIRING BOT WHATSAPP ---${NC}"
             read -p "Masukkan Nomor WA Bot (Awalan 62, cth: 62812...): " botnum
             if [ ! -z "$botnum" ]; then
+                pm2 stop $BOT_NAME > /dev/null 2>&1
                 cd "$HOME/$DIR_NAME"
                 node -e "
-                const fs = require('fs');
-                const file = './config.json';
-                let config = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
-                config.botNumber = '$botnum';
-                fs.writeFileSync(file, JSON.stringify(config, null, 2));
-                console.log('Nomor disimpan!');
+                    const fs = require('fs');
+                    const file = './config.json';
+                    let config = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
+                    config.botNumber = '$botnum';
+                    fs.writeFileSync(file, JSON.stringify(config, null, 2));
+                    console.log('Nomor disimpan!');
                 "
-                echo -e "${GREEN}Nomor disimpan! Meminta kode pairing ke WhatsApp...${NC}"
+                echo -e "${GREEN}Meminta kode pairing ke WhatsApp...${NC}"
                 echo -e "${CYAN}(Tunggu sekitar 5-10 detik. Jika kode sudah muncul, catat kodenya.)${NC}"
-                echo -e "${RED}(Tekan CTRL+C di keyboard jika sudah selesai untuk kembali ke menu)${NC}"
+                echo -e "${RED}(Setelah mencatat kode, tekan CTRL+C lalu pilih menu 2 untuk jalankan bot di background)${NC}"
                 node index.js
             fi
             ;;
@@ -2991,8 +3073,8 @@ while true; do clear
             pm2 delete $BOT_NAME 2>/dev/null
             pm2 start index.js --name "$BOT_NAME"
             pm2 save 
-            echo -e "${GREEN}Bot dijalankan di latar belakang!${NC}"
-            read -p "Enter..."
+            echo -e "${GREEN}Bot berhasil dijalankan di latar belakang!${NC}"
+            read -p "Tekan Enter..."
             ;;
         3)
             clear
@@ -3016,7 +3098,7 @@ while true; do clear
             pm2 stop $BOT_NAME 2>/dev/null
             rm -rf "$HOME/$DIR_NAME/sesi_bot"
             echo -e "${GREEN}Sesi WA dihapus.${NC}"
-            read -p "Enter..." 
+            read -p "Tekan Enter..." 
             ;;
         6)
             clear
@@ -3028,15 +3110,15 @@ while true; do clear
             if [ ! -z "$b_isi" ]; then
                 cd "$HOME/$DIR_NAME"
                 node -e "
-                const http = require('http');
-                const data = JSON.stringify({judul: '$b_judul', message: '$b_isi'});
-                const req = http.request({
-                    hostname: 'localhost', port: 3000, path: '/api/admin/broadcast', method: 'POST',
-                    headers: {'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data)}
-                }, res => {
-                    let b = ''; res.on('data', c => b += c); res.on('end', () => console.log('Terkirim ke Server!'));
-                });
-                req.write(data); req.end();
+                    const http = require('http');
+                    const data = JSON.stringify({judul: '$b_judul', message: '$b_isi'});
+                    const req = http.request({
+                        hostname: 'localhost', port: 3000, path: '/api/admin/broadcast', method: 'POST',
+                        headers: {'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data)}
+                    }, res => {
+                        console.log('Terkirim ke Server!');
+                    });
+                    req.write(data); req.end();
                 "
                 echo -e "\n${GREEN}✅ Pesan Broadcast berhasil ditambahkan ke Pusat Informasi Aplikasi!${NC}"
             fi
@@ -3055,48 +3137,48 @@ while true; do clear
             if [ "$s_menu" == "1" ]; then
                 cd "$HOME/$DIR_NAME"
                 node -e "
-                const fs = require('fs');
-                const db = fs.existsSync('./database.json') ? JSON.parse(fs.readFileSync('./database.json')) : {};
-                const users = fs.existsSync('./web_users.json') ? JSON.parse(fs.readFileSync('./web_users.json')) : {};
-                for (let p in users) {
-                    if (users[p].isVerified) {
-                        console.log('- ' + users[p].name + ' (' + p + ') : Rp ' + (db[p] ? db[p].saldo : 0));
+                    const fs = require('fs');
+                    const db = fs.existsSync('./database.json') ? JSON.parse(fs.readFileSync('./database.json')) : {};
+                    const users = fs.existsSync('./web_users.json') ? JSON.parse(fs.readFileSync('./web_users.json')) : {};
+                    for (let p in users) {
+                        if (users[p].isVerified) {
+                            console.log('- ' + users[p].name + ' (' + p + ') : Rp ' + (db[p] ? db[p].saldo : 0));
+                        }
                     }
-                }
                 "
-                read -p "Enter..."
+                read -p "Tekan Enter..."
             elif [ "$s_menu" == "2" ]; then
                 read -p "No WA Member: " no_mem
                 read -p "Jumlah Tambah: " jm_mem
                 cd "$HOME/$DIR_NAME"
                 node -e "
-                const http = require('http');
-                const data = JSON.stringify({identifier: '$no_mem', amount: parseInt('$jm_mem'), action: 'add'});
-                const req = http.request({
-                    hostname: 'localhost', port: 3000, path: '/api/admin/balance', method: 'POST',
-                    headers: {'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data)}
-                }, res => {
-                    res.on('data', c => console.log(c.toString()));
-                });
-                req.write(data); req.end();
+                    const http = require('http');
+                    const data = JSON.stringify({identifier: '$no_mem', amount: parseInt('$jm_mem'), action: 'add'});
+                    const req = http.request({
+                        hostname: 'localhost', port: 3000, path: '/api/admin/balance', method: 'POST',
+                        headers: {'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data)}
+                    }, res => {
+                        res.on('data', c => console.log(c.toString()));
+                    });
+                    req.write(data); req.end();
                 "
-                read -p "Enter..."
+                read -p "Tekan Enter..."
             elif [ "$s_menu" == "3" ]; then
                 read -p "No WA Member: " no_mem
                 read -p "Jumlah Kurangi: " jm_mem
                 cd "$HOME/$DIR_NAME"
                 node -e "
-                const http = require('http');
-                const data = JSON.stringify({identifier: '$no_mem', amount: parseInt('$jm_mem'), action: 'reduce'});
-                const req = http.request({
-                    hostname: 'localhost', port: 3000, path: '/api/admin/balance', method: 'POST',
-                    headers: {'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data)}
-                }, res => {
-                    res.on('data', c => console.log(c.toString()));
-                });
-                req.write(data); req.end();
+                    const http = require('http');
+                    const data = JSON.stringify({identifier: '$no_mem', amount: parseInt('$jm_mem'), action: 'reduce'});
+                    const req = http.request({
+                        hostname: 'localhost', port: 3000, path: '/api/admin/balance', method: 'POST',
+                        headers: {'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data)}
+                    }, res => {
+                        res.on('data', c => console.log(c.toString()));
+                    });
+                    req.write(data); req.end();
                 "
-                read -p "Enter..."
+                read -p "Tekan Enter..."
             fi
             ;;
         8)
@@ -3114,28 +3196,28 @@ while true; do clear
             if [ "$b_menu" == "1" ]; then
                 cd "$HOME/$DIR_NAME"
                 node -e "
-                const fs = require('fs'); 
-                const path = './public/banners';
-                if(!fs.existsSync(path)) fs.mkdirSync(path, {recursive:true});
-                let files = fs.readdirSync(path).filter(f => f.match(/\.(jpg|jpeg|png|gif)$/i));
-                let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {};
-                cfg.banners = files;
-                fs.writeFileSync('./config.json', JSON.stringify(cfg, null, 2));
-                console.log('✅ Berhasil menyinkronkan ' + files.length + ' banner!');
+                    const fs = require('fs'); 
+                    const path = './public/banners';
+                    if(!fs.existsSync(path)) fs.mkdirSync(path, {recursive:true});
+                    let files = fs.readdirSync(path).filter(f => f.match(/\.(jpg|jpeg|png|gif)$/i));
+                    let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {};
+                    cfg.banners = files;
+                    fs.writeFileSync('./config.json', JSON.stringify(cfg, null, 2));
+                    console.log('✅ Berhasil menyinkronkan ' + files.length + ' banner!');
                 "
                 pm2 restart $BOT_NAME > /dev/null 2>&1
-                read -p "Enter..."
+                read -p "Tekan Enter..."
             elif [ "$b_menu" == "2" ]; then
                 cd "$HOME/$DIR_NAME"
                 node -e "
-                const fs = require('fs'); 
-                let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {};
-                cfg.banners = [];
-                fs.writeFileSync('./config.json', JSON.stringify(cfg, null, 2));
-                console.log('✅ Semua banner telah disembunyikan dari aplikasi.');
+                    const fs = require('fs'); 
+                    let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {};
+                    cfg.banners = [];
+                    fs.writeFileSync('./config.json', JSON.stringify(cfg, null, 2));
+                    console.log('✅ Semua banner telah disembunyikan dari aplikasi.');
                 "
                 pm2 restart $BOT_NAME > /dev/null 2>&1
-                read -p "Enter..."
+                read -p "Tekan Enter..."
             fi
             ;;
         9)
@@ -3157,17 +3239,17 @@ while true; do clear
             
             cd "$HOME/$DIR_NAME"
             node -e "
-            const fs = require('fs');
-            const file = './config.json';
-            let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
-            cfg.markupRules = {
-                l1: parseInt('$l1') || 10000, m1: parseInt('$m1') || 0,
-                l2: parseInt('$l2') || 50000, m2: parseInt('$m2') || 0,
-                l3: parseInt('$l3') || 100000, m3: parseInt('$m3') || 0,
-                m4: parseInt('$m4') || 0
-            };
-            fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
-            console.log('\n✅ Seting Pasang Harga Berhasil Disimpan!');
+                const fs = require('fs');
+                const file = './config.json';
+                let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
+                cfg.markupRules = {
+                    l1: parseInt('$l1') || 10000, m1: parseInt('$m1') || 0,
+                    l2: parseInt('$l2') || 50000, m2: parseInt('$m2') || 0,
+                    l3: parseInt('$l3') || 100000, m3: parseInt('$m3') || 0,
+                    m4: parseInt('$m4') || 0
+                };
+                fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
+                console.log('\n✅ Seting Pasang Harga Berhasil Disimpan!');
             "
             pm2 restart $BOT_NAME > /dev/null 2>&1
             read -p "Tekan Enter untuk kembali..."
@@ -3189,46 +3271,46 @@ while true; do clear
                 read -p "SKU Digiflazz: " p_sku
                 cd "$HOME/$DIR_NAME" 
                 node -e "
-                const fs = require('fs');
-                let f = './local_products.json';
-                let data = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f)) : [];
-                data.push({
-                    id: 'LOC' + Date.now(), type: '$tp', brand: '$p_brand', category: '$p_cat',
-                    name: '$p_name', price: parseInt('$p_price') || 0, sku: '$p_sku', isDigi: true
-                });
-                fs.writeFileSync(f, JSON.stringify(data, null, 2));
-                console.log('✅ Produk Berhasil Ditambahkan!');
+                    const fs = require('fs');
+                    let f = './local_products.json';
+                    let data = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f)) : [];
+                    data.push({
+                        id: 'LOC' + Date.now(), type: '$tp', brand: '$p_brand', category: '$p_cat',
+                        name: '$p_name', price: parseInt('$p_price') || 0, sku: '$p_sku', isDigi: true
+                    });
+                    fs.writeFileSync(f, JSON.stringify(data, null, 2));
+                    console.log('✅ Produk Berhasil Ditambahkan!');
                 "
-                read -p "Enter..."
+                read -p "Tekan Enter..."
             elif [ "$pr_menu" == "2" ]; then
                 cd "$HOME/$DIR_NAME" 
                 node -e "
-                const fs = require('fs');
-                let f = './local_products.json';
-                let data = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f)) : [];
-                if (data.length === 0) {
-                    console.log('\nBelum ada produk.');
-                } else {
-                    data.forEach((p, i) => console.log('[' + i + '] ' + p.name));
-                }
+                    const fs = require('fs');
+                    let f = './local_products.json';
+                    let data = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f)) : [];
+                    if (data.length === 0) {
+                        console.log('\nBelum ada produk.');
+                    } else {
+                        data.forEach((p, i) => console.log('[' + i + '] ' + p.name));
+                    }
                 "
                 read -p "Masukkan Nomor Produk yang mau dihapus: " del_id
                 if [ ! -z "$del_id" ]; then
                     cd "$HOME/$DIR_NAME" 
                     node -e "
-                    const fs = require('fs');
-                    let f = './local_products.json';
-                    let data = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f)) : [];
-                    if (data['$del_id']) {
-                        data.splice('$del_id', 1);
-                        fs.writeFileSync(f, JSON.stringify(data, null, 2));
-                        console.log('\n✅ Produk berhasil dihapus!');
-                    } else {
-                        console.log('\n❌ Nomor tidak valid.');
-                    }
+                        const fs = require('fs');
+                        let f = './local_products.json';
+                        let data = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f)) : [];
+                        if (data['$del_id']) {
+                            data.splice('$del_id', 1);
+                            fs.writeFileSync(f, JSON.stringify(data, null, 2));
+                            console.log('\n✅ Produk berhasil dihapus!');
+                        } else {
+                            console.log('\n❌ Nomor tidak valid.');
+                        }
                     "
                 fi
-                read -p "Enter..."
+                read -p "Tekan Enter..."
             fi
             ;;
         11)
@@ -3247,35 +3329,35 @@ while true; do clear
             if [[ "$confirm_csv" == "y" || "$confirm_csv" == "Y" ]]; then
                 cd "$HOME/$DIR_NAME"
                 node -e "
-                const fs = require('fs');
-                const file = './import.csv';
-                if (!fs.existsSync(file)) {
-                    console.log('❌ File import.csv tidak ditemukan di direktori!');
-                    process.exit();
-                }
-                const lines = fs.readFileSync(file, 'utf-8').split('\n');
-                let data = fs.existsSync('./local_products.json') ? JSON.parse(fs.readFileSync('./local_products.json')) : [];
-                let count = 0;
-                lines.forEach(line => {
-                    let p = line.split(';');
-                    if (p.length >= 6) {
-                        data.push({
-                            id: 'LOC' + Date.now() + Math.floor(Math.random() * 1000),
-                            type: p[0].trim().toLowerCase(),
-                            brand: p[1].trim(),
-                            category: p[2].trim(),
-                            name: p[3].trim(),
-                            price: parseInt(p[4].trim()) || 0,
-                            sku: p[5].trim(),
-                            desc: p[6] ? p[6].trim() : '',
-                            isDigi: true
-                        });
-                        count++;
+                    const fs = require('fs');
+                    const file = './import.csv';
+                    if (!fs.existsSync(file)) {
+                        console.log('❌ File import.csv tidak ditemukan di direktori!');
+                        process.exit();
                     }
-                });
-                fs.writeFileSync('./local_products.json', JSON.stringify(data, null, 2));
-                fs.unlinkSync(file);
-                console.log('✅ Berhasil Import ' + count + ' Produk ke sistem!');
+                    const lines = fs.readFileSync(file, 'utf-8').split('\n');
+                    let data = fs.existsSync('./local_products.json') ? JSON.parse(fs.readFileSync('./local_products.json')) : [];
+                    let count = 0;
+                    lines.forEach(line => {
+                        let p = line.split(';');
+                        if (p.length >= 6) {
+                            data.push({
+                                id: 'LOC' + Date.now() + Math.floor(Math.random() * 1000),
+                                type: p[0].trim().toLowerCase(),
+                                brand: p[1].trim(),
+                                category: p[2].trim(),
+                                name: p[3].trim(),
+                                price: parseInt(p[4].trim()) || 0,
+                                sku: p[5].trim(),
+                                desc: p[6] ? p[6].trim() : '',
+                                isDigi: true
+                            });
+                            count++;
+                        }
+                    });
+                    fs.writeFileSync('./local_products.json', JSON.stringify(data, null, 2));
+                    fs.unlinkSync(file);
+                    console.log('✅ Berhasil Import ' + count + ' Produk ke sistem!');
                 "
             fi
             read -p "Tekan Enter untuk kembali..."
@@ -3305,60 +3387,60 @@ EOFNGINX
             read -p "API Key Digiflazz (Prod Key): " digi_key
             cd "$HOME/$DIR_NAME"
             node -e "
-            const fs = require('fs');
-            let file = './config.json';
-            let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
-            cfg.digiUser = '$digi_user';
-            cfg.digiKey = '$digi_key';
-            fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
-            console.log('✅ Konfigurasi API Disimpan!');
+                const fs = require('fs');
+                let file = './config.json';
+                let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
+                cfg.digiUser = '$digi_user';
+                cfg.digiKey = '$digi_key';
+                fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
+                console.log('✅ Konfigurasi API Disimpan!');
             "
             pm2 restart $BOT_NAME > /dev/null 2>&1
-            read -p "Enter..." 
+            read -p "Tekan Enter..." 
             ;;
         14)
             clear
             echo "Memeriksa koneksi dan saldo Digiflazz..."
             cd "$HOME/$DIR_NAME" 
             node -e "
-            const fs = require('fs');
-            let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {};
-            if(!cfg.digiUser || !cfg.digiKey) {
-                console.log('❌ API Digiflazz belum diatur! Isi di menu 13 terlebih dahulu.');
-                process.exit();
-            }
-            const axios = require('axios');
-            const crypto = require('crypto');
-            let sign = crypto.createHash('md5').update(cfg.digiUser + cfg.digiKey + 'depo').digest('hex');
-            
-            axios.post('https://api.digiflazz.com/v1/cek-saldo', { cmd: 'deposit', username: cfg.digiUser, sign: sign })
-            .then(r => {
-                if(r.data && r.data.data && r.data.data.deposit !== undefined) {
-                    console.log('\n✅ Koneksi Sukses! Saldo Anda: Rp ' + r.data.data.deposit);
-                } else {
-                    console.log('\n❌ Respon server Digiflazz tidak valid. Cek Username & Key.');
+                const fs = require('fs');
+                let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {};
+                if(!cfg.digiUser || !cfg.digiKey) {
+                    console.log('❌ API Digiflazz belum diatur! Isi di menu 13 terlebih dahulu.');
+                    process.exit();
                 }
-            })
-            .catch(e => {
-                console.log('\n❌ Gagal terhubung! Pastikan Username/Key benar, dan IP VPS sudah ditambahkan di web Digiflazz.');
-            });
+                const axios = require('axios');
+                const crypto = require('crypto');
+                let sign = crypto.createHash('md5').update(cfg.digiUser + cfg.digiKey + 'depo').digest('hex');
+                
+                axios.post('https://api.digiflazz.com/v1/cek-saldo', { cmd: 'deposit', username: cfg.digiUser, sign: sign })
+                .then(r => {
+                    if(r.data && r.data.data && r.data.data.deposit !== undefined) {
+                        console.log('\n✅ Koneksi Sukses! Saldo Anda: Rp ' + r.data.data.deposit);
+                    } else {
+                        console.log('\n❌ Respon server Digiflazz tidak valid. Cek Username & Key.');
+                    }
+                })
+                .catch(e => {
+                    console.log('\n❌ Gagal terhubung! Pastikan Username/Key benar, dan IP VPS sudah ditambahkan di web Digiflazz.');
+                });
             "
             read -p "Tekan Enter untuk kembali..." 
             ;;
         15)
             cd "$HOME/$DIR_NAME" 
             node -e "
-            const fs = require('fs'); 
-            let f = './digi_cache.json'; 
-            if(fs.existsSync(f)) { 
-                fs.unlinkSync(f); 
-                console.log('✅ Cache Katalog berhasil dihapus!'); 
-            } else {
-                console.log('✅ Cache sudah bersih.');
-            }
+                const fs = require('fs'); 
+                let f = './digi_cache.json'; 
+                if(fs.existsSync(f)) { 
+                    fs.unlinkSync(f); 
+                    console.log('✅ Cache Katalog berhasil dihapus!'); 
+                } else {
+                    console.log('✅ Cache sudah bersih.');
+                }
             "
             pm2 restart all > /dev/null 2>&1
-            read -p "Enter..." 
+            read -p "Tekan Enter..." 
             ;;
         16)
             clear
@@ -3375,12 +3457,12 @@ EOFNGINX
                 read -p "Chat ID Transaksi: " c_trx
                 cd "$HOME/$DIR_NAME"
                 node -e "
-                const fs = require('fs');
-                let file = './config.json';
-                let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
-                cfg.teleTokenTrx = '$t_trx';
-                cfg.teleChatIdTrx = '$c_trx';
-                fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
+                    const fs = require('fs');
+                    let file = './config.json';
+                    let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
+                    cfg.teleTokenTrx = '$t_trx';
+                    cfg.teleChatIdTrx = '$c_trx';
+                    fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
                 "
                 echo -e "${GREEN}✅ Bot Transaksi Disimpan!${NC}"
             elif [ "$bot_sel" == "2" ]; then
@@ -3388,12 +3470,12 @@ EOFNGINX
                 read -p "Chat ID Top Up: " c_topup
                 cd "$HOME/$DIR_NAME"
                 node -e "
-                const fs = require('fs');
-                let file = './config.json';
-                let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
-                cfg.teleTokenTopup = '$t_topup';
-                cfg.teleChatIdTopup = '$c_topup';
-                fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
+                    const fs = require('fs');
+                    let file = './config.json';
+                    let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
+                    cfg.teleTokenTopup = '$t_topup';
+                    cfg.teleChatIdTopup = '$c_topup';
+                    fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
                 "
                 echo -e "${GREEN}✅ Bot Top Up Disimpan!${NC}"
             elif [ "$bot_sel" == "3" ]; then
@@ -3401,67 +3483,67 @@ EOFNGINX
                 read -p "Chat ID Backup: " c_backup
                 cd "$HOME/$DIR_NAME"
                 node -e "
-                const fs = require('fs');
-                let file = './config.json';
-                let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
-                cfg.teleTokenBackup = '$t_backup';
-                cfg.teleChatIdBackup = '$c_backup';
-                fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
+                    const fs = require('fs');
+                    let file = './config.json';
+                    let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
+                    cfg.teleTokenBackup = '$t_backup';
+                    cfg.teleChatIdBackup = '$c_backup';
+                    fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
                 "
                 echo -e "${GREEN}✅ Bot Backup Disimpan!${NC}"
             fi
             pm2 restart all > /dev/null 2>&1
-            read -p "Enter..." 
+            read -p "Tekan Enter..." 
             ;;
         17)
             echo "Format: 1 untuk tiap 1 jam, 0.5 untuk 30 menit."
             read -p "Berapa Jam Sekali Auto-Backup?: " tele_jam
             cd "$HOME/$DIR_NAME"
             node -e "
-            const fs = require('fs');
-            let file = './config.json';
-            let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
-            cfg.autoBackupHours = parseFloat('$tele_jam');
-            fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
-            console.log('✅ Disimpan: Auto Backup Tiap $tele_jam Jam!');
+                const fs = require('fs');
+                let file = './config.json';
+                let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
+                cfg.autoBackupHours = parseFloat('$tele_jam');
+                fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
+                console.log('✅ Disimpan: Auto Backup Tiap $tele_jam Jam!');
             "
             pm2 restart all > /dev/null 2>&1
-            read -p "Enter..." 
+            read -p "Tekan Enter..." 
             ;;
         18)
             cd "$HOME/$DIR_NAME"
             node -e "
-            const axios = require('axios');
-            const fs = require('fs');
-            const FormData = require('form-data');
-            const {exec} = require('child_process');
-            
-            let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {};
-            let t = cfg.teleTokenBackup || cfg.teleToken;
-            let c = cfg.teleChatIdBackup || cfg.teleChatId;
-            
-            if(!t || !c) {
-                console.log('❌ Token/Chat ID Bot Backup belum disetting (Menu 16)');
-                process.exit();
-            }
-            
-            let zipName = 'Backup_FikyStore_' + Date.now() + '.zip';
-            exec('zip -r ' + zipName + ' database.json web_users.json config.json local_products.json info.json', (err) => {
-                const form = new FormData();
-                form.append('chat_id', c);
-                form.append('document', fs.createReadStream(zipName));
-                form.append('caption', '📦 *BACKUP MANUAL BERHASIL*\n\nTanggal: ' + new Date().toLocaleString('id-ID'));
-                form.append('parse_mode', 'Markdown');
+                const axios = require('axios');
+                const fs = require('fs');
+                const FormData = require('form-data');
+                const {exec} = require('child_process');
                 
-                axios.post('https://api.telegram.org/bot' + t + '/sendDocument', form, { headers: form.getHeaders() })
-                .then(() => {
-                    console.log('✅ File Backup Terkirim ke Telegram!');
-                    fs.unlinkSync(zipName);
-                })
-                .catch(e => {
-                    console.log('❌ Gagal Kirim ke Telegram');
+                let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {};
+                let t = cfg.teleTokenBackup || cfg.teleToken;
+                let c = cfg.teleChatIdBackup || cfg.teleChatId;
+                
+                if(!t || !c) {
+                    console.log('❌ Token/Chat ID Bot Backup belum disetting (Menu 16)');
+                    process.exit();
+                }
+                
+                let zipName = 'Backup_FikyStore_' + Date.now() + '.zip';
+                exec('zip -r ' + zipName + ' database.json web_users.json config.json local_products.json info.json', (err) => {
+                    const form = new FormData();
+                    form.append('chat_id', c);
+                    form.append('document', fs.createReadStream(zipName));
+                    form.append('caption', '📦 *BACKUP MANUAL BERHASIL*\n\nTanggal: ' + new Date().toLocaleString('id-ID'));
+                    form.append('parse_mode', 'Markdown');
+                    
+                    axios.post('https://api.telegram.org/bot' + t + '/sendDocument', form, { headers: form.getHeaders() })
+                    .then(() => {
+                        console.log('✅ File Backup Terkirim ke Telegram!');
+                        fs.unlinkSync(zipName);
+                    })
+                    .catch(e => {
+                        console.log('❌ Gagal Kirim ke Telegram');
+                    });
                 });
-            });
             "
             read -p "Tunggu sebentar lalu tekan Enter..." 
             ;;
@@ -3474,7 +3556,7 @@ EOFNGINX
                 pm2 restart all > /dev/null 2>&1
                 echo -e "${GREEN}✅ Restore Data Selesai!${NC}"
             fi
-            read -p "Enter..." 
+            read -p "Tekan Enter..." 
             ;;
         20) 
             echo -e "${YELLOW}Menarik update terbaru dari GitHub Anda...${NC}"
@@ -3485,7 +3567,7 @@ EOFNGINX
             cp menu /usr/bin/menu
             pm2 restart all > /dev/null 2>&1
             echo -e "${GREEN}✅ Update Selesai! Sistem sudah diperbarui.${NC}"
-            read -p "Enter..."
+            read -p "Tekan Enter..."
             ;;
         0) exit 0 ;;
     esac
