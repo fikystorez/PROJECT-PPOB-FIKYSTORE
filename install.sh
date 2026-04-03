@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V148 (FULL UNCOMPRESSED - PART 1)
+# DIGITAL FIKY STORE - V149 (THE AUTOPILOT MAFIA - PART 1)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
@@ -16,7 +16,7 @@ DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V148 (PART 1)           "
+echo "    MENGINSTAL DIGITAL FIKY STORE V149 (PART 1)           "
 echo "=========================================================="
 
 echo "[1/6] Memperbarui sistem dan menginstal Node.js..."
@@ -35,7 +35,7 @@ cd "$HOME/$DIR_NAME"
 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
-  "version": "1.0.0",
+  "version": "1.4.9",
   "description": "Aplikasi PPOB DIGITAL FIKY STORE",
   "main": "index.js",
   "scripts": {
@@ -674,7 +674,11 @@ cat << 'EOF' > public/dashboard.html
 <body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
   <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
     
-    <div class="flex justify-between items-center p-4 bg-white dark:bg-[#0b1320] shadow-sm dark:shadow-md sticky top-0 z-40">
+    <div id="maintenanceBanner" class="hidden bg-red-600 text-white text-center py-2 px-4 text-xs font-bold shadow-md z-50 sticky top-0">
+      <i class="fas fa-tools mr-1 animate-pulse"></i> SISTEM SEDANG MAINTENANCE (23:00 - 00:30 WIB). TRANSAKSI DITUTUP.
+    </div>
+
+    <div class="flex justify-between items-center p-4 bg-white dark:bg-[#0b1320] shadow-sm dark:shadow-md sticky z-40 top-0" id="headerMain">
       <div class="flex items-center gap-4">
         <i class="fas fa-bars text-xl cursor-pointer text-gray-600 dark:text-gray-300 hover:text-yellow-400" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')"></i>
         <h1 class="font-medium text-[17px] tracking-wide text-gray-800 dark:text-white" id="headerGreeting">Hai, Member</h1>
@@ -952,9 +956,30 @@ cat << 'EOF' > public/dashboard.html
     const user = JSON.parse(localStorage.getItem('user'));
     
     if(!user) {
-        window.location.href='/';
+        window.location.href = '/';
     }
     
+    // LOGIKA AUTO MAINTENANCE DI FRONTEND
+    function isMaintenance() {
+        const now = new Date();
+        const h = now.getHours();
+        const m = now.getMinutes();
+        // Cek apakah jam >= 23:00 ATAU jam === 00 dan menit <= 30
+        if (h >= 23 || (h === 0 && m <= 30)) {
+            return true;
+        }
+        return false;
+    }
+
+    if(isMaintenance()) {
+        const mb = document.getElementById('maintenanceBanner');
+        if(mb) mb.classList.remove('hidden');
+        
+        // Pindahkan headerMain agar tidak tertutup banner
+        const hm = document.getElementById('headerMain');
+        if(hm) hm.classList.remove('top-0');
+    }
+
     document.getElementById('headerGreeting').innerText = "Hai, " + user.name;
     document.getElementById('sidebarName').innerText = user.name;
     document.getElementById('sidebarPhone').innerText = user.phone;
@@ -1199,6 +1224,17 @@ cat << 'EOF' > public/dashboard.html
       const bg = isD ? '#0b1320' : '#fff'; 
       const c = isD ? '#fff' : '#000';
       
+      // CEK AUTO MAINTENANCE SEBELUM LANJUT
+      if(isMaintenance()) {
+          return Swal.fire({
+              icon: 'error', 
+              title: 'MAINTENANCE', 
+              text: 'Sistem sedang Maintenance Otomatis (23:00 - 00:30 WIB). Transaksi ditutup sementara.', 
+              background: bg, 
+              color: c
+          });
+      }
+      
       if(!n || n <= 0) {
           return Swal.fire({icon: 'warning', title: 'Gagal', text: 'Isi nominal valid!', background: bg, color: c});
       }
@@ -1407,6 +1443,17 @@ cat << 'EOF' > public/operator.html
     let sN = ''; 
     let sP = 0; 
     let sL = false;
+
+    // FUNGSI CEK MAINTENANCE
+    function isMaintenance() {
+        const now = new Date();
+        const h = now.getHours();
+        const m = now.getMinutes();
+        if (h >= 23 || (h === 0 && m <= 30)) {
+            return true;
+        }
+        return false;
+    }
 
     // OPERATOR DASAR
     const o = {
@@ -1747,6 +1794,17 @@ cat << 'EOF' > public/operator.html
       const bg = isD ? '#0b1320' : '#fff';
       const c = isD ? '#fff' : '#000';
       
+      // CEK AUTO MAINTENANCE SEBELUM BAYAR
+      if(isMaintenance()) {
+          return Swal.fire({
+              icon: 'error', 
+              title: 'MAINTENANCE', 
+              text: 'Sistem sedang Maintenance Otomatis (23:00 - 00:30 WIB). Transaksi ditutup sementara.', 
+              background: bg, 
+              color: c
+          });
+      }
+      
       setTimeout(() => {
         Swal.fire({
             title: 'Memproses...', 
@@ -1878,6 +1936,7 @@ cat << 'EOF' > public/game.html
   <title>Top Up Game</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
   <script>
       tailwind.config = { darkMode: 'class' }
   </script>
@@ -1886,8 +1945,8 @@ cat << 'EOF' > public/game.html
   <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative shadow-2xl overflow-x-hidden">
     
     <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
-      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 dark:text-white" onclick="history.back()"></i>
-      <h1 class="text-[18px] font-bold dark:text-white">Top Up Game</h1>
+      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="history.back()"></i>
+      <h1 class="text-[18px] font-bold text-gray-800 dark:text-white">Top Up Game</h1>
     </div>
 
     <div class="px-4 mt-6">
@@ -1900,22 +1959,22 @@ cat << 'EOF' > public/game.html
           
           <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=free_fire'">
             <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold text-sm mb-2">FF</div>
-            <div class="text-[11px] font-medium dark:text-gray-300 text-center">Free Fire</div>
+            <div class="text-[11px] font-medium text-gray-700 dark:text-gray-300 text-center">Free Fire</div>
           </div>
           
           <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=mobile_legends'">
             <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold text-xs text-center">ML</div>
-            <div class="text-[11px] font-medium dark:text-gray-300 text-center">Mobile<br>Legends</div>
+            <div class="text-[11px] font-medium text-gray-700 dark:text-gray-300 text-center">Mobile<br>Legends</div>
           </div>
           
           <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=pubg_mobile'">
             <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold text-[10px] text-center">PUBG</div>
-            <div class="text-[11px] font-medium dark:text-gray-300 text-center">PUBG<br>Mobile</div>
+            <div class="text-[11px] font-medium text-gray-700 dark:text-gray-300 text-center">PUBG<br>Mobile</div>
           </div>
           
           <div class="bg-gray-50 dark:bg-[#1a2639] border border-gray-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#002147] dark:hover:border-yellow-400 transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=valorant'">
             <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-400 flex items-center justify-center text-[#002147] dark:text-yellow-400 font-extrabold text-[11px] text-center">VALO</div>
-            <div class="text-[11px] font-medium dark:text-gray-300 text-center">Valorant</div>
+            <div class="text-[11px] font-medium text-gray-700 dark:text-gray-300 text-center">Valorant</div>
           </div>
           
         </div>
@@ -1946,6 +2005,7 @@ cat << 'EOF' > public/riwayat_topup.html
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
   <script>
       tailwind.config = { darkMode: 'class' }
   </script>
@@ -2874,7 +2934,7 @@ cat << 'EOF' > public/riwayat.html
 EOF
 
 echo "[PART 4 SELESAI DITULIS. TINGGAL 2 PART LAGI (BACKEND & VPS MENU)!]"
-echo "[5/6] Menulis logika Backend Node.js (SUPER UNCOMPRESSED)..."
+echo "[5/6] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V149)..."
 
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
@@ -2934,6 +2994,23 @@ if (!fs.existsSync(localProductsFile)) saveJSON(localProductsFile, []);
 if (!fs.existsSync(digiCacheFile)) saveJSON(digiCacheFile, { time: 0, data: [] }); 
 if (!fs.existsSync(infoFile)) saveJSON(infoFile, []);
 
+
+// ==========================================
+// FUNGSI AUTO MAINTENANCE (23:00 - 00:30 WIB)
+// ==========================================
+function isMaintenance() {
+    const now = new Date();
+    // Menggunakan waktu lokal server (Pastikan VPS sudah diset ke WIB/Asia Jakarta)
+    const h = now.getHours();
+    const m = now.getMinutes();
+    
+    if (h >= 23 || (h === 0 && m <= 30)) {
+        return true;
+    }
+    return false;
+}
+
+
 // ==========================================
 // 3 BOT TELEGRAM LOGIC (SUPER DETAIL)
 // ==========================================
@@ -2954,7 +3031,7 @@ const sendTeleNotif = async (message, type = 'trx') => {
     }
 
     if (!token || !chatId) {
-        return; // ABAIKAN JIKA BELUM DISETTING
+        return; 
     }
 
     try {
@@ -3064,7 +3141,6 @@ app.post('/api/products', async (req, res) => {
         } else if (type === 'data') {
             filtered = products.filter(p => p.category === 'Data' && p.brand.toLowerCase() === safeBrand);
             if (category) {
-                // Mendukung filter dengan spasi (cth: "Freedom Sensasi")
                 const keywords = category.toLowerCase().split(' ');
                 filtered = filtered.filter(p => keywords.every(kw => p.product_name.toLowerCase().includes(kw)));
             }
@@ -3093,19 +3169,26 @@ app.post('/api/products', async (req, res) => {
         }
     }
 
-    // LOGIKA MARKUP / KEUNTUNGAN
+    // LOGIKA 14 TIER MARKUP (GOD MODE)
     let markupRules = config.markupRules || { 
-        l1: 10000, m1: 0, 
-        l2: 50000, m2: 0, 
-        l3: 100000, m3: 0, 
-        m4: 0 
+        m1: 0, m2: 0, m3: 0, m4: 0, m5: 0, m6: 0, m7: 0, m8: 0, m9: 0, m10: 0, m11: 0, m12: 0, m13: 0, m14: 0 
     };
     
     let getMarkup = (price) => {
-        if (price <= markupRules.l1) return markupRules.m1;
-        if (price <= markupRules.l2) return markupRules.m2;
-        if (price <= markupRules.l3) return markupRules.m3;
-        return markupRules.m4;
+        if (price <= 100) return markupRules.m1;
+        if (price <= 500) return markupRules.m2;
+        if (price <= 1000) return markupRules.m3;
+        if (price <= 3000) return markupRules.m4;
+        if (price <= 5000) return markupRules.m5;
+        if (price <= 10000) return markupRules.m6;
+        if (price <= 15000) return markupRules.m7;
+        if (price <= 25000) return markupRules.m8;
+        if (price <= 50000) return markupRules.m9;
+        if (price <= 70000) return markupRules.m10;
+        if (price <= 100000) return markupRules.m11;
+        if (price <= 120000) return markupRules.m12;
+        if (price <= 150000) return markupRules.m13;
+        return markupRules.m14;
     };
 
     // GABUNGKAN DENGAN PRODUK LOKAL VPS
@@ -3156,6 +3239,12 @@ app.post('/api/products', async (req, res) => {
 app.post('/api/transaction/create', async (req, res) => {
     try {
         const { phone, target, sku, name, price, isLocal } = req.body;
+        
+        // CEK MAINTENANCE DULU
+        if (isMaintenance()) {
+            return res.status(400).json({ error: 'Sistem sedang Maintenance Otomatis (23:00 - 00:30 WIB). Transaksi ditutup sementara.' });
+        }
+        
         let db = loadJSON(dbFile); 
         let config = loadJSON(configFile); 
         let webUsers = loadJSON(webUsersFile);
@@ -3241,16 +3330,7 @@ app.post('/api/transaction/create', async (req, res) => {
         
         saveJSON(dbFile, db);
         
-        // KIRIM NOTIF WA KE MEMBER
-        try { 
-            global.waSocket?.sendMessage(db[phone].jid || phone + '@s.whatsapp.net', { 
-                text: `Halo kak, *TRANSAKSI ${trxStatus.toUpperCase()}* 🚀\n\n📦 Produk: *${name}*\n📱 Tujuan: ${target}\n💰 Harga: Rp ${price.toLocaleString('id-ID')}\n🔖 Ref: ${ref_id}\n\nTerima kasih telah bertransaksi di DIGITAL FIKY STORE!` 
-            }); 
-        } catch(err) {
-            console.log("Gagal kirim pesan WA Member:", err.message);
-        }
-        
-        // KIRIM NOTIF TELEGRAM KE ADMIN
+        // KIRIM NOTIF TELEGRAM KE ADMIN SAJA (WA BOT DIMATIKAN UNTUK TRX)
         let msgTeleTrx = `🛒 *TRANSAKSI BARU (ORDER MASUK)* 🛒\n\n`;
         msgTeleTrx += `👤 Nama: ${uData.name}\n`;
         msgTeleTrx += `✉️ Email: ${uData.email}\n`;
@@ -3310,12 +3390,7 @@ setInterval(async () => {
                         trx.sn_ref = digiData.sn || trx.sn_ref; 
                         changed = true;
                         
-                        try { 
-                            global.waSocket?.sendMessage(user.jid || phone+'@s.whatsapp.net', { 
-                                text: `✅ *TRANSAKSI SUKSES*\n\n📦 Produk: *${trx.produk}*\n📱 Tujuan: ${trx.no_tujuan}\n🔖 SN: ${trx.sn_ref}\n\nPesanan kamu sudah masuk ya kak!` 
-                            }); 
-                        } catch(e){}
-                        
+                        // HANYA TELEGRAM NOTIF (WA DIMATIKAN)
                         let msgTeleSukses = `✅ *UPDATE: TRANSAKSI SUKSES* ✅\n\n`;
                         msgTeleSukses += `👤 Nama: ${uData.name}\n`;
                         msgTeleSukses += `📱 WA: ${phone}\n`;
@@ -3338,12 +3413,7 @@ setInterval(async () => {
                         }); 
                         changed = true;
                         
-                        try { 
-                            global.waSocket?.sendMessage(user.jid || phone+'@s.whatsapp.net', { 
-                                text: `❌ *TRANSAKSI GAGAL*\n\n📦 Produk: *${trx.produk}*\n📱 Tujuan: ${trx.no_tujuan}\n⚠️ Alasan: ${digiData.message || 'Gangguan Server'}\n\n💰 Saldo Rp ${trx.harga.toLocaleString('id-ID')} telah dikembalikan otomatis ke akun kamu.` 
-                            }); 
-                        } catch(e){}
-                        
+                        // HANYA TELEGRAM NOTIF (WA DIMATIKAN)
                         let msgTeleGagal = `❌ *UPDATE: TRANSAKSI GAGAL (REFUND)* ❌\n\n`;
                         msgTeleGagal += `👤 Nama: ${uData.name}\n`;
                         msgTeleGagal += `📱 WA: ${phone}\n`;
@@ -3396,7 +3466,6 @@ function startAutoBackup() {
     }, intervalMs);
 }
 
-// Mulai Auto Backup 15 Detik setelah server nyala
 setTimeout(startAutoBackup, 15000); 
 
 // ==========================================
@@ -3404,6 +3473,12 @@ setTimeout(startAutoBackup, 15000);
 // ==========================================
 app.post('/api/topup/request', (req, res) => {
     const { phone, method, nominal } = req.body; 
+    
+    // CEK MAINTENANCE DULU
+    if (isMaintenance()) {
+        return res.status(400).json({ error: 'Sistem sedang Maintenance Otomatis (23:00 - 00:30 WIB). Transaksi ditutup sementara.' });
+    }
+    
     let db = loadJSON(dbFile);
     let webUsers = loadJSON(webUsersFile);
     let uData = webUsers[phone] || { name: 'Unknown', email: 'Unknown' };
@@ -3553,11 +3628,7 @@ app.post('/api/admin/balance', async (req, res) => {
         
         saveJSON(dbFile, db);
         
-        try { 
-            await global.waSocket?.sendMessage(targetPhone + '@c.us', { 
-                text: `🎉 Saldo Anda berhasil ditambah Admin sebesar *Rp ${parseInt(amount).toLocaleString('id-ID')}*.\n💰 Sisa Saldo: *Rp ${db[targetPhone].saldo.toLocaleString('id-ID')}*` 
-            }); 
-        } catch(e) {}
+        // WA NOTIF MATI SESUAI REQUEST (DIHAPUS)
         
         let msgAdd = `✅ *PEMBAYARAN DITERIMA (TOP UP BERHASIL)* ✅\n\n`;
         msgAdd += `👤 Nama: ${uData.name}\n`;
@@ -3584,11 +3655,7 @@ app.post('/api/admin/balance', async (req, res) => {
         });
         saveJSON(dbFile, db);
         
-        try { 
-            await global.waSocket?.sendMessage(targetPhone + '@c.us', { 
-                text: `⚠️ Saldo Anda telah dikurangi Admin sebesar *Rp ${parseInt(amount).toLocaleString('id-ID')}*.\n💰 Sisa Saldo: *Rp ${db[targetPhone].saldo.toLocaleString('id-ID')}*` 
-            }); 
-        } catch(e) {}
+        // WA NOTIF MATI SESUAI REQUEST (DIHAPUS)
         
         res.json({ success: true, message: `\n✅ Saldo ${webUsers[targetPhone].name} berhasil dikurangi!` });
     }
@@ -3596,6 +3663,7 @@ app.post('/api/admin/balance', async (req, res) => {
 
 // ==========================================
 // API AUTH LOGIC (LOGIN, DAFTAR, LUPA PASSWORD)
+// INI SATU-SATUNYA TEMPAT WA BOT BEKERJA (KIRIM OTP)
 // ==========================================
 app.post('/api/auth/login', (req, res) => {
     const { identifier, password } = req.body; 
@@ -3644,6 +3712,7 @@ app.post('/api/auth/register', async (req, res) => {
     saveJSON(webUsersFile, webUsers);
     
     try { 
+        // WA BOT HANYA UNTUK KIRIM OTP (SESUAI REQUEST)
         await global.waSocket?.sendMessage(fPhone + '@c.us', { 
             text: `Halo kak *${name}* 👋\n\nTerima kasih telah mendaftar di *DIGITAL FIKY STORE* 👑\n\nBerikut adalah kode rahasia (OTP) untuk mengaktifkan akun kakak:\n\n*${otp}*\n\n⏳ _Kode ini hanya berlaku selama 5 menit._\n⚠️ _Jangan pernah memberikan kode ini kepada siapapun!_` 
         }); 
@@ -3704,6 +3773,7 @@ app.post('/api/auth/forgot', async (req, res) => {
     saveJSON(webUsersFile, webUsers);
     
     try { 
+        // WA BOT HANYA UNTUK KIRIM OTP (SESUAI REQUEST)
         await global.waSocket?.sendMessage(fPhone + '@c.us', { 
             text: `Halo kak 👋\n\nKami menerima permintaan reset password akun *DIGITAL FIKY STORE*.\n\nKode OTP Anda:\n\n*${otp}*\n\n⏳ _Berlaku selama 5 menit._` 
         }); 
@@ -3756,6 +3826,7 @@ app.post('/api/auth/request-update-otp', async (req, res) => {
     
     let targetWA = fNew !== fOld ? fNew : fOld;
     try { 
+        // WA BOT HANYA UNTUK KIRIM OTP (SESUAI REQUEST)
         await global.waSocket?.sendMessage(targetWA + '@c.us', { 
             text: `Halo kak 👋\n\nBerikut kode OTP untuk verifikasi perubahan keamanan akun (Nomor/Password) di *DIGITAL FIKY STORE*:\n\n*${otp}*\n\n⏳ _Berlaku 5 menit._` 
         }); 
@@ -3895,7 +3966,7 @@ echo "Menginstal modul Node.js..."
 npm install --silent
 npm install -g pm2 > /dev/null 2>&1
 
-echo "[6/6] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED)..."
+echo "[6/6] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - AUTOPILOT MAFIA)..."
 
 cat << 'EOF' > /usr/bin/menu
 #!/bin/bash
@@ -3911,11 +3982,42 @@ NC='\033[0m'
 
 while true; do 
     clear
+    echo -e "${YELLOW}Sedang memuat data Saldo Digiflazz...${NC}"
+    
+    # FETCH SALDO DIGIFLAZZ OTOMATIS
+    cd "$HOME/$DIR_NAME"
+    SALDO_DIGI=$(node -e "
+        const fs = require('fs');
+        let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {};
+        if(!cfg.digiUser || !cfg.digiKey) {
+            console.log('Belum Disetting');
+        } else {
+            const axios = require('axios');
+            const crypto = require('crypto');
+            let sign = crypto.createHash('md5').update(cfg.digiUser + cfg.digiKey + 'depo').digest('hex');
+            
+            axios.post('https://api.digiflazz.com/v1/cek-saldo', { cmd: 'deposit', username: cfg.digiUser, sign: sign }, {timeout: 5000})
+            .then(r => {
+                if(r.data && r.data.data && r.data.data.deposit !== undefined) {
+                    console.log('Rp ' + r.data.data.deposit.toLocaleString('id-ID'));
+                } else {
+                    console.log('Error/Invalid Key');
+                }
+            })
+            .catch(e => {
+                console.log('Gangguan/Timeout');
+            });
+        }
+    " 2>/dev/null)
+
+    clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}          💎 PANEL DIGITAL FIKY STORE (V148) 💎       ${NC}"
+    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V149) 💎        ${NC}"
+    echo -e "${CYAN}======================================================${NC}"
+    echo -e "   💰 SALDO DIGIFLAZZ: ${GREEN}$SALDO_DIGI${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo ""
-    echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
+    echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP (KHUSUS OTP) ]${NC}"
     echo -e "  ${GREEN}1.${NC} Setup No. Bot & Login Pairing"
     echo -e "  ${GREEN}2.${NC} Jalankan Bot (Latar Belakang/PM2)"
     echo -e "  ${YELLOW}3.${NC} 🛠️ Install & Perbarui Sistem Bot WA"
@@ -3926,27 +4028,26 @@ while true; do
     echo -e "${PURPLE}[ 📱 MANAJEMEN APLIKASI & WEB ]${NC}"
     echo -e "  ${GREEN}7.${NC} 💰 Manajemen Saldo Member"
     echo -e "  ${GREEN}8.${NC} 🖼️ Sinkronisasi Gambar Banner Lokal"
-    echo -e "  ${GREEN}9.${NC} 📈 Seting Pasang Harga (Keuntungan/Markup)"
+    echo -e "  ${GREEN}9.${NC} 📈 Seting Keuntungan 14 Tier (Margin GOD MODE)"
     echo -e "  ${GREEN}10.${NC} 📦 Manajemen Produk (Katalog Manual Satu-Satu)"
     echo -e "  ${YELLOW}11.${NC} 🚀 IMPORT CSV MASSAL (Ratusan Produk 1 Detik)"
     echo ""
     echo -e "${PURPLE}[ 🌐 MANAJEMEN SERVER & API ]${NC}"
     echo -e "  ${GREEN}12.${NC} Setup Domain (Nginx + Cloudflare + UFW Firewall)"
     echo -e "  ${GREEN}13.${NC} 🔌 Setup API Digiflazz"
-    echo -e "  ${GREEN}14.${NC} 🔍 Cek Saldo & Koneksi Digiflazz"
-    echo -e "  ${GREEN}15.${NC} 🔄 Refresh Katalog Digiflazz (Hapus Cache API)"
+    echo -e "  ${GREEN}14.${NC} 🔄 Refresh Katalog Digiflazz (Hapus Cache API)"
     echo ""
     echo -e "${PURPLE}[ 🛡️ PUSAT KOMANDO TELEGRAM ]${NC}"
-    echo -e "  ${GREEN}16.${NC} ⚙️ Setup Telegram Bot (Trx, Topup, Backup)"
-    echo -e "  ${GREEN}17.${NC} ⏳ Setting Auto-Backup Telegram (Tiap X Jam)"
-    echo -e "  ${GREEN}18.${NC} 💾 BACKUP DATA MANUAL KE TELEGRAM"
-    echo -e "  ${GREEN}19.${NC} 📥 RESTORE DATA DARI DIRECT LINK"
+    echo -e "  ${GREEN}15.${NC} ⚙️ Setup Telegram Bot (Trx, Topup, Backup)"
+    echo -e "  ${GREEN}16.${NC} ⏳ Setting Auto-Backup Telegram (Tiap X Jam)"
+    echo -e "  ${GREEN}17.${NC} 💾 BACKUP DATA MANUAL KE TELEGRAM"
+    echo -e "  ${GREEN}18.${NC} 📥 RESTORE DATA DARI DIRECT LINK"
     echo ""
     echo -e "${PURPLE}[ ⚙️ SISTEM ]${NC}"
-    echo -e "  ${YELLOW}20.${NC} Update Sistem"
+    echo -e "  ${YELLOW}19.${NC} Update Sistem"
     echo -e "  ${RED}0.${NC} Keluar"
     echo -e "${CYAN}======================================================${NC}"
-    read -p "Pilih menu [0-20]: " choice
+    read -p "Pilih menu [0-19]: " choice
 
     case $choice in
         1) 
@@ -4194,19 +4295,24 @@ JS
         9)
             clear
             echo -e "${CYAN}===============================================${NC}"
-            echo -e "${YELLOW}    📈 SETING PASANG HARGA (MARKUP CUSTOM)     ${NC}"
+            echo -e "${YELLOW}  📈 SETING KEUNTUNGAN 14 TIER (GOD MODE)      ${NC}"
             echo -e "${CYAN}===============================================${NC}"
             echo "Atur keuntungan berdasarkan rentang harga modal asli Digiflazz."
-            echo "Contoh: Jika modal produk Rp 5000 (masuk Tier 1), dan untung Tier 1 diset 500,"
-            echo "maka harga di aplikasi otomatis menjadi Rp 5500."
             echo ""
-            read -p "1. Batas Atas Modal Tier 1 (cth: 10000) : " l1
-            read -p "   -> Keuntungan Modal 0 s/d $l1        : " m1
-            read -p "2. Batas Atas Modal Tier 2 (cth: 50000) : " l2
-            read -p "   -> Keuntungan Modal $l1 s/d $l2      : " m2
-            read -p "3. Batas Atas Modal Tier 3 (cth: 100000): " l3
-            read -p "   -> Keuntungan Modal $l2 s/d $l3      : " m3
-            read -p "4. -> Keuntungan Modal diatas $l3       : " m4
+            read -p "1. Laba untuk modal Rp 0 - 100         : " m1
+            read -p "2. Laba untuk modal Rp 100 - 500       : " m2
+            read -p "3. Laba untuk modal Rp 500 - 1.000     : " m3
+            read -p "4. Laba untuk modal Rp 1.000 - 3.000   : " m4
+            read -p "5. Laba untuk modal Rp 3.000 - 5.000   : " m5
+            read -p "6. Laba untuk modal Rp 5.000 - 10.000  : " m6
+            read -p "7. Laba untuk modal Rp 10.000 - 15.000 : " m7
+            read -p "8. Laba untuk modal Rp 15.000 - 25.000 : " m8
+            read -p "9. Laba untuk modal Rp 25.000 - 50.000 : " m9
+            read -p "10. Laba untuk modal Rp 50.000 - 70.000: " m10
+            read -p "11. Laba untuk modal Rp 70k - 100.000  : " m11
+            read -p "12. Laba untuk modal Rp 100k - 120.000 : " m12
+            read -p "13. Laba untuk modal Rp 120k - 150.000 : " m13
+            read -p "14. Laba untuk modal Rp > 150.000      : " m14
             
             cd "$HOME/$DIR_NAME"
             cat << 'JS' > temp_markup.js
@@ -4214,18 +4320,25 @@ const fs = require('fs');
 const file = './config.json';
 let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
 cfg.markupRules = {
-    l1: parseInt(process.argv[2]) || 10000, 
-    m1: parseInt(process.argv[3]) || 0,
-    l2: parseInt(process.argv[4]) || 50000, 
-    m2: parseInt(process.argv[5]) || 0,
-    l3: parseInt(process.argv[6]) || 100000, 
-    m3: parseInt(process.argv[7]) || 0,
-    m4: parseInt(process.argv[8]) || 0
+    m1: parseInt(process.argv[2]) || 0,
+    m2: parseInt(process.argv[3]) || 0,
+    m3: parseInt(process.argv[4]) || 0,
+    m4: parseInt(process.argv[5]) || 0,
+    m5: parseInt(process.argv[6]) || 0,
+    m6: parseInt(process.argv[7]) || 0,
+    m7: parseInt(process.argv[8]) || 0,
+    m8: parseInt(process.argv[9]) || 0,
+    m9: parseInt(process.argv[10]) || 0,
+    m10: parseInt(process.argv[11]) || 0,
+    m11: parseInt(process.argv[12]) || 0,
+    m12: parseInt(process.argv[13]) || 0,
+    m13: parseInt(process.argv[14]) || 0,
+    m14: parseInt(process.argv[15]) || 0
 };
 fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
-console.log('\n✅ Seting Pasang Harga Berhasil Disimpan!');
+console.log('\n✅ 14 Tingkatan Keuntungan (God Mode) Berhasil Disimpan!');
 JS
-            node temp_markup.js "$l1" "$m1" "$l2" "$m2" "$l3" "$m3" "$m4"
+            node temp_markup.js "$m1" "$m2" "$m3" "$m4" "$m5" "$m6" "$m7" "$m8" "$m9" "$m10" "$m11" "$m12" "$m13" "$m14"
             rm temp_markup.js
             pm2 restart $BOT_NAME > /dev/null 2>&1
             read -p "Tekan Enter untuk kembali..."
@@ -4409,41 +4522,6 @@ JS
             
         14)
             clear
-            echo -e "${CYAN}===============================================${NC}"
-            echo -e "${YELLOW}       🔍 CEK SALDO & KONEKSI DIGIFLAZZ        ${NC}"
-            echo -e "${CYAN}===============================================${NC}"
-            echo "Memeriksa koneksi ke server Digiflazz..."
-            cd "$HOME/$DIR_NAME" 
-            cat << 'JS' > temp_cek_digi.js
-const fs = require('fs');
-let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {};
-if(!cfg.digiUser || !cfg.digiKey) {
-    console.log('❌ API Digiflazz belum diatur! Isi di menu 13 terlebih dahulu.');
-    process.exit();
-}
-const axios = require('axios');
-const crypto = require('crypto');
-let sign = crypto.createHash('md5').update(cfg.digiUser + cfg.digiKey + 'depo').digest('hex');
-
-axios.post('https://api.digiflazz.com/v1/cek-saldo', { cmd: 'deposit', username: cfg.digiUser, sign: sign })
-.then(r => {
-    if(r.data && r.data.data && r.data.data.deposit !== undefined) {
-        console.log('\n✅ Koneksi Sukses! Saldo Digiflazz Anda: Rp ' + r.data.data.deposit.toLocaleString('id-ID'));
-    } else {
-        console.log('\n❌ Respon server Digiflazz tidak valid. Cek Username & Key.');
-    }
-})
-.catch(e => {
-    console.log('\n❌ Gagal terhubung! Pastikan Username/Key benar, dan IP VPS Anda sudah ditambahkan/di-whitelist di web Digiflazz.');
-});
-JS
-            node temp_cek_digi.js
-            rm temp_cek_digi.js
-            read -p "Tekan Enter untuk kembali..." 
-            ;;
-            
-        15)
-            clear
             cd "$HOME/$DIR_NAME" 
             cat << 'JS' > temp_clear_cache.js
 const fs = require('fs'); 
@@ -4461,7 +4539,7 @@ JS
             read -p "Tekan Enter..." 
             ;;
             
-        16)
+        15)
             clear
             echo -e "${CYAN}===============================================${NC}"
             echo -e "${YELLOW}      ⚙️ SETUP 3 BOT TELEGRAM (PISAH)           ${NC}"
@@ -4525,7 +4603,7 @@ JS
             read -p "Tekan Enter..." 
             ;;
             
-        17)
+        16)
             clear
             echo "Format: 1 untuk tiap 1 jam, 0.5 untuk 30 menit."
             read -p "Berapa Jam Sekali Sistem Melakukan Auto-Backup?: " tele_jam
@@ -4544,7 +4622,7 @@ JS
             read -p "Tekan Enter..." 
             ;;
             
-        18)
+        17)
             clear
             echo "Memproses Backup Manual ke Telegram..."
             cd "$HOME/$DIR_NAME"
@@ -4559,7 +4637,7 @@ let t = cfg.teleTokenBackup || cfg.teleToken;
 let c = cfg.teleChatIdBackup || cfg.teleChatId;
 
 if(!t || !c) {
-    console.log('❌ Token/Chat ID Bot Backup belum disetting (Buka Menu 16)');
+    console.log('❌ Token/Chat ID Bot Backup belum disetting (Buka Menu 15)');
     process.exit();
 }
 
@@ -4586,7 +4664,7 @@ JS
             read -p "Tunggu sebentar lalu tekan Enter..." 
             ;;
             
-        19)
+        18)
             clear
             read -p "Masukkan Direct Link (URL) File ZIP Backup: " link_zip
             cd "$HOME/$DIR_NAME" 
@@ -4599,7 +4677,7 @@ JS
             read -p "Tekan Enter..." 
             ;;
             
-        20) 
+        19) 
             clear
             echo -e "${YELLOW}Menarik update terbaru dari GitHub Anda...${NC}"
             cd "$HOME/$DIR_NAME"
@@ -4620,6 +4698,8 @@ EOF
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
 echo "=========================================================="
-echo "  SISTEM WEB V148 BERHASIL DIPERBARUI SECARA PENUH!       "
+echo "  SISTEM WEB V149 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
+
+EOF
