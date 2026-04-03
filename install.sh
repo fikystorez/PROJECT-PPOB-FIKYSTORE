@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V149 (THE AUTOPILOT MAFIA - PART 1)
+# DIGITAL FIKY STORE - V150 (THE EMPIRE EDITION - PART 1)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
@@ -16,10 +16,10 @@ DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V149 (PART 1)           "
+echo "    MENGINSTAL DIGITAL FIKY STORE V150 (PART 1)           "
 echo "=========================================================="
 
-echo "[1/6] Memperbarui sistem dan menginstal Node.js..."
+echo "[1/7] Memperbarui sistem dan menginstal Node.js..."
 apt update -y && apt install curl wget gnupg git dos2unix psmisc zip unzip nginx ufw -y > /dev/null 2>&1
 
 if ! command -v node > /dev/null 2>&1; then
@@ -28,14 +28,14 @@ if ! command -v node > /dev/null 2>&1; then
 fi
 npm install -g pm2 > /dev/null 2>&1
 
-echo "[2/6] Membuat direktori aplikasi dan web..."
+echo "[2/7] Membuat direktori aplikasi dan web..."
 mkdir -p "$HOME/$DIR_NAME/public/banners"
 cd "$HOME/$DIR_NAME"
 
 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
-  "version": "1.4.9",
+  "version": "1.5.0",
   "description": "Aplikasi PPOB DIGITAL FIKY STORE",
   "main": "index.js",
   "scripts": {
@@ -54,7 +54,7 @@ cat << 'EOF' > package.json
 }
 EOF
 
-echo "[3/6] Membangun Antarmuka CSS & HTML (FULL UNCOMPRESSED)..."
+echo "[3/7] Membangun Antarmuka CSS & HTML (FULL UNCOMPRESSED)..."
 
 cat << 'EOF' > public/style.css
 body { 
@@ -683,7 +683,9 @@ cat << 'EOF' > public/dashboard.html
         <i class="fas fa-bars text-xl cursor-pointer text-gray-600 dark:text-gray-300 hover:text-yellow-400" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')"></i>
         <h1 class="font-medium text-[17px] tracking-wide text-gray-800 dark:text-white" id="headerGreeting">Hai, Member</h1>
       </div>
-      <div class="text-[11px] font-bold text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-white/10 px-3 py-1.5 rounded-full" id="headTrx">0 Trx</div>
+      <div class="text-[11px] font-bold text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-white/10 px-3 py-1.5 rounded-full" id="headTrx">
+          0 Trx Saya
+      </div>
     </div>
 
     <div id="sidebar" class="fixed inset-0 z-[100] transform -translate-x-full transition-transform duration-300 flex">
@@ -866,7 +868,10 @@ cat << 'EOF' > public/dashboard.html
     </div>
 
     <div class="mx-4 mt-4 mb-8 bg-white dark:bg-[#111c2e] rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm p-4">
-      <h3 class="font-extrabold text-gray-800 dark:text-white mb-4 text-[14px]">Statistik Transaksi Saya</h3>
+      <div class="flex justify-between items-center mb-4">
+          <h3 class="font-extrabold text-gray-800 dark:text-white text-[14px]">Statistik Penjualan Toko</h3>
+          <span class="text-[9px] bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">Realtime</span>
+      </div>
       <div class="grid grid-cols-3 gap-3">
         <div class="bg-blue-50 dark:bg-[#1a2639] p-3 rounded-xl border border-blue-100 dark:border-gray-700 text-center">
           <p class="text-[10px] text-gray-500 dark:text-gray-400 font-bold mb-1">HARI INI</p>
@@ -959,12 +964,11 @@ cat << 'EOF' > public/dashboard.html
         window.location.href = '/';
     }
     
-    // LOGIKA AUTO MAINTENANCE DI FRONTEND
+    // FUNGSI CEK MAINTENANCE
     function isMaintenance() {
         const now = new Date();
         const h = now.getHours();
         const m = now.getMinutes();
-        // Cek apakah jam >= 23:00 ATAU jam === 00 dan menit <= 30
         if (h >= 23 || (h === 0 && m <= 30)) {
             return true;
         }
@@ -975,7 +979,6 @@ cat << 'EOF' > public/dashboard.html
         const mb = document.getElementById('maintenanceBanner');
         if(mb) mb.classList.remove('hidden');
         
-        // Pindahkan headerMain agar tidak tertutup banner
         const hm = document.getElementById('headerMain');
         if(hm) hm.classList.remove('top-0');
     }
@@ -1086,6 +1089,7 @@ cat << 'EOF' > public/dashboard.html
         window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(`Halo Admin DIGITAL FIKY STORE, saya butuh bantuan.`), '_blank'); 
     }
 
+    // FETCH SALDO PRIBADI
     fetch('/api/user/balance', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -1096,8 +1100,8 @@ cat << 'EOF' > public/dashboard.html
         curSal = d.saldo;
         updSal();
     });
-    
-    // LOGIKA STATISTIK TRANSAKSI
+
+    // FETCH TRANSAKSI PRIBADI (UNTUK HEADER TRX)
     fetch('/api/user/transactions', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -1105,40 +1109,20 @@ cat << 'EOF' > public/dashboard.html
     })
     .then(r => r.json())
     .then(d => {
-      let trxs = d.transactions || [];
-      document.getElementById('headTrx').innerText = trxs.length + ' Trx';
-      
-      let now = new Date();
-      let todayStr = now.toLocaleString('id-ID').split(' ')[0]; 
-      
-      let startOfWeek = new Date(now);
-      startOfWeek.setDate(now.getDate() - now.getDay()); 
-      
-      let tToday = 0; 
-      let tWeek = 0; 
-      let tMonth = 0;
-      
-      trxs.forEach(trx => {
-          if(trx.status === 'Sukses' || trx.status === 'Proses') {
-              let trxDateStr = trx.date.split(' ')[0]; 
-              let dParts = trxDateStr.split('/');
-              let trxDateObj = new Date(dParts[2], dParts[1]-1, dParts[0]);
-
-              if(trxDateStr === todayStr) {
-                  tToday++;
-              }
-              if(trxDateObj >= startOfWeek && trxDateObj <= now) {
-                  tWeek++;
-              }
-              if(trxDateObj.getMonth() === now.getMonth() && trxDateObj.getFullYear() === now.getFullYear()) {
-                  tMonth++;
-              }
-          }
-      });
-
-      document.getElementById('statToday').innerText = tToday;
-      document.getElementById('statWeek').innerText = tWeek;
-      document.getElementById('statMonth').innerText = tMonth;
+        let myTrxs = d.transactions || [];
+        document.getElementById('headTrx').innerText = myTrxs.length + ' Trx Saya';
+    });
+    
+    // FETCH STATISTIK GLOBAL SELURUH TOKO
+    fetch('/api/global-stats')
+    .then(r => r.json())
+    .then(d => {
+        document.getElementById('statToday').innerText = d.today || 0;
+        document.getElementById('statWeek').innerText = d.week || 0;
+        document.getElementById('statMonth').innerText = d.month || 0;
+    })
+    .catch(e => {
+        console.log("Gagal memuat statistik global");
     });
 
     fetch('/api/config')
@@ -1224,7 +1208,6 @@ cat << 'EOF' > public/dashboard.html
       const bg = isD ? '#0b1320' : '#fff'; 
       const c = isD ? '#fff' : '#000';
       
-      // CEK AUTO MAINTENANCE SEBELUM LANJUT
       if(isMaintenance()) {
           return Swal.fire({
               icon: 'error', 
@@ -1403,6 +1386,10 @@ cat << 'EOF' > public/operator.html
         <span class="text-xs font-bold text-gray-500">No Tujuan:</span>
         <span class="text-sm font-bold text-red-500" id="dtTarget">Kosong</span>
       </div>
+      <div class="bg-gray-50 dark:bg-[#111c2e] rounded-xl p-3 mb-4 border border-gray-200 dark:border-gray-800 flex justify-between items-center">
+        <span class="text-xs font-bold text-gray-500">Status Server:</span>
+        <div id="dtStatusServer"></div>
+      </div>
       <div>
         <span class="text-xs font-bold text-gray-500 mb-2 block">Deskripsi:</span>
         <div class="bg-gray-50 dark:bg-[#111c2e] rounded-xl p-3 text-[11px] text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-800 leading-relaxed" id="dtDesc">Desc...</div>
@@ -1415,7 +1402,7 @@ cat << 'EOF' > public/operator.html
             <i class="fab fa-whatsapp mr-1"></i> Tanya CS
         </button>
       </div>
-      <button id="btnLanjutkan" class="w-full py-3.5 bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#001229] font-bold rounded-xl text-sm opacity-50 cursor-not-allowed shadow-md" onclick="executeBuy()">
+      <button id="btnLanjutkan" class="w-full py-3.5 bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#001229] font-bold rounded-xl text-sm shadow-md transition-opacity" onclick="executeBuy()">
           Lanjutkan Pembayaran
       </button>
     </div>
@@ -1443,6 +1430,7 @@ cat << 'EOF' > public/operator.html
     let sN = ''; 
     let sP = 0; 
     let sL = false;
+    let isProductOpen = true;
 
     // FUNGSI CEK MAINTENANCE
     function isMaintenance() {
@@ -1466,7 +1454,7 @@ cat << 'EOF' > public/operator.html
       byu: { name: 'BY.U', logo: 'BY.U', digiBrand: 'BYU' }
     };
 
-    // KATEGORI DATA ASLI DIGIFLAZZ (SESUAI FOTO REQUEST)
+    // KATEGORI DATA ASLI DIGIFLAZZ + FREEDOM SENSASI
     const dC = JSON.parse(JSON.stringify(o));
     
     dC['telkomsel'].items = [
@@ -1683,7 +1671,11 @@ cat << 'EOF' > public/operator.html
         dt.innerText = v; 
         dt.classList.remove('text-red-500'); 
         dt.classList.add('text-gray-800', 'dark:text-white');
-        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+        
+        // HANYA BISA DIKLIK JIKA PRODUK AMAN (TIDAK GANGGUAN)
+        if(isProductOpen) {
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
       } else {
         dt.innerText = 'Kosong'; 
         dt.classList.add('text-red-500'); 
@@ -1728,22 +1720,20 @@ cat << 'EOF' > public/operator.html
             let sS = p.sku.replace(/'/g, "\\'").replace(/"/g, "&quot;");
             let sD = p.desc ? p.desc.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "<br>") : 'Tidak ada deskripsi.';
             
+            // STATUS BADGE DARI DIGIFLAZZ
             let bdg = p.is_open ? 
-              `<span class="text-[8px] bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400 px-1.5 py-0.5 rounded font-bold uppercase tracking-wide">Tersedia</span>` : 
-              `<span class="text-[8px] bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 px-1.5 py-0.5 rounded font-bold uppercase tracking-wide">Gangguan</span>`;
+              `<span class="text-[8px] bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400 px-2 py-0.5 rounded-full font-bold uppercase tracking-wide border border-green-200 dark:border-green-800">✅ AMAN</span>` : 
+              `<span class="text-[8px] bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 px-2 py-0.5 rounded-full font-bold uppercase tracking-wide border border-red-200 dark:border-red-800 animate-pulse">❌ GANGGUAN</span>`;
             
-            let clk = p.is_open ? 
-                `showProductDetail('${sS}','${sN}',${p.price},${p.isLocal},'${sD}')` : 
-                `Swal.fire({icon:'error',title:'Gangguan',text:'Produk sedang gangguan dari server pusat.',background:localStorage.getItem('darkMode')==='true'?'#0b1320':'#fff',color:localStorage.getItem('darkMode')==='true'?'#fff':'#000'})`;
-            
-            let opc = p.is_open ? '' : 'opacity-50';
+            let clk = `showProductDetail('${sS}','${sN}',${p.price},${p.isLocal},'${sD}', ${p.is_open})`;
+            let opc = p.is_open ? '' : 'opacity-60 bg-gray-50 dark:bg-[#1a2639]';
 
             return `
             <div class="flex justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1a2639] transition ${opc}" onclick="${clk}">
               <div class="w-2/3 text-[12px] font-bold text-gray-800 dark:text-gray-100 leading-tight">
-                  ${p.name} ${p.isLocal ? '<i class="fas fa-check-circle text-green-500"></i>' : ''}
+                  ${p.name} ${p.isLocal ? '<i class="fas fa-check-circle text-green-500 ml-1"></i>' : ''}
               </div>
-              <div class="text-right flex flex-col items-end">
+              <div class="text-right flex flex-col items-end justify-center">
                 <div class="mb-1">${bdg}</div>
                 <span class="text-[13px] font-extrabold text-[#002147] dark:text-yellow-400">Rp ${p.price.toLocaleString('id-ID')}</span>
               </div>
@@ -1757,16 +1747,37 @@ cat << 'EOF' > public/operator.html
       }
     }
 
-    function showProductDetail(sku, n, pr, il, ds) {
+    function showProductDetail(sku, n, pr, il, ds, isOpen) {
       sS = sku; 
       sN = n; 
       sP = pr; 
       sL = il;
+      isProductOpen = isOpen;
       
       document.getElementById('dtName').innerText = n;
       document.getElementById('dtPrice').innerText = 'Rp ' + pr.toLocaleString('id-ID');
       document.getElementById('dtDesc').innerHTML = ds;
-      document.getElementById('inputTarget').dispatchEvent(new Event('input'));
+      
+      let statBadge = isOpen 
+          ? `<span class="bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400 px-3 py-1 rounded-full text-xs font-bold border border-green-200 dark:border-green-800"><i class="fas fa-check-circle mr-1"></i> NORMAL / AMAN</span>`
+          : `<span class="bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 px-3 py-1 rounded-full text-xs font-bold border border-red-200 dark:border-red-800 animate-pulse"><i class="fas fa-times-circle mr-1"></i> SEDANG GANGGUAN</span>`;
+      
+      document.getElementById('dtStatusServer').innerHTML = statBadge;
+
+      const btn = document.getElementById('btnLanjutkan');
+      if(!isOpen) {
+          btn.innerText = "Produk Sedang Gangguan";
+          btn.classList.add('opacity-50', 'cursor-not-allowed');
+          btn.classList.replace('bg-[#002147]', 'bg-gray-500');
+          btn.classList.replace('dark:bg-yellow-400', 'dark:bg-gray-600');
+          btn.classList.replace('dark:text-[#001229]', 'dark:text-gray-300');
+      } else {
+          btn.innerText = "Lanjutkan Pembayaran";
+          btn.classList.replace('bg-gray-500', 'bg-[#002147]');
+          btn.classList.replace('dark:bg-gray-600', 'dark:bg-yellow-400');
+          btn.classList.replace('dark:text-gray-300', 'dark:text-[#001229]');
+          document.getElementById('inputTarget').dispatchEvent(new Event('input')); // Re-evaluate btn status
+      }
       
       document.getElementById('detailOverlay').classList.remove('hidden');
       setTimeout(() => {
@@ -1786,6 +1797,16 @@ cat << 'EOF' > public/operator.html
     }
 
     function executeBuy() {
+      if(!isProductOpen) {
+          return Swal.fire({
+              icon: 'error',
+              title: 'Gangguan',
+              text: 'Mohon maaf, produk ini sedang mengalami gangguan dari server pusat.',
+              background: localStorage.getItem('darkMode') === 'true' ? '#0b1320' : '#fff',
+              color: localStorage.getItem('darkMode') === 'true' ? '#fff' : '#000'
+          });
+      }
+
       const tr = document.getElementById('inputTarget').value;
       if (!tr) return;
       
@@ -1933,7 +1954,7 @@ cat << 'EOF' > public/game.html
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Top Up Game</title>
+  <title>Top Up Game - DIGITAL FIKY STORE</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
@@ -1983,10 +2004,12 @@ cat << 'EOF' > public/game.html
   </div>
   
   <script>
+    // Validasi Sesi Pengguna
     if(!localStorage.getItem('user')) {
         window.location.href = '/';
     }
     
+    // Validasi Mode Gelap
     if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) {
         document.getElementById('html-root').classList.add('dark');
     }
@@ -2001,7 +2024,7 @@ cat << 'EOF' > public/riwayat_topup.html
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Riwayat Topup</title>
+  <title>Riwayat Topup - DIGITAL FIKY STORE</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -2021,6 +2044,7 @@ cat << 'EOF' > public/riwayat_topup.html
     <div class="px-4 mt-6" id="historyContainer">
       <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
         <i class="fas fa-spinner fa-spin text-4xl mb-4 text-gray-400"></i>
+        <p class="text-sm text-gray-500">Memuat riwayat top up...</p>
       </div>
     </div>
   </div>
@@ -2036,6 +2060,7 @@ cat << 'EOF' > public/riwayat_topup.html
         document.getElementById('html-root').classList.add('dark');
     }
     
+    // Fetch Riwayat Top Up ke Backend
     fetch('/api/topup/history', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -2107,10 +2132,22 @@ cat << 'EOF' > public/riwayat_topup.html
             title: `<span class="font-bold ${isDark ? 'text-white' : 'text-gray-800'} text-lg">Detail Top Up</span>`,
             html: `
             <div class="text-left mt-2 space-y-3 text-sm border-t ${borderColor} pt-4">
-                <div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Waktu</span><span class="font-medium ${textColor} text-right">${item.date}</span></div>
-                <div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Nominal</span><span class="font-medium ${textColor} text-right">Rp ${(item.nominal || 0).toLocaleString('id-ID')}</span></div>
-                <div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Metode</span><span class="font-medium ${textColor} text-right">${item.method}</span></div>
-                <div class="flex justify-between border-b ${borderColor} pb-2"><span class="${mutedColor}">Status</span><span class="font-bold ${statusColor} text-right uppercase">${item.status}</span></div>
+                <div class="flex justify-between border-b ${borderColor} pb-2">
+                    <span class="${mutedColor}">Waktu</span>
+                    <span class="font-medium ${textColor} text-right">${item.date}</span>
+                </div>
+                <div class="flex justify-between border-b ${borderColor} pb-2">
+                    <span class="${mutedColor}">Nominal</span>
+                    <span class="font-medium ${textColor} text-right">Rp ${(item.nominal || 0).toLocaleString('id-ID')}</span>
+                </div>
+                <div class="flex justify-between border-b ${borderColor} pb-2">
+                    <span class="${mutedColor}">Metode</span>
+                    <span class="font-medium ${textColor} text-right">${item.method}</span>
+                </div>
+                <div class="flex justify-between border-b ${borderColor} pb-2">
+                    <span class="${mutedColor}">Status</span>
+                    <span class="font-bold ${statusColor} text-right uppercase">${item.status}</span>
+                </div>
                 <div class="mt-5 text-center">
                     <p class="${mutedColor} text-xs mb-1">Total Bayar</p>
                     <p class="text-3xl font-extrabold ${isDark ? 'text-yellow-400' : 'text-[#002147]'}">Rp ${(item.nominal || 0).toLocaleString('id-ID')}</p>
@@ -2136,7 +2173,7 @@ cat << 'EOF' > public/info.html
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pusat Informasi</title>
+  <title>Pusat Informasi - DIGITAL FIKY STORE</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
@@ -2190,6 +2227,7 @@ cat << 'EOF' > public/info.html
         document.getElementById('html-root').classList.add('dark');
     }
     
+    // Fetch Informasi dari Backend
     fetch('/api/info')
     .then(r => r.json())
     .then(d => {
@@ -2933,8 +2971,8 @@ cat << 'EOF' > public/riwayat.html
 </html>
 EOF
 
-echo "[PART 4 SELESAI DITULIS. TINGGAL 2 PART LAGI (BACKEND & VPS MENU)!]"
-echo "[5/6] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V149)..."
+echo "[PART 4 SELESAI DITULIS. TINGGAL PART 5, 6, 7 (BACKEND & VPS MENU)!]"
+echo "[5/7] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V150)..."
 
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
@@ -3031,7 +3069,7 @@ const sendTeleNotif = async (message, type = 'trx') => {
     }
 
     if (!token || !chatId) {
-        return; 
+        return; // ABAIKAN JIKA BELUM DISETTING
     }
 
     try {
@@ -3081,6 +3119,54 @@ app.post('/api/user/transactions', (req, res) => {
     let phone = req.body.phone;
     let transactions = db[phone]?.transactions || [];
     res.json({ transactions: transactions }); 
+});
+
+// ==========================================
+// API STATISTIK GLOBAL SELURUH TOKO
+// ==========================================
+app.get('/api/global-stats', (req, res) => {
+    let db = loadJSON(dbFile);
+    let now = new Date();
+    
+    // Format tanggal WIB
+    let todayStr = now.toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }).split(' ')[0]; 
+    
+    let startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay()); 
+    
+    let tToday = 0; 
+    let tWeek = 0; 
+    let tMonth = 0;
+    
+    // Looping semua akun user di database
+    for (let phone in db) {
+        let userTrx = db[phone].transactions || [];
+        
+        userTrx.forEach(trx => {
+            // Hanya hitung transaksi yang Sukses atau Proses
+            if(trx.status === 'Sukses' || trx.status === 'Proses') {
+                let trxDateStr = trx.date.split(' ')[0]; 
+                let dParts = trxDateStr.split('/');
+                let trxDateObj = new Date(dParts[2], dParts[1]-1, dParts[0]);
+
+                if(trxDateStr === todayStr) {
+                    tToday++;
+                }
+                if(trxDateObj >= startOfWeek && trxDateObj <= now) {
+                    tWeek++;
+                }
+                if(trxDateObj.getMonth() === now.getMonth() && trxDateObj.getFullYear() === now.getFullYear()) {
+                    tMonth++;
+                }
+            }
+        });
+    }
+    
+    res.json({
+        today: tToday,
+        week: tWeek,
+        month: tMonth
+    });
 });
 
 app.post('/api/admin/broadcast', (req, res) => {
@@ -3217,6 +3303,7 @@ app.post('/api/products', async (req, res) => {
             desc: p.desc, 
             price: p.price + getMarkup(p.price), 
             isLocal: false, 
+            // CEK STATUS DARI API DIGIFLAZZ
             is_open: (p.buyer_product_status === true && p.seller_product_status === true)
         })),
         ...myLocals.map(p => ({
@@ -3961,12 +4048,12 @@ if (require.main === module) {
 }
 EOF
 
-echo "[PART 5 SELESAI DITULIS. TINGGAL 1 PART TERAKHIR (MENU VPS)!]"
+echo "[PART 5 SELESAI DITULIS. TINGGAL 2 PART LAGI!]"
 echo "Menginstal modul Node.js..."
 npm install --silent
 npm install -g pm2 > /dev/null 2>&1
 
-echo "[6/6] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - AUTOPILOT MAFIA)..."
+echo "[6/7] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - THE EMPIRE)..."
 
 cat << 'EOF' > /usr/bin/menu
 #!/bin/bash
@@ -4012,7 +4099,7 @@ while true; do
 
     clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V149) 💎        ${NC}"
+    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V150) 💎        ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo -e "   💰 SALDO DIGIFLAZZ: ${GREEN}$SALDO_DIGI${NC}"
     echo -e "${CYAN}======================================================${NC}"
@@ -4698,8 +4785,42 @@ EOF
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
 echo "=========================================================="
-echo "  SISTEM WEB V149 BERHASIL DIPERBARUI SECARA PENUH!       "
+echo "  SISTEM WEB V150 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
 
 EOF
+echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V150..."
+
+cd "$HOME/$DIR_NAME"
+
+# MENGHENTIKAN PROSES LAMA JIKA ADA
+pm2 stop $BOT_NAME > /dev/null 2>&1
+pm2 delete $BOT_NAME > /dev/null 2>&1
+
+# MENJALANKAN SISTEM BARU DI BACKGROUND
+pm2 start index.js --name "$BOT_NAME"
+pm2 save > /dev/null 2>&1
+pm2 startup > /dev/null 2>&1
+
+# MEMBERSIHKAN SAMPAH CACHE BIAR VPS RINGAN
+npm cache clean --force > /dev/null 2>&1
+
+# MEMASTIKAN MENU PANEL BISA DIAKSES
+chmod +x /usr/bin/menu
+
+clear
+echo -e "\033[0;32m======================================================================\033[0m"
+echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V150 SELESAI! 🚀      \033[0m"
+echo -e "\033[0;32m======================================================================\033[0m"
+echo -e "\033[0;36mFITUR BARU DI V150 (THE EMPIRE STRIKES BACK):\033[0m"
+echo -e "  ✅ \033[1;33mAUTO MAINTENANCE\033[0m (23:00 - 00:30 WIB) Aktif Menolak Transaksi"
+echo -e "  ✅ \033[1;33mBOT WA SILENT\033[0m (Hanya kirim OTP, Sisanya Telegram Admin)"
+echo -e "  ✅ \033[1;33mSTATISTIK GLOBAL\033[0m (Total Transaksi Toko Realtime di Dashboard)"
+echo -e "  ✅ \033[1;33mSTATUS GANGGUAN\033[0m (Otomatis Kunci Tombol Beli Jika Provider Mati)"
+echo -e "  ✅ \033[1;33m14 TIER MARGIN\033[0m (Setting Keuntungan GOD MODE Lewat Panel)"
+echo -e "  ✅ \033[1;33mSALDO DIGIFLAZZ\033[0m (Nongol Otomatis di Pucuk Panel Menu VPS)"
+echo -e "\033[0;32m======================================================================\033[0m"
+echo -e "\033[1;37mCARA PENGGUNAAN SELANJUTNYA:\033[0m"
+echo -e "Ketik perintah: \033[1;32mmenu\033[0m (Lalu tekan Enter untuk buka Panel)"
+echo -e "\033[0;32m======================================================================\033[0m"
