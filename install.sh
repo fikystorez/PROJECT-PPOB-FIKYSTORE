@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V152 (THE PERFECT HUB - PART 1)
+# DIGITAL FIKY STORE - V153 (THE LEGACY UI - PART 1)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
@@ -16,7 +16,7 @@ DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V152 (PART 1)           "
+echo "    MENGINSTAL DIGITAL FIKY STORE V153 (PART 1)           "
 echo "=========================================================="
 
 echo "[1/7] Memperbarui sistem dan menginstal Node.js..."
@@ -35,7 +35,7 @@ cd "$HOME/$DIR_NAME"
 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Aplikasi PPOB DIGITAL FIKY STORE",
   "main": "index.js",
   "scripts": {
@@ -898,14 +898,14 @@ cat << 'EOF' > public/dashboard.html
       <h3 class="font-extrabold text-gray-800 dark:text-white mb-2 text-[16px] ml-1">Komunitas & Update</h3>
       <p class="text-[11px] text-gray-500 mb-4 ml-1">Gabung ke saluran resmi kami untuk mendapatkan info promo, event, dan update terbaru langsung dari Digital Fiky Store!</p>
       <div class="grid grid-cols-2 gap-3">
-         <div class="bg-gradient-to-br from-blue-50 to-white dark:from-[#1a2639] dark:to-[#111c2e] border border-blue-200 dark:border-blue-900 rounded-2xl p-4 flex items-center cursor-pointer hover:shadow-md transition-shadow" onclick="window.open('https://t.me/digitalfikystore_channel', '_blank')">
+         <div class="bg-gradient-to-br from-blue-50 to-white dark:from-[#1a2639] dark:to-[#111c2e] border border-blue-200 dark:border-blue-900 rounded-2xl p-4 flex items-center cursor-pointer hover:shadow-md transition-shadow" onclick="bukaLinkKomunitas('tele')">
              <i class="fab fa-telegram text-4xl text-blue-500 mr-3 drop-shadow-sm"></i>
              <div class="flex flex-col">
                  <h4 class="font-extrabold text-[13px] text-gray-800 dark:text-white">Telegram</h4>
                  <p class="text-[10px] font-bold text-gray-500 mt-0.5 uppercase tracking-wide">Join Channel</p>
              </div>
          </div>
-         <div class="bg-gradient-to-br from-green-50 to-white dark:from-[#1a2639] dark:to-[#111c2e] border border-green-200 dark:border-green-900 rounded-2xl p-4 flex items-center cursor-pointer hover:shadow-md transition-shadow" onclick="window.open('https://whatsapp.com/channel/digitalfikystore', '_blank')">
+         <div class="bg-gradient-to-br from-green-50 to-white dark:from-[#1a2639] dark:to-[#111c2e] border border-green-200 dark:border-green-900 rounded-2xl p-4 flex items-center cursor-pointer hover:shadow-md transition-shadow" onclick="bukaLinkKomunitas('wa')">
              <i class="fab fa-whatsapp text-4xl text-green-500 mr-3 drop-shadow-sm"></i>
              <div class="flex flex-col">
                  <h4 class="font-extrabold text-[13px] text-gray-800 dark:text-white">WhatsApp</h4>
@@ -1044,6 +1044,8 @@ cat << 'EOF' > public/dashboard.html
     }
 
     let qrisImg = 'https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg';
+    let linkTele = 'https://t.me/digitalfikystore_channel';
+    let linkWa = 'https://whatsapp.com/channel/digitalfikystore';
     let sel = ''; 
     let curSal = 0; 
     let hideS = localStorage.getItem('hideSaldo') === 'true';
@@ -1139,6 +1141,11 @@ cat << 'EOF' > public/dashboard.html
         window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(`Halo Admin DIGITAL FIKY STORE, saya butuh bantuan.`), '_blank'); 
     }
 
+    function bukaLinkKomunitas(tipe) {
+        if(tipe === 'tele') window.open(linkTele, '_blank');
+        if(tipe === 'wa') window.open(linkWa, '_blank');
+    }
+
     // FETCH SALDO PRIBADI
     fetch('/api/user/balance', {
         method: 'POST',
@@ -1163,7 +1170,7 @@ cat << 'EOF' > public/dashboard.html
         document.getElementById('headTrx').innerText = myTrxs.length + ' Trx';
     });
     
-    // FETCH STATISTIK GLOBAL SELURUH TOKO (4 TIER)
+    // FETCH STATISTIK GLOBAL SELURUH TOKO
     fetch('/api/global-stats')
     .then(r => r.json())
     .then(d => {
@@ -1179,9 +1186,9 @@ cat << 'EOF' > public/dashboard.html
     fetch('/api/config')
     .then(r => r.json())
     .then(d => {
-      if(d.qrisUrl) {
-          qrisImg = d.qrisUrl;
-      }
+      if(d.qrisUrl) { qrisImg = d.qrisUrl; }
+      if(d.linkTele) { linkTele = d.linkTele; }
+      if(d.linkWa) { linkWa = d.linkWa; }
       
       if(d.banners && d.banners.length > 0) {
         const bc = document.getElementById('bannerContainer');
@@ -2085,9 +2092,10 @@ cat << 'EOF' > public/riwayat_topup.html
       }
     });
 
-    // FUNGSI KOMPLAIN WA
-    window.komplainTopup = function(id_trx) {
-        window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(`Halo Admin, saya ingin komplain terkait Top Up Saldo dengan Nomor Referensi: *${id_trx}*. Tolong dibantu cek ya.`), '_blank');
+    // FUNGSI KOMPLAIN WA DENGAN TEKS OTOMATIS SESUAI REQUEST
+    window.komplainTopup = function(nominal, tanggal, statusLengkap) {
+        let msg = `Halo Admin, saya ingin komplain deposit dengan nominal ${nominal} pada tanggal ${tanggal}. Status saat ini: ${statusLengkap}. Mohon bantuannya.`;
+        window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(msg), '_blank');
     }
 
     // POPUP DETAIL MEWAH SESUAI SCREENSHOT
@@ -2096,6 +2104,10 @@ cat << 'EOF' > public/riwayat_topup.html
         const isDark = localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null;
         
         let statusText = item.status === 'Expired' ? 'Gagal (Kedaluwarsa)' : item.status;
+        let rawStatus = item.status.toLowerCase();
+        if(rawStatus === 'proses' && item.method.includes('QRIS')) rawStatus = 'pending_qris';
+        if(rawStatus === 'expired') rawStatus = 'gagal (kedaluwarsa)';
+        
         let methodClean = item.method.includes('QRIS') ? 'QRIS' : (item.method.includes('Admin') ? 'Admin' : 'Manual WA');
         
         let htmlContent = `
@@ -2128,7 +2140,7 @@ cat << 'EOF' > public/riwayat_topup.html
             </div>
         </div>
         
-        <button onclick="komplainTopup('${item.id}')" class="w-full py-3.5 bg-[#ef4444] hover:bg-[#dc2626] text-white font-extrabold rounded-[12px] mb-3 transition-colors text-[14px]">
+        <button onclick="komplainTopup('${item.nominal}', '${item.date}', '${rawStatus}')" class="w-full py-3.5 bg-[#ef4444] hover:bg-[#dc2626] text-white font-extrabold rounded-[12px] mb-3 transition-colors text-[14px]">
             Hubungi Admin (Komplain)
         </button>
         <button onclick="Swal.close()" class="w-full py-3.5 bg-transparent border border-[#334155] text-white hover:bg-[#1e293b] font-extrabold rounded-[12px] transition-colors text-[14px]">
@@ -2693,7 +2705,7 @@ cat << 'EOF' > public/riwayat.html
     <div class="mx-4 mt-4 bg-white dark:bg-[#111c2e] p-4 rounded-2xl border border-gray-200 dark:border-[#1e293b] shadow-sm">
         <div class="relative mb-4">
             <i class="fas fa-search absolute left-3.5 top-3 text-gray-400 text-sm"></i>
-            <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm font-bold focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400" placeholder="Cari transaksi (Nomor/SN)...">
+            <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm font-bold focus:outline-none focus:border-[#00a8ff] dark:focus:border-[#38bdf8]" placeholder="Cari transaksi (Nomor/SN)...">
         </div>
         <div class="flex justify-between mb-2 gap-2">
             <div id="btn-Semua" onclick="setStatusFilter('Semua')" class="flex-1 bg-[#00a8ff] dark:bg-[#38bdf8] text-white dark:text-[#0b1320] text-center py-2 rounded-full text-[11px] font-bold cursor-pointer shadow-sm transition-colors">Semua</div>
@@ -2706,6 +2718,25 @@ cat << 'EOF' > public/riwayat.html
     <div class="px-4 mt-4" id="historyContainer">
       <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
         <i class="fas fa-spinner fa-spin text-4xl mb-4 text-[#00a8ff] dark:text-[#38bdf8]"></i>
+      </div>
+    </div>
+
+    <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/dashboard.html'">
+          <i class="fas fa-home text-xl"></i>
+          <span class="text-[10px] mt-1 font-bold">HOME</span>
+      </div>
+      <div class="flex flex-col items-center cursor-pointer text-[#00a8ff] dark:text-[#38bdf8]">
+          <i class="fas fa-file-alt text-xl"></i>
+          <span class="text-[10px] mt-1 font-bold">RIWAYAT</span>
+      </div>
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/info.html'">
+          <i class="fas fa-bell text-xl"></i>
+          <span class="text-[10px] mt-1 font-bold">INFO</span>
+      </div>
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/profile.html'">
+          <i class="fas fa-user text-xl"></i>
+          <span class="text-[10px] mt-1 font-bold">PROFIL</span>
       </div>
     </div>
 
@@ -2778,6 +2809,7 @@ cat << 'EOF' > public/riwayat.html
             </div>`;
         } else {
             c.innerHTML = filtered.map((i) => {
+                // WARNA BADGE PERSIS SCREENSHOT BOS
                 let sc = '';
                 if(i.status === 'Gagal') {
                     sc = 'bg-[#ffe4e6] text-[#e11d48] dark:bg-[#ffe4e6] dark:text-[#be123c]';
@@ -2795,7 +2827,7 @@ cat << 'EOF' > public/riwayat.html
                         <span class="text-[12px] text-gray-500 dark:text-gray-400 font-bold">${i.date}</span>
                         <span class="text-[11px] font-extrabold px-3 py-1 rounded-full ${sc}">${i.status}</span>
                     </div>
-                    <h4 class="font-extrabold text-[15px] text-gray-800 dark:text-white mb-0.5">${i.produk}</h4>
+                    <h4 class="font-extrabold text-[16px] text-gray-800 dark:text-white mb-0.5">${i.produk}</h4>
                     <p class="text-[13px] font-bold text-gray-600 dark:text-gray-300">Tujuan: ${i.no_tujuan}</p>
                 </div>`;
             }).join('');
@@ -2804,13 +2836,18 @@ cat << 'EOF' > public/riwayat.html
 
     function renderHistory() { filterHistory(); }
 
-    window.komplainTrx = function(id_trx) {
-        window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(`Halo Admin, saya ingin komplain terkait Transaksi Produk dengan Nomor Referensi: *${id_trx}*. Tolong dibantu cek ya.`), '_blank');
+    // FUNGSI KOMPLAIN WA DENGAN TEKS OTOMATIS SESUAI REQUEST
+    window.komplainTrx = function(harga, tanggal, statusLengkap) {
+        let msg = `Halo Admin, saya ingin komplain transaksi dengan nominal Rp ${harga} pada tanggal ${tanggal}. Status saat ini: ${statusLengkap}. Mohon bantuannya.`;
+        window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(msg), '_blank');
     }
 
+    // POPUP DETAIL MEWAH SESUAI SCREENSHOT
     window.showDetailTrx = function(idx) {
       const i = allTrx[idx];
       const isD = localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null;
+      
+      let rawStatus = i.status.toLowerCase();
       
       let htmlContent = `
         <h3 class="text-white font-extrabold text-[19px] mb-5 text-center">Detail Transaksi</h3>
@@ -2822,7 +2859,7 @@ cat << 'EOF' > public/riwayat.html
             </div>
             <div class="flex justify-between mb-3">
                 <span class="text-gray-400 font-medium text-[13px]">Status</span>
-                <span class="${i.status === 'Sukses' ? 'text-green-500' : (i.status === 'Proses' ? 'text-yellow-500' : 'text-red-500')} font-extrabold text-[13px] text-right uppercase">${i.status}</span>
+                <span class="${i.status === 'Sukses' ? 'text-[#16a34a]' : (i.status === 'Proses' ? 'text-[#ca8a04]' : 'text-[#e11d48]')} font-extrabold text-[13px] text-right uppercase">${i.status}</span>
             </div>
             <div class="flex justify-between mb-3">
                 <span class="text-gray-400 font-medium text-[13px]">Produk</span>
@@ -2838,7 +2875,7 @@ cat << 'EOF' > public/riwayat.html
             </div>
         </div>
         
-        <button onclick="komplainTrx('${i.id}')" class="w-full py-3.5 bg-[#ef4444] hover:bg-[#dc2626] text-white font-extrabold rounded-[12px] mb-3 transition-colors text-[14px]">
+        <button onclick="komplainTrx('${(i.harga||0).toLocaleString('id-ID')}', '${i.date}', '${rawStatus}')" class="w-full py-3.5 bg-[#ef4444] hover:bg-[#dc2626] text-white font-extrabold rounded-[12px] mb-3 transition-colors text-[14px]">
             Hubungi Admin (Komplain)
         </button>
         <button onclick="Swal.close()" class="w-full py-3.5 bg-transparent border border-[#334155] text-white hover:bg-[#1e293b] font-extrabold rounded-[12px] transition-colors text-[14px]">
@@ -2860,7 +2897,7 @@ cat << 'EOF' > public/riwayat.html
 EOF
 
 echo "[PART 4 SELESAI DITULIS. TINGGAL PART 5, 6, 7 (BACKEND & VPS MENU)!]"
-echo "[5/7] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V152)..."
+echo "[5/7] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V153)..."
 
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
@@ -2983,7 +3020,9 @@ app.get('/api/config', (req, res) => {
     let cfg = loadJSON(configFile);
     res.json({ 
         banners: cfg.banners || [], 
-        qrisUrl: cfg.qrisUrl || '' 
+        qrisUrl: cfg.qrisUrl || '',
+        linkTele: cfg.linkTele || 'https://t.me/digitalfikystore_channel',
+        linkWa: cfg.linkWa || 'https://whatsapp.com/channel/digitalfikystore'
     }); 
 });
 
@@ -3938,7 +3977,7 @@ echo "Menginstal modul Node.js..."
 npm install --silent
 npm install -g pm2 > /dev/null 2>&1
 
-echo "[6/7] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - THE PERFECT HUB)..."
+echo "[6/7] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - THE LEGACY UI)..."
 
 cat << 'EOF' > /usr/bin/menu
 #!/bin/bash
@@ -3984,7 +4023,7 @@ while true; do
 
     clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V152) 💎        ${NC}"
+    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V153) 💎        ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo -e "   💰 SALDO DIGIFLAZZ: ${GREEN}$SALDO_DIGI${NC}"
     echo -e "${CYAN}======================================================${NC}"
@@ -4002,7 +4041,7 @@ while true; do
     echo -e "  ${GREEN}8.${NC} 🖼️ Sinkronisasi Gambar Banner Lokal"
     echo -e "  ${GREEN}9.${NC} 📈 Seting Keuntungan 14 Tier (Margin GOD MODE)"
     echo -e "  ${GREEN}10.${NC} 📦 Manajemen Produk (Katalog Manual Satu-Satu)"
-    echo -e "  ${YELLOW}11.${NC} 🚀 IMPORT CSV MASSAL (Ratusan Produk 1 Detik)"
+    echo -e "  ${YELLOW}11.${NC} 🔗 Ubah Link Komunitas (Telegram & WhatsApp)"
     echo ""
     echo -e "${PURPLE}[ 🌐 MANAJEMEN SERVER & API ]${NC}"
     echo -e "  ${GREEN}12.${NC} Setup Domain (Nginx + Cloudflare + UFW Firewall)"
@@ -4408,53 +4447,32 @@ JS
         11)
             clear
             echo -e "${CYAN}===============================================${NC}"
-            echo -e "${YELLOW}      🚀 IMPORT PRODUK MASSAL VIA CSV          ${NC}"
+            echo -e "${YELLOW}    🔗 UBAH LINK KOMUNITAS (TELEGRAM & WA)     ${NC}"
             echo -e "${CYAN}===============================================${NC}"
-            echo -e "1. Buat file Excel dengan 7 kolom berurutan ke kanan:"
-            echo -e "   tipe | brand | kategori | nama_produk | harga_modal | sku | deskripsi"
-            echo -e "2. Save As menggunakan format ${GREEN}CSV (Comma delimited)${NC}"
-            echo -e "   Pastikan pemisahnya menggunakan ${YELLOW}titik koma (;)${NC}"
-            echo -e "3. Ubah nama filenya menjadi: ${RED}import.csv${NC}"
-            echo -e "4. Upload file import.csv ke folder ${GREEN}/root/$DIR_NAME/${NC}"
+            echo "Masukkan link lengkap (https://...)"
+            echo "Kosongkan jika tidak ingin mengubah link saat ini."
             echo ""
-            read -p "Apakah file import.csv sudah di-upload? (y/n): " confirm_csv
+            read -p "Link Telegram Channel : " new_tele
+            read -p "Link WhatsApp Saluran : " new_wa
             
-            if [[ "$confirm_csv" == "y" || "$confirm_csv" == "Y" ]]; then
-                cd "$HOME/$DIR_NAME"
-                cat << 'JS' > temp_import.js
+            cd "$HOME/$DIR_NAME"
+            cat << 'JS' > temp_links.js
 const fs = require('fs');
-const file = './import.csv';
-if (!fs.existsSync(file)) {
-    console.log('❌ File import.csv tidak ditemukan di direktori!');
-    process.exit();
+const file = './config.json';
+let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
+
+if (process.argv[2] && process.argv[2].trim() !== '') {
+    cfg.linkTele = process.argv[2].trim();
 }
-const lines = fs.readFileSync(file, 'utf-8').split('\n');
-let data = fs.existsSync('./local_products.json') ? JSON.parse(fs.readFileSync('./local_products.json')) : [];
-let count = 0;
-lines.forEach(line => {
-    let p = line.split(';');
-    if (p.length >= 6) {
-        data.push({
-            id: 'LOC' + Date.now() + Math.floor(Math.random() * 1000),
-            type: p[0].trim().toLowerCase(),
-            brand: p[1].trim(),
-            category: p[2].trim(),
-            name: p[3].trim(),
-            price: parseInt(p[4].trim()) || 0,
-            sku: p[5].trim(),
-            desc: p[6] ? p[6].trim() : '',
-            isDigi: true
-        });
-        count++;
-    }
-});
-fs.writeFileSync('./local_products.json', JSON.stringify(data, null, 2));
-fs.unlinkSync(file);
-console.log('✅ Berhasil Import ' + count + ' Produk ke sistem!');
+if (process.argv[3] && process.argv[3].trim() !== '') {
+    cfg.linkWa = process.argv[3].trim();
+}
+
+fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
+console.log('\n✅ Link Komunitas berhasil diperbarui!');
 JS
-                node temp_import.js
-                rm temp_import.js
-            fi
+            node temp_links.js "$new_tele" "$new_wa"
+            rm temp_links.js
             read -p "Tekan Enter untuk kembali..."
             ;;
             
@@ -4680,12 +4698,12 @@ EOF
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
 echo "=========================================================="
-echo "  SISTEM WEB V152 BERHASIL DIPERBARUI SECARA PENUH!       "
+echo "  SISTEM WEB V153 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
 
 EOF
-echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V152..."
+echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V153..."
 
 cd "$HOME/$DIR_NAME"
 
@@ -4706,18 +4724,18 @@ chmod +x /usr/bin/menu
 
 clear
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V152 SELESAI! 🚀      \033[0m"
+echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V153 SELESAI! 🚀      \033[0m"
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[0;36mFITUR BARU DI V152 (THE PERFECT HUB EDITION):\033[0m"
+echo -e "\033[0;36mFITUR BARU DI V153 (THE LEGACY UI EDITION):\033[0m"
+echo -e "  ✅ \033[1;33mUI RIWAYAT 1000% MIRIP SCREENSHOT\033[0m Desain Tab & Badge Akurat"
+echo -e "  ✅ \033[1;33mTEKS KOMPLAIN OTOMATIS\033[0m Format komplain detail sesuai pesanan"
+echo -e "  ✅ \033[1;33mMENU LAMA (CSV) DIHAPUS\033[0m Sesuai request bos"
+echo -e "  ✅ \033[1;33mMENU BARU (LINK KOMUNITAS)\033[0m Ubah link Tele/WA langsung dari VPS"
 echo -e "  ✅ \033[1;33mBUG 'Cannot GET /' FIXED\033[0m Routing Express 100% Mulus"
 echo -e "  ✅ \033[1;33mTEKS BERJALAN (MARQUEE)\033[0m Jalan mulus tanpa numpuk"
-echo -e "  ✅ \033[1;33mUI RIWAYAT 2 TAB\033[0m Desain mewah persis screenshot"
-echo -e "  ✅ \033[1;33mPOPUP DETAIL & KOMPLAIN\033[0m Lengkap tombol merah ke WA Admin"
 echo -e "  ✅ \033[1;33mSTATISTIK TOKO (4 TIER)\033[0m Hari Ini, Minggu, Bulan, Semua"
-echo -e "  ✅ \033[1;33mKOMUNITAS & UPDATE\033[0m Tombol Telegram & WA di Dashboard"
 echo -e "  ✅ \033[1;33mBUG BANNER SPASI FIXED\033[0m Rename otomatis spasi jadi garis bawah"
 echo -e "  ✅ \033[1;33m14 TIER MARGIN GOD MODE\033[0m Atur harga bertingkat sesuka hati"
-echo -e "  ✅ \033[1;33mSALDO DIGIFLAZZ DI PUCUK\033[0m Cek otomatis setiap buka Panel"
 echo -e "\033[0;32m======================================================================\033[0m"
 echo -e "\033[1;37mCARA PENGGUNAAN SELANJUTNYA:\033[0m"
 echo -e "Ketik perintah: \033[1;32mmenu\033[0m (Lalu tekan Enter untuk buka Panel)"
