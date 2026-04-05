@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V160 (THE PERFECT OXFORD - PART 1)
+# DIGITAL FIKY STORE - V161 (PERFECT OXFORD + AUTO GOPAY - PART 1)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
@@ -16,7 +16,7 @@ DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V160 (PART 1)           "
+echo "    MENGINSTAL DIGITAL FIKY STORE V161 (PART 1)           "
 echo "=========================================================="
 
 echo "[1/7] Memperbarui sistem dan menginstal Node.js..."
@@ -35,7 +35,7 @@ cd "$HOME/$DIR_NAME"
 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Aplikasi PPOB DIGITAL FIKY STORE",
   "main": "index.js",
   "scripts": {
@@ -49,7 +49,8 @@ cat << 'EOF' > package.json
     "express": "^4.19.2",
     "form-data": "^4.0.0",
     "multer": "^1.4.5-lts.1",
-    "pino": "^8.20.0"
+    "pino": "^8.20.0",
+    "node-cron": "^3.0.3"
   }
 }
 EOF
@@ -980,16 +981,18 @@ cat << 'EOF' > public/dashboard.html
         </div>
 
         <div class="flex flex-col gap-3 mb-6">
-          <div onclick="selM('wa')" id="m-wa" class="flex items-center justify-between bg-[#0b1320] border border-[#1e293b] p-3 rounded-xl cursor-pointer">
+          
+          <div onclick="selM('gopay')" id="m-gopay" class="flex items-center justify-between bg-[#0b1320] border border-[#1e293b] p-3 rounded-xl cursor-pointer">
             <div class="flex items-center gap-3">
-              <i class="fab fa-whatsapp text-2xl text-green-500"></i>
+              <i class="fas fa-wallet text-2xl text-blue-400"></i>
               <div class="flex flex-col">
-                <span class="font-bold text-sm text-white">Manual WA</span>
-                <span class="text-[10px] text-gray-500 leading-tight">Transfer ke admin</span>
+                <span class="font-bold text-sm text-white">GoPay Otomatis</span>
+                <span class="text-[10px] text-gray-500 leading-tight">Cek otomatis 24 Jam (Sesuai Nominal)</span>
               </div>
             </div>
-            <div id="r-wa" class="w-5 h-5 rounded-full border-[3px] border-gray-600"></div>
+            <div id="r-gopay" class="w-5 h-5 rounded-full border-[3px] border-gray-600 bg-transparent shrink-0"></div>
           </div>
+
           <div onclick="selM('qris')" id="m-qris" class="flex items-center justify-between bg-[#0b1320] border border-[#1e293b] p-3 rounded-xl cursor-pointer">
             <div class="flex items-center gap-3">
               <i class="fas fa-qrcode text-2xl text-white"></i>
@@ -998,7 +1001,18 @@ cat << 'EOF' > public/dashboard.html
                 <span class="text-[10px] text-gray-500 leading-tight">Otomatis masuk (Wajib 2 digit)</span>
               </div>
             </div>
-            <div id="r-qris" class="w-5 h-5 rounded-full border-[3px] border-gray-600"></div>
+            <div id="r-qris" class="w-5 h-5 rounded-full border-[3px] border-gray-600 bg-transparent shrink-0"></div>
+          </div>
+          
+          <div onclick="selM('wa')" id="m-wa" class="flex items-center justify-between bg-[#0b1320] border border-[#1e293b] p-3 rounded-xl cursor-pointer">
+            <div class="flex items-center gap-3">
+              <i class="fab fa-whatsapp text-2xl text-green-500"></i>
+              <div class="flex flex-col">
+                <span class="font-bold text-sm text-white">Manual WA</span>
+                <span class="text-[10px] text-gray-500 leading-tight">Transfer ke admin</span>
+              </div>
+            </div>
+            <div id="r-wa" class="w-5 h-5 rounded-full border-[3px] border-gray-600 bg-transparent shrink-0"></div>
           </div>
         </div>
 
@@ -1040,6 +1054,7 @@ cat << 'EOF' > public/dashboard.html
     let qrisImg = 'https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg';
     let linkTele = 'https://t.me/digitalfikystore_channel';
     let linkWa = 'https://whatsapp.com/channel/digitalfikystore';
+    let gopayNumTarget = ''; // Nomor gopay ambil dari backend
     let sel = ''; 
     let curSal = 0; 
     let hideS = localStorage.getItem('hideSaldo') === 'true';
@@ -1097,10 +1112,12 @@ cat << 'EOF' > public/dashboard.html
         document.getElementById('statAll').innerText = d.all || 0;
     }).catch(e => {});
 
+    // MENGAMBIL DATA KONFIGURASI TERMASUK NOMOR GOPAY
     fetch('/api/config').then(r => r.json()).then(d => {
       if(d.qrisUrl) qrisImg = d.qrisUrl;
       if(d.linkTele) linkTele = d.linkTele;
       if(d.linkWa) linkWa = d.linkWa;
+      if(d.bhmGopayNumber) gopayNumTarget = d.bhmGopayNumber; // Narik no gopay dari config
       
       if(d.banners && d.banners.length > 0) {
         const bc = document.getElementById('bannerContainer');
@@ -1133,7 +1150,7 @@ cat << 'EOF' > public/dashboard.html
     
     function selM(m) {
       sel = m;
-      ['wa','qris'].forEach(x => {
+      ['wa','qris','gopay'].forEach(x => {
         document.getElementById('r-' + x).className = 'w-5 h-5 rounded-full border-[3px] border-gray-600 bg-transparent shrink-0';
         document.getElementById('m-' + x).classList.remove('border-[#facc15]');
       });
@@ -1163,7 +1180,7 @@ cat << 'EOF' > public/dashboard.html
             title: `<span class="font-bold text-lg text-[#facc15]">Scan QRIS</span>`,
             html: `
                 <p class="text-4xl text-[#facc15] font-extrabold mb-2">Rp ${fn.toLocaleString('id-ID')}</p>
-                <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold mb-3 animate-pulse">Sisa Waktu: <span id="qrisTimer">05:00</span></div>
+                <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold mb-3 animate-pulse inline-block">Sisa Waktu: <span id="qrisTimer">05:00</span></div>
                 <div class="bg-white p-3 rounded-xl inline-block border border-gray-200 mb-2"><img src="${qrisImg}" class="w-48 h-48 object-cover"></div>
                 <p class="text-xs text-gray-400">Transfer TEPAT sesuai nominal (3 digit akhir) agar otomatis masuk.</p>`,
             showCancelButton: true, confirmButtonText: 'Sudah Transfer', cancelButtonText: 'Tutup', background: bg, color: c,
@@ -1179,6 +1196,39 @@ cat << 'EOF' > public/dashboard.html
           }).then(r => {
             if(r.isConfirmed) { Swal.fire({ icon: 'success', title: 'Diproses', text: 'Sistem sedang memverifikasi...', timer: 2000, background: bg, color: c }).then(() => location.href = '/riwayat_topup.html'); } 
             else { location.href = '/riwayat_topup.html'; }
+          });
+        }, 300);
+      } else if (sel === 'gopay') {
+        if(n < 1000) return Swal.fire({icon: 'warning', title: 'Gagal', text: 'Minimal Top Up Rp 1.000', background: bg, color: c});
+        
+        closeTopUp();
+        // Request Topup dengan Metode GoPay Otomatis (BHM API)
+        await fetch('/api/topup/request', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone: user.phone, method: 'GoPay Otomatis', nominal: fn}) });
+        
+        setTimeout(() => {
+          Swal.fire({
+            title: `<span class="font-bold text-lg text-[#facc15]">Transfer GoPay</span>`,
+            html: `
+                <p class="text-4xl text-[#facc15] font-extrabold mb-2">Rp ${fn.toLocaleString('id-ID')}</p>
+                <div class="bg-blue-900/30 text-blue-400 px-3 py-2 rounded-xl text-[11px] font-bold mb-3 border border-blue-800">
+                  Transfer TEPAT nominal di atas ke Nomor GoPay:<br>
+                  <span class="text-white text-lg mt-1 block tracking-wider" id="gopayNumDisplay">Memuat...</span>
+                </div>
+                <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold mb-3 animate-pulse inline-block">Sisa Waktu: <span id="gopayTimer">10:00</span></div>
+                <p class="text-[10px] text-gray-400">Saldo akan masuk otomatis 1-3 menit setelah transfer sukses.</p>`,
+            showCancelButton: true, confirmButtonText: 'Cek Status', cancelButtonText: 'Tutup', background: bg, color: c,
+            didOpen: () => {
+              document.getElementById('gopayNumDisplay').innerText = gopayNumTarget || 'Hubungi Admin';
+              let t = 600; let tmr = document.getElementById('gopayTimer');
+              timerInterval = setInterval(() => { 
+                  t--; let m = Math.floor(t / 60).toString().padStart(2, '0'); let s = (t % 60).toString().padStart(2, '0'); 
+                  if(tmr) tmr.innerText = `${m}:${s}`; 
+                  if(t <= 0) { clearInterval(timerInterval); Swal.close(); location.href = '/riwayat_topup.html'; } 
+              }, 1000);
+            }, 
+            willClose: () => clearInterval(timerInterval)
+          }).then(r => {
+             location.href = '/riwayat_topup.html'; 
           });
         }, 300);
       } else {
@@ -1288,7 +1338,7 @@ cat << 'EOF' > public/operator.html
             <i class="fab fa-whatsapp mr-1"></i> Komplain
         </button>
       </div>
-      <button id="btnLanjutkan" class="w-full py-3.5 bg-[#facc15] text-[#0b1320] font-bold rounded-xl text-sm shadow-md transition-opacity" onclick="executeBuy()">
+      <button id="btnLanjutkan" class="w-full py-3.5 bg-[#facc15] text-[#001229] font-bold rounded-xl text-sm shadow-md transition-opacity" onclick="executeBuy()">
           Lanjutkan Pembayaran
       </button>
     </div>
@@ -1572,11 +1622,11 @@ cat << 'EOF' > public/operator.html
           btn.innerText = "Produk Sedang Gangguan";
           btn.classList.add('opacity-50', 'cursor-not-allowed');
           btn.classList.replace('bg-[#facc15]', 'bg-gray-600');
-          btn.classList.replace('text-[#0b1320]', 'text-gray-300');
+          btn.classList.replace('text-[#001229]', 'text-gray-300');
       } else {
           btn.innerText = "Lanjutkan Pembayaran";
           btn.classList.replace('bg-gray-600', 'bg-[#facc15]');
-          btn.classList.replace('text-gray-300', 'text-[#0b1320]');
+          btn.classList.replace('text-gray-300', 'text-[#001229]');
           document.getElementById('inputTarget').dispatchEvent(new Event('input')); 
       }
       
@@ -1821,7 +1871,6 @@ cat << 'EOF' > public/riwayat_topup.html
     <div class="px-4 mt-4" id="historyContainer">
       <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
         <i class="fas fa-spinner fa-spin text-4xl mb-4 text-[#facc15]"></i>
-        <p class="text-sm font-bold text-gray-500">Memuat riwayat top up...</p>
       </div>
     </div>
 
@@ -1848,62 +1897,29 @@ cat << 'EOF' > public/riwayat_topup.html
   <script>
     const user = JSON.parse(localStorage.getItem('user'));
     if(!user) { window.location.href = '/'; }
-    
     document.getElementById('html-root').classList.add('dark');
     
     let allTrx = [];
     let currentFilter = 'Semua';
 
-    fetch('/api/topup/history', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: user.phone })
-    })
-    .then(r => r.json())
-    .then(d => {
-      allTrx = d.history ? d.history.reverse() : [];
-      window.topupData = allTrx; // untuk keperluan popup
-      renderHistory();
-    })
-    .catch(e => {
-      document.getElementById('historyContainer').innerHTML = `<div class="mt-10 text-center text-red-500 font-bold">Gagal memuat data.</div>`;
-    });
+    fetch('/api/topup/history', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) })
+    .then(r => r.json()).then(d => { allTrx = d.history ? d.history.reverse() : []; window.topupData = allTrx; renderHistory(); })
+    .catch(e => { document.getElementById('historyContainer').innerHTML = `<div class="mt-10 text-center text-red-500 font-bold">Gagal memuat data.</div>`; });
 
     function setStatusFilter(status) {
         currentFilter = status;
-        
-        ['Semua', 'Sukses', 'Proses', 'Gagal'].forEach(btn => {
-            const el = document.getElementById('btn-' + btn);
-            el.className = 'flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#1a2639]';
-        });
-        
-        const activeBtn = document.getElementById('btn-' + status);
-        activeBtn.className = `flex-1 bg-[#facc15] text-[#0b1320] text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer shadow-sm transition-colors border border-[#facc15]`;
-        
+        ['Semua', 'Sukses', 'Proses', 'Gagal'].forEach(btn => { document.getElementById('btn-' + btn).className = 'flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#1a2639]'; });
+        document.getElementById('btn-' + status).className = `flex-1 bg-[#facc15] text-[#0b1320] text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer shadow-sm transition-colors border border-[#facc15]`;
         filterHistory();
     }
 
     function filterHistory() {
         const query = document.getElementById('searchInput').value.toLowerCase();
         let filtered = allTrx;
-        
-        if(currentFilter !== 'Semua') {
-            if(currentFilter === 'Gagal') {
-                filtered = filtered.filter(i => i.status === 'Gagal' || i.status === 'Expired');
-            } else {
-                filtered = filtered.filter(i => i.status === currentFilter);
-            }
-        }
-        
-        if(query) {
-            filtered = filtered.filter(i => 
-                (i.method && i.method.toLowerCase().includes(query)) || 
-                (i.id && i.id.toLowerCase().includes(query))
-            );
-        }
+        if(currentFilter !== 'Semua') { filtered = currentFilter === 'Gagal' ? filtered.filter(i => i.status === 'Gagal' || i.status === 'Expired') : filtered.filter(i => i.status === currentFilter); }
+        if(query) { filtered = filtered.filter(i => (i.method && i.method.toLowerCase().includes(query)) || (i.id && i.id.toLowerCase().includes(query))); }
         
         const c = document.getElementById('historyContainer');
-        
         if(!filtered || filtered.length === 0) {
             c.innerHTML = `
             <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
@@ -1911,45 +1927,23 @@ cat << 'EOF' > public/riwayat_topup.html
                     <i class="fas fa-wallet text-gray-400 text-4xl"></i>
                 </div>
                 <h2 class="text-white font-bold text-lg tracking-wide mb-2">Belum Ada Top Up</h2>
-                <p class="text-gray-400 text-[13px] leading-relaxed mb-8 px-2">Anda belum melakukan pengisian saldo. Ayo isi saldo sekarang!</p>
-                <button class="bg-[#facc15] text-[#0b1320] font-extrabold py-3 px-8 rounded-full shadow-lg hover:opacity-90 transition" onclick="location.href='/dashboard.html'">Top Up Sekarang</button>
+                <button class="bg-[#facc15] text-[#0b1320] font-extrabold py-3 px-8 rounded-full shadow-lg hover:opacity-90 transition mt-4" onclick="location.href='/dashboard.html'">Top Up Sekarang</button>
             </div>`;
         } else {
             c.innerHTML = filtered.map((i) => {
                 let isExp = i.status === 'Expired';
-                
-                let sc = '';
+                let sc = isExp || i.status === 'Gagal' ? 'text-red-400 border border-red-500/50 bg-red-500/10' : (i.status === 'Sukses' ? 'text-green-400 border border-green-500/50 bg-green-500/10' : 'text-[#facc15] border border-[#facc15]/50 bg-[#facc15]/10');
                 let statusText = isExp ? 'KEDALUWARSA' : i.status.toUpperCase();
-                
-                if(isExp || i.status === 'Gagal') {
-                    sc = 'text-red-400 border border-red-500/50 bg-red-500/10';
-                } else if(i.status === 'Sukses') {
-                    sc = 'text-green-400 border border-green-500/50 bg-green-500/10'; 
-                } else {
-                    sc = 'text-[#facc15] border border-[#facc15]/50 bg-[#facc15]/10'; 
-                }
-                
-                let methodClean = i.method.includes('QRIS') ? 'QRIS' : (i.method.includes('Admin') ? 'Admin' : 'Manual WA');
-                let titleText = `Topup Saldo ${methodClean}`;
-                
+                let methodClean = i.method.includes('QRIS') ? 'QRIS' : (i.method.includes('GoPay') ? 'GoPay' : (i.method.includes('Admin') ? 'Admin' : 'Manual WA'));
                 let rawIdx = allTrx.indexOf(i);
                 
-                // KARTU UI: GELAP (#162032), ICON KOTAK DI KIRI, HARGA KUNING KANAN ATAS
                 return `
-                <div onclick="showDetailTopup(${rawIdx})" class="bg-[#162032] p-4 rounded-[1.2rem] mb-3 border border-[#1e293b] shadow-sm cursor-pointer hover:bg-[#1e293b] transition-colors flex items-center justify-between">
+                <div onclick="showDetailTopup(${rawIdx})" class="bg-[#111c2e] p-4 rounded-[1.2rem] mb-3 border border-[#1e293b] shadow-sm cursor-pointer hover:bg-[#1a2639] transition-colors flex items-center justify-between">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-[#0b1320] flex items-center justify-center shrink-0 border border-gray-700">
-                            <i class="fas fa-wallet text-gray-400 text-xl"></i>
-                        </div>
-                        <div class="flex flex-col">
-                            <h4 class="font-extrabold text-[14px] text-gray-200 mb-1">${titleText}</h4>
-                            <span class="text-[11px] text-gray-400 font-medium">${i.date}</span>
-                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-[#0b1320] flex items-center justify-center shrink-0 border border-gray-700"><i class="fas fa-wallet text-gray-400 text-xl"></i></div>
+                        <div class="flex flex-col"><h4 class="font-extrabold text-[14px] text-gray-200 mb-1">Topup Saldo ${methodClean}</h4><span class="text-[11px] text-gray-400 font-medium">${i.date}</span></div>
                     </div>
-                    <div class="flex flex-col items-end">
-                        <p class="text-[15px] font-black text-[#facc15] mb-1.5">Rp ${(i.nominal || 0).toLocaleString('id-ID')}</p>
-                        <span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${sc}">${statusText}</span>
-                    </div>
+                    <div class="flex flex-col items-end"><p class="text-[15px] font-black text-[#facc15] mb-1.5">Rp ${(i.nominal || 0).toLocaleString('id-ID')}</p><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${sc}">${statusText}</span></div>
                 </div>`;
             }).join('');
         }
@@ -1964,59 +1958,27 @@ cat << 'EOF' > public/riwayat_topup.html
 
     window.showDetailTopup = function(index) {
         const item = window.topupData[index];
-        
         let statusText = item.status === 'Expired' ? 'Kedaluwarsa' : item.status;
         let rawStatus = item.status.toLowerCase();
         if(rawStatus === 'proses' && item.method.includes('QRIS')) rawStatus = 'pending_qris';
+        if(rawStatus === 'proses' && item.method.includes('GoPay')) rawStatus = 'pending_gopay';
         if(rawStatus === 'expired') rawStatus = 'gagal_kedaluwarsa';
-        
-        let methodClean = item.method.includes('QRIS') ? 'QRIS' : (item.method.includes('Admin') ? 'Admin' : 'Manual WA');
+        let methodClean = item.method.includes('QRIS') ? 'QRIS' : (item.method.includes('GoPay') ? 'GoPay' : (item.method.includes('Admin') ? 'Admin' : 'Manual WA'));
         
         let htmlContent = `
         <h3 class="text-white font-extrabold text-[19px] mb-5 text-center">Detail Transaksi</h3>
-        
         <div class="bg-[#0b1320] border border-[#1e293b] rounded-xl p-4 mb-5 text-left">
-            <div class="flex justify-between mb-3">
-                <span class="text-gray-400 font-medium text-[13px]">Waktu</span>
-                <span class="text-white font-bold text-[13px]">${item.date}</span>
-            </div>
-            <div class="flex justify-between mb-3">
-                <span class="text-gray-400 font-medium text-[13px]">Status</span>
-                <span class="text-white font-bold text-[13px]">${statusText}</span>
-            </div>
-            <div class="flex justify-between mb-3">
-                <span class="text-gray-400 font-medium text-[13px]">Layanan</span>
-                <span class="text-white font-bold text-[13px]">Topup Saldo ${methodClean}</span>
-            </div>
-            <div class="flex justify-between mb-3">
-                <span class="text-gray-400 font-medium text-[13px]">Nominal</span>
-                <span class="text-white font-bold text-[13px] text-[#facc15]">Rp ${(item.nominal || 0).toLocaleString('id-ID')}</span>
-            </div>
-            <div class="flex justify-between mb-3">
-                <span class="text-gray-400 font-medium text-[13px]">Tujuan</span>
-                <span class="text-white font-bold text-[13px]">Sistem Pembayaran</span>
-            </div>
-            <div class="flex justify-between">
-                <span class="text-gray-400 font-medium text-[13px]">SN/Ref</span>
-                <span class="text-white font-bold text-[13px]">${item.id}</span>
-            </div>
+            <div class="flex justify-between mb-3"><span class="text-gray-400 font-medium text-[13px]">Waktu</span><span class="text-white font-bold text-[13px]">${item.date}</span></div>
+            <div class="flex justify-between mb-3"><span class="text-gray-400 font-medium text-[13px]">Status</span><span class="text-white font-bold text-[13px]">${statusText}</span></div>
+            <div class="flex justify-between mb-3"><span class="text-gray-400 font-medium text-[13px]">Layanan</span><span class="text-white font-bold text-[13px]">Topup Saldo ${methodClean}</span></div>
+            <div class="flex justify-between mb-3"><span class="text-gray-400 font-medium text-[13px]">Nominal</span><span class="text-white font-bold text-[13px] text-[#facc15]">Rp ${(item.nominal || 0).toLocaleString('id-ID')}</span></div>
+            <div class="flex justify-between mb-3"><span class="text-gray-400 font-medium text-[13px]">Tujuan</span><span class="text-white font-bold text-[13px]">Sistem Pembayaran</span></div>
+            <div class="flex justify-between"><span class="text-gray-400 font-medium text-[13px]">SN/Ref</span><span class="text-white font-bold text-[13px]">${item.id}</span></div>
         </div>
-        
-        <button onclick="komplainTopup('${item.nominal}', '${item.date}', '${rawStatus}')" class="w-full py-3.5 bg-[#ef4444] hover:bg-[#dc2626] text-white font-extrabold rounded-[12px] mb-3 transition-colors text-[14px]">
-            Hubungi Admin (Komplain)
-        </button>
-        <button onclick="Swal.close()" class="w-full py-3.5 bg-transparent border border-[#334155] text-white hover:bg-[#1a2639] font-extrabold rounded-[12px] transition-colors text-[14px]">
-            Tutup
-        </button>
+        <button onclick="komplainTopup('${item.nominal}', '${item.date}', '${rawStatus}')" class="w-full py-3.5 bg-[#ef4444] hover:bg-[#dc2626] text-white font-extrabold rounded-[12px] mb-3 transition-colors text-[14px]">Hubungi Admin (Komplain)</button>
+        <button onclick="Swal.close()" class="w-full py-3.5 bg-transparent border border-[#334155] text-white hover:bg-[#1a2639] font-extrabold rounded-[12px] transition-colors text-[14px]">Tutup</button>
         `;
-
-        Swal.fire({
-            html: htmlContent,
-            showConfirmButton: false,
-            background: '#111c2e', 
-            customClass: { popup: 'custom-swal-bg' },
-            padding: 0
-        });
+        Swal.fire({ html: htmlContent, showConfirmButton: false, background: '#111c2e', customClass: { popup: 'custom-swal-bg' }, padding: 0 });
     }
   </script>
 </body>
@@ -2661,7 +2623,7 @@ cat << 'EOF' > public/riwayat.html
             </div>`;
         } else {
             c.innerHTML = filtered.map((i) => {
-                // WARNA BADGE CLONE OUTLINE PURE MAIZE (Sesuai Foto bos)
+                // WARNA BADGE CLONE OUTLINE PURE MAIZE
                 let sc = '';
                 if(i.status === 'Gagal') {
                     sc = 'text-red-400 border border-red-500/50 bg-red-500/10';
@@ -2702,7 +2664,7 @@ cat << 'EOF' > public/riwayat.html
         window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(msg), '_blank');
     }
 
-    // POPUP DETAIL MEWAH (PURE MAIZE)
+    // POPUP DETAIL MEWAH
     window.showDetailTrx = function(idx) {
       const i = allTrx[idx];
       let rawStatus = i.status.toLowerCase();
@@ -2755,7 +2717,7 @@ cat << 'EOF' > public/riwayat.html
 EOF
 
 echo "[PART 4 SELESAI DITULIS. TINGGAL PART 5, 6, 7 (BACKEND & VPS MENU)!]"
-echo "[5/7] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V160)..."
+echo "[5/7] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V161 AUTO GOPAY)..."
 
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
@@ -2767,7 +2729,6 @@ const path = require('path');
 const axios = require('axios');
 const crypto = require('crypto');
 const FormData = require('form-data');
-const multer = require('multer');
 const { exec } = require('child_process');
 
 const app = express();
@@ -2778,6 +2739,11 @@ const app = express();
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// MENGATASI BUG CANNOT GET / SECARA PERMANEN
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // ==========================================
 // DATABASE & KONFIGURASI FILE
@@ -2821,49 +2787,34 @@ if (!fs.existsSync(infoFile)) saveJSON(infoFile, []);
 // ==========================================
 function isMaintenance() {
     const now = new Date();
-    // Menggunakan waktu lokal server
     const h = now.getHours();
     const m = now.getMinutes();
-    
-    if (h >= 23 || (h === 0 && m <= 30)) {
-        return true;
-    }
+    if (h >= 23 || (h === 0 && m <= 30)) { return true; }
     return false;
 }
-
 
 // ==========================================
 // 3 BOT TELEGRAM LOGIC (SUPER DETAIL)
 // ==========================================
 const sendTeleNotif = async (message, type = 'trx') => {
     let cfg = loadJSON(configFile);
-    let token = ''; 
-    let chatId = '';
+    let token = ''; let chatId = '';
 
     if (type === 'trx') { 
-        token = cfg.teleTokenTrx || cfg.teleToken; 
-        chatId = cfg.teleChatIdTrx || cfg.teleChatId; 
+        token = cfg.teleTokenTrx || cfg.teleToken; chatId = cfg.teleChatIdTrx || cfg.teleChatId; 
     } else if (type === 'topup') { 
-        token = cfg.teleTokenTopup || cfg.teleToken; 
-        chatId = cfg.teleChatIdTopup || cfg.teleChatId; 
+        token = cfg.teleTokenTopup || cfg.teleToken; chatId = cfg.teleChatIdTopup || cfg.teleChatId; 
     } else if (type === 'backup') { 
-        token = cfg.teleTokenBackup || cfg.teleToken; 
-        chatId = cfg.teleChatIdBackup || cfg.teleChatId; 
+        token = cfg.teleTokenBackup || cfg.teleToken; chatId = cfg.teleChatIdBackup || cfg.teleChatId; 
     }
 
-    if (!token || !chatId) {
-        return; // ABAIKAN JIKA BELUM DISETTING
-    }
+    if (!token || !chatId) return;
 
     try {
         await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, { 
-            chat_id: chatId, 
-            text: message, 
-            parse_mode: 'Markdown' 
+            chat_id: chatId, text: message, parse_mode: 'Markdown' 
         });
-    } catch(e) { 
-        console.log("❌ Gagal Mengirim Notifikasi Telegram: ", e.message); 
-    }
+    } catch(e) {}
 };
 
 // ==========================================
@@ -2875,426 +2826,130 @@ app.get('/api/config', (req, res) => {
         banners: cfg.banners || [], 
         qrisUrl: cfg.qrisUrl || '',
         linkTele: cfg.linkTele || 'https://t.me/digitalfikystore_channel',
-        linkWa: cfg.linkWa || 'https://whatsapp.com/channel/digitalfikystore'
+        linkWa: cfg.linkWa || 'https://whatsapp.com/channel/digitalfikystore',
+        bhmGopayNumber: cfg.bhmGopayNumber || 'Belum Diatur Admin'
     }); 
 });
 
-app.get('/api/info', (req, res) => { 
-    res.json({ 
-        info: loadJSON(infoFile) 
-    }); 
-});
+app.get('/api/info', (req, res) => { res.json({ info: loadJSON(infoFile) }); });
+app.post('/api/user/balance', (req, res) => { let db = loadJSON(dbFile); res.json({ saldo: db[req.body.phone]?.saldo || 0 }); });
+app.post('/api/user/mutasi', (req, res) => { let db = loadJSON(dbFile); res.json({ mutasi: db[req.body.phone]?.mutasi || [] }); });
+app.post('/api/user/transactions', (req, res) => { let db = loadJSON(dbFile); res.json({ transactions: db[req.body.phone]?.transactions || [] }); });
 
-app.post('/api/user/balance', (req, res) => { 
-    let db = loadJSON(dbFile);
-    let phone = req.body.phone;
-    let saldo = db[phone]?.saldo || 0;
-    res.json({ saldo: saldo }); 
-});
-
-app.post('/api/user/mutasi', (req, res) => { 
-    let db = loadJSON(dbFile);
-    let phone = req.body.phone;
-    let mutasi = db[phone]?.mutasi || [];
-    res.json({ mutasi: mutasi }); 
-});
-
-app.post('/api/user/transactions', (req, res) => { 
-    let db = loadJSON(dbFile);
-    let phone = req.body.phone;
-    let transactions = db[phone]?.transactions || [];
-    res.json({ transactions: transactions }); 
-});
-
-// ==========================================
-// API STATISTIK GLOBAL SELURUH TOKO (4 TIER)
-// ==========================================
 app.get('/api/global-stats', (req, res) => {
-    let db = loadJSON(dbFile);
-    let now = new Date();
-    
-    // Format tanggal sesuai WIB
+    let db = loadJSON(dbFile); let now = new Date();
     let todayStr = now.toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }).split(' ')[0]; 
-    
-    let startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - now.getDay()); 
-    
+    let startOfWeek = new Date(now); startOfWeek.setDate(now.getDate() - now.getDay()); 
     let tToday = 0, tWeek = 0, tMonth = 0, tAll = 0;
     
     for (let phone in db) {
         let userTrx = db[phone].transactions || [];
-        
         userTrx.forEach(trx => {
-            // Hanya hitung yang Sukses atau Proses
             if(trx.status === 'Sukses' || trx.status === 'Proses') {
                 tAll++; 
-                
-                // Parser Tanggal 
-                let trxDateStr = trx.date.split(',')[0].split(' ')[0]; 
-                let dParts = trxDateStr.split('/');
+                let trxDateStr = trx.date.split(',')[0].split(' ')[0]; let dParts = trxDateStr.split('/');
                 let trxDateObj = new Date(dParts[2], parseInt(dParts[1])-1, dParts[0]);
-
-                if(trxDateStr === todayStr) {
-                    tToday++;
-                }
-                if(trxDateObj >= startOfWeek && trxDateObj <= now) {
-                    tWeek++;
-                }
-                if(trxDateObj.getMonth() === now.getMonth() && trxDateObj.getFullYear() === now.getFullYear()) {
-                    tMonth++;
-                }
+                if(trxDateStr === todayStr) tToday++;
+                if(trxDateObj >= startOfWeek && trxDateObj <= now) tWeek++;
+                if(trxDateObj.getMonth() === now.getMonth() && trxDateObj.getFullYear() === now.getFullYear()) tMonth++;
             }
         });
     }
-    
     res.json({ today: tToday, week: tWeek, month: tMonth, all: tAll });
 });
 
 app.post('/api/admin/broadcast', (req, res) => {
-    const { judul, message } = req.body;
-    let infoData = loadJSON(infoFile);
-    
-    infoData.push({ 
-        judul: judul || "📢 PENGUMUMAN RESMI", 
-        isi: message, 
-        date: new Date().toLocaleString('id-ID') 
-    });
-    
-    saveJSON(infoFile, infoData);
-    res.json({ success: true, message: "Broadcast ditambahkan ke Pusat Informasi." });
+    const { judul, message } = req.body; let infoData = loadJSON(infoFile);
+    infoData.push({ judul: judul || "📢 PENGUMUMAN RESMI", isi: message, date: new Date().toLocaleString('id-ID') });
+    saveJSON(infoFile, infoData); res.json({ success: true, message: "Broadcast ditambahkan ke Pusat Informasi." });
 });
 
 // ==========================================
 // PULL CATALOG DIGIFLAZZ & PRODUK LOKAL
 // ==========================================
 app.post('/api/products', async (req, res) => {
-    const { type, brand, category } = req.body;
-    let config = loadJSON(configFile);
-    let digiCache = loadJSON(digiCacheFile); 
-    let filtered = [];
-    
-    // FETCH DARI DIGIFLAZZ JIKA DISETTING
+    const { type, brand, category } = req.body; let config = loadJSON(configFile); let digiCache = loadJSON(digiCacheFile); let filtered = [];
     if (config.digiUser && config.digiKey) {
         let timeDiff = Date.now() - digiCache.time;
-        
-        // CACHE 5 MENIT AGAR TIDAK SPAM API DIGIFLAZZ
         if (timeDiff > 300000 || !digiCache.data || digiCache.data.length === 0) { 
             try {
                 let sign = crypto.createHash('md5').update(config.digiUser + config.digiKey + "pricelist").digest('hex');
-                let digiRes = await axios.post('https://api.digiflazz.com/v1/price-list', { 
-                    cmd: 'prepaid', 
-                    username: config.digiUser, 
-                    sign: sign 
-                }, { timeout: 8000 });
-                
-                if (digiRes.data && digiRes.data.data) {
-                    digiCache.data = digiRes.data.data; 
-                    digiCache.time = Date.now(); 
-                    saveJSON(digiCacheFile, digiCache); 
-                }
-            } catch(e) {
-                console.log("⚠️ [DIGIFLAZZ API] Timeout/Gagal Fetch Katalog.");
-                digiCache.time = Date.now(); 
-                saveJSON(digiCacheFile, digiCache);
-            }
+                let digiRes = await axios.post('https://api.digiflazz.com/v1/price-list', { cmd: 'prepaid', username: config.digiUser, sign: sign }, { timeout: 8000 });
+                if (digiRes.data && digiRes.data.data) { digiCache.data = digiRes.data.data; digiCache.time = Date.now(); saveJSON(digiCacheFile, digiCache); }
+            } catch(e) { digiCache.time = Date.now(); saveJSON(digiCacheFile, digiCache); }
         }
-        
-        let products = digiCache.data || [];
-        const safeBrand = brand ? brand.toLowerCase() : '';
-        
-        // LOGIKA FILTER PRODUK
-        if (type === 'pulsa') { 
-            filtered = products.filter(p => p.category === 'Pulsa' && p.brand.toLowerCase() === safeBrand); 
-        } else if (type === 'data') {
-            filtered = products.filter(p => p.category === 'Data' && p.brand.toLowerCase() === safeBrand);
-            if (category) {
-                const keywords = category.toLowerCase().split(' ');
-                filtered = filtered.filter(p => keywords.every(kw => p.product_name.toLowerCase().includes(kw)));
-            }
-        } else if (type === 'ewallet' || type === 'etoll') { 
-            filtered = products.filter(p => p.category === 'E-Money' && p.brand.toLowerCase().includes(safeBrand)); 
-        } else if (type === 'game') { 
-            filtered = products.filter(p => p.category === 'Games' && p.brand.toLowerCase() === safeBrand); 
-            if (category) {
-                const isWDP = category.toLowerCase().includes('weekly') || category.toLowerCase().includes('pass');
-                const isMember = category.toLowerCase().includes('member');
-                
-                if (isWDP || isMember) {
-                    filtered = filtered.filter(p => p.product_name.toLowerCase().includes('pass') || p.product_name.toLowerCase().includes('weekly') || p.product_name.toLowerCase().includes('member'));
-                } else {
-                    filtered = filtered.filter(p => !p.product_name.toLowerCase().includes('pass') && !p.product_name.toLowerCase().includes('weekly') && !p.product_name.toLowerCase().includes('member'));
-                }
-            }
-        } else if (type === 'pln') { 
-            filtered = products.filter(p => p.category === 'PLN'); 
-        } else if (type === 'masaaktif') { 
-            filtered = products.filter(p => p.category === 'Masa Aktif' && p.brand.toLowerCase() === safeBrand); 
-        } else if (type === 'voucher') { 
-            filtered = products.filter(p => p.category === 'Voucher' && p.brand.toLowerCase() === safeBrand); 
-        } else if (type === 'perdana') { 
-            filtered = products.filter(p => p.category === 'Perdana' && p.brand.toLowerCase() === safeBrand); 
-        } else if (type === 'smstelpon') {
-            filtered = products.filter(p => p.category === 'Paket SMS & Nelpon' && p.brand.toLowerCase() === safeBrand); 
-        }
+        let products = digiCache.data || []; const safeBrand = brand ? brand.toLowerCase() : '';
+        if (type === 'pulsa') { filtered = products.filter(p => p.category === 'Pulsa' && p.brand.toLowerCase() === safeBrand); } 
+        else if (type === 'data') { filtered = products.filter(p => p.category === 'Data' && p.brand.toLowerCase() === safeBrand); if (category) { const kw = category.toLowerCase().split(' '); filtered = filtered.filter(p => kw.every(k => p.product_name.toLowerCase().includes(k))); } } 
+        else if (type === 'ewallet' || type === 'etoll') { filtered = products.filter(p => p.category === 'E-Money' && p.brand.toLowerCase().includes(safeBrand)); } 
+        else if (type === 'game') { filtered = products.filter(p => p.category === 'Games' && p.brand.toLowerCase() === safeBrand); if (category) { const isWDP = category.toLowerCase().includes('weekly') || category.toLowerCase().includes('pass'); const isMember = category.toLowerCase().includes('member'); if (isWDP || isMember) { filtered = filtered.filter(p => p.product_name.toLowerCase().includes('pass') || p.product_name.toLowerCase().includes('weekly') || p.product_name.toLowerCase().includes('member')); } else { filtered = filtered.filter(p => !p.product_name.toLowerCase().includes('pass') && !p.product_name.toLowerCase().includes('weekly') && !p.product_name.toLowerCase().includes('member')); } } } 
+        else if (type === 'pln') { filtered = products.filter(p => p.category === 'PLN'); } 
+        else if (type === 'masaaktif') { filtered = products.filter(p => p.category === 'Masa Aktif' && p.brand.toLowerCase() === safeBrand); } 
+        else if (type === 'voucher') { filtered = products.filter(p => p.category === 'Voucher' && p.brand.toLowerCase() === safeBrand); } 
+        else if (type === 'perdana') { filtered = products.filter(p => p.category === 'Perdana' && p.brand.toLowerCase() === safeBrand); } 
+        else if (type === 'smstelpon') { filtered = products.filter(p => p.category === 'Paket SMS & Nelpon' && p.brand.toLowerCase() === safeBrand); }
     }
 
-    // LOGIKA 14 TIER MARKUP (GOD MODE)
-    let markupRules = config.markupRules || { 
-        m1: 0, m2: 0, m3: 0, m4: 0, m5: 0, m6: 0, m7: 0, m8: 0, m9: 0, m10: 0, m11: 0, m12: 0, m13: 0, m14: 0 
-    };
+    let markupRules = config.markupRules || { m1:0, m2:0, m3:0, m4:0, m5:0, m6:0, m7:0, m8:0, m9:0, m10:0, m11:0, m12:0, m13:0, m14:0 };
+    let getMarkup = (price) => { if(price<=100)return markupRules.m1; if(price<=500)return markupRules.m2; if(price<=1000)return markupRules.m3; if(price<=3000)return markupRules.m4; if(price<=5000)return markupRules.m5; if(price<=10000)return markupRules.m6; if(price<=15000)return markupRules.m7; if(price<=25000)return markupRules.m8; if(price<=50000)return markupRules.m9; if(price<=70000)return markupRules.m10; if(price<=100000)return markupRules.m11; if(price<=120000)return markupRules.m12; if(price<=150000)return markupRules.m13; return markupRules.m14; };
     
-    let getMarkup = (price) => {
-        if (price <= 100) return markupRules.m1;
-        if (price <= 500) return markupRules.m2;
-        if (price <= 1000) return markupRules.m3;
-        if (price <= 3000) return markupRules.m4;
-        if (price <= 5000) return markupRules.m5;
-        if (price <= 10000) return markupRules.m6;
-        if (price <= 15000) return markupRules.m7;
-        if (price <= 25000) return markupRules.m8;
-        if (price <= 50000) return markupRules.m9;
-        if (price <= 70000) return markupRules.m10;
-        if (price <= 100000) return markupRules.m11;
-        if (price <= 120000) return markupRules.m12;
-        if (price <= 150000) return markupRules.m13;
-        return markupRules.m14;
-    };
-
-    // GABUNGKAN DENGAN PRODUK LOKAL VPS
     let localProducts = loadJSON(localProductsFile);
-    let myLocals = localProducts.filter(p => {
-        if (p.type !== type) return false;
-        
-        if (brand && p.brand) { 
-            if (p.brand.toLowerCase() !== brand.toLowerCase()) return false; 
-        } else if (brand && !p.brand) { 
-            return false; 
-        }
-        
-        if ((type === 'data' || type === 'game') && category) {
-            if (p.category && p.category.toLowerCase().trim() === category.toLowerCase().trim()) return true;
-            let kw = category.toLowerCase().split(' ');
-            return kw.every(k => p.name.toLowerCase().includes(k) || (p.category && p.category.toLowerCase().includes(k)));
-        }
-        return true;
-    });
-
-    let combined = [
-        ...filtered.map(p => ({
-            sku: p.buyer_sku_code, 
-            name: p.product_name, 
-            desc: p.desc, 
-            price: p.price + getMarkup(p.price), 
-            isLocal: false, 
-            // CEK STATUS DARI API DIGIFLAZZ (TRUE jika keduanya true, sebaliknya false = Gangguan)
-            is_open: (p.buyer_product_status === true && p.seller_product_status === true)
-        })),
-        ...myLocals.map(p => ({
-            sku: p.sku, 
-            name: p.name, 
-            desc: p.desc, 
-            price: p.price + getMarkup(p.price), 
-            isLocal: (p.isDigi === true) ? false : true, 
-            is_open: true 
-        }))
-    ];
+    let myLocals = localProducts.filter(p => { if (p.type !== type) return false; if (brand && p.brand) { if (p.brand.toLowerCase() !== brand.toLowerCase()) return false; } else if (brand && !p.brand) { return false; } if ((type === 'data' || type === 'game') && category) { if (p.category && p.category.toLowerCase().trim() === category.toLowerCase().trim()) return true; let kw = category.toLowerCase().split(' '); return kw.every(k => p.name.toLowerCase().includes(k) || (p.category && p.category.toLowerCase().includes(k))); } return true; });
     
-    combined.sort((a, b) => a.price - b.price); 
-    res.json({ data: combined });
+    let combined = [ ...filtered.map(p => ({ sku: p.buyer_sku_code, name: p.product_name, desc: p.desc, price: p.price + getMarkup(p.price), isLocal: false, is_open: (p.buyer_product_status === true && p.seller_product_status === true) })), ...myLocals.map(p => ({ sku: p.sku, name: p.name, desc: p.desc, price: p.price + getMarkup(p.price), isLocal: (p.isDigi === true) ? false : true, is_open: true })) ];
+    combined.sort((a, b) => a.price - b.price); res.json({ data: combined });
 });
 
 // ==========================================
-// TRANSAKSI LOGIC (SANGAT DETAIL)
+// TRANSAKSI LOGIC
 // ==========================================
 app.post('/api/transaction/create', async (req, res) => {
     try {
         const { phone, target, sku, name, price, isLocal } = req.body;
+        if (isMaintenance()) return res.status(400).json({ error: 'Sistem sedang Maintenance Otomatis. Transaksi ditutup sementara.' });
+        let db = loadJSON(dbFile); let config = loadJSON(configFile); let webUsers = loadJSON(webUsersFile); let uData = webUsers[phone] || { name: 'Unknown', email: 'Unknown' };
+        if (!db[phone]) return res.status(400).json({ error: 'Akun tidak ditemukan.' });
+        if (db[phone].saldo < price) return res.status(400).json({ error: 'Saldo tidak mencukupi.' });
         
-        // CEK MAINTENANCE DULU
-        if (isMaintenance()) {
-            return res.status(400).json({ error: 'Sistem sedang Maintenance Otomatis (23:00 - 00:30 WIB). Transaksi ditutup sementara.' });
-        }
-        
-        let db = loadJSON(dbFile); 
-        let config = loadJSON(configFile); 
-        let webUsers = loadJSON(webUsersFile);
-        let uData = webUsers[phone] || { name: 'Unknown', email: 'Unknown' };
+        if (!db[phone].mutasi) db[phone].mutasi = []; if (!db[phone].transactions) db[phone].transactions = [];
+        db[phone].saldo -= price; let ref_id = 'TRX' + Date.now(); let dateStr = new Date().toLocaleString('id-ID'); let trxStatus = 'Proses'; let sn_ref = '';
 
-        if (!db[phone]) {
-            return res.status(400).json({ error: 'Akun tidak ditemukan.' });
-        }
-        if (db[phone].saldo < price) {
-            return res.status(400).json({ error: 'Saldo tidak mencukupi.' });
-        }
-
-        if (!db[phone].mutasi) db[phone].mutasi = []; 
-        if (!db[phone].transactions) db[phone].transactions = [];
-
-        // POTONG SALDO DIAWAL
-        db[phone].saldo -= price;
-        let ref_id = 'TRX' + Date.now(); 
-        let dateStr = new Date().toLocaleString('id-ID');
-        let trxStatus = 'Proses'; 
-        let sn_ref = '';
-
-        // TEMBAK KE DIGIFLAZZ JIKA BUKAN PRODUK LOKAL
         if (!isLocal && config.digiUser && config.digiKey) {
             try {
-                let sign = crypto.createHash('md5').update(config.digiUser + config.digiKey + ref_id).digest('hex');
-                let isDev = (config.digiKey || '').toLowerCase().startsWith('dev');
-                
-                let digiPayload = { 
-                    username: config.digiUser, 
-                    buyer_sku_code: sku, 
-                    customer_no: target, 
-                    ref_id: ref_id, 
-                    sign: sign 
-                };
-                
-                if (isDev) digiPayload.testing = true;
-
-                let digiRes = await axios.post('https://api.digiflazz.com/v1/transaction', digiPayload, { timeout: 8000 });
-                let digiData = digiRes.data.data;
-
-                if (digiData.status === 'Gagal') {
-                    // KEMBALIKAN SALDO
-                    db[phone].saldo += price; 
-                    saveJSON(dbFile, db); 
-                    return res.status(400).json({ error: digiData.message || 'Gagal dari provider.' });
-                } else if (digiData.status === 'Sukses') { 
-                    trxStatus = 'Sukses'; 
-                    sn_ref = digiData.sn || ''; 
-                } else { 
-                    trxStatus = 'Proses'; 
-                    sn_ref = digiData.sn || ''; 
-                }
-            } catch(e) {
-                // JIKA TIMEOUT, KEMBALIKAN SALDO OTOMATIS
-                db[phone].saldo += price; 
-                saveJSON(dbFile, db);
-                return res.status(400).json({ error: 'Koneksi ke Digiflazz Timeout. Saldo dikembalikan otomatis.' });
-            }
+                let sign = crypto.createHash('md5').update(config.digiUser + config.digiKey + ref_id).digest('hex'); let isDev = (config.digiKey || '').toLowerCase().startsWith('dev');
+                let digiPayload = { username: config.digiUser, buyer_sku_code: sku, customer_no: target, ref_id: ref_id, sign: sign }; if (isDev) digiPayload.testing = true;
+                let digiRes = await axios.post('https://api.digiflazz.com/v1/transaction', digiPayload, { timeout: 8000 }); let digiData = digiRes.data.data;
+                if (digiData.status === 'Gagal') { db[phone].saldo += price; saveJSON(dbFile, db); return res.status(400).json({ error: digiData.message || 'Gagal dari provider.' }); } 
+                else if (digiData.status === 'Sukses') { trxStatus = 'Sukses'; sn_ref = digiData.sn || ''; } else { trxStatus = 'Proses'; sn_ref = digiData.sn || ''; }
+            } catch(e) { db[phone].saldo += price; saveJSON(dbFile, db); return res.status(400).json({ error: 'Koneksi ke Digiflazz Timeout. Saldo dikembalikan otomatis.' }); }
         }
         
-        // SIMPAN MUTASI & TRX
-        db[phone].mutasi.push({ 
-            id: ref_id, 
-            type: 'out', 
-            amount: price, 
-            desc: `Beli ${name}`, 
-            date: dateStr 
-        });
-        
-        db[phone].transactions.push({ 
-            id: ref_id, 
-            sku: sku, 
-            isLocal: isLocal, 
-            produk: name, 
-            nominal: price, 
-            no_tujuan: target, 
-            status: trxStatus, 
-            sn_ref: sn_ref, 
-            harga: price, 
-            date: dateStr 
-        });
-        
+        db[phone].mutasi.push({ id: ref_id, type: 'out', amount: price, desc: `Beli ${name}`, date: dateStr });
+        db[phone].transactions.push({ id: ref_id, sku: sku, isLocal: isLocal, produk: name, nominal: price, no_tujuan: target, status: trxStatus, sn_ref: sn_ref, harga: price, date: dateStr });
         saveJSON(dbFile, db);
         
-        // KIRIM NOTIF TELEGRAM KE ADMIN SAJA (WA BOT DIMATIKAN UNTUK TRX)
-        let msgTeleTrx = `🛒 *TRANSAKSI BARU (ORDER MASUK)* 🛒\n\n`;
-        msgTeleTrx += `👤 Nama: ${uData.name}\n`;
-        msgTeleTrx += `✉️ Email: ${uData.email}\n`;
-        msgTeleTrx += `📱 WA: ${phone}\n\n`;
-        msgTeleTrx += `📦 Produk: ${name}\n`;
-        msgTeleTrx += `📱 Tujuan: ${target}\n`;
-        msgTeleTrx += `💰 Harga: Rp ${price.toLocaleString('id-ID')}\n`;
-        msgTeleTrx += `🔄 Status: ${trxStatus}\n`;
-        msgTeleTrx += `🔖 Ref: ${ref_id}`;
-        
-        sendTeleNotif(msgTeleTrx, 'trx');
-        
-        res.json({ message: 'Transaksi berhasil diproses.' });
-    } catch (fatalErr) { 
-        res.status(500).json({ error: 'Terjadi kesalahan internal.' }); 
-    }
+        let msgTeleTrx = `🛒 *TRANSAKSI BARU (ORDER MASUK)* 🛒\n\n👤 Nama: ${uData.name}\n✉️ Email: ${uData.email}\n📱 WA: ${phone}\n\n📦 Produk: ${name}\n📱 Tujuan: ${target}\n💰 Harga: Rp ${price.toLocaleString('id-ID')}\n🔄 Status: ${trxStatus}\n🔖 Ref: ${ref_id}`;
+        sendTeleNotif(msgTeleTrx, 'trx'); res.json({ message: 'Transaksi berhasil diproses.' });
+    } catch (e) { res.status(500).json({ error: 'Terjadi kesalahan internal.' }); }
 });
 
 // INTERVAL PENGECEKAN STATUS TRANSAKSI DIGIFLAZZ (TIAP 20 DETIK)
 setInterval(async () => {
-    let db = loadJSON(dbFile); 
-    let config = loadJSON(configFile); 
-    let webUsers = loadJSON(webUsersFile); 
-    let changed = false;
-    
+    let db = loadJSON(dbFile); let config = loadJSON(configFile); let webUsers = loadJSON(webUsersFile); let changed = false;
     if (!config.digiUser || !config.digiKey) return;
-    
     for (let phone in db) {
-        let user = db[phone]; 
-        if (!user.transactions) continue;
-        
+        let user = db[phone]; if (!user.transactions) continue;
         let uData = webUsers[phone] || { name: 'Unknown', email: 'Unknown' };
-        
         for (let i = 0; i < user.transactions.length; i++) {
             let trx = user.transactions[i];
-            
             if (trx.status === 'Proses' && !trx.isLocal && trx.sku) {
                 try {
                     let sign = crypto.createHash('md5').update(config.digiUser + config.digiKey + trx.id).digest('hex');
-                    let isDev = (config.digiKey || '').toLowerCase().startsWith('dev');
-                    
-                    let digiPayload = { 
-                        username: config.digiUser, 
-                        buyer_sku_code: trx.sku, 
-                        customer_no: trx.no_tujuan, 
-                        ref_id: trx.id, 
-                        sign: sign 
-                    };
-                    
-                    if (isDev) digiPayload.testing = true;
-
-                    let digiRes = await axios.post('https://api.digiflazz.com/v1/transaction', digiPayload, { timeout: 10000 });
-                    let digiData = digiRes.data.data;
-                    
-                    if (digiData.status === 'Sukses') {
-                        trx.status = 'Sukses'; 
-                        trx.sn_ref = digiData.sn || trx.sn_ref; 
-                        changed = true;
-                        
-                        // HANYA TELEGRAM NOTIF (WA DIMATIKAN)
-                        let msgTeleSukses = `✅ *UPDATE: TRANSAKSI SUKSES* ✅\n\n`;
-                        msgTeleSukses += `👤 Nama: ${uData.name}\n`;
-                        msgTeleSukses += `📱 WA: ${phone}\n`;
-                        msgTeleSukses += `📦 Produk: ${trx.produk}\n`;
-                        msgTeleSukses += `📱 Tujuan: ${trx.no_tujuan}\n`;
-                        msgTeleSukses += `🔖 SN: ${trx.sn_ref}`;
-                        sendTeleNotif(msgTeleSukses, 'trx');
-
-                    } else if (digiData.status === 'Gagal') {
-                        trx.status = 'Gagal'; 
-                        trx.sn_ref = digiData.sn || digiData.message || 'Gagal Pusat';
-                        user.saldo += trx.harga; 
-                        
-                        user.mutasi.push({ 
-                            id: 'REF'+Date.now(), 
-                            type: 'in', 
-                            amount: trx.harga, 
-                            desc: `Refund: ${trx.produk}`, 
-                            date: new Date().toLocaleString('id-ID') 
-                        }); 
-                        changed = true;
-                        
-                        // HANYA TELEGRAM NOTIF (WA DIMATIKAN)
-                        let msgTeleGagal = `❌ *UPDATE: TRANSAKSI GAGAL (REFUND)* ❌\n\n`;
-                        msgTeleGagal += `👤 Nama: ${uData.name}\n`;
-                        msgTeleGagal += `📱 WA: ${phone}\n`;
-                        msgTeleGagal += `📦 Produk: ${trx.produk}\n`;
-                        msgTeleGagal += `📱 Tujuan: ${trx.no_tujuan}\n`;
-                        msgTeleGagal += `⚠️ Alasan: ${digiData.message || 'Gagal Pusat'}`;
-                        sendTeleNotif(msgTeleGagal, 'trx');
-                    }
-                } catch(e) {
-                    console.log("Error Cronjob Digiflazz:", e.message);
-                }
+                    let digiPayload = { username: config.digiUser, buyer_sku_code: trx.sku, customer_no: trx.no_tujuan, ref_id: trx.id, sign: sign };
+                    let digiRes = await axios.post('https://api.digiflazz.com/v1/transaction', digiPayload, { timeout: 10000 }); let digiData = digiRes.data.data;
+                    if (digiData.status === 'Sukses') { trx.status = 'Sukses'; trx.sn_ref = digiData.sn || trx.sn_ref; changed = true; sendTeleNotif(`✅ *UPDATE: TRANSAKSI SUKSES* ✅\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n🔖 SN: ${trx.sn_ref}`, 'trx'); } 
+                    else if (digiData.status === 'Gagal') { trx.status = 'Gagal'; trx.sn_ref = digiData.sn || digiData.message || 'Gagal Pusat'; user.saldo += trx.harga; user.mutasi.push({ id: 'REF'+Date.now(), type: 'in', amount: trx.harga, desc: `Refund: ${trx.produk}`, date: new Date().toLocaleString('id-ID') }); changed = true; sendTeleNotif(`❌ *UPDATE: TRANSAKSI GAGAL (REFUND)* ❌\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n⚠️ Alasan: ${digiData.message || 'Gagal Pusat'}`, 'trx'); }
+                } catch(e) {}
             }
         }
     }
@@ -3302,521 +2957,223 @@ setInterval(async () => {
 }, 20000); 
 
 // ==========================================
-// FUNGSI AUTO BACKUP TELEGRAM
+// 💰 FUNGSI AUTO-GOPAY CHECKER (BHM API) 💰
 // ==========================================
-function startAutoBackup() {
+setInterval(async () => {
+    let db = loadJSON(dbFile);
     let config = loadJSON(configFile);
-    let t = config.teleTokenBackup || config.teleToken;
-    let c = config.teleChatIdBackup || config.teleChatId;
-    
-    if (!t || !c || !config.autoBackupHours || config.autoBackupHours <= 0) {
-        return;
+    let webUsers = loadJSON(webUsersFile);
+    let changed = false;
+
+    // Jika Token API BHM belum disetting, lewati
+    if (!config.bhmToken) return;
+
+    let pendingGopay = [];
+    for (let phone in db) {
+        if (db[phone].topup) {
+            db[phone].topup.forEach(t => {
+                if (t.status === 'Proses' && t.method === 'GoPay Otomatis') {
+                    pendingGopay.push({ phone, topup: t });
+                }
+            });
+        }
     }
-    
-    let intervalMs = config.autoBackupHours * 60 * 60 * 1000; 
-    
+
+    if (pendingGopay.length > 0) {
+        try {
+            // Hit BHM API Endpoint
+            let res = await axios.get('http://gopay.bhm.biz.id/api/transactions', {
+                headers: { 'Authorization': `Bearer ${config.bhmToken}` },
+                timeout: 10000
+            });
+            
+            let txs = res.data.data || res.data || [];
+            
+            for (let p of pendingGopay) {
+                let targetNominal = parseInt(p.topup.nominal);
+                
+                // Cari transaksi mutasi masuk (credit) yang nominalnya pas
+                let matchTx = txs.find(tx => {
+                    let amount = parseInt(tx.amount); // Parse 50000.00 jadi 50000
+                    let isCredit = (tx.type && tx.type.toLowerCase() === 'credit') || parseFloat(tx.amount) > 0;
+                    return amount === targetNominal && isCredit;
+                });
+
+                if (matchTx) {
+                    if (!config.processedGopay) config.processedGopay = [];
+                    
+                    // Mencegah double mutasi jika ID transaksi BHM sudah pernah diproses
+                    if (!config.processedGopay.includes(matchTx.transaction_id)) {
+                        config.processedGopay.push(matchTx.transaction_id);
+                        if(config.processedGopay.length > 500) config.processedGopay.shift(); // Jaga biar gak kegedean
+                        saveJSON(configFile, config);
+
+                        // Eksekusi Sukses
+                        p.topup.status = 'Sukses';
+                        db[p.phone].saldo += targetNominal;
+                        db[p.phone].mutasi.push({
+                            id: 'TU' + Date.now(),
+                            type: 'in',
+                            amount: targetNominal,
+                            desc: 'Topup GoPay Otomatis',
+                            date: new Date().toLocaleString('id-ID')
+                        });
+                        changed = true;
+
+                        let uData = webUsers[p.phone] || {name: 'Unknown'};
+                        sendTeleNotif(`✅ *TOP UP GOPAY OTOMATIS BERHASIL*\n\n👤 Nama: ${uData.name}\n📱 WA: ${p.phone}\n💰 Masuk: Rp ${targetNominal.toLocaleString('id-ID')}\n🔖 Ref BHM: ${matchTx.transaction_id}`, 'topup');
+                    }
+                }
+            }
+        } catch (e) {
+            console.log("⚠️ Gagal cek mutasi GoPay BHM API:", e.message);
+        }
+    }
+
+    if (changed) saveJSON(dbFile, db);
+}, 30000); // Ngecek setiap 30 Detik!
+
+// FUNGSI AUTO BACKUP TELEGRAM
+function startAutoBackup() {
+    let config = loadJSON(configFile); let t = config.teleTokenBackup || config.teleToken; let c = config.teleChatIdBackup || config.teleChatId;
+    if (!t || !c || !config.autoBackupHours || config.autoBackupHours <= 0) return;
     setInterval(() => {
         let zipName = `AutoBackup_FikyStore_${Date.now()}.zip`;
-        exec(`zip -r ${zipName} database.json web_users.json config.json local_products.json info.json`, async (error) => {
-            if (!error) {
-                const form = new FormData();
-                form.append('chat_id', c);
-                form.append('caption', `⏳ *AUTO BACKUP (${config.autoBackupHours} Jam)*\n\nTanggal: ${new Date().toLocaleString('id-ID')}`);
-                form.append('document', fs.createReadStream(zipName));
-                
-                try { 
-                    await axios.post(`https://api.telegram.org/bot${t}/sendDocument`, form, { headers: form.getHeaders() }); 
-                } catch(e) {
-                    console.log("Gagal Auto Backup Telegram");
-                }
-                
-                fs.unlinkSync(zipName);
-            }
+        exec(`zip -r ${zipName} database.json web_users.json config.json local_products.json info.json`, async (err) => {
+            if (!err) { const form = new FormData(); form.append('chat_id', c); form.append('caption', `⏳ *AUTO BACKUP (${config.autoBackupHours} Jam)*\n\nTanggal: ${new Date().toLocaleString('id-ID')}`); form.append('document', fs.createReadStream(zipName)); try { await axios.post(`https://api.telegram.org/bot${t}/sendDocument`, form, { headers: form.getHeaders() }); } catch(e){} fs.unlinkSync(zipName); }
         });
-    }, intervalMs);
+    }, config.autoBackupHours * 60 * 60 * 1000);
 }
-
 setTimeout(startAutoBackup, 15000); 
 
-// ==========================================
 // API TOPUP LOGIC
-// ==========================================
 app.post('/api/topup/request', (req, res) => {
-    const { phone, method, nominal } = req.body; 
-    
-    // CEK MAINTENANCE DULU
-    if (isMaintenance()) {
-        return res.status(400).json({ error: 'Sistem sedang Maintenance Otomatis (23:00 - 00:30 WIB). Transaksi ditutup sementara.' });
-    }
-    
-    let db = loadJSON(dbFile);
-    let webUsers = loadJSON(webUsersFile);
-    let uData = webUsers[phone] || { name: 'Unknown', email: 'Unknown' };
-
-    if (!db[phone]) {
-        db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] };
-    }
-    
+    const { phone, method, nominal } = req.body; if (isMaintenance()) return res.status(400).json({ error: 'Sistem sedang Maintenance Otomatis.' });
+    let db = loadJSON(dbFile); let webUsers = loadJSON(webUsersFile); let uData = webUsers[phone] || { name: 'Unknown', email: 'Unknown' };
+    if (!db[phone]) db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] };
     if (!db[phone].topup) db[phone].topup = [];
     
-    const expiry = method === 'QRIS Otomatis' ? Date.now() + 5*60*1000 : null; 
+    // Kadaluwarsa 5 menit (QRIS), atau 10 menit (GoPay)
+    let expiry = null;
+    if (method === 'QRIS Otomatis') expiry = Date.now() + 5*60*1000;
+    if (method === 'GoPay Otomatis') expiry = Date.now() + 10*60*1000;
+
     let dateStr = new Date().toLocaleString('id-ID');
+    const newTopup = { id: 'TU' + Date.now(), method: method, nominal: nominal, status: 'Proses', date: dateStr, expiry: expiry };
+    db[phone].topup.push(newTopup); saveJSON(dbFile, db); 
     
-    const newTopup = { 
-        id: 'TU' + Date.now(), 
-        method: method, 
-        nominal: nominal, 
-        status: 'Proses', 
-        date: dateStr, 
-        expiry: expiry 
-    };
-    
-    db[phone].topup.push(newTopup); 
-    saveJSON(dbFile, db); 
-
-    let kodeUnik = nominal % 1000;
-    let depositAsli = nominal - kodeUnik;
-    let saldoSebelum = db[phone].saldo;
-
-    let msgTopup = `⏳ *TOP UP MENUNGGU PEMBAYARAN* ⏳\n\n`;
-    msgTopup += `👤 Nama: ${uData.name}\n`;
-    msgTopup += `✉️ Email: ${uData.email}\n`;
-    msgTopup += `📱 WA: ${phone}\n`;
-    msgTopup += `⌚ Waktu: ${dateStr}\n`;
-    msgTopup += `🏦 Metode: ${method}\n\n`;
-    msgTopup += `💰 Jumlah Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n`;
-    msgTopup += `🎫 Kode Unik: ${kodeUnik}\n`;
-    msgTopup += `💵 Total Saldo Diterima: Rp ${nominal.toLocaleString('id-ID')}\n\n`;
-    msgTopup += `💳 *Riwayat Saldo*\n`;
-    msgTopup += `📉 Saldo Sebelum: Rp ${saldoSebelum.toLocaleString('id-ID')}\n`;
-    msgTopup += `📈 Saldo Sesudah: Rp ${saldoSebelum.toLocaleString('id-ID')} (Pending)`;
-    
-    sendTeleNotif(msgTopup, 'topup');
-    res.json({ message: 'Top up direkam' });
+    let kodeUnik = nominal % 1000; let depositAsli = nominal - kodeUnik; let saldoSebelum = db[phone].saldo;
+    let msgTopup = `⏳ *TOP UP MENUNGGU PEMBAYARAN* ⏳\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n⌚ Waktu: ${dateStr}\n🏦 Metode: ${method}\n💰 Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n🎫 Unik: ${kodeUnik}\n💵 Diterima: Rp ${nominal.toLocaleString('id-ID')}`;
+    sendTeleNotif(msgTopup, 'topup'); res.json({ message: 'Top up direkam' });
 });
 
 app.post('/api/topup/history', (req, res) => { 
-    let db = loadJSON(dbFile); 
-    let history = db[req.body.phone]?.topup || []; 
-    let changed = false; 
-    let now = Date.now();
-    
-    history.forEach(t => { 
-        if (t.status === 'Proses' && t.method === 'QRIS Otomatis' && t.expiry && now > t.expiry) { 
-            t.status = 'Expired'; 
-            changed = true; 
-        }
-    });
-    
-    if (changed) saveJSON(dbFile, db); 
-    res.json({ history: history }); 
+    let db = loadJSON(dbFile); let history = db[req.body.phone]?.topup || []; let changed = false; let now = Date.now();
+    history.forEach(t => { if (t.status === 'Proses' && (t.method === 'QRIS Otomatis' || t.method === 'GoPay Otomatis') && t.expiry && now > t.expiry) { t.status = 'Expired'; changed = true; } });
+    if (changed) saveJSON(dbFile, db); res.json({ history: history }); 
 });
 
-// ==========================================
-// API ADMIN
-// ==========================================
 app.get('/api/admin/backup', async (req, res) => {
-    let config = loadJSON(configFile);
-    let t = config.teleTokenBackup || config.teleToken;
-    let c = config.teleChatIdBackup || config.teleChatId;
-    
-    if(!t || !c) {
-        return res.status(400).json({ error: "Token/Chat ID Telegram Backup belum disetting." });
-    }
-    
-    try {
-        let zipName = `Backup_DigitalFikyStore_${Date.now()}.zip`;
-        exec(`zip -r ${zipName} database.json web_users.json config.json local_products.json info.json`, async (error) => {
-            if(error) return res.status(500).json({ error: "Gagal membuat file ZIP." });
-            
-            const form = new FormData();
-            form.append('chat_id', c);
-            form.append('caption', `📦 *BACKUP MANUAL BERHASIL*\n\nTanggal: ${new Date().toLocaleString('id-ID')}`);
-            form.append('parse_mode', 'Markdown');
-            form.append('document', fs.createReadStream(zipName));
-            
-            await axios.post(`https://api.telegram.org/bot${t}/sendDocument`, form, { headers: form.getHeaders() });
-            fs.unlinkSync(zipName);
-            res.json({ message: "Backup sukses terkirim ke Telegram!" });
-        });
-    } catch (e) { 
-        res.status(500).json({ error: "Gagal mengirim ke Telegram." }); 
-    }
+    let config = loadJSON(configFile); let t = config.teleTokenBackup || config.teleToken; let c = config.teleChatIdBackup || config.teleChatId;
+    if(!t || !c) return res.status(400).json({ error: "Token/Chat ID Telegram Backup belum disetting." });
+    let zipName = `Backup_DigitalFikyStore_${Date.now()}.zip`;
+    exec(`zip -r ${zipName} database.json web_users.json config.json local_products.json info.json`, async (err) => {
+        if(err) return res.status(500).json({ error: "Gagal membuat file ZIP." });
+        const form = new FormData(); form.append('chat_id', c); form.append('caption', `📦 *BACKUP MANUAL BERHASIL*`); form.append('document', fs.createReadStream(zipName));
+        try { await axios.post(`https://api.telegram.org/bot${t}/sendDocument`, form, { headers: form.getHeaders() }); fs.unlinkSync(zipName); res.json({ message: "Backup sukses!" }); } catch(e) { res.status(500).json({ error: "Gagal mengirim ke Telegram." }); }
+    });
 });
 
 app.post('/api/admin/balance', async (req, res) => {
-    const { identifier, amount, action } = req.body; 
-    let webUsers = loadJSON(webUsersFile); 
-    let db = loadJSON(dbFile); 
-    let targetPhone = null;
-    
-    if(identifier.includes('@')){
-        for(let p in webUsers){ 
-            if(webUsers[p].email === identifier){ 
-                targetPhone = p; 
-                break; 
-            } 
-        }
-    } else { 
-        targetPhone = identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier; 
-    }
-    
-    if(!targetPhone || !webUsers[targetPhone]) {
-        return res.json({ success: false, message: '\n❌ Member tidak ditemukan!' });
-    }
-
-    if(!db[targetPhone]) {
-        db[targetPhone] = { saldo: 0, jid: targetPhone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] };
-    }
-    
-    if(!db[targetPhone].mutasi) db[targetPhone].mutasi = [];
-    if(!db[targetPhone].topup) db[targetPhone].topup = [];
-    
-    let uData = webUsers[targetPhone];
-    let saldoSebelum = db[targetPhone].saldo;
+    const { identifier, amount, action } = req.body; let webUsers = loadJSON(webUsersFile); let db = loadJSON(dbFile); let targetPhone = identifier.includes('@') ? Object.keys(webUsers).find(p => webUsers[p].email === identifier) : (identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier);
+    if(!targetPhone || !webUsers[targetPhone]) return res.json({ success: false, message: '\n❌ Member tidak ditemukan!' });
+    if(!db[targetPhone]) db[targetPhone] = { saldo: 0, mutasi: [], topup: [], transactions: [] };
+    if(!db[targetPhone].mutasi) db[targetPhone].mutasi = []; if(!db[targetPhone].topup) db[targetPhone].topup = [];
     const dateStr = new Date().toLocaleString('id-ID');
-
-    if (action === 'add') {
-        db[targetPhone].saldo += parseInt(amount);
-        let saldoSesudah = db[targetPhone].saldo;
-        
-        db[targetPhone].mutasi.push({ 
-            id: 'TRX'+Date.now(), 
-            type: 'in', 
-            amount: parseInt(amount), 
-            desc: 'Penambahan oleh Admin', 
-            date: dateStr 
-        });
-        
-        db[targetPhone].topup.push({ 
-            id: 'TU'+Date.now(), 
-            method: 'Admin Fiky Store', 
-            nominal: parseInt(amount), 
-            status: 'Sukses', 
-            date: dateStr 
-        });
-        
-        saveJSON(dbFile, db);
-        
-        let msgAdd = `✅ *PEMBAYARAN DITERIMA (TOP UP BERHASIL)* ✅\n\n`;
-        msgAdd += `👤 Nama: ${uData.name}\n`;
-        msgAdd += `✉️ Email: ${uData.email}\n`;
-        msgAdd += `📱 WA: ${targetPhone}\n`;
-        msgAdd += `⌚ Waktu: ${dateStr}\n`;
-        msgAdd += `🏦 Metode: Admin Fiky Store\n\n`;
-        msgAdd += `💰 Total Saldo Masuk: Rp ${parseInt(amount).toLocaleString('id-ID')}\n\n`;
-        msgAdd += `💳 *Riwayat Saldo*\n`;
-        msgAdd += `📉 Saldo Sebelum: Rp ${saldoSebelum.toLocaleString('id-ID')}\n`;
-        msgAdd += `📈 Saldo Sesudah: Rp ${saldoSesudah.toLocaleString('id-ID')}`;
-        
-        sendTeleNotif(msgAdd, 'topup');
-        res.json({ success: true, message: `\n✅ Saldo ${webUsers[targetPhone].name} berhasil ditambah!` });
-        
-    } else if (action === 'reduce') {
-        db[targetPhone].saldo -= parseInt(amount);
-        db[targetPhone].mutasi.push({ 
-            id: 'TRX'+Date.now(), 
-            type: 'out', 
-            amount: parseInt(amount), 
-            desc: 'Penarikan oleh Admin', 
-            date: dateStr 
-        });
-        saveJSON(dbFile, db);
-        
-        res.json({ success: true, message: `\n✅ Saldo ${webUsers[targetPhone].name} berhasil dikurangi!` });
-    }
+    if (action === 'add') { db[targetPhone].saldo += parseInt(amount); db[targetPhone].mutasi.push({ id: 'TRX'+Date.now(), type: 'in', amount: parseInt(amount), desc: 'Penambahan oleh Admin', date: dateStr }); db[targetPhone].topup.push({ id: 'TU'+Date.now(), method: 'Admin Fiky Store', nominal: parseInt(amount), status: 'Sukses', date: dateStr }); saveJSON(dbFile, db); sendTeleNotif(`✅ *TOP UP BERHASIL*\n\n👤 Nama: ${webUsers[targetPhone].name}\n💰 Masuk: Rp ${parseInt(amount).toLocaleString('id-ID')}`, 'topup'); res.json({ success: true, message: `\n✅ Saldo berhasil ditambah!` }); } 
+    else if (action === 'reduce') { db[targetPhone].saldo -= parseInt(amount); db[targetPhone].mutasi.push({ id: 'TRX'+Date.now(), type: 'out', amount: parseInt(amount), desc: 'Penarikan oleh Admin', date: dateStr }); saveJSON(dbFile, db); res.json({ success: true, message: `\n✅ Saldo berhasil dikurangi!` }); }
 });
 
-// ==========================================
-// API AUTH LOGIC (LOGIN, DAFTAR, LUPA PASSWORD)
-// INI SATU-SATUNYA TEMPAT WA BOT BEKERJA (KIRIM OTP)
-// ==========================================
 app.post('/api/auth/login', (req, res) => {
-    const { identifier, password } = req.body; 
-    let webUsers = loadJSON(webUsersFile);
-    let fPhone = identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier;
-    
+    const { identifier, password } = req.body; let webUsers = loadJSON(webUsersFile); let fPhone = identifier.startsWith('0') ? '62' + identifier.slice(1) : identifier;
     let foundPhone = Object.keys(webUsers).find(p => (p === fPhone || webUsers[p].email === identifier) && webUsers[p].password === password);
-    
-    if (foundPhone) {
-        if (!webUsers[foundPhone].isVerified) {
-            return res.status(400).json({ error: 'Akun belum diverifikasi OTP.' });
-        }
-        res.json({ 
-            message: 'Login sukses', 
-            user: { 
-                phone: foundPhone, 
-                name: webUsers[foundPhone].name, 
-                email: webUsers[foundPhone].email, 
-                avatar: webUsers[foundPhone].avatar || null 
-            } 
-        });
-    } else { 
-        res.status(400).json({ error: 'Email/No HP atau Password salah.' }); 
-    }
+    if (foundPhone) { if (!webUsers[foundPhone].isVerified) return res.status(400).json({ error: 'Akun belum diverifikasi OTP.' }); res.json({ message: 'Login sukses', user: { phone: foundPhone, name: webUsers[foundPhone].name, email: webUsers[foundPhone].email, avatar: webUsers[foundPhone].avatar || null } }); } 
+    else { res.status(400).json({ error: 'Email/No HP atau Password salah.' }); }
 });
 
 app.post('/api/auth/register', async (req, res) => {
-    const { name, phone, email, password } = req.body; 
-    let webUsers = loadJSON(webUsersFile); 
-    let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
-    
-    if (webUsers[fPhone] && webUsers[fPhone].isVerified) {
-        return res.status(400).json({ error: 'Nomor sudah terdaftar.' });
-    }
-    
-    const otp = Math.floor(1000 + Math.random() * 9000).toString(); 
-    webUsers[fPhone] = { 
-        name, 
-        email, 
-        password, 
-        isVerified: false, 
-        otp, 
-        otpExpiry: Date.now() + 300000, 
-        avatar: null 
-    }; 
-    saveJSON(webUsersFile, webUsers);
-    
-    try { 
-        // WA BOT HANYA UNTUK KIRIM OTP (SESUAI REQUEST)
-        await global.waSocket?.sendMessage(fPhone + '@c.us', { 
-            text: `Halo kak *${name}* 👋\n\nTerima kasih telah mendaftar di *DIGITAL FIKY STORE* 👑\n\nBerikut adalah kode rahasia (OTP) untuk mengaktifkan akun kakak:\n\n*${otp}*\n\n⏳ _Kode ini hanya berlaku selama 5 menit._\n⚠️ _Jangan pernah memberikan kode ini kepada siapapun!_` 
-        }); 
-        res.json({ message: 'OTP Terkirim', phone: fPhone }); 
-    } catch(e) { 
-        res.status(500).json({ error: 'Gagal kirim WA. Pastikan nomor bot di Panel VPS sudah terhubung.' }); 
-    }
+    const { name, phone, email, password } = req.body; let webUsers = loadJSON(webUsersFile); let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
+    if (webUsers[fPhone] && webUsers[fPhone].isVerified) return res.status(400).json({ error: 'Nomor sudah terdaftar.' });
+    const otp = Math.floor(1000 + Math.random() * 9000).toString(); webUsers[fPhone] = { name, email, password, isVerified: false, otp, otpExpiry: Date.now() + 300000, avatar: null }; saveJSON(webUsersFile, webUsers);
+    try { await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Halo kak *${name}* 👋\n\nTerima kasih telah mendaftar di *DIGITAL FIKY STORE* 👑\n\nKode OTP Anda:\n\n*${otp}*\n\n⏳ _Berlaku selama 5 menit._` }); res.json({ message: 'OTP Terkirim', phone: fPhone }); } 
+    catch(e) { res.status(500).json({ error: 'Gagal kirim WA. Pastikan bot di VPS jalan.' }); }
 });
 
 app.post('/api/auth/verify', (req, res) => {
-    const { phone, otp } = req.body; 
-    let webUsers = loadJSON(webUsersFile);
-    
-    if (webUsers[phone] && webUsers[phone].otp) {
-        if (String(webUsers[phone].otp).trim() === String(otp).trim()) {
-            if (Date.now() > (webUsers[phone].otpExpiry || Infinity)) {
-                return res.status(400).json({ error: 'OTP kedaluwarsa.' });
-            }
-            
-            webUsers[phone].isVerified = true; 
-            delete webUsers[phone].otp; 
-            delete webUsers[phone].otpExpiry; 
-            saveJSON(webUsersFile, webUsers);
-            
-            let db = loadJSON(dbFile); 
-            if (!db[phone]) { 
-                db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] }; 
-                saveJSON(dbFile, db); 
-            } 
-            
-            let msgNew = `🎊 *MEMBER BARU BERGABUNG* 🎊\n\n`;
-            msgNew += `👤 Nama: ${webUsers[phone].name}\n`;
-            msgNew += `📱 WA: ${phone}\n`;
-            msgNew += `✉️ Email: ${webUsers[phone].email}`;
-            sendTeleNotif(msgNew, 'trx');
-            
-            res.json({ message: 'Sukses!' });
-        } else { 
-            res.status(400).json({ error: 'OTP Salah.' }); 
-        }
-    } else { 
-        res.status(400).json({ error: 'Sesi tidak valid.' }); 
-    }
+    const { phone, otp } = req.body; let webUsers = loadJSON(webUsersFile);
+    if (webUsers[phone] && webUsers[phone].otp && String(webUsers[phone].otp) === String(otp)) {
+        if (Date.now() > webUsers[phone].otpExpiry) return res.status(400).json({ error: 'OTP kedaluwarsa.' });
+        webUsers[phone].isVerified = true; delete webUsers[phone].otp; delete webUsers[phone].otpExpiry; saveJSON(webUsersFile, webUsers);
+        let db = loadJSON(dbFile); if (!db[phone]) { db[phone] = { saldo: 0, mutasi: [], topup: [], transactions: [] }; saveJSON(dbFile, db); }
+        sendTeleNotif(`🎊 *MEMBER BARU BERGABUNG* 🎊\n\n👤 Nama: ${webUsers[phone].name}\n📱 WA: ${phone}`, 'trx'); res.json({ message: 'Sukses!' });
+    } else { res.status(400).json({ error: 'OTP Salah / Sesi tidak valid.' }); }
 });
 
 app.post('/api/auth/forgot', async (req, res) => {
-    const { phone } = req.body; 
-    let webUsers = loadJSON(webUsersFile); 
-    let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
-    
-    if (!webUsers[fPhone]) {
-        return res.status(400).json({ error: 'Nomor tidak terdaftar.' });
-    }
-    
-    const otp = Math.floor(1000 + Math.random() * 9000).toString(); 
-    webUsers[fPhone].otp = otp; 
-    webUsers[fPhone].otpExpiry = Date.now() + 300000; 
-    saveJSON(webUsersFile, webUsers);
-    
-    try { 
-        // WA BOT HANYA UNTUK KIRIM OTP (SESUAI REQUEST)
-        await global.waSocket?.sendMessage(fPhone + '@c.us', { 
-            text: `Halo kak 👋\n\nKami menerima permintaan reset password akun *DIGITAL FIKY STORE*.\n\nKode OTP Anda:\n\n*${otp}*\n\n⏳ _Berlaku selama 5 menit._` 
-        }); 
-        res.json({ message: 'OTP Terkirim' }); 
-    } catch(e) { 
-        res.status(500).json({ error: 'Gagal kirim WA.' }); 
-    }
+    const { phone } = req.body; let webUsers = loadJSON(webUsersFile); let fPhone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
+    if (!webUsers[fPhone]) return res.status(400).json({ error: 'Nomor tidak terdaftar.' });
+    const otp = Math.floor(1000 + Math.random() * 9000).toString(); webUsers[fPhone].otp = otp; webUsers[fPhone].otpExpiry = Date.now() + 300000; saveJSON(webUsersFile, webUsers);
+    try { await global.waSocket?.sendMessage(fPhone + '@c.us', { text: `Permintaan reset password *DIGITAL FIKY STORE*.\n\nKode OTP:\n\n*${otp}*\n\n⏳ _Berlaku 5 menit._` }); res.json({ message: 'OTP Terkirim' }); } 
+    catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); }
 });
 
 app.post('/api/auth/reset', (req, res) => {
-    const { phone, otp, newPassword } = req.body; 
-    let webUsers = loadJSON(webUsersFile);
-    
-    if (webUsers[phone] && webUsers[phone].otp) {
-        if (String(webUsers[phone].otp).trim() === String(otp).trim()) {
-            if(Date.now() > (webUsers[phone].otpExpiry || Infinity)) {
-                return res.status(400).json({ error: 'OTP kedaluwarsa.' });
-            }
-            
-            webUsers[phone].password = newPassword; 
-            delete webUsers[phone].otp; 
-            delete webUsers[phone].otpExpiry; 
-            saveJSON(webUsersFile, webUsers); 
-            res.json({ message: 'Diubah!' }); 
-        } else { 
-            res.status(400).json({ error: 'OTP Salah.' }); 
-        }
-    } else { 
-        res.status(400).json({ error: 'Sesi tidak valid.' }); 
-    }
+    const { phone, otp, newPassword } = req.body; let webUsers = loadJSON(webUsersFile);
+    if (webUsers[phone] && webUsers[phone].otp && String(webUsers[phone].otp) === String(otp)) {
+        if(Date.now() > webUsers[phone].otpExpiry) return res.status(400).json({ error: 'OTP kedaluwarsa.' });
+        webUsers[phone].password = newPassword; delete webUsers[phone].otp; delete webUsers[phone].otpExpiry; saveJSON(webUsersFile, webUsers); res.json({ message: 'Diubah!' });
+    } else { res.status(400).json({ error: 'OTP Salah.' }); }
 });
 
 app.post('/api/auth/request-update-otp', async (req, res) => {
-    const { oldPhone, newPhone } = req.body; 
-    let webUsers = loadJSON(webUsersFile);
-    let fOld = oldPhone.startsWith('0') ? '62' + oldPhone.slice(1) : oldPhone; 
-    let fNew = newPhone.startsWith('0') ? '62' + newPhone.slice(1) : newPhone;
-    
-    if (webUsers[fNew] && fNew !== fOld) {
-        return res.status(400).json({ error: 'Nomor baru sudah terdaftar.' });
-    }
-    if(!webUsers[fOld]) {
-        return res.status(400).json({ error: 'Akun tidak ditemukan.' });
-    }
-
-    const otp = Math.floor(1000 + Math.random() * 9000).toString();
-    webUsers[fOld].updateOtp = otp; 
-    webUsers[fOld].updateOtpExpiry = Date.now() + 300000; 
-    saveJSON(webUsersFile, webUsers); 
-    
-    let targetWA = fNew !== fOld ? fNew : fOld;
-    try { 
-        // WA BOT HANYA UNTUK KIRIM OTP (SESUAI REQUEST)
-        await global.waSocket?.sendMessage(targetWA + '@c.us', { 
-            text: `Halo kak 👋\n\nBerikut kode OTP untuk verifikasi perubahan keamanan akun (Nomor/Password) di *DIGITAL FIKY STORE*:\n\n*${otp}*\n\n⏳ _Berlaku 5 menit._` 
-        }); 
-        res.json({ message: 'OTP Terkirim' }); 
-    } catch(e) { 
-        res.status(500).json({ error: 'Gagal kirim WA.' }); 
-    } 
+    const { oldPhone, newPhone } = req.body; let webUsers = loadJSON(webUsersFile); let fOld = oldPhone.startsWith('0') ? '62' + oldPhone.slice(1) : oldPhone; let fNew = newPhone.startsWith('0') ? '62' + newPhone.slice(1) : newPhone;
+    if (webUsers[fNew] && fNew !== fOld) return res.status(400).json({ error: 'Nomor baru sudah terdaftar.' });
+    if(!webUsers[fOld]) return res.status(400).json({ error: 'Akun tidak ditemukan.' });
+    const otp = Math.floor(1000 + Math.random() * 9000).toString(); webUsers[fOld].updateOtp = otp; webUsers[fOld].updateOtpExpiry = Date.now() + 300000; saveJSON(webUsersFile, webUsers); 
+    try { await global.waSocket?.sendMessage((fNew !== fOld ? fNew : fOld) + '@c.us', { text: `Kode OTP verifikasi ubah keamanan akun *DIGITAL FIKY STORE*:\n\n*${otp}*\n\n⏳ _Berlaku 5 menit._` }); res.json({ message: 'OTP Terkirim' }); } 
+    catch(e) { res.status(500).json({ error: 'Gagal kirim WA.' }); } 
 });
 
 app.post('/api/auth/update', (req, res) => {
-    const { oldPhone, newPhone, newName, otp, avatar, newPassword } = req.body; 
-    let webUsers = loadJSON(webUsersFile); 
-    let db = loadJSON(dbFile);
-    let fOld = oldPhone.startsWith('0') ? '62' + oldPhone.slice(1) : oldPhone; 
-    let fNew = newPhone.startsWith('0') ? '62' + newPhone.slice(1) : newPhone;
-    
-    if (!webUsers[fOld]) {
-        return res.status(400).json({ error: 'Akun tidak ditemukan.' });
-    }
-    
+    const { oldPhone, newPhone, newName, otp, avatar, newPassword } = req.body; let webUsers = loadJSON(webUsersFile); let db = loadJSON(dbFile); let fOld = oldPhone.startsWith('0') ? '62' + oldPhone.slice(1) : oldPhone; let fNew = newPhone.startsWith('0') ? '62' + newPhone.slice(1) : newPhone;
+    if (!webUsers[fOld]) return res.status(400).json({ error: 'Akun tidak ditemukan.' });
     let isSecureChange = (fOld !== fNew) || (newPassword && newPassword.trim() !== '');
-    
     if (isSecureChange) {
-        if (fOld !== fNew && webUsers[fNew]) {
-            return res.status(400).json({ error: 'Nomor sudah dipakai.' });
-        }
-        if (String(webUsers[fOld].updateOtp).trim() !== String(otp).trim()) {
-            return res.status(400).json({ error: 'Kode OTP Salah.' });
-        }
-        if (Date.now() > (webUsers[fOld].updateOtpExpiry||Infinity)) {
-            return res.status(400).json({ error: 'OTP kedaluwarsa.' });
-        }
-        
-        if (fOld !== fNew) {
-            webUsers[fNew] = { ...webUsers[fOld], name: newName, avatar: avatar || webUsers[fOld].avatar }; 
-            if (newPassword && newPassword.trim() !== '') {
-                webUsers[fNew].password = newPassword;
-            }
-            delete webUsers[fNew].updateOtp; 
-            delete webUsers[fNew].updateOtpExpiry; 
-            delete webUsers[fOld];
-            
-            if (db[fOld]) { 
-                db[fNew] = { ...db[fOld], jid: fNew + '@s.whatsapp.net' }; 
-                delete db[fOld]; 
-            }
-        } else {
-            webUsers[fOld].name = newName; 
-            if(avatar !== undefined) webUsers[fOld].avatar = avatar;
-            if (newPassword && newPassword.trim() !== '') {
-                webUsers[fOld].password = newPassword;
-            }
-            delete webUsers[fOld].updateOtp; 
-            delete webUsers[fOld].updateOtpExpiry;
-        }
-    } else { 
-        webUsers[fOld].name = newName; 
-        if(avatar !== undefined) webUsers[fOld].avatar = avatar; 
-    }
-    
-    saveJSON(webUsersFile, webUsers); 
-    saveJSON(dbFile, db); 
-    res.json({ message: 'Profil diperbarui.', phone: fNew });
+        if (fOld !== fNew && webUsers[fNew]) return res.status(400).json({ error: 'Nomor sudah dipakai.' });
+        if (String(webUsers[fOld].updateOtp) !== String(otp)) return res.status(400).json({ error: 'Kode OTP Salah.' });
+        if (Date.now() > webUsers[fOld].updateOtpExpiry) return res.status(400).json({ error: 'OTP kedaluwarsa.' });
+        if (fOld !== fNew) { webUsers[fNew] = { ...webUsers[fOld], name: newName, avatar: avatar || webUsers[fOld].avatar }; if (newPassword) webUsers[fNew].password = newPassword; delete webUsers[fNew].updateOtp; delete webUsers[fNew].updateOtpExpiry; delete webUsers[fOld]; if (db[fOld]) { db[fNew] = { ...db[fOld], jid: fNew + '@s.whatsapp.net' }; delete db[fOld]; } } 
+        else { webUsers[fOld].name = newName; if(avatar !== undefined) webUsers[fOld].avatar = avatar; if (newPassword) webUsers[fOld].password = newPassword; delete webUsers[fOld].updateOtp; delete webUsers[fOld].updateOtpExpiry; }
+    } else { webUsers[fOld].name = newName; if(avatar !== undefined) webUsers[fOld].avatar = avatar; }
+    saveJSON(webUsersFile, webUsers); saveJSON(dbFile, db); res.json({ message: 'Profil diperbarui.', phone: fNew });
 });
 
 app.post('/api/auth/delete', (req, res) => {
-    const { phone } = req.body; 
-    let webUsers = loadJSON(webUsersFile); 
-    let db = loadJSON(dbFile);
-    
-    if(webUsers[phone]) delete webUsers[phone]; 
-    if(db[phone]) delete db[phone];
-    
-    saveJSON(webUsersFile, webUsers); 
-    saveJSON(dbFile, db); 
-    res.json({ message: 'Akun dihapus.' });
+    const { phone } = req.body; let webUsers = loadJSON(webUsersFile); let db = loadJSON(dbFile);
+    if(webUsers[phone]) delete webUsers[phone]; if(db[phone]) delete db[phone];
+    saveJSON(webUsersFile, webUsers); saveJSON(dbFile, db); res.json({ message: 'Akun dihapus.' });
 });
 
-// ==========================================
-// START BAILEYS WHATSAPP BOT (ERROR HANDLING FULL)
-// ==========================================
+// START BAILEYS BOT
 async function startBot() {
     try {
         const { state, saveCreds } = await useMultiFileAuthState('sesi_bot');
         const { version } = await fetchLatestBaileysVersion();
-        
-        const sock = makeWASocket({ 
-            version, 
-            auth: state, 
-            logger: pino({ level: 'silent' }), 
-            browser: ['Ubuntu', 'Chrome', '20.0.0'], 
-            printQRInTerminal: false 
-        });
-        
-        if (!sock.authState.creds.registered) { 
-            let config = loadJSON(configFile); 
-            if (config.botNumber) {
-                setTimeout(async () => { 
-                    try { 
-                        const code = await sock.requestPairingCode(config.botNumber.replace(/[^0-9]/g, '')); 
-                        console.log(`\n🔑 KODE PAIRING: ${code}\n`); 
-                    } catch (error) {
-                        console.log("❌ Gagal request pairing code:", error.message);
-                    } 
-                }, 5000); 
-            } 
-        }
-        
-        sock.ev.on('connection.update', (update) => { 
-            const { connection } = update; 
-            if (connection === 'close') {
-                console.log("Koneksi terputus, mencoba menyambung kembali...");
-                setTimeout(startBot, 3000); 
-            } else if (connection === 'open') {
-                console.log('\n✅ BOT WHATSAPP BERHASIL TERHUBUNG!\n');
-            }
-        });
-        
-        sock.ev.on('creds.update', saveCreds); 
-        global.waSocket = sock; 
-        
-    } catch (error) {
-        console.log("❌ Fatal Error Bot WA:", error.message);
-    }
+        const sock = makeWASocket({ version, auth: state, logger: pino({ level: 'silent' }), browser: ['Ubuntu', 'Chrome', '20.0.0'], printQRInTerminal: false });
+        if (!sock.authState.creds.registered) { let config = loadJSON(configFile); if (config.botNumber) { setTimeout(async () => { try { const code = await sock.requestPairingCode(config.botNumber.replace(/[^0-9]/g, '')); console.log(`\n🔑 KODE PAIRING: ${code}\n`); } catch (e) {} }, 5000); } }
+        sock.ev.on('connection.update', (update) => { const { connection } = update; if (connection === 'close') { setTimeout(startBot, 3000); } else if (connection === 'open') { console.log('\n✅ BOT WA TERHUBUNG!\n'); } });
+        sock.ev.on('creds.update', saveCreds); global.waSocket = sock; 
+    } catch (e) {}
 }
 
 // ==========================================
@@ -3825,7 +3182,6 @@ async function startBot() {
 app.get('*', (req, res) => {
     let reqPath = req.path;
     
-    // Auto-tambah .html kalau user nggak sengaja ngetik link tanpa .html
     if (!reqPath.includes('.') && reqPath !== '/') {
         let altPath = path.join(__dirname, 'public', reqPath + '.html');
         if (fs.existsSync(altPath)) return res.sendFile(altPath);
@@ -3836,23 +3192,19 @@ app.get('*', (req, res) => {
         if (fs.existsSync(pagePath)) return res.sendFile(pagePath);
     }
     
-    // JIKA FILE BENAR-BENAR TIDAK ADA, TAMPILKAN TEKS ERROR BUKAN LOGOUT
     res.status(404).send(`
         <div style="background-color:#0b1320; color:white; font-family:sans-serif; text-align:center; padding-top:50px; height:100vh;">
             <h1 style="color:#facc15;">FILE TIDAK DITEMUKAN (404)</h1>
             <p>Halaman <b>${reqPath}</b> tidak ada di server.</p>
             <p>Sepertinya file HTML tersebut terpotong saat instalasi VPS (Copy-Paste).</p>
             <br>
-            <button onclick="window.location.href='/dashboard.html'" style="background-color:#facc15; border:none; padding:10px 20px; font-weight:bold; border-radius:5px; cursor:pointer;">KEMBALI KE DASHBOARD</button>
+            <button onclick="window.location.href='/dashboard.html'" style="background-color:#facc15; border:none; padding:10px 20px; font-weight:bold; border-radius:5px; cursor:pointer; color:#0b1320;">KEMBALI KE DASHBOARD</button>
         </div>
     `); 
 });
 
-
 if (require.main === module) { 
-    app.listen(3000, () => { 
-        console.log('🌐 Web berjalan di port 3000'); 
-    }); 
+    app.listen(3000, () => { console.log('🌐 Web berjalan di port 3000'); }); 
     startBot(); 
 }
 EOF
@@ -3862,7 +3214,7 @@ echo "Menginstal modul Node.js..."
 npm install --silent
 npm install -g pm2 > /dev/null 2>&1
 
-echo "[6/7] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - V160 THE PERFECT OXFORD)..."
+echo "[6/7] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - V161 AUTO GOPAY)..."
 
 cat << 'EOF' > /usr/bin/menu
 #!/bin/bash
@@ -3908,7 +3260,7 @@ while true; do
 
     clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V160) 💎        ${NC}"
+    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V161) 💎        ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo -e "   💰 SALDO DIGIFLAZZ: ${GREEN}$SALDO_DIGI${NC}"
     echo -e "${CYAN}======================================================${NC}"
@@ -3930,7 +3282,7 @@ while true; do
     echo ""
     echo -e "${PURPLE}[ 🌐 MANAJEMEN SERVER & API ]${NC}"
     echo -e "  ${GREEN}12.${NC} Setup Domain (Nginx + Cloudflare + UFW Firewall)"
-    echo -e "  ${GREEN}13.${NC} 🔌 Setup API Digiflazz"
+    echo -e "  ${GREEN}13.${NC} 🔌 Setup API (Digiflazz & Auto GoPay BHM)"
     echo -e "  ${GREEN}14.${NC} 🔄 Refresh Katalog Digiflazz (Hapus Cache API)"
     echo ""
     echo -e "${PURPLE}[ 🛡️ PUSAT KOMANDO TELEGRAM ]${NC}"
@@ -4384,12 +3736,21 @@ EOFNGINX
         13)
             clear
             echo -e "${CYAN}===============================================${NC}"
-            echo -e "${YELLOW}           🔌 SETUP API DIGIFLAZZ              ${NC}"
+            echo -e "${YELLOW}        🔌 SETUP API SERVER & PAYMENT          ${NC}"
             echo -e "${CYAN}===============================================${NC}"
-            read -p "Username Digiflazz: " digi_user
-            read -p "API Key Digiflazz (Prod/Dev Key): " digi_key
-            cd "$HOME/$DIR_NAME"
-            cat << 'JS' > temp_digi.js
+            echo "1. Setup API Provider Digiflazz (Untuk Produk)"
+            echo "2. Setup API GoPay Otomatis (BHM Biz ID)"
+            echo "0. Kembali"
+            echo ""
+            read -p "Pilih [0-2]: " api_sel
+            
+            if [ "$api_sel" == "1" ]; then
+                clear
+                echo -e "${YELLOW}--- SETUP API DIGIFLAZZ ---${NC}"
+                read -p "Username Digiflazz: " digi_user
+                read -p "API Key Digiflazz (Prod/Dev Key): " digi_key
+                cd "$HOME/$DIR_NAME"
+                cat << 'JS' > temp_digi.js
 const fs = require('fs');
 let file = './config.json';
 let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
@@ -4398,10 +3759,31 @@ cfg.digiKey = process.argv[3];
 fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
 console.log('✅ Konfigurasi API Digiflazz Disimpan!');
 JS
-            node temp_digi.js "$digi_user" "$digi_key"
-            rm temp_digi.js
-            pm2 restart $BOT_NAME > /dev/null 2>&1
-            read -p "Tekan Enter..." 
+                node temp_digi.js "$digi_user" "$digi_key"
+                rm temp_digi.js
+                pm2 restart $BOT_NAME > /dev/null 2>&1
+                
+            elif [ "$api_sel" == "2" ]; then
+                clear
+                echo -e "${YELLOW}--- SETUP API GOPAY OTOMATIS (BHM BIZ ID) ---${NC}"
+                echo "Catatan: Pastikan Anda sudah daftar & punya Token di gopay.bhm.biz.id"
+                read -p "Masukkan API Token BHM (cth: mapi_aSW...): " bhm_token
+                read -p "Masukkan Nomor GoPay Admin (cth: 08123...): " bhm_num
+                cd "$HOME/$DIR_NAME"
+                cat << 'JS' > temp_bhm.js
+const fs = require('fs');
+let file = './config.json';
+let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
+cfg.bhmToken = process.argv[2];
+cfg.bhmGopayNumber = process.argv[3];
+fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
+console.log('✅ Konfigurasi API GoPay (BHM) Berhasil Disimpan!');
+JS
+                node temp_bhm.js "$bhm_token" "$bhm_num"
+                rm temp_bhm.js
+                pm2 restart $BOT_NAME > /dev/null 2>&1
+            fi
+            read -p "Tekan Enter untuk kembali..." 
             ;;
             
         14)
@@ -4569,12 +3951,12 @@ EOF
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
 echo "=========================================================="
-echo "  SISTEM WEB V160 BERHASIL DIPERBARUI SECARA PENUH!       "
+echo "  SISTEM WEB V161 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
 
 EOF
-echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V160..."
+echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V161..."
 
 cd "$HOME/$DIR_NAME"
 
@@ -4595,16 +3977,15 @@ chmod +x /usr/bin/menu
 
 clear
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V160 SELESAI! 🚀      \033[0m"
+echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V161 SELESAI! 🚀      \033[0m"
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[0;36mFITUR BARU DI V160 (THE PERFECT OXFORD & MAIZE):\033[0m"
+echo -e "\033[0;36mFITUR BARU DI V161 (THE PERFECT OXFORD + AUTO GOPAY):\033[0m"
+echo -e "  ✅ \033[1;33mAUTO GOPAY BHM API\033[0m Top Up Otomatis 24 Jam via GoPay!"
 echo -e "  ✅ \033[1;33mANIMASI WELCOME LOGIN\033[0m Teks berjalan elegan dengan inner-shadow"
 echo -e "  ✅ \033[1;33mANTI-BUG CANNOT GET\033[0m Sistem otomatis ngebaca file atau nampilin 404 keren!"
 echo -e "  ✅ \033[1;33mUI 1000% CLONE FOTO\033[0m Background Oxford, Harga & Aksesoris Kuning Maize"
 echo -e "  ✅ \033[1;33mSISA BIRU MUDA DIMUSNAHKAN\033[0m Background Profil/Riwayat/Info Full Hitam Gelap"
 echo -e "  ✅ \033[1;33mTELEGRAM KEMBALI BIRU\033[0m Icon Telegram kembali ke kodratnya"
-echo -e "  ✅ \033[1;33mMINIMAL TOPUP QRIS 1000\033[0m Lebih merakyat dan ramah member"
-echo -e "  ✅ \033[1;33mMARQUEE KUNING MAIZE\033[0m Teks berjalan bersih warna Maize (Tanpa 24 Jam)"
 echo -e "  ✅ \033[1;33mREVOLUSI LAYANAN\033[0m SMS & Telp Masuk, E-Wallet Pindah, Tagihan Lenyap!"
 echo -e "\033[0;32m======================================================================\033[0m"
 echo -e "\033[1;37mCARA PENGGUNAAN SELANJUTNYA:\033[0m"
