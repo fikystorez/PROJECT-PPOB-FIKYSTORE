@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V162 (PERFECT OXFORD + AUTO QRIS BHM - PART 1)
+# DIGITAL FIKY STORE - V163 (PERFECT OXFORD + AUTO QRIS BHM - PART 1)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
@@ -16,7 +16,7 @@ DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V162 (PART 1)           "
+echo "    MENGINSTAL DIGITAL FIKY STORE V163 (PART 1)           "
 echo "=========================================================="
 
 echo "[1/7] Memperbarui sistem dan menginstal Node.js..."
@@ -35,7 +35,7 @@ cd "$HOME/$DIR_NAME"
 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "Aplikasi PPOB DIGITAL FIKY STORE",
   "main": "index.js",
   "scripts": {
@@ -1101,7 +1101,6 @@ cat << 'EOF' > public/dashboard.html
     }).catch(e => {});
 
     fetch('/api/config').then(r => r.json()).then(d => {
-      if(d.qrisUrl) qrisImg = d.qrisUrl;
       if(d.linkTele) linkTele = d.linkTele;
       if(d.linkWa) linkWa = d.linkWa;
       
@@ -1159,31 +1158,46 @@ cat << 'EOF' > public/dashboard.html
         
         closeTopUp();
         
-        await fetch('/api/topup/request', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone: user.phone, method: 'QRIS Otomatis', nominal: fn}) });
-        
-        setTimeout(() => {
-          Swal.fire({
-            title: `<span class="font-bold text-lg text-[#facc15]">Scan QRIS</span>`,
-            html: `
-                <p class="text-4xl text-[#facc15] font-extrabold mb-2">Rp ${fn.toLocaleString('id-ID')}</p>
-                <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold mb-3 animate-pulse inline-block">Sisa Waktu: <span id="qrisTimer">05:00</span></div>
-                <div class="bg-white p-3 rounded-xl inline-block border border-gray-200 mb-2"><img src="${qrisImg}" class="w-48 h-48 object-cover"></div>
-                <p class="text-[11px] text-gray-300 font-medium">Scan QRIS dan transfer <b class="text-[#facc15]">TEPAT SESUAI NOMINAL</b> (Hingga 3 digit terakhir) agar saldo masuk otomatis 1-3 menit.</p>`,
-            showCancelButton: true, confirmButtonText: 'Sudah Transfer', cancelButtonText: 'Tutup', background: bg, color: c,
-            didOpen: () => {
-              let t = 300; let tmr = document.getElementById('qrisTimer');
-              timerInterval = setInterval(() => { 
-                  t--; let m = Math.floor(t / 60).toString().padStart(2, '0'); let s = (t % 60).toString().padStart(2, '0'); 
-                  if(tmr) tmr.innerText = `${m}:${s}`; 
-                  if(t <= 0) { clearInterval(timerInterval); Swal.close(); location.href = '/riwayat_topup.html'; } 
-              }, 1000);
-            }, 
-            willClose: () => clearInterval(timerInterval)
-          }).then(r => {
-            if(r.isConfirmed) { Swal.fire({ icon: 'success', title: 'Diproses', text: 'Sistem sedang memverifikasi dana yang masuk...', timer: 2000, background: bg, color: c }).then(() => location.href = '/riwayat_topup.html'); } 
-            else { location.href = '/riwayat_topup.html'; }
-          });
-        }, 300);
+        Swal.fire({ title: 'Membuat QRIS...', allowOutsideClick: false, background: bg, color: c, didOpen: () => Swal.showLoading() });
+
+        try {
+            let res = await fetch('/api/topup/request', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone: user.phone, method: 'QRIS Otomatis', nominal: fn}) });
+            let data = await res.json();
+            
+            if(res.ok) {
+                Swal.close();
+                // Mengubah String QRIS dari Server menjadi Gambar QR Code Asli
+                let finalQrisImg = data.qris_string ? `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(data.qris_string)}` : qrisImg;
+
+                setTimeout(() => {
+                  Swal.fire({
+                    title: `<span class="font-bold text-lg text-[#facc15]">Scan QRIS</span>`,
+                    html: `
+                        <p class="text-4xl text-[#facc15] font-extrabold mb-2">Rp ${fn.toLocaleString('id-ID')}</p>
+                        <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold mb-3 animate-pulse inline-block">Sisa Waktu: <span id="qrisTimer">05:00</span></div>
+                        <div class="bg-white p-3 rounded-xl inline-block border border-gray-200 mb-2 shadow-lg"><img src="${finalQrisImg}" class="w-56 h-56 object-cover"></div>
+                        <p class="text-[11px] text-gray-300 font-medium">Scan QRIS di atas dan saldo akan masuk otomatis dalam 1-3 menit.</p>`,
+                    showCancelButton: true, confirmButtonText: 'Sudah Transfer', cancelButtonText: 'Tutup', background: bg, color: c,
+                    didOpen: () => {
+                      let t = 300; let tmr = document.getElementById('qrisTimer');
+                      timerInterval = setInterval(() => { 
+                          t--; let m = Math.floor(t / 60).toString().padStart(2, '0'); let s = (t % 60).toString().padStart(2, '0'); 
+                          if(tmr) tmr.innerText = `${m}:${s}`; 
+                          if(t <= 0) { clearInterval(timerInterval); Swal.close(); location.href = '/riwayat_topup.html'; } 
+                      }, 1000);
+                    }, 
+                    willClose: () => clearInterval(timerInterval)
+                  }).then(r => {
+                    if(r.isConfirmed) { Swal.fire({ icon: 'success', title: 'Diproses', text: 'Sistem sedang memverifikasi dana yang masuk...', timer: 2000, background: bg, color: c }).then(() => location.href = '/riwayat_topup.html'); } 
+                    else { location.href = '/riwayat_topup.html'; }
+                  });
+                }, 300);
+            } else {
+                Swal.fire({ icon: 'error', title: 'Gagal', text: data.error || 'Terjadi kesalahan sistem.', background: bg, color: c });
+            }
+        } catch(e) {
+            Swal.fire({ icon: 'error', title: 'Gagal', text: 'Jaringan bermasalah.', background: bg, color: c });
+        }
       } else {
         closeTopUp();
         fetch('/api/topup/request', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone: user.phone, method: 'Manual WA', nominal: fn}) }).then(() => {
@@ -2669,7 +2683,7 @@ cat << 'EOF' > public/riwayat.html
 EOF
 
 echo "[PART 4 SELESAI DITULIS. TINGGAL PART 5, 6, 7 (BACKEND & VPS MENU)!]"
-echo "[5/7] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V162 AUTO QRIS BHM)..."
+echo "[5/7] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V163 AUTO QRIS BHM)..."
 
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
@@ -2692,7 +2706,6 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// MENGATASI BUG CANNOT GET / SECARA PERMANEN
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -2711,9 +2724,7 @@ const loadJSON = (file) => {
     if (fs.existsSync(file)) {
         return JSON.parse(fs.readFileSync(file));
     } else {
-        if (file === localProductsFile || file === infoFile) {
-            return [];
-        }
+        if (file === localProductsFile || file === infoFile) return [];
         return {};
     }
 };
@@ -2722,7 +2733,6 @@ const saveJSON = (file, data) => {
     fs.writeFileSync(file, JSON.stringify(data, null, 2));
 };
 
-// INISIALISASI FILE JIKA BELUM ADA
 let configAwal = loadJSON(configFile);
 configAwal.botName = configAwal.botName || "DIGITAL FIKY STORE";
 saveJSON(configFile, configAwal);
@@ -2746,27 +2756,17 @@ function isMaintenance() {
 }
 
 // ==========================================
-// 3 BOT TELEGRAM LOGIC (SUPER DETAIL)
+// 3 BOT TELEGRAM LOGIC
 // ==========================================
 const sendTeleNotif = async (message, type = 'trx') => {
     let cfg = loadJSON(configFile);
     let token = ''; let chatId = '';
-
-    if (type === 'trx') { 
-        token = cfg.teleTokenTrx || cfg.teleToken; chatId = cfg.teleChatIdTrx || cfg.teleChatId; 
-    } else if (type === 'topup') { 
-        token = cfg.teleTokenTopup || cfg.teleToken; chatId = cfg.teleChatIdTopup || cfg.teleChatId; 
-    } else if (type === 'backup') { 
-        token = cfg.teleTokenBackup || cfg.teleToken; chatId = cfg.teleChatIdBackup || cfg.teleChatId; 
-    }
+    if (type === 'trx') { token = cfg.teleTokenTrx || cfg.teleToken; chatId = cfg.teleChatIdTrx || cfg.teleChatId; } 
+    else if (type === 'topup') { token = cfg.teleTokenTopup || cfg.teleToken; chatId = cfg.teleChatIdTopup || cfg.teleChatId; } 
+    else if (type === 'backup') { token = cfg.teleTokenBackup || cfg.teleToken; chatId = cfg.teleChatIdBackup || cfg.teleChatId; }
 
     if (!token || !chatId) return;
-
-    try {
-        await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, { 
-            chat_id: chatId, text: message, parse_mode: 'Markdown' 
-        });
-    } catch(e) {}
+    try { await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, { chat_id: chatId, text: message, parse_mode: 'Markdown' }); } catch(e) {}
 };
 
 // ==========================================
@@ -2776,7 +2776,6 @@ app.get('/api/config', (req, res) => {
     let cfg = loadJSON(configFile);
     res.json({ 
         banners: cfg.banners || [], 
-        qrisUrl: cfg.qrisUrl || '',
         linkTele: cfg.linkTele || 'https://t.me/digitalfikystore_channel',
         linkWa: cfg.linkWa || 'https://whatsapp.com/channel/digitalfikystore'
     }); 
@@ -2852,7 +2851,7 @@ app.post('/api/products', async (req, res) => {
 });
 
 // ==========================================
-// TRANSAKSI LOGIC
+// TRANSAKSI LOGIC (PULSA/DATA/GAME DLL)
 // ==========================================
 app.post('/api/transaction/create', async (req, res) => {
     try {
@@ -2907,8 +2906,48 @@ setInterval(async () => {
     if (changed) saveJSON(dbFile, db);
 }, 20000); 
 
+
 // ==========================================
-// 💰 FUNGSI AUTO-QRIS CHECKER (MENGGUNAKAN BHM API GOPAY) 💰
+// 🛠️ GENERATOR QRIS DINAMIS (RUMUS CRC16 CCITT)
+// ==========================================
+function convertCRC16(str) {
+    let crc = 0xFFFF;
+    for (let c = 0; c < str.length; c++) {
+        crc ^= str.charCodeAt(c) << 8;
+        for (let i = 0; i < 8; i++) {
+            if (crc & 0x8000) crc = (crc << 1) ^ 0x1021;
+            else crc = crc << 1;
+        }
+    }
+    let hex = (crc & 0xFFFF).toString(16).toUpperCase();
+    return hex.padStart(4, '0');
+}
+
+function generateDynamicQris(staticQris, amount) {
+    try {
+        // Ambil string sebelum tag 6304
+        let qrisWithoutCRC = staticQris.substring(0, staticQris.indexOf("6304"));
+        if(!qrisWithoutCRC) return staticQris; // Kalau format QRIS salah, balikin default
+        
+        let amountStr = amount.toString();
+        let amountLen = amountStr.length.toString().padStart(2, '0');
+        
+        // Buat tag 54 (Nominal)
+        let tag54 = "54" + amountLen + amountStr;
+        
+        // Gabungkan dan hitung CRC baru
+        let rawQris = qrisWithoutCRC + tag54 + "6304";
+        let newCrc = convertCRC16(rawQris);
+        
+        return rawQris + newCrc;
+    } catch (e) {
+        return staticQris;
+    }
+}
+
+
+// ==========================================
+// 💰 FUNGSI AUTO-QRIS CHECKER (VIA MUTASI GOPAY BHM) 💰
 // ==========================================
 setInterval(async () => {
     let db = loadJSON(dbFile);
@@ -2916,14 +2955,12 @@ setInterval(async () => {
     let webUsers = loadJSON(webUsersFile);
     let changed = false;
 
-    // Jika Token API BHM belum disetting, lewati
     if (!config.bhmToken) return;
 
     let pendingQris = [];
     for (let phone in db) {
         if (db[phone].topup) {
             db[phone].topup.forEach(t => {
-                // KITA CEK METODE "QRIS Otomatis"
                 if (t.status === 'Proses' && t.method === 'QRIS Otomatis') {
                     pendingQris.push({ phone, topup: t });
                 }
@@ -2933,7 +2970,6 @@ setInterval(async () => {
 
     if (pendingQris.length > 0) {
         try {
-            // Hit BHM API Endpoint
             let res = await axios.get('http://gopay.bhm.biz.id/api/transactions', {
                 headers: { 'Authorization': `Bearer ${config.bhmToken}` },
                 timeout: 10000
@@ -2944,9 +2980,9 @@ setInterval(async () => {
             for (let p of pendingQris) {
                 let targetNominal = parseInt(p.topup.nominal);
                 
-                // Cari transaksi mutasi masuk (credit) yang nominalnya pas
+                // Cari transaksi mutasi GoPay masuk (credit) yang nominalnya PAS
                 let matchTx = txs.find(tx => {
-                    let amount = parseInt(tx.amount); // Parse 50000.00 jadi 50000
+                    let amount = parseInt(tx.amount);
                     let isCredit = (tx.type && tx.type.toLowerCase() === 'credit') || parseFloat(tx.amount) > 0;
                     return amount === targetNominal && isCredit;
                 });
@@ -2954,22 +2990,14 @@ setInterval(async () => {
                 if (matchTx) {
                     if (!config.processedGopay) config.processedGopay = [];
                     
-                    // Mencegah double mutasi jika ID transaksi BHM sudah pernah diproses
                     if (!config.processedGopay.includes(matchTx.transaction_id)) {
                         config.processedGopay.push(matchTx.transaction_id);
-                        if(config.processedGopay.length > 500) config.processedGopay.shift(); // Jaga biar gak kegedean
+                        if(config.processedGopay.length > 500) config.processedGopay.shift();
                         saveJSON(configFile, config);
 
-                        // Eksekusi Sukses
                         p.topup.status = 'Sukses';
                         db[p.phone].saldo += targetNominal;
-                        db[p.phone].mutasi.push({
-                            id: 'TU' + Date.now(),
-                            type: 'in',
-                            amount: targetNominal,
-                            desc: 'Topup QRIS Otomatis',
-                            date: new Date().toLocaleString('id-ID')
-                        });
+                        db[p.phone].mutasi.push({ id: 'TU' + Date.now(), type: 'in', amount: targetNominal, desc: 'Topup QRIS Otomatis', date: new Date().toLocaleString('id-ID') });
                         changed = true;
 
                         let uData = webUsers[p.phone] || {name: 'Unknown'};
@@ -2983,7 +3011,7 @@ setInterval(async () => {
     }
 
     if (changed) saveJSON(dbFile, db);
-}, 30000); // Ngecek setiap 30 Detik!
+}, 30000); 
 
 // FUNGSI AUTO BACKUP TELEGRAM
 function startAutoBackup() {
@@ -2998,24 +3026,43 @@ function startAutoBackup() {
 }
 setTimeout(startAutoBackup, 15000); 
 
-// API TOPUP LOGIC
+// ==========================================
+// API TOPUP LOGIC (MENYERTAKAN GENERATE QRIS DINAMIS)
+// ==========================================
 app.post('/api/topup/request', (req, res) => {
-    const { phone, method, nominal } = req.body; if (isMaintenance()) return res.status(400).json({ error: 'Sistem sedang Maintenance Otomatis.' });
+    const { phone, method, nominal } = req.body; 
+    let config = loadJSON(configFile);
+    
+    if (isMaintenance()) return res.status(400).json({ error: 'Sistem sedang Maintenance Otomatis.' });
+    
     let db = loadJSON(dbFile); let webUsers = loadJSON(webUsersFile); let uData = webUsers[phone] || { name: 'Unknown', email: 'Unknown' };
     if (!db[phone]) db[phone] = { saldo: 0, jid: phone + '@s.whatsapp.net', mutasi: [], topup: [], transactions: [] };
     if (!db[phone].topup) db[phone].topup = [];
     
-    // Kadaluwarsa 5 menit (QRIS)
     let expiry = null;
-    if (method === 'QRIS Otomatis') expiry = Date.now() + 5*60*1000;
+    let finalQrisString = null;
+
+    if (method === 'QRIS Otomatis') {
+        expiry = Date.now() + 5*60*1000; // 5 Menit
+        // Kalau admin sudah set String QRIS di panel, kita buatkan dinamisnya!
+        if (config.qrisStringCode) {
+            finalQrisString = generateDynamicQris(config.qrisStringCode, nominal);
+        } else {
+            return res.status(400).json({ error: 'Admin belum menyetting String QRIS di panel VPS.' });
+        }
+    }
 
     let dateStr = new Date().toLocaleString('id-ID');
     const newTopup = { id: 'TU' + Date.now(), method: method, nominal: nominal, status: 'Proses', date: dateStr, expiry: expiry };
-    db[phone].topup.push(newTopup); saveJSON(dbFile, db); 
+    db[phone].topup.push(newTopup); 
+    saveJSON(dbFile, db); 
     
-    let kodeUnik = nominal % 1000; let depositAsli = nominal - kodeUnik; let saldoSebelum = db[phone].saldo;
+    let kodeUnik = nominal % 1000; let depositAsli = nominal - kodeUnik;
     let msgTopup = `⏳ *TOP UP MENUNGGU PEMBAYARAN* ⏳\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n⌚ Waktu: ${dateStr}\n🏦 Metode: ${method}\n💰 Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n🎫 Unik: ${kodeUnik}\n💵 Diterima: Rp ${nominal.toLocaleString('id-ID')}`;
-    sendTeleNotif(msgTopup, 'topup'); res.json({ message: 'Top up direkam' });
+    sendTeleNotif(msgTopup, 'topup'); 
+    
+    // Kirim string QRIS ke frontend biar dirender jadi gambar
+    res.json({ message: 'Top up direkam', qris_string: finalQrisString });
 });
 
 app.post('/api/topup/history', (req, res) => { 
@@ -3165,7 +3212,7 @@ echo "Menginstal modul Node.js..."
 npm install --silent
 npm install -g pm2 > /dev/null 2>&1
 
-echo "[6/7] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - V162 AUTO QRIS BHM)..."
+echo "[6/7] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - V163 AUTO QRIS BHM)..."
 
 cat << 'EOF' > /usr/bin/menu
 #!/bin/bash
@@ -3211,7 +3258,7 @@ while true; do
 
     clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V162) 💎        ${NC}"
+    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V163) 💎        ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo -e "   💰 SALDO DIGIFLAZZ: ${GREEN}$SALDO_DIGI${NC}"
     echo -e "${CYAN}======================================================${NC}"
@@ -3234,7 +3281,7 @@ while true; do
     echo -e "${PURPLE}[ 🌐 MANAJEMEN SERVER & API ]${NC}"
     echo -e "  ${GREEN}12.${NC} Setup Domain (Nginx + Cloudflare + UFW Firewall)"
     echo -e "  ${GREEN}13.${NC} 🔌 Setup API Digiflazz (Untuk Produk)"
-    echo -e "  ${YELLOW}14.${NC} 💸 Setup API BHM GoPay (Untuk AUTO QRIS)"
+    echo -e "  ${YELLOW}14.${NC} 💸 Setup API GoPay & QRIS Otomatis (BHM Biz ID)"
     echo -e "  ${GREEN}15.${NC} 🔄 Refresh Katalog Digiflazz (Hapus Cache API)"
     echo ""
     echo -e "${PURPLE}[ 🛡️ PUSAT KOMANDO TELEGRAM ]${NC}"
@@ -3711,22 +3758,34 @@ JS
         14)
             clear
             echo -e "${CYAN}===============================================${NC}"
-            echo -e "${YELLOW}   💸 SETUP API BHM GOPAY (UNTUK AUTO QRIS)    ${NC}"
+            echo -e "${YELLOW} 💸 SETUP API GOPAY & QRIS OTOMATIS (BHM BIZ ID) ${NC}"
             echo -e "${CYAN}===============================================${NC}"
-            echo "Catatan: Pastikan Anda sudah daftar & punya Token di gopay.bhm.biz.id"
-            echo "API ini digunakan untuk memverifikasi Topup QRIS Otomatis."
+            echo "API ini akan menarik transaksi dari akun GoPay Anda,"
+            echo "lalu mengkonfirmasi deposit QRIS secara otomatis!"
             echo ""
-            read -p "Masukkan API Token BHM (cth: mapi_aSW...): " bhm_token
+            read -p "Masukkan API Token BHM Biz Anda: " bhm_token
+            read -p "Masukkan Merchant ID (Angka, contoh: 123): " bhm_merchant
+            read -p "Masukkan Nomor HP GoPay (08...): " bhm_phone
+            echo ""
+            echo "Siapkan TEKS STRING dari QRIS Statis Anda."
+            echo "Teks QRIS berawalan '000201010211...' dan diakhiri dengan kombinasi 4 huruf/angka (CRC)."
+            read -p "Paste TEKS STRING QRIS Anda di sini: " qris_string
+            
             cd "$HOME/$DIR_NAME"
             cat << 'JS' > temp_bhm.js
 const fs = require('fs');
 let file = './config.json';
 let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
+
 if(process.argv[2] && process.argv[2] !== '') cfg.bhmToken = process.argv[2];
+if(process.argv[3] && process.argv[3] !== '') cfg.bhmMerchantId = process.argv[3];
+if(process.argv[4] && process.argv[4] !== '') cfg.bhmGopayNumber = process.argv[4];
+if(process.argv[5] && process.argv[5] !== '') cfg.qrisStringCode = process.argv[5];
+
 fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
-console.log('\n✅ Konfigurasi API BHM (Auto QRIS) Berhasil Disimpan!');
+console.log('\n✅ Data API BHM & String QRIS Statis Berhasil Disimpan!');
 JS
-            node temp_bhm.js "$bhm_token"
+            node temp_bhm.js "$bhm_token" "$bhm_merchant" "$bhm_phone" "$qris_string"
             rm temp_bhm.js
             pm2 restart $BOT_NAME > /dev/null 2>&1
             read -p "Tekan Enter untuk kembali..." 
@@ -3897,12 +3956,12 @@ EOF
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
 echo "=========================================================="
-echo "  SISTEM WEB V162 BERHASIL DIPERBARUI SECARA PENUH!       "
+echo "  SISTEM WEB V163 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
 
 EOF
-echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V162..."
+echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V163..."
 
 cd "$HOME/$DIR_NAME"
 
@@ -3923,10 +3982,10 @@ chmod +x /usr/bin/menu
 
 clear
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V162 SELESAI! 🚀      \033[0m"
+echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V163 SELESAI! 🚀      \033[0m"
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[0;36mFITUR BARU DI V162 (THE PERFECT OXFORD + AUTO QRIS BHM):\033[0m"
-echo -e "  ✅ \033[1;33mAUTO QRIS (BHM API)\033[0m Cek mutasi GoPay otomatis untuk pembayaran QRIS!"
+echo -e "\033[0;36mFITUR BARU DI V163 (THE PERFECT OXFORD + AUTO QRIS STRING):\033[0m"
+echo -e "  ✅ \033[1;33mAUTO QRIS DINAMIS (BHM API)\033[0m Generate QR otomatis dari String & Cek Mutasi GoPay!"
 echo -e "  ✅ \033[1;33mANIMASI WELCOME LOGIN\033[0m Teks berjalan elegan dengan inner-shadow"
 echo -e "  ✅ \033[1;33mANTI-BUG CANNOT GET\033[0m Sistem otomatis ngebaca file atau nampilin 404 keren!"
 echo -e "  ✅ \033[1;33mUI 1000% CLONE FOTO\033[0m Background Oxford, Harga & Aksesoris Kuning Maize"
