@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V164 (PERFECT OXFORD + AUTO QRIS BHM - PART 1)
+# DIGITAL FIKY STORE - V165 (PERFECT OXFORD + UI QRIS MEWAH - PART 1)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
@@ -16,10 +16,10 @@ DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V164 (PART 1)           "
+echo "    MENGINSTAL DIGITAL FIKY STORE V165 (PART 1)           "
 echo "=========================================================="
 
-echo "[1/7] Memperbarui sistem dan menginstal Node.js..."
+echo "[1/8] Memperbarui sistem dan menginstal Node.js..."
 apt update -y && apt install curl wget gnupg git dos2unix psmisc zip unzip nginx ufw -y > /dev/null 2>&1
 
 if ! command -v node > /dev/null 2>&1; then
@@ -28,14 +28,14 @@ if ! command -v node > /dev/null 2>&1; then
 fi
 npm install -g pm2 > /dev/null 2>&1
 
-echo "[2/7] Membuat direktori aplikasi dan web..."
+echo "[2/8] Membuat direktori aplikasi dan web..."
 mkdir -p "$HOME/$DIR_NAME/public/banners"
 cd "$HOME/$DIR_NAME"
 
 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "description": "Aplikasi PPOB DIGITAL FIKY STORE",
   "main": "index.js",
   "scripts": {
@@ -54,7 +54,7 @@ cat << 'EOF' > package.json
 }
 EOF
 
-echo "[3/7] Membangun Antarmuka CSS & Halaman Auth (FULL UNCOMPRESSED)..."
+echo "[3/8] Membangun Antarmuka CSS & Halaman Auth (FULL UNCOMPRESSED)..."
 
 cat << 'EOF' > public/style.css
 body { 
@@ -63,7 +63,7 @@ body {
     font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; 
 }
 
-/* MARQUEE KUNING MAIZE SESUAI REQUEST */
+/* MARQUEE KUNING MAIZE */
 .marquee-wrapper {
     width: 100%;
     overflow: hidden;
@@ -685,8 +685,9 @@ cat << 'EOF' > public/forgot.html
 </body>
 </html>
 EOF
-
 echo "[PART 1 SELESAI BOSKUUU!]"
+echo "[PART 2 DITULIS: Memperbarui Dashboard dan Membuat Halaman QRIS Khusus...]"
+
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -1016,10 +1017,12 @@ cat << 'EOF' > public/dashboard.html
     
     document.getElementById('html-root').classList.add('dark');
 
+    // PERBAIKAN WAKTU KHUSUS WIB AGAR TIDAK ERROR MAINTENANCE
     function isMaintenance() {
-        const now = new Date();
-        const h = now.getHours();
-        const m = now.getMinutes();
+        const tzStr = new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"});
+        const nowWIB = new Date(tzStr);
+        const h = nowWIB.getHours();
+        const m = nowWIB.getMinutes();
         if (h >= 23 || (h === 0 && m <= 30)) { return true; }
         return false;
     }
@@ -1040,7 +1043,6 @@ cat << 'EOF' > public/dashboard.html
         document.getElementById('sidebarInitial').innerText = user.name.charAt(0).toUpperCase();
     }
 
-    let qrisImg = 'https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg';
     let linkTele = 'https://t.me/digitalfikystore_channel';
     let linkWa = 'https://whatsapp.com/channel/digitalfikystore';
     let sel = ''; 
@@ -1048,7 +1050,8 @@ cat << 'EOF' > public/dashboard.html
     let hideS = localStorage.getItem('hideSaldo') === 'true';
 
     function updateDateTime() {
-      const now = new Date();
+      const tzStr = new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"});
+      const now = new Date(tzStr);
       const year = now.getFullYear();
       const month = String(now.getMonth() + 1).padStart(2, '0');
       const date = String(now.getDate()).padStart(2, '0');
@@ -1166,33 +1169,18 @@ cat << 'EOF' > public/dashboard.html
             
             if(res.ok) {
                 Swal.close();
-                // Mengubah String QRIS Dinamis dari Server menjadi Gambar QR Code Asli
-                // PERBAIKAN UI RESOLUSI DAN MARGIN DISINI
-                let finalQrisImg = data.qris_string ? `https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=2&data=${encodeURIComponent(data.qris_string)}` : qrisImg;
-
-                setTimeout(() => {
-                  Swal.fire({
-                    title: `<span class="font-bold text-lg text-[#facc15]">Scan QRIS Dinamis</span>`,
-                    html: `
-                        <p class="text-4xl text-[#facc15] font-extrabold mb-2">Rp ${fn.toLocaleString('id-ID')}</p>
-                        <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold mb-3 animate-pulse inline-block">Sisa Waktu: <span id="qrisTimer">05:00</span></div>
-                        <div class="bg-white p-4 rounded-xl inline-block border border-gray-200 mb-2 shadow-lg"><img src="${finalQrisImg}" class="w-64 h-64 object-contain" style="image-rendering: crisp-edges;"></div>
-                        <p class="text-[11px] text-gray-300 font-medium">Scan QRIS di atas. <b class="text-[#facc15]">Nominal akan otomatis muncul</b> di aplikasi E-Wallet / M-Banking Anda!</p>`,
-                    showCancelButton: true, confirmButtonText: 'Sudah Transfer', cancelButtonText: 'Tutup', background: bg, color: c,
-                    didOpen: () => {
-                      let t = 300; let tmr = document.getElementById('qrisTimer');
-                      timerInterval = setInterval(() => { 
-                          t--; let m = Math.floor(t / 60).toString().padStart(2, '0'); let s = (t % 60).toString().padStart(2, '0'); 
-                          if(tmr) tmr.innerText = `${m}:${s}`; 
-                          if(t <= 0) { clearInterval(timerInterval); Swal.close(); location.href = '/riwayat_topup.html'; } 
-                      }, 1000);
-                    }, 
-                    willClose: () => clearInterval(timerInterval)
-                  }).then(r => {
-                    if(r.isConfirmed) { Swal.fire({ icon: 'success', title: 'Diproses', text: 'Sistem sedang memverifikasi dana yang masuk...', timer: 2000, background: bg, color: c }).then(() => location.href = '/riwayat_topup.html'); } 
-                    else { location.href = '/riwayat_topup.html'; }
-                  });
-                }, 300);
+                // KITA PINDAHKAN TAMPILAN KE HALAMAN BARU qris.html AGAR MEWAH SEPERTI REQUEST!
+                let finalQrisImg = data.qris_string ? `https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=2&data=${encodeURIComponent(data.qris_string)}` : 'https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg';
+                
+                const qrisData = {
+                    nominal: fn,
+                    qris_url: finalQrisImg,
+                    date: new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'}),
+                    ref: data.ref_id || 'TP-' + Date.now()
+                };
+                sessionStorage.setItem('pendingQris', JSON.stringify(qrisData));
+                window.location.href = '/qris.html';
+                
             } else {
                 Swal.fire({ icon: 'error', title: 'Gagal', text: data.error || 'Terjadi kesalahan sistem.', background: bg, color: c });
             }
@@ -1211,6 +1199,184 @@ cat << 'EOF' > public/dashboard.html
 </body>
 </html>
 EOF
+
+cat << 'EOF' > public/qris.html
+<!DOCTYPE html>
+<html lang="id" id="html-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pembayaran QRIS - DIGITAL FIKY STORE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+      tailwind.config = { darkMode: 'class' }
+  </script>
+</head>
+<body class="bg-[#0b1320] font-sans transition-colors duration-300 text-white min-h-screen flex justify-center">
+  <div class="w-full max-w-md bg-[#0b1320] relative shadow-2xl flex flex-col h-full min-h-screen pb-10">
+    
+    <div class="flex justify-center p-5 bg-[#0b1320] sticky top-0 z-40">
+      <h1 class="text-[18px] font-extrabold text-white">Detail Transaksi</h1>
+    </div>
+
+    <div class="px-4 flex-1">
+      <div class="bg-[#111c2e] rounded-[1.5rem] border border-[#1e293b] p-5 shadow-lg flex flex-col items-center">
+        
+        <div class="w-full text-center mb-5">
+            <p class="text-white text-sm font-bold mb-1.5">Sisa Waktu Pembayaran:</p>
+            <div class="bg-[#fecdd3] text-[#e11d48] font-black text-4xl py-3 rounded-xl shadow-sm tracking-wider" id="timerDisplay">10 : 00</div>
+        </div>
+
+        <p class="text-white text-sm mb-3">Segera bayar dengan QRIS ini:</p>
+        <div class="bg-white p-4 rounded-3xl inline-block mb-6 w-full max-w-[280px] shadow-sm flex justify-center">
+            <img id="qrisImage" src="" class="w-64 h-64 object-contain" style="image-rendering: crisp-edges;">
+        </div>
+
+        <div class="flex w-full gap-4 justify-center mb-8">
+            <button onclick="shareQR()" class="flex-1 border-2 border-green-600 text-green-500 py-2.5 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-green-600/10 transition-colors shadow-sm">
+                <i class="fas fa-share-alt text-lg"></i> Bagikan
+            </button>
+            <button onclick="downloadQR()" class="flex-1 border-2 border-green-600 text-green-500 py-2.5 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-green-600/10 transition-colors shadow-sm">
+                <i class="fas fa-download text-lg"></i> Simpan
+            </button>
+        </div>
+
+        <div class="text-center w-full mb-8">
+            <p class="text-gray-400 text-[11px] font-bold uppercase tracking-wider mb-1">Transfer TEPAT SEBESAR:</p>
+            <p class="text-[#38bdf8] font-black text-4xl mb-2 drop-shadow-md" id="qrisNominal">Rp 0</p>
+            <p class="text-[#ef4444] text-[13px] font-bold">Harus persis agar otomatis masuk.</p>
+        </div>
+
+        <div class="w-full h-px bg-[#1e293b] mb-6"></div>
+
+        <div class="w-full flex flex-col gap-3.5 mb-2">
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-[13px] font-medium">Waktu</span><span class="text-white font-bold text-[13px]" id="detWaktu">...</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-[13px] font-medium">Status</span><span class="text-white font-extrabold text-[13px]">Pending</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-[13px] font-medium">Layanan</span><span class="text-white font-bold text-[13px]">Topup Saldo QRIS</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-[13px] font-medium">Nominal</span><span class="text-white font-bold text-[13px]" id="detNominal">...</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-[13px] font-medium">Tujuan</span><span class="text-white font-bold text-[13px]">Sistem Pembayaran</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-[13px] font-medium">SN/Ref</span><span class="text-white font-bold text-[13px]" id="detRef">...</span></div>
+        </div>
+
+      </div>
+      
+      <button onclick="window.location.href='/riwayat_topup.html'" class="w-full py-4 mt-6 bg-[#ef4444] text-white font-extrabold rounded-[1rem] shadow-lg hover:bg-red-600 transition-colors text-[15px]">
+          Kembali ke Beranda
+      </button>
+
+    </div>
+  </div>
+  
+  <script>
+    if(!localStorage.getItem('user')) { window.location.href = '/'; }
+    document.getElementById('html-root').classList.add('dark');
+
+    const qrisDataRaw = sessionStorage.getItem('pendingQris');
+    if(!qrisDataRaw) { window.location.href = '/dashboard.html'; }
+    const qData = JSON.parse(qrisDataRaw);
+
+    document.getElementById('qrisImage').src = qData.qris_url;
+    document.getElementById('qrisNominal').innerText = 'Rp ' + qData.nominal.toLocaleString('id-ID');
+    document.getElementById('detNominal').innerText = 'Rp ' + qData.nominal.toLocaleString('id-ID');
+    document.getElementById('detWaktu').innerText = qData.date;
+    document.getElementById('detRef').innerText = qData.ref;
+
+    // TIMER 10 MENIT
+    let timeLeft = 600; 
+    const timerEl = document.getElementById('timerDisplay');
+    
+    const countdown = setInterval(() => {
+        timeLeft--;
+        let m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+        let s = (timeLeft % 60).toString().padStart(2, '0');
+        timerEl.innerText = `${m} : ${s}`;
+        
+        if(timeLeft <= 0) {
+            clearInterval(countdown);
+            Swal.fire({
+                icon: 'warning',
+                title: 'Waktu Habis',
+                text: 'Waktu pembayaran QRIS telah berakhir.',
+                background: '#0b1320', color: '#fff'
+            }).then(() => {
+                sessionStorage.removeItem('pendingQris');
+                window.location.href = '/riwayat_topup.html';
+            });
+        }
+    }, 1000);
+
+    // AUTO CEK STATUS SUKSES KE SERVER
+    const user = JSON.parse(localStorage.getItem('user'));
+    const checkInterval = setInterval(() => {
+        fetch('/api/user/mutasi', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone: user.phone}) })
+        .then(r => r.json())
+        .then(d => {
+            const mutasi = d.mutasi || [];
+            // Jika ada mutasi masuk dengan nominal sama di menit-menit ini
+            const found = mutasi.find(m => m.type === 'in' && m.amount === qData.nominal);
+            if(found) {
+                clearInterval(checkInterval);
+                clearInterval(countdown);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: 'Pembayaran otomatis terdeteksi. Saldo telah masuk!',
+                    background: '#0b1320', color: '#fff'
+                }).then(() => {
+                    sessionStorage.removeItem('pendingQris');
+                    window.location.href = '/riwayat_topup.html';
+                });
+            }
+        });
+    }, 5000);
+
+    async function downloadQR() {
+        try {
+            const response = await fetch(qData.qris_url);
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `QRIS_PPOB_${qData.nominal}.png`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            Swal.fire({icon: 'success', title: 'Disimpan', text: 'Gambar QRIS berhasil disimpan ke galeri.', timer: 2000, showConfirmButton: false, background: '#0b1320', color: '#fff'});
+        } catch(e) {
+            Swal.fire({icon: 'error', title: 'Gagal', text: 'Gagal menyimpan gambar.', background: '#0b1320', color: '#fff'});
+        }
+    }
+
+    async function shareQR() {
+        try {
+            const response = await fetch(qData.qris_url);
+            const blob = await response.blob();
+            const file = new File([blob], `QRIS_${qData.nominal}.png`, { type: blob.type });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    title: 'Bayar QRIS PPOB',
+                    text: `Tolong bayarkan tagihan sebesar Rp ${qData.nominal.toLocaleString('id-ID')}`,
+                    files: [file]
+                });
+            } else {
+                Swal.fire({icon: 'info', title: 'Gagal', text: 'Browser kamu tidak mendukung fitur bagikan gambar.', background: '#0b1320', color: '#fff'});
+            }
+        } catch(e) {
+            // User cancelled share
+        }
+    }
+  </script>
+</body>
+</html>
+EOF
+
+echo "[PART 2 SELESAI BOSKUUU!]"
+echo "[PART 3 DITULIS: Menyusun Halaman Layanan, Riwayat, dan Info...]"
+
 cat << 'EOF' > public/operator.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -1720,7 +1886,6 @@ cat << 'EOF' > public/operator.html
 </html>
 EOF
 
-echo "[PART 2 SELESAI BOSKUUU!]"
 cat << 'EOF' > public/game.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -1950,6 +2115,7 @@ cat << 'EOF' > public/riwayat_topup.html
 </body>
 </html>
 EOF
+
 cat << 'EOF' > public/info.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -2033,7 +2199,6 @@ cat << 'EOF' > public/info.html
 </html>
 EOF
 
-echo "[PART 3 SELESAI BOSKUUU!]"
 cat << 'EOF' > public/mutasi.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -2132,6 +2297,9 @@ cat << 'EOF' > public/mutasi.html
 </body>
 </html>
 EOF
+
+echo "[PART 3 SELESAI BOSKUUU!]"
+echo "[PART 4 DITULIS: Menyusun Profil, Riwayat, dan Backend Server...]"
 
 cat << 'EOF' > public/profile.html
 <!DOCTYPE html>
@@ -2588,19 +2756,17 @@ cat << 'EOF' > public/riwayat.html
             </div>`;
         } else {
             c.innerHTML = filtered.map((i) => {
-                // WARNA BADGE CLONE OUTLINE PURE MAIZE
                 let sc = '';
                 if(i.status === 'Gagal') {
                     sc = 'text-red-400 border border-red-500/50 bg-red-500/10';
                 } else if(i.status === 'Sukses') {
                     sc = 'text-green-400 border border-green-500/50 bg-green-500/10'; 
                 } else {
-                    sc = 'text-[#facc15] border border-[#facc15]/50 bg-[#facc15]/10'; // Kuning Maize murni
+                    sc = 'text-[#facc15] border border-[#facc15]/50 bg-[#facc15]/10'; 
                 }
                         
                 let rawIdx = allTrx.indexOf(i);
                 
-                // KARTU UI CLONE: GELAP (#111c2e), ICON BULAT KIRI, HARGA KUNING MAIZE KANAN ATAS
                 return `
                 <div onclick="showDetailTrx(${rawIdx})" class="bg-[#111c2e] p-4 rounded-[1.2rem] mb-3 border border-[#1e293b] shadow-sm cursor-pointer hover:bg-[#1a2639] transition-colors flex items-center justify-between">
                     <div class="flex items-center gap-3 overflow-hidden">
@@ -2623,13 +2789,11 @@ cat << 'EOF' > public/riwayat.html
 
     function renderHistory() { filterHistory(); }
 
-    // FUNGSI KOMPLAIN WA DENGAN TEKS OTOMATIS SESUAI REQUEST
     window.komplainTrx = function(harga, tanggal, statusLengkap) {
         let msg = `Halo, saya ingin komplain transaksi dengan nominal Rp ${harga} pada tanggal ${tanggal}. Status: ${statusLengkap}.`;
         window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(msg), '_blank');
     }
 
-    // POPUP DETAIL MEWAH
     window.showDetailTrx = function(idx) {
       const i = allTrx[idx];
       let rawStatus = i.status.toLowerCase();
@@ -2680,8 +2844,8 @@ cat << 'EOF' > public/riwayat.html
 </body>
 </html>
 EOF
-echo "[PART 4 SELESAI DITULIS. TINGGAL PART 5, 6, 7 (BACKEND & VPS MENU)!]"
-echo "[5/7] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V164 AUTO QRIS DINAMIS)..."
+
+echo "[5/8] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - FIX TIMEZONE & QRIS MEWAH)..."
 
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
@@ -2742,12 +2906,13 @@ if (!fs.existsSync(digiCacheFile)) saveJSON(digiCacheFile, { time: 0, data: [] }
 if (!fs.existsSync(infoFile)) saveJSON(infoFile, []);
 
 // ==========================================
-// FUNGSI AUTO MAINTENANCE (23:00 - 00:30 WIB)
+// FUNGSI AUTO MAINTENANCE (FIX TIMEZONE WIB)
 // ==========================================
 function isMaintenance() {
-    const now = new Date();
-    const h = now.getHours();
-    const m = now.getMinutes();
+    const tzStr = new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"});
+    const nowWIB = new Date(tzStr);
+    const h = nowWIB.getHours();
+    const m = nowWIB.getMinutes();
     if (h >= 23 || (h === 0 && m <= 30)) { return true; }
     return false;
 }
@@ -2784,7 +2949,10 @@ app.post('/api/user/mutasi', (req, res) => { let db = loadJSON(dbFile); res.json
 app.post('/api/user/transactions', (req, res) => { let db = loadJSON(dbFile); res.json({ transactions: db[req.body.phone]?.transactions || [] }); });
 
 app.get('/api/global-stats', (req, res) => {
-    let db = loadJSON(dbFile); let now = new Date();
+    let db = loadJSON(dbFile); 
+    const tzStr = new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"});
+    let now = new Date(tzStr);
+    
     let todayStr = now.toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }).split(' ')[0]; 
     let startOfWeek = new Date(now); startOfWeek.setDate(now.getDate() - now.getDay()); 
     let tToday = 0, tWeek = 0, tMonth = 0, tAll = 0;
@@ -2807,7 +2975,8 @@ app.get('/api/global-stats', (req, res) => {
 
 app.post('/api/admin/broadcast', (req, res) => {
     const { judul, message } = req.body; let infoData = loadJSON(infoFile);
-    infoData.push({ judul: judul || "📢 PENGUMUMAN RESMI", isi: message, date: new Date().toLocaleString('id-ID') });
+    let dateStr = new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'});
+    infoData.push({ judul: judul || "📢 PENGUMUMAN RESMI", isi: message, date: dateStr });
     saveJSON(infoFile, infoData); res.json({ success: true, message: "Broadcast ditambahkan ke Pusat Informasi." });
 });
 
@@ -2859,7 +3028,7 @@ app.post('/api/transaction/create', async (req, res) => {
         if (db[phone].saldo < price) return res.status(400).json({ error: 'Saldo tidak mencukupi.' });
         
         if (!db[phone].mutasi) db[phone].mutasi = []; if (!db[phone].transactions) db[phone].transactions = [];
-        db[phone].saldo -= price; let ref_id = 'TRX' + Date.now(); let dateStr = new Date().toLocaleString('id-ID'); let trxStatus = 'Proses'; let sn_ref = '';
+        db[phone].saldo -= price; let ref_id = 'TRX' + Date.now(); let dateStr = new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'}); let trxStatus = 'Proses'; let sn_ref = '';
 
         if (!isLocal && config.digiUser && config.digiKey) {
             try {
@@ -2895,7 +3064,7 @@ setInterval(async () => {
                     let digiPayload = { username: config.digiUser, buyer_sku_code: trx.sku, customer_no: trx.no_tujuan, ref_id: trx.id, sign: sign };
                     let digiRes = await axios.post('https://api.digiflazz.com/v1/transaction', digiPayload, { timeout: 10000 }); let digiData = digiRes.data.data;
                     if (digiData.status === 'Sukses') { trx.status = 'Sukses'; trx.sn_ref = digiData.sn || trx.sn_ref; changed = true; sendTeleNotif(`✅ *UPDATE: TRANSAKSI SUKSES* ✅\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n🔖 SN: ${trx.sn_ref}`, 'trx'); } 
-                    else if (digiData.status === 'Gagal') { trx.status = 'Gagal'; trx.sn_ref = digiData.sn || digiData.message || 'Gagal Pusat'; user.saldo += trx.harga; user.mutasi.push({ id: 'REF'+Date.now(), type: 'in', amount: trx.harga, desc: `Refund: ${trx.produk}`, date: new Date().toLocaleString('id-ID') }); changed = true; sendTeleNotif(`❌ *UPDATE: TRANSAKSI GAGAL (REFUND)* ❌\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n⚠️ Alasan: ${digiData.message || 'Gagal Pusat'}`, 'trx'); }
+                    else if (digiData.status === 'Gagal') { trx.status = 'Gagal'; trx.sn_ref = digiData.sn || digiData.message || 'Gagal Pusat'; user.saldo += trx.harga; user.mutasi.push({ id: 'REF'+Date.now(), type: 'in', amount: trx.harga, desc: `Refund: ${trx.produk}`, date: new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'}) }); changed = true; sendTeleNotif(`❌ *UPDATE: TRANSAKSI GAGAL (REFUND)* ❌\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n⚠️ Alasan: ${digiData.message || 'Gagal Pusat'}`, 'trx'); }
                 } catch(e) {}
             }
         }
@@ -2922,15 +3091,11 @@ function convertCRC16(str) {
 function generateDynamicQris(staticQris, amount) {
     try {
         let qrisWithoutCRC = staticQris.substring(0, staticQris.indexOf("6304"));
-        if(!qrisWithoutCRC) return staticQris; // Kalau string admin ngawur, kembalikan statis
+        if(!qrisWithoutCRC) return staticQris;
         
         let amountStr = amount.toString();
         let amountLen = amountStr.length.toString().padStart(2, '0');
-        
-        // Buat tag 54 (Nominal) => 54 + Panjang Nominal + Nominal
         let tag54 = "54" + amountLen + amountStr;
-        
-        // Gabungkan dan hitung CRC baru
         let rawQris = qrisWithoutCRC + tag54 + "6304";
         let newCrc = convertCRC16(rawQris);
         
@@ -2964,13 +3129,11 @@ setInterval(async () => {
 
     if (pendingQris.length > 0) {
         try {
-            // MENGGUNAKAN ENDPOINT TRANSAKSI GOPAY DARI BHM
-            let endpoint = 'http://gopay.bhm.biz.id/v1/gopay/transactions'; // Alternatif jika yang /api/transactions gangguan
+            let endpoint = 'http://gopay.bhm.biz.id/v1/gopay/transactions';
             let res = await axios.get(endpoint, {
                 headers: { 'Authorization': `Bearer ${config.bhmToken}` },
                 timeout: 10000
             }).catch(async () => {
-                // Fallback ke endpoint satu lagi
                 return await axios.get('http://gopay.bhm.biz.id/api/transactions', {
                     headers: { 'Authorization': `Bearer ${config.bhmToken}` },
                     timeout: 10000
@@ -2982,9 +3145,8 @@ setInterval(async () => {
             for (let p of pendingQris) {
                 let targetNominal = parseInt(p.topup.nominal);
                 
-                // Cari transaksi mutasi GoPay masuk (credit) yang nominalnya PAS dengan kode unik
                 let matchTx = txs.find(tx => {
-                    let amount = parseInt(tx.amount); // Parse 50000.00 jadi 50000
+                    let amount = parseInt(tx.amount);
                     let isCredit = (tx.type && tx.type.toLowerCase() === 'credit') || parseFloat(tx.amount) > 0;
                     return amount === targetNominal && isCredit;
                 });
@@ -2999,7 +3161,7 @@ setInterval(async () => {
 
                         p.topup.status = 'Sukses';
                         db[p.phone].saldo += targetNominal;
-                        db[p.phone].mutasi.push({ id: 'TU' + Date.now(), type: 'in', amount: targetNominal, desc: 'Topup QRIS Dinamis (GoPay)', date: new Date().toLocaleString('id-ID') });
+                        db[p.phone].mutasi.push({ id: 'TU' + Date.now(), type: 'in', amount: targetNominal, desc: 'Topup QRIS Dinamis (GoPay)', date: new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'}) });
                         changed = true;
 
                         let uData = webUsers[p.phone] || {name: 'Unknown'};
@@ -3013,7 +3175,7 @@ setInterval(async () => {
     }
 
     if (changed) saveJSON(dbFile, db);
-}, 30000); // 👈 Mesin akan beroperasi mencari GoPay setiap 30 Detik
+}, 30000); 
 
 // FUNGSI AUTO BACKUP TELEGRAM
 function startAutoBackup() {
@@ -3022,7 +3184,7 @@ function startAutoBackup() {
     setInterval(() => {
         let zipName = `AutoBackup_FikyStore_${Date.now()}.zip`;
         exec(`zip -r ${zipName} database.json web_users.json config.json local_products.json info.json`, async (err) => {
-            if (!err) { const form = new FormData(); form.append('chat_id', c); form.append('caption', `⏳ *AUTO BACKUP (${config.autoBackupHours} Jam)*\n\nTanggal: ${new Date().toLocaleString('id-ID')}`); form.append('document', fs.createReadStream(zipName)); try { await axios.post(`https://api.telegram.org/bot${t}/sendDocument`, form, { headers: form.getHeaders() }); } catch(e){} fs.unlinkSync(zipName); }
+            if (!err) { const form = new FormData(); form.append('chat_id', c); form.append('caption', `⏳ *AUTO BACKUP (${config.autoBackupHours} Jam)*\n\nTanggal: ${new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'})}`); form.append('document', fs.createReadStream(zipName)); try { await axios.post(`https://api.telegram.org/bot${t}/sendDocument`, form, { headers: form.getHeaders() }); } catch(e){} fs.unlinkSync(zipName); }
         });
     }, config.autoBackupHours * 60 * 60 * 1000);
 }
@@ -3045,27 +3207,26 @@ app.post('/api/topup/request', (req, res) => {
     let finalQrisString = null;
 
     if (method === 'QRIS Otomatis') {
-        expiry = Date.now() + 5*60*1000; // Kadaluwarsa 5 Menit
+        expiry = Date.now() + 10*60*1000; // Timer Kadaluwarsa 10 Menit sesuai Request Gambar
         
         if (config.qrisStringCode && config.qrisStringCode !== '') {
-            // MENGUBAH STRING STATIS MENJADI DINAMIS BERDASARKAN NOMINAL UNIK
             finalQrisString = generateDynamicQris(config.qrisStringCode, nominal);
         } else {
             return res.status(400).json({ error: 'Admin belum menyetting String QRIS di panel VPS. Hubungi Admin.' });
         }
     }
 
-    let dateStr = new Date().toLocaleString('id-ID');
-    const newTopup = { id: 'TU' + Date.now(), method: method, nominal: nominal, status: 'Proses', date: dateStr, expiry: expiry };
+    let dateStr = new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'});
+    let newRef = 'TP-' + Date.now();
+    const newTopup = { id: newRef, method: method, nominal: nominal, status: 'Proses', date: dateStr, expiry: expiry };
     db[phone].topup.push(newTopup); 
     saveJSON(dbFile, db); 
     
-    let kodeUnik = nominal % 1000; let depositAsli = nominal - kodeUnik;
     let msgTopup = `⏳ *TOP UP MENUNGGU PEMBAYARAN* ⏳\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n⌚ Waktu: ${dateStr}\n🏦 Metode: QRIS Dinamis\n💰 Nominal Scan: Rp ${nominal.toLocaleString('id-ID')}`;
     sendTeleNotif(msgTopup, 'topup'); 
     
-    // Kirim string QRIS yang sudah disisipkan harga ke frontend
-    res.json({ message: 'Top up direkam', qris_string: finalQrisString });
+    // Kirim string QRIS dan Ref ID ke frontend untuk qris.html
+    res.json({ message: 'Top up direkam', qris_string: finalQrisString, ref_id: newRef });
 });
 
 app.post('/api/topup/history', (req, res) => { 
@@ -3090,7 +3251,7 @@ app.post('/api/admin/balance', async (req, res) => {
     if(!targetPhone || !webUsers[targetPhone]) return res.json({ success: false, message: '\n❌ Member tidak ditemukan!' });
     if(!db[targetPhone]) db[targetPhone] = { saldo: 0, mutasi: [], topup: [], transactions: [] };
     if(!db[targetPhone].mutasi) db[targetPhone].mutasi = []; if(!db[targetPhone].topup) db[targetPhone].topup = [];
-    const dateStr = new Date().toLocaleString('id-ID');
+    const dateStr = new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'});
     if (action === 'add') { db[targetPhone].saldo += parseInt(amount); db[targetPhone].mutasi.push({ id: 'TRX'+Date.now(), type: 'in', amount: parseInt(amount), desc: 'Penambahan oleh Admin', date: dateStr }); db[targetPhone].topup.push({ id: 'TU'+Date.now(), method: 'Admin Fiky Store', nominal: parseInt(amount), status: 'Sukses', date: dateStr }); saveJSON(dbFile, db); sendTeleNotif(`✅ *TOP UP BERHASIL*\n\n👤 Nama: ${webUsers[targetPhone].name}\n💰 Masuk: Rp ${parseInt(amount).toLocaleString('id-ID')}`, 'topup'); res.json({ success: true, message: `\n✅ Saldo berhasil ditambah!` }); } 
     else if (action === 'reduce') { db[targetPhone].saldo -= parseInt(amount); db[targetPhone].mutasi.push({ id: 'TRX'+Date.now(), type: 'out', amount: parseInt(amount), desc: 'Penarikan oleh Admin', date: dateStr }); saveJSON(dbFile, db); res.json({ success: true, message: `\n✅ Saldo berhasil dikurangi!` }); }
 });
@@ -3210,12 +3371,14 @@ if (require.main === module) {
 }
 EOF
 
-echo "[PART 5 SELESAI DITULIS. TINGGAL 2 PART LAGI!]"
+echo "[PART 4 SELESAI BOSKUUU!]"
+echo "[PART 5 DITULIS: Finalisasi Instalasi, Panel VPS, & Menyalakan Mesin!]"
+
 echo "Menginstal modul Node.js..."
 npm install --silent
 npm install -g pm2 > /dev/null 2>&1
 
-echo "[6/7] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - V163 AUTO QRIS BHM)..."
+echo "[6/8] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - V165 AUTO QRIS MEWAH)..."
 
 cat << 'EOF' > /usr/bin/menu
 #!/bin/bash
@@ -3261,7 +3424,7 @@ while true; do
 
     clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V163) 💎        ${NC}"
+    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V165) 💎        ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo -e "   💰 SALDO DIGIFLAZZ: ${GREEN}$SALDO_DIGI${NC}"
     echo -e "${CYAN}======================================================${NC}"
@@ -3940,7 +4103,7 @@ exec('zip -r ' + zipName + ' database.json web_users.json config.json local_prod
     const form = new FormData();
     form.append('chat_id', c);
     form.append('document', fs.createReadStream(zipName));
-    form.append('caption', '📦 *BACKUP MANUAL BERHASIL*\n\nTanggal: ' + new Date().toLocaleString('id-ID'));
+    form.append('caption', '📦 *BACKUP MANUAL BERHASIL*\n\nTanggal: ' + new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'}));
     form.append('parse_mode', 'Markdown');
     
     axios.post('https://api.telegram.org/bot' + t + '/sendDocument', form, { headers: form.getHeaders() })
@@ -3978,12 +4141,8 @@ EOF
 
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
-echo "=========================================================="
-echo "  SISTEM WEB V163 BERHASIL DIPERBARUI SECARA PENUH!       "
-echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
-echo "=========================================================="
 
-echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V163..."
+echo "[8/8] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V165..."
 
 cd "$HOME/$DIR_NAME"
 
@@ -4004,15 +4163,13 @@ chmod +x /usr/bin/menu
 
 clear
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V163 SELESAI! 🚀      \033[0m"
+echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V165 SELESAI! 🚀      \033[0m"
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[0;36mFITUR BARU DI V163 (THE PERFECT OXFORD + AUTO QRIS STRING BHM):\033[0m"
-echo -e "  ✅ \033[1;33mAUTO QRIS DINAMIS (BHM API)\033[0m Generate QR otomatis dari String & Cek Mutasi GoPay!"
-echo -e "  ✅ \033[1;33mANIMASI WELCOME LOGIN\033[0m Teks berjalan elegan dengan inner-shadow"
-echo -e "  ✅ \033[1;33mANTI-BUG CANNOT GET\033[0m Sistem otomatis ngebaca file atau nampilin 404 keren!"
-echo -e "  ✅ \033[1;33mUI 1000% CLONE FOTO\033[0m Background Oxford, Harga & Aksesoris Kuning Maize"
-echo -e "  ✅ \033[1;33mSISA BIRU MUDA DIMUSNAHKAN\033[0m Background Profil/Riwayat/Info Full Hitam Gelap"
-echo -e "  ✅ \033[1;33mTELEGRAM KEMBALI BIRU\033[0m Icon Telegram kembali ke kodratnya"
+echo -e "\033[0;36mFITUR BARU DI V165 (PERFECT OXFORD + QRIS MEWAH & FIX TIMEZONE):\033[0m"
+echo -e "  ✅ \033[1;33mFIX BUG WAKTU MAINTENANCE\033[0m Waktu server dikunci ke zona WIB (Asia/Jakarta)!"
+echo -e "  ✅ \033[1;33mUI QRIS 1 Halaman Full\033[0m Desain mewah persis gambar, ada Timer 10 Menit!"
+echo -e "  ✅ \033[1;33mTombol Bagikan & Download\033[0m Lebih elegan, tidak lagi pakai popup kaku!"
+echo -e "  ✅ \033[1;33mAUTO QRIS BHM & CEK MUTASI\033[0m Pengecekan mutasi GoPay otomatis jalan!"
 echo -e "\033[0;32m======================================================================\033[0m"
 echo -e "\033[1;37mCARA PENGGUNAAN SELANJUTNYA:\033[0m"
 echo -e "Ketik perintah: \033[1;32mmenu\033[0m (Lalu tekan Enter untuk buka Panel)"
