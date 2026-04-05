@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V154 (THE MODERN HYBRID - PART 1)
+# DIGITAL FIKY STORE - V155 (THE LEGACY REBORN - PART 1)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
@@ -16,7 +16,7 @@ DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V154 (PART 1)           "
+echo "    MENGINSTAL DIGITAL FIKY STORE V155 (PART 1)           "
 echo "=========================================================="
 
 echo "[1/7] Memperbarui sistem dan menginstal Node.js..."
@@ -35,7 +35,7 @@ cd "$HOME/$DIR_NAME"
 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "Aplikasi PPOB DIGITAL FIKY STORE",
   "main": "index.js",
   "scripts": {
@@ -63,42 +63,25 @@ body {
     font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; 
 }
 
-/* MARQUEE MODERN GLOWING EFFECT */
-.modern-marquee-wrapper {
+/* MARQUEE LEGACY KUNING MENYALA */
+.marquee-wrapper {
     width: 100%;
     overflow: hidden;
     white-space: nowrap;
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    background: linear-gradient(90deg, rgba(15,23,42,0.05) 0%, rgba(30,41,59,0.08) 50%, rgba(15,23,42,0.05) 100%);
-    border-radius: 50px;
-    padding: 6px 12px;
-    border: 1px solid rgba(0, 33, 71, 0.1);
 }
 
-.dark .modern-marquee-wrapper {
-    background: linear-gradient(90deg, #0b1320 0%, #111c2e 50%, #0b1320 100%);
-    border: 1px solid #1e293b;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
-}
-
-.modern-marquee-text {
+.marquee-text {
     display: inline-block;
     padding-left: 100%;
-    animation: marquee-anim 16s linear infinite;
+    animation: marquee-anim 15s linear infinite;
     font-weight: 900;
-    font-size: 11.5px;
-    letter-spacing: 0.8px;
+    font-size: 12px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
-    color: #002147;
-}
-
-.dark .modern-marquee-text {
-    background: linear-gradient(to right, #fde047, #facc15, #fbbf24);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0px 0px 12px rgba(253, 224, 71, 0.3);
+    color: #facc15; /* Kuning khas Fiky Store */
 }
 
 @keyframes marquee-anim {
@@ -724,8 +707,8 @@ cat << 'EOF' > public/dashboard.html
     <div class="flex justify-between items-center p-4 bg-white dark:bg-[#0b1320] shadow-sm dark:shadow-md sticky z-40 top-0" id="headerMain">
       <i class="fas fa-bars text-xl cursor-pointer text-gray-600 dark:text-gray-300 hover:text-[#002147] dark:hover:text-yellow-400 shrink-0" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')"></i>
       
-      <div class="modern-marquee-wrapper mx-3">
-          <span class="modern-marquee-text">WELCOME TO THE DIGITAL FIKY STORE - PUSAT PPOB TERMURAH & TERPERCAYA - TRANSAKSI CEPAT AMAN 24 JAM</span>
+      <div class="marquee-wrapper border-l border-r border-gray-200 dark:border-gray-800 mx-3 px-2 h-6">
+          <span class="marquee-text">WELCOME TO THE DIGITAL FIKY STORE - PUSAT PPOB TERMURAH & TERPERCAYA - TRANSAKSI CEPAT AMAN 24 JAM</span>
       </div>
 
       <div class="text-[10px] font-extrabold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 px-3 py-1.5 rounded-full shrink-0 shadow-sm" id="headTrx">
@@ -1190,7 +1173,9 @@ cat << 'EOF' > public/dashboard.html
       const fn = n + Math.floor(Math.random() * 90) + 10;
       
       if(sel === 'qris') {
-        if(n < 10000) return Swal.fire({icon: 'warning', title: 'Gagal', text: 'Minimal Rp 10.000', background: bg, color: c});
+        // BATAS MINIMAL QRIS DIUBAH JADI RP 1.000 SESUAI REQUEST BOS
+        if(n < 1000) return Swal.fire({icon: 'warning', title: 'Gagal', text: 'Minimal Top Up Rp 1.000', background: bg, color: c});
+        
         closeTopUp();
         
         await fetch('/api/topup/request', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone: user.phone, method: 'QRIS Otomatis', nominal: fn}) });
@@ -1359,7 +1344,9 @@ cat << 'EOF' > public/operator.html
         const now = new Date();
         const h = now.getHours();
         const m = now.getMinutes();
-        if (h >= 23 || (h === 0 && m <= 30)) { return true; }
+        if (h >= 23 || (h === 0 && m <= 30)) {
+            return true;
+        }
         return false;
     }
 
@@ -1831,26 +1818,26 @@ cat << 'EOF' > public/riwayat_topup.html
       .swal2-popup.custom-swal-bg { background-color: #111c2e !important; border-radius: 1.5rem !important; width: 340px !important; padding: 1.5rem !important; }
   </style>
 </head>
-<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
-  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+<body class="bg-[#0b1320] font-sans transition-colors duration-300">
+  <div class="max-w-md mx-auto bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
     
-    <div class="flex items-center pt-5 px-5 pb-0 bg-white dark:bg-[#0b1320] sticky top-0 z-50">
-      <i class="fas fa-chevron-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i>
-      <h1 class="text-[18px] font-extrabold text-gray-800 dark:text-white uppercase tracking-wide">Riwayat Topup</h1>
+    <div class="flex items-center pt-5 px-5 pb-0 bg-[#0b1320] sticky top-0 z-50">
+      <i class="fas fa-chevron-left text-xl cursor-pointer mr-4 text-white" onclick="location.href='/dashboard.html'"></i>
+      <h1 class="text-[18px] font-extrabold text-white uppercase tracking-wide">Riwayat Topup</h1>
     </div>
 
-    <div class="flex bg-white dark:bg-[#0b1320] sticky top-[60px] z-40 border-b border-gray-200 dark:border-[#1e293b] shadow-sm">
+    <div class="flex bg-[#0b1320] sticky top-[60px] z-40 border-b border-[#1e293b] shadow-sm">
       <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-gray-400 cursor-pointer uppercase tracking-wide transition-colors" onclick="location.href='/riwayat.html'">
         Produk
       </div>
-      <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-[#00a8ff] dark:text-[#38bdf8] border-b-[3px] border-[#00a8ff] dark:border-[#38bdf8] cursor-pointer uppercase tracking-wide">
+      <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-[#38bdf8] border-b-[3px] border-[#38bdf8] cursor-pointer uppercase tracking-wide">
         Topup Saldo
       </div>
     </div>
 
     <div class="mt-2" id="historyContainer">
       <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
-        <i class="fas fa-spinner fa-spin text-4xl mb-4 text-[#002147] dark:text-yellow-400"></i>
+        <i class="fas fa-spinner fa-spin text-4xl mb-4 text-yellow-400"></i>
         <p class="text-sm font-bold text-gray-500">Memuat riwayat top up...</p>
       </div>
     </div>
@@ -1863,9 +1850,8 @@ cat << 'EOF' > public/riwayat_topup.html
         window.location.href = '/';
     }
     
-    if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) {
-        document.getElementById('html-root').classList.add('dark');
-    }
+    // Force Dark Mode for Legacy Reborn Look
+    document.getElementById('html-root').classList.add('dark');
     
     // Fetch Riwayat Top Up ke Backend
     fetch('/api/topup/history', {
@@ -1876,17 +1862,16 @@ cat << 'EOF' > public/riwayat_topup.html
     .then(r => r.json())
     .then(d => {
       const c = document.getElementById('historyContainer');
-      const isDark = localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null;
       
       if(!d.history || d.history.length === 0){
         c.innerHTML = `
             <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
-                <div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-[#1e293b]">
+                <div class="w-[5.5rem] h-[5.5rem] bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-[#1e293b]">
                     <i class="fas fa-wallet text-gray-400 text-4xl"></i>
                 </div>
-                <h2 class="text-gray-800 dark:text-white font-bold text-lg tracking-wide mb-2">Belum Ada Top Up</h2>
-                <p class="text-gray-500 dark:text-gray-400 text-[13px] leading-relaxed mb-8 px-2">Anda belum melakukan pengisian saldo. Ayo isi saldo sekarang!</p>
-                <button class="bg-[#002147] text-white dark:bg-[#0b1320] dark:text-yellow-400 border border-transparent dark:border-yellow-400 font-extrabold py-3 px-8 rounded-full shadow-lg hover:opacity-90 transition" onclick="location.href='/dashboard.html'">Top Up Sekarang</button>
+                <h2 class="text-white font-bold text-lg tracking-wide mb-2">Belum Ada Top Up</h2>
+                <p class="text-gray-400 text-[13px] leading-relaxed mb-8 px-2">Anda belum melakukan pengisian saldo. Ayo isi saldo sekarang!</p>
+                <button class="bg-yellow-400 text-[#001229] font-extrabold py-3 px-8 rounded-full shadow-lg hover:bg-yellow-500 transition" onclick="location.href='/dashboard.html'">Top Up Sekarang</button>
             </div>`;
       } else {
         window.topupData = d.history.reverse();
@@ -1894,38 +1879,34 @@ cat << 'EOF' > public/riwayat_topup.html
         c.innerHTML = window.topupData.map((i, idx) => {
           let isExp = i.status === 'Expired';
           
-          // WARNA BADGE KEMBALI KE VERSI LAMA YANG AKURAT
+          // WARNA BADGE KEMBALI KE VERSI LAMA (Sesuai Screenshot)
           let sc = '';
           let statusText = i.status;
           
           if(isExp) {
-              sc = 'bg-[#ffedd5] text-[#ea580c] dark:bg-[#ffedd5] dark:text-[#c2410c]';
-              statusText = 'Gagal (Kedaluwarsa)';
+              sc = 'bg-orange-100 text-orange-600';
+              statusText = 'Kedaluwarsa';
           } else if(i.status === 'Gagal') {
-              sc = 'bg-[#ffe4e6] text-[#e11d48] dark:bg-[#ffe4e6] dark:text-[#be123c]';
+              sc = 'bg-[#ffe4e6] text-[#16a34a]'; // Fallback
+              sc = 'bg-red-100 text-red-600';
           } else if(i.status === 'Sukses') {
-              sc = 'bg-[#dcfce7] text-[#16a34a] dark:bg-[#dcfce7] dark:text-[#15803d]';
+              sc = 'bg-[#e6f4ea] text-[#16a34a]'; // Warna hijau khas persis screenshot
           } else {
-              sc = 'bg-[#fef9c3] text-[#ca8a04] dark:bg-[#fef9c3] dark:text-[#a16207]';
+              sc = 'bg-yellow-100 text-yellow-600'; // Proses
           }
           
           let methodClean = i.method.includes('QRIS') ? 'QRIS' : (i.method.includes('Admin') ? 'Admin' : 'Manual WA');
           let titleText = `Topup Saldo ${methodClean}`;
           
-          // KARTU UI HYBRID (CLASSIC CLEAN + TAB MODERN)
+          // KARTU UI LEGACY REBORN: GELAP (#162032), TANPA HARGA DI KANAN
           return `
-            <div onclick="showDetailTopup(${idx})" class="bg-white dark:bg-[#0b1320] p-4 border-b border-gray-200 dark:border-[#1e293b] cursor-pointer hover:bg-gray-50 dark:hover:bg-[#111c2e] transition-colors flex justify-between items-center">
-                <div class="flex flex-col flex-1">
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-[11px] text-gray-500 dark:text-gray-400 font-bold">${i.date}</span>
-                        <span class="text-[10px] font-extrabold px-2 py-0.5 rounded ${sc}">${statusText}</span>
-                    </div>
-                    <h4 class="font-extrabold text-[14px] text-gray-800 dark:text-gray-200 mb-0.5">${titleText}</h4>
-                    <p class="text-[11px] font-bold text-gray-500 dark:text-gray-400">Tujuan: Sistem Pembayaran</p>
+            <div onclick="showDetailTopup(${idx})" class="bg-[#162032] p-4 border-b border-gray-800 cursor-pointer hover:bg-[#1e293b] transition-colors flex flex-col">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-[11px] text-gray-400 font-bold">${i.date}</span>
+                    <span class="text-[10px] font-extrabold px-2 py-0.5 rounded ${sc}">${statusText}</span>
                 </div>
-                <div class="ml-3 text-right">
-                    <p class="text-[14px] font-black text-[#002147] dark:text-yellow-400">Rp ${(i.nominal || 0).toLocaleString('id-ID')}</p>
-                </div>
+                <h4 class="font-extrabold text-[14px] text-gray-200 mb-0.5">${titleText}</h4>
+                <p class="text-[11px] font-bold text-gray-500">Tujuan: Sistem Pembayaran</p>
             </div>`;
         }).join('');
       }
@@ -1933,17 +1914,16 @@ cat << 'EOF' > public/riwayat_topup.html
 
     // FUNGSI KOMPLAIN WA DENGAN TEKS OTOMATIS SESUAI REQUEST
     window.komplainTopup = function(nominal, tanggal, statusLengkap) {
-        // Teks presisi sesuai permintaan bos: "Halo, saya ingin komplain deposit dengan nominal 20190 pada tanggal 2026-03-25 15:50:33. Status: pending_qris..."
-        let msg = `Halo Admin, saya ingin komplain deposit dengan nominal Rp ${nominal} pada tanggal ${tanggal}. Status: ${statusLengkap}. Mohon bantuannya.`;
+        // Teks presisi sesuai permintaan bos (tanpa Rp): "Halo, saya ingin komplain deposit dengan nominal 20190 pada tanggal 2026-03-25 15:50:33. Status: pending_qris."
+        let msg = `Halo, saya ingin komplain deposit dengan nominal ${nominal} pada tanggal ${tanggal}. Status: ${statusLengkap}.`;
         window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(msg), '_blank');
     }
 
     // POPUP DETAIL MEWAH
     window.showDetailTopup = function(index) {
         const item = window.topupData[index];
-        const isDark = localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null;
         
-        let statusText = item.status === 'Expired' ? 'Gagal (Kedaluwarsa)' : item.status;
+        let statusText = item.status === 'Expired' ? 'Kedaluwarsa' : item.status;
         let rawStatus = item.status.toLowerCase();
         if(rawStatus === 'proses' && item.method.includes('QRIS')) rawStatus = 'pending_qris';
         if(rawStatus === 'expired') rawStatus = 'gagal_kedaluwarsa';
@@ -1968,7 +1948,7 @@ cat << 'EOF' > public/riwayat_topup.html
             </div>
             <div class="flex justify-between mb-3">
                 <span class="text-gray-400 font-medium text-[13px]">Nominal</span>
-                <span class="text-white font-bold text-[13px]">Rp ${(item.nominal || 0).toLocaleString('id-ID')}</span>
+                <span class="text-white font-bold text-[13px] text-yellow-400">Rp ${(item.nominal || 0).toLocaleString('id-ID')}</span>
             </div>
             <div class="flex justify-between mb-3">
                 <span class="text-gray-400 font-medium text-[13px]">Tujuan</span>
@@ -1991,7 +1971,7 @@ cat << 'EOF' > public/riwayat_topup.html
         Swal.fire({
             html: htmlContent,
             showConfirmButton: false,
-            background: isDark ? '#111c2e' : '#111c2e', 
+            background: '#111c2e', 
             customClass: { popup: 'custom-swal-bg' },
             padding: 0
         });
@@ -2015,35 +1995,35 @@ cat << 'EOF' > public/info.html
       tailwind.config = { darkMode: 'class' }
   </script>
 </head>
-<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
-  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+<body class="bg-[#0b1320] font-sans transition-colors duration-300 text-white">
+  <div class="max-w-md mx-auto bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
     
-    <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
-      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i>
-      <h1 class="text-[18px] font-bold text-gray-800 dark:text-white">Pusat Informasi</h1>
+    <div class="flex items-center p-5 bg-[#0b1320] sticky top-0 z-40 border-b border-[#1e293b]">
+      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-white" onclick="location.href='/dashboard.html'"></i>
+      <h1 class="text-[18px] font-bold text-white">Pusat Informasi</h1>
     </div>
 
     <div class="p-4" id="infoList">
       <div class="mt-20 flex flex-col items-center justify-center text-gray-400">
-        <i class="fas fa-spinner fa-spin text-4xl mb-4 text-[#002147] dark:text-yellow-400"></i>
+        <i class="fas fa-spinner fa-spin text-4xl mb-4 text-yellow-400"></i>
         <p class="text-sm font-bold">Memuat informasi...</p>
       </div>
     </div>
 
-    <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40">
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/dashboard.html'">
+    <div class="fixed bottom-0 w-full max-w-md bg-[#001229] border-t border-[#1e293b] flex justify-around p-3 pb-4 shadow-sm z-40">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/dashboard.html'">
         <i class="fas fa-home text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">HOME</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/riwayat.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/riwayat.html'">
         <i class="fas fa-file-alt text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">RIWAYAT</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400">
+      <div class="flex flex-col items-center cursor-pointer text-yellow-400">
         <i class="fas fa-bell text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">INFO</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/profile.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/profile.html'">
         <i class="fas fa-user text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">PROFIL</span>
       </div>
@@ -2054,9 +2034,7 @@ cat << 'EOF' > public/info.html
     const user = JSON.parse(localStorage.getItem('user'));
     if(!user) window.location.href = '/';
     
-    if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) {
-        document.getElementById('html-root').classList.add('dark');
-    }
+    document.getElementById('html-root').classList.add('dark');
 
     // Fetch Informasi dari Backend
     fetch('/api/info')
@@ -2065,19 +2043,19 @@ cat << 'EOF' > public/info.html
       const l = document.getElementById('infoList');
       if(!d.info || d.info.length === 0) {
         l.innerHTML = `
-            <div class="mt-20 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500">
+            <div class="mt-20 flex flex-col items-center justify-center text-gray-500">
                 <i class="fas fa-bell-slash text-5xl mb-4 opacity-50"></i>
                 <p class="text-sm font-bold">Belum ada info terbaru.</p>
             </div>`;
       } else {
         l.innerHTML = d.info.reverse().map(i => `
-            <div class="relative bg-white dark:bg-[#111c2e] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 mb-4 shadow-sm overflow-hidden">
-                <div class="absolute -right-2 top-4 text-7xl opacity-10 dark:opacity-20 select-none">📢</div>
+            <div class="relative bg-[#111c2e] border border-[#1e293b] rounded-2xl p-5 mb-4 shadow-sm overflow-hidden">
+                <div class="absolute -right-2 top-4 text-7xl opacity-20 select-none">📢</div>
                 <div class="flex justify-between items-start mb-3 relative z-10">
-                    <h3 class="font-extrabold text-[#002147] dark:text-yellow-400 text-[15px] pr-2">${i.judul}</h3>
-                    <span class="text-[10px] text-gray-500 bg-gray-100 dark:bg-black font-bold px-2 py-1 rounded-md border border-gray-200 dark:border-gray-800">${i.date}</span>
+                    <h3 class="font-extrabold text-yellow-400 text-[15px] pr-2">${i.judul}</h3>
+                    <span class="text-[10px] text-gray-400 bg-black font-bold px-2 py-1 rounded-md border border-[#1e293b]">${i.date}</span>
                 </div>
-                <p class="text-[13px] text-gray-600 dark:text-gray-300 leading-relaxed relative z-10 font-medium">${i.isi}</p>
+                <p class="text-[13px] text-gray-300 leading-relaxed relative z-10 font-medium">${i.isi}</p>
             </div>`).join('');
       }
     });
@@ -2101,35 +2079,35 @@ cat << 'EOF' > public/mutasi.html
       tailwind.config = { darkMode: 'class' }
   </script>
 </head>
-<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
-  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+<body class="bg-[#0b1320] font-sans transition-colors duration-300 text-white">
+  <div class="max-w-md mx-auto bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
     
-    <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
-      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="history.back()"></i>
-      <h1 class="text-[18px] font-bold text-gray-800 dark:text-white">Mutasi Saldo</h1>
+    <div class="flex items-center p-5 bg-[#0b1320] sticky top-0 z-40 border-b border-[#1e293b]">
+      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-white" onclick="history.back()"></i>
+      <h1 class="text-[18px] font-bold text-white">Mutasi Saldo</h1>
     </div>
 
     <div class="p-4" id="mutasiList">
-      <div class="mt-20 flex flex-col items-center justify-center text-[#002147] dark:text-yellow-400">
+      <div class="mt-20 flex flex-col items-center justify-center text-yellow-400">
         <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
         <p class="text-sm font-bold text-gray-500">Memuat data mutasi...</p>
       </div>
     </div>
 
-    <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40">
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/dashboard.html'">
+    <div class="fixed bottom-0 w-full max-w-md bg-[#001229] border-t border-[#1e293b] flex justify-around p-3 pb-4 shadow-sm z-40">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/dashboard.html'">
         <i class="fas fa-home text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">HOME</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/riwayat.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/riwayat.html'">
         <i class="fas fa-file-alt text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">RIWAYAT</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/info.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/info.html'">
         <i class="fas fa-bell text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">INFO</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/profile.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/profile.html'">
         <i class="fas fa-user text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">PROFIL</span>
       </div>
@@ -2139,10 +2117,12 @@ cat << 'EOF' > public/mutasi.html
   
   <script>
     const user = JSON.parse(localStorage.getItem('user'));
-    if(!user) { window.location.href = '/'; }
-    if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) {
-        document.getElementById('html-root').classList.add('dark');
+    
+    if(!user) {
+        window.location.href = '/';
     }
+    
+    document.getElementById('html-root').classList.add('dark');
     
     fetch('/api/user/mutasi', {
         method: 'POST',
@@ -2156,24 +2136,24 @@ cat << 'EOF' > public/mutasi.html
       if(!d.mutasi || d.mutasi.length === 0) {
         l.innerHTML = `
             <div class="mt-20 flex flex-col items-center justify-center text-center px-6">
-                <div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-[#1e293b]">
+                <div class="w-[5.5rem] h-[5.5rem] bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-[#1e293b]">
                     <i class="fas fa-exchange-alt text-gray-400 text-4xl"></i>
                 </div>
-                <h2 class="text-gray-800 dark:text-white font-bold text-lg mb-2">Belum Ada Mutasi</h2>
+                <h2 class="text-white font-bold text-lg mb-2">Belum Ada Mutasi</h2>
             </div>`;
       } else {
         l.innerHTML = d.mutasi.reverse().map(m => `
-        <div class="bg-white dark:bg-[#111c2e] border border-gray-200 dark:border-[#1e293b] rounded-2xl p-4 mb-3 flex justify-between shadow-sm">
+        <div class="bg-[#111c2e] border border-[#1e293b] rounded-2xl p-4 mb-3 flex justify-between shadow-sm">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full ${m.type === 'in' ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'} flex items-center justify-center text-lg shrink-0">
+                <div class="w-10 h-10 rounded-full ${m.type === 'in' ? 'bg-green-900/30 text-green-400' : 'bg-red-900/30 text-red-400'} flex items-center justify-center text-lg shrink-0">
                     <i class="fas ${m.type === 'in' ? 'fa-arrow-down' : 'fa-arrow-up'}"></i>
                 </div>
                 <div>
-                    <h4 class="font-bold text-[13px] text-gray-800 dark:text-gray-200">${m.desc}</h4>
+                    <h4 class="font-bold text-[13px] text-gray-200">${m.desc}</h4>
                     <p class="text-[10px] font-bold text-gray-500">${m.date}</p>
                 </div>
             </div>
-            <div class="font-extrabold text-[14px] flex items-center ${m.type === 'in' ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}">
+            <div class="font-extrabold text-[14px] flex items-center ${m.type === 'in' ? 'text-green-500' : 'text-red-500'}">
                 ${m.type === 'in' ? '+' : '-'} Rp ${m.amount.toLocaleString('id-ID')}
             </div>
         </div>`).join('');
@@ -2199,108 +2179,108 @@ cat << 'EOF' > public/profile.html
       tailwind.config = { darkMode: 'class' }
   </script>
 </head>
-<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
-  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+<body class="bg-[#0b1320] font-sans transition-colors duration-300 text-white">
+  <div class="max-w-md mx-auto bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
     
-    <div class="bg-white dark:bg-[#050b14] p-8 pb-10 flex flex-col items-center relative rounded-b-[2rem] shadow-sm dark:shadow-lg">
-      <div class="w-24 h-24 bg-gray-100 dark:bg-[#1e293b] rounded-full flex justify-center items-center text-[#002147] dark:text-white font-extrabold text-4xl mt-2 mb-3 shadow-md overflow-hidden border-2 border-transparent" id="profileCircle">U</div>
+    <div class="bg-[#050b14] p-8 pb-10 flex flex-col items-center relative rounded-b-[2rem] shadow-lg border-b border-[#1e293b]">
+      <div class="w-24 h-24 bg-[#1e293b] rounded-full flex justify-center items-center text-white font-extrabold text-4xl mt-2 mb-3 shadow-md overflow-hidden border-2 border-transparent" id="profileCircle">U</div>
       <div class="flex items-center gap-3">
-        <h2 class="text-2xl font-bold tracking-wide text-gray-800 dark:text-gray-100" id="profileName">User Name</h2>
-        <i class="fas fa-pencil-alt text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400 cursor-pointer text-lg" onclick="openEditModal()"></i>
+        <h2 class="text-2xl font-bold tracking-wide text-gray-100" id="profileName">User Name</h2>
+        <i class="fas fa-pencil-alt text-gray-400 hover:text-yellow-400 cursor-pointer text-lg" onclick="openEditModal()"></i>
       </div>
     </div>
 
     <div class="mt-4 px-2">
-      <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800">
-        <i class="fas fa-envelope text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
-        <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Email</div>
-        <div class="text-sm font-bold text-gray-500 dark:text-gray-400" id="profileEmail">-</div>
+      <div class="flex items-center px-4 py-5 border-b border-gray-800">
+        <i class="fas fa-envelope text-gray-400 w-10 text-xl text-center"></i>
+        <div class="flex-1 text-[15px] font-bold text-gray-200 ml-2">Email</div>
+        <div class="text-sm font-bold text-gray-400" id="profileEmail">-</div>
       </div>
-      <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800">
-        <i class="fas fa-phone-alt text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
-        <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">No. Telp</div>
-        <div class="text-sm font-bold text-gray-500 dark:text-gray-400" id="profilePhoneData">08...</div>
+      <div class="flex items-center px-4 py-5 border-b border-gray-800">
+        <i class="fas fa-phone-alt text-gray-400 w-10 text-xl text-center"></i>
+        <div class="flex-1 text-[15px] font-bold text-gray-200 ml-2">No. Telp</div>
+        <div class="text-sm font-bold text-gray-400" id="profilePhoneData">08...</div>
       </div>
-      <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800">
-        <i class="fas fa-wallet text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
-        <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Saldo Akun</div>
-        <div class="text-sm font-extrabold text-[#002147] dark:text-yellow-400" id="profileSaldo">Rp 0</div>
+      <div class="flex items-center px-4 py-5 border-b border-gray-800">
+        <i class="fas fa-wallet text-gray-400 w-10 text-xl text-center"></i>
+        <div class="flex-1 text-[15px] font-bold text-gray-200 ml-2">Saldo Akun</div>
+        <div class="text-sm font-extrabold text-yellow-400" id="profileSaldo">Rp 0</div>
       </div>
-      <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800">
-        <i class="fas fa-shopping-cart text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
-        <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Total Transaksi</div>
-        <div class="text-sm font-extrabold text-[#002147] dark:text-yellow-400" id="profileTrx">0 Trx</div>
+      <div class="flex items-center px-4 py-5 border-b border-gray-800">
+        <i class="fas fa-shopping-cart text-gray-400 w-10 text-xl text-center"></i>
+        <div class="flex-1 text-[15px] font-bold text-gray-200 ml-2">Total Transaksi</div>
+        <div class="text-sm font-extrabold text-yellow-400" id="profileTrx">0 Trx</div>
       </div>
-      <div class="flex items-center px-4 py-5 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#1a2639] transition-colors" onclick="location.href='/mutasi.html'">
-        <i class="fas fa-exchange-alt text-[#002147] dark:text-gray-400 w-10 text-xl text-center"></i>
-        <div class="flex-1 text-[15px] font-bold text-gray-800 dark:text-gray-200 ml-2">Mutasi Saldo</div>
+      <div class="flex items-center px-4 py-5 border-b border-gray-800 cursor-pointer hover:bg-[#1a2639] transition-colors" onclick="location.href='/mutasi.html'">
+        <i class="fas fa-exchange-alt text-gray-400 w-10 text-xl text-center"></i>
+        <div class="flex-1 text-[15px] font-bold text-gray-200 ml-2">Mutasi Saldo</div>
         <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
       </div>
-      <div class="flex items-center px-4 py-5 cursor-pointer hover:bg-red-50 dark:hover:bg-gray-800/50 transition-colors" onclick="logout()">
+      <div class="flex items-center px-4 py-5 cursor-pointer hover:bg-gray-800/50 transition-colors" onclick="logout()">
         <i class="fas fa-sign-out-alt text-red-600 w-10 text-xl text-center"></i>
         <div class="flex-1 text-[15px] font-bold text-red-600 ml-2">Keluar Akun</div>
       </div>
     </div>
 
     <div id="editProfileModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/70">
-        <div class="bg-white dark:bg-[#0b1320] w-[90%] max-w-[340px] rounded-[1.25rem] border border-gray-200 dark:border-gray-800 shadow-2xl relative p-6 animate-slide-up">
+        <div class="bg-[#0b1320] w-[90%] max-w-[340px] rounded-[1.25rem] border border-gray-800 shadow-2xl relative p-6 animate-slide-up">
             <button onclick="closeEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500">
                 <i class="fas fa-times text-xl"></i>
             </button>
-            <h3 class="text-center text-gray-800 dark:text-white font-extrabold text-lg mb-6">Ubah Profil</h3>
+            <h3 class="text-center text-white font-extrabold text-lg mb-6">Ubah Profil</h3>
             
             <div class="relative w-20 h-20 mx-auto mb-8">
-                <div class="w-full h-full rounded-full border-2 border-[#002147] dark:border-yellow-400 flex items-center justify-center text-3xl font-bold bg-gray-100 dark:bg-[#1e293b] overflow-hidden text-[#002147] dark:text-white" id="editModalInitial">U</div>
+                <div class="w-full h-full rounded-full border-2 border-yellow-400 flex items-center justify-center text-3xl font-bold bg-[#1e293b] overflow-hidden text-white" id="editModalInitial">U</div>
                 <input type="file" id="avatarInput" accept="image/*" class="hidden" onchange="previewAvatar(event)">
-                <div class="absolute bottom-0 right-0 bg-[#002147] dark:bg-yellow-400 rounded-full w-7 h-7 flex items-center justify-center text-white dark:text-[#0b1320] border-[3px] border-white dark:border-[#0b1320] cursor-pointer z-10" onclick="document.getElementById('avatarInput').click()">
+                <div class="absolute bottom-0 right-0 bg-yellow-400 rounded-full w-7 h-7 flex items-center justify-center text-[#0b1320] border-[3px] border-[#0b1320] cursor-pointer z-10" onclick="document.getElementById('avatarInput').click()">
                     <i class="fas fa-camera text-[10px]"></i>
                 </div>
             </div>
 
             <div class="mb-4">
                 <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase">Email (Hanya Baca)</label>
-                <input type="email" id="editEmail" readonly class="w-full bg-gray-100 dark:bg-[#1e293b]/50 border border-gray-300 dark:border-gray-800 rounded-lg px-3 py-3 text-gray-500 dark:text-gray-400 font-bold text-sm focus:outline-none cursor-not-allowed">
+                <input type="email" id="editEmail" readonly class="w-full bg-[#1e293b]/50 border border-gray-800 rounded-lg px-3 py-3 text-gray-400 font-bold text-sm focus:outline-none cursor-not-allowed">
             </div>
             <div class="mb-4">
                 <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase">Nama Pengguna</label>
-                <input type="text" id="editName" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white font-bold text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400">
+                <input type="text" id="editName" class="w-full bg-[#0b1320] border border-gray-700 rounded-lg px-3 py-3 text-white font-bold text-sm focus:outline-none focus:border-yellow-400">
             </div>
             <div class="mb-4">
                 <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase">Nomor Telepon</label>
-                <input type="number" id="editPhone" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white font-bold text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400">
+                <input type="number" id="editPhone" class="w-full bg-[#0b1320] border border-gray-700 rounded-lg px-3 py-3 text-white font-bold text-sm focus:outline-none focus:border-yellow-400">
             </div>
             <div class="mb-4">
                 <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase">Password Baru (Opsional)</label>
                 <div class="relative w-full">
-                    <input type="password" id="editPassword" class="w-full bg-white dark:bg-[#0b1320] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-3 text-gray-800 dark:text-white font-bold text-sm focus:outline-none focus:border-[#002147] dark:focus:border-yellow-400" placeholder="Kosongkan jika tidak diganti">
+                    <input type="password" id="editPassword" class="w-full bg-[#0b1320] border border-gray-700 rounded-lg px-3 py-3 text-white font-bold text-sm focus:outline-none focus:border-yellow-400" placeholder="Kosongkan jika tidak diganti">
                     <i class="fas fa-eye absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-400" onclick="togglePasswordProfile('editPassword', this)"></i>
                 </div>
             </div>
 
             <div class="mb-6 hidden slide-down" id="editOtpContainer">
                 <label class="block text-[10px] font-bold text-gray-500 mb-1 text-center">OTP telah dikirim ke WA</label>
-                <input type="number" id="editOtpInput" class="w-full bg-white dark:bg-[#0b1320] border border-green-500 rounded-lg px-3 py-3 text-gray-800 dark:text-white text-lg tracking-[0.5em] text-center font-extrabold focus:outline-none" placeholder="XXXX">
+                <input type="number" id="editOtpInput" class="w-full bg-[#0b1320] border border-green-500 rounded-lg px-3 py-3 text-white text-lg tracking-[0.5em] text-center font-extrabold focus:outline-none" placeholder="XXXX">
             </div>
 
-            <button id="btnSimpanProfil" onclick="saveProfile()" class="w-full py-3.5 bg-[#002147] dark:bg-yellow-400 text-white dark:text-[#001229] font-extrabold rounded-xl mb-3 shadow-md hover:opacity-90">Simpan Profil</button>
+            <button id="btnSimpanProfil" onclick="saveProfile()" class="w-full py-3.5 bg-yellow-400 text-[#001229] font-extrabold rounded-xl mb-3 shadow-md hover:opacity-90">Simpan Profil</button>
             <button onclick="deleteAccount()" class="w-full py-3.5 bg-red-500/10 text-red-500 font-bold rounded-xl border border-red-500/20 hover:bg-red-500/20">Hapus Akun Permanen</button>
         </div>
     </div>
 
-    <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40">
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/dashboard.html'">
+    <div class="fixed bottom-0 w-full max-w-md bg-[#001229] border-t border-[#1e293b] flex justify-around p-3 pb-4 shadow-sm z-40">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/dashboard.html'">
           <i class="fas fa-home text-xl"></i>
           <span class="text-[10px] mt-1 font-bold">HOME</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/riwayat.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/riwayat.html'">
           <i class="fas fa-file-alt text-xl"></i>
           <span class="text-[10px] mt-1 font-bold">RIWAYAT</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/info.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/info.html'">
           <i class="fas fa-bell text-xl"></i>
           <span class="text-[10px] mt-1 font-bold">INFO</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-[#002147] dark:text-yellow-400">
+      <div class="flex flex-col items-center cursor-pointer text-yellow-400">
           <i class="fas fa-user text-xl"></i>
           <span class="text-[10px] mt-1 font-bold">PROFIL</span>
       </div>
@@ -2312,9 +2292,7 @@ cat << 'EOF' > public/profile.html
     const user = JSON.parse(localStorage.getItem('user'));
     if(!user) window.location.href = '/';
     
-    if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) {
-        document.getElementById('html-root').classList.add('dark');
-    }
+    document.getElementById('html-root').classList.add('dark');
 
     function loadProfileData() {
       document.getElementById('profileName').innerText = user.name;
@@ -2368,8 +2346,8 @@ cat << 'EOF' > public/profile.html
           text: 'Apakah kamu yakin ingin keluar?', 
           icon: 'warning',
           showCancelButton: true,
-          background: localStorage.getItem('darkMode') === 'true' ? '#0b1320' : '#fff',
-          color: localStorage.getItem('darkMode') === 'true' ? '#fff' : '#000',
+          background: '#0b1320',
+          color: '#fff',
           confirmButtonColor: '#d33'
       }).then(r => {
         if(r.isConfirmed) {
@@ -2428,9 +2406,8 @@ cat << 'EOF' > public/profile.html
         const otp = document.getElementById('editOtpInput').value;
         const newPassword = document.getElementById('editPassword').value;
         
-        const isDark = localStorage.getItem('darkMode') === 'true';
-        const bg = isDark ? '#0b1320' : '#fff'; 
-        const col = isDark ? '#fff' : '#000';
+        const bg = '#0b1320'; 
+        const col = '#fff';
         
         if(!newName || !rawPhone) {
             return Swal.fire({
@@ -2483,18 +2460,17 @@ cat << 'EOF' > public/profile.html
     }
 
     function deleteAccount() {
-        const isDark = localStorage.getItem('darkMode') === 'true';
         Swal.fire({ 
             title: 'Hapus Akun Permanen?', text: "Akun dan sisa saldo Anda akan hangus!", icon: 'error', 
-            showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: isDark ? '#111c2e' : '#gray-200', 
-            confirmButtonText: 'Ya, Hapus!', background: isDark ? '#0b1320' : '#fff', color: isDark ? '#fff' : '#000' 
+            showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#111c2e', 
+            confirmButtonText: 'Ya, Hapus!', background: '#0b1320', color: '#fff' 
         }).then(async (result) => {
             if (result.isConfirmed) {
-                Swal.fire({ title: 'Menghapus...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }, background: isDark ? '#0b1320' : '#fff', color: isDark ? '#fff' : '#000' });
+                Swal.fire({ title: 'Menghapus...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }, background: '#0b1320', color: '#fff' });
                 try {
                     const res = await fetch('/api/auth/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) });
-                    if(res.ok) { localStorage.removeItem('user'); Swal.fire({ icon: 'success', title: 'Terhapus', text: 'Akun dihapus.', background: isDark ? '#0b1320' : '#fff', color: isDark ? '#fff' : '#000' }).then(() => { location.href = '/'; }); }
-                } catch(e) { Swal.fire({ icon: 'error', title: 'Error', text: 'Gagal menghapus.', background: isDark ? '#0b1320' : '#fff', color: isDark ? '#fff' : '#000' }); }
+                    if(res.ok) { localStorage.removeItem('user'); Swal.fire({ icon: 'success', title: 'Terhapus', text: 'Akun dihapus.', background: '#0b1320', color: '#fff' }).then(() => { location.href = '/'; }); }
+                } catch(e) { Swal.fire({ icon: 'error', title: 'Error', text: 'Gagal menghapus.', background: '#0b1320', color: '#fff' }); }
             }
         });
     }
@@ -2521,16 +2497,16 @@ cat << 'EOF' > public/riwayat.html
       .swal2-popup.custom-swal-bg { background-color: #111c2e !important; border-radius: 1.5rem !important; width: 340px !important; padding: 1.5rem !important; }
   </style>
 </head>
-<body class="bg-gray-50 dark:bg-[#0b1320] font-sans transition-colors duration-300">
-  <div class="max-w-md mx-auto bg-gray-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+<body class="bg-[#0b1320] font-sans transition-colors duration-300 text-white">
+  <div class="max-w-md mx-auto bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
     
-    <div class="flex items-center pt-5 px-5 pb-0 bg-white dark:bg-[#0b1320] sticky top-0 z-50">
-      <i class="fas fa-chevron-left text-xl cursor-pointer mr-4 text-gray-800 dark:text-white" onclick="location.href='/dashboard.html'"></i>
-      <h1 class="text-[18px] font-extrabold text-gray-800 dark:text-white uppercase tracking-wide">Riwayat Transaksi</h1>
+    <div class="flex items-center pt-5 px-5 pb-0 bg-[#0b1320] sticky top-0 z-50">
+      <i class="fas fa-chevron-left text-xl cursor-pointer mr-4 text-white" onclick="location.href='/dashboard.html'"></i>
+      <h1 class="text-[18px] font-extrabold text-white uppercase tracking-wide">Riwayat Transaksi</h1>
     </div>
 
-    <div class="flex bg-white dark:bg-[#0b1320] sticky top-[60px] z-40 border-b border-gray-200 dark:border-[#1e293b] shadow-sm">
-      <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-[#00a8ff] dark:text-[#38bdf8] border-b-[3px] border-[#00a8ff] dark:border-[#38bdf8] cursor-pointer uppercase tracking-wide">
+    <div class="flex bg-[#0b1320] sticky top-[60px] z-40 border-b border-[#1e293b] shadow-sm">
+      <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-[#38bdf8] border-b-[3px] border-[#38bdf8] cursor-pointer uppercase tracking-wide">
         Produk
       </div>
       <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-gray-400 cursor-pointer uppercase tracking-wide transition-colors" onclick="location.href='/riwayat_topup.html'">
@@ -2538,39 +2514,39 @@ cat << 'EOF' > public/riwayat.html
       </div>
     </div>
 
-    <div class="mx-4 mt-4 bg-white dark:bg-[#111c2e] p-4 rounded-2xl border border-gray-200 dark:border-[#1e293b] shadow-sm">
+    <div class="mx-4 mt-4 bg-[#111c2e] p-4 rounded-2xl border border-[#1e293b] shadow-sm">
         <div class="relative mb-4">
             <i class="fas fa-search absolute left-3.5 top-3 text-gray-400 text-sm"></i>
-            <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-gray-50 dark:bg-[#1a2639] border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm font-bold focus:outline-none focus:border-[#00a8ff] dark:focus:border-[#38bdf8]" placeholder="Cari transaksi (Nomor/SN)...">
+            <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-[#1a2639] border border-gray-700 text-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm font-bold focus:outline-none focus:border-[#38bdf8]" placeholder="Cari transaksi (Nomor/SN)...">
         </div>
         <div class="flex justify-between mb-2 gap-2">
-            <div id="btn-Semua" onclick="setStatusFilter('Semua')" class="flex-1 bg-[#00a8ff] dark:bg-[#38bdf8] text-white dark:text-[#0b1320] text-center py-2 rounded-full text-[11px] font-bold cursor-pointer shadow-sm transition-colors">Semua</div>
-            <div id="btn-Sukses" onclick="setStatusFilter('Sukses')" class="flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors">Sukses</div>
-            <div id="btn-Proses" onclick="setStatusFilter('Proses')" class="flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors">Proses</div>
-            <div id="btn-Gagal" onclick="setStatusFilter('Gagal')" class="flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors">Gagal</div>
+            <div id="btn-Semua" onclick="setStatusFilter('Semua')" class="flex-1 bg-[#38bdf8] text-[#0b1320] text-center py-2 rounded-full text-[11px] font-bold cursor-pointer shadow-sm transition-colors">Semua</div>
+            <div id="btn-Sukses" onclick="setStatusFilter('Sukses')" class="flex-1 bg-[#1a2639] text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-700 transition-colors">Sukses</div>
+            <div id="btn-Proses" onclick="setStatusFilter('Proses')" class="flex-1 bg-[#1a2639] text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-700 transition-colors">Proses</div>
+            <div id="btn-Gagal" onclick="setStatusFilter('Gagal')" class="flex-1 bg-[#1a2639] text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-700 transition-colors">Gagal</div>
         </div>
     </div>
 
-    <div class="mt-2" id="historyContainer">
+    <div class="mt-4" id="historyContainer">
       <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
-        <i class="fas fa-spinner fa-spin text-4xl mb-4 text-[#00a8ff] dark:text-[#38bdf8]"></i>
+        <i class="fas fa-spinner fa-spin text-4xl mb-4 text-[#38bdf8]"></i>
       </div>
     </div>
 
-    <div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-[#001229] border-t border-gray-200 dark:border-gray-800 flex justify-around p-3 pb-4 shadow-sm z-40">
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/dashboard.html'">
+    <div class="fixed bottom-0 w-full max-w-md bg-[#001229] border-t border-[#1e293b] flex justify-around p-3 pb-4 shadow-sm z-40">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/dashboard.html'">
           <i class="fas fa-home text-xl"></i>
           <span class="text-[10px] mt-1 font-bold">HOME</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-[#00a8ff] dark:text-[#38bdf8]">
+      <div class="flex flex-col items-center cursor-pointer text-[#38bdf8]">
           <i class="fas fa-file-alt text-xl"></i>
           <span class="text-[10px] mt-1 font-bold">RIWAYAT</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/info.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/info.html'">
           <i class="fas fa-bell text-xl"></i>
           <span class="text-[10px] mt-1 font-bold">INFO</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#002147] dark:hover:text-yellow-400" onclick="location.href='/profile.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-yellow-400" onclick="location.href='/profile.html'">
           <i class="fas fa-user text-xl"></i>
           <span class="text-[10px] mt-1 font-bold">PROFIL</span>
       </div>
@@ -2581,9 +2557,8 @@ cat << 'EOF' > public/riwayat.html
   <script>
     const user = JSON.parse(localStorage.getItem('user'));
     if(!user) window.location.href = '/';
-    if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) {
-        document.getElementById('html-root').classList.add('dark');
-    }
+    
+    document.getElementById('html-root').classList.add('dark');
 
     let allTrx = [];
     let currentFilter = 'Semua';
@@ -2604,15 +2579,14 @@ cat << 'EOF' > public/riwayat.html
 
     function setStatusFilter(status) {
         currentFilter = status;
-        const isD = localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null;
         
         ['Semua', 'Sukses', 'Proses', 'Gagal'].forEach(btn => {
             const el = document.getElementById('btn-' + btn);
-            el.className = 'flex-1 bg-gray-50 dark:bg-[#1a2639] text-gray-500 dark:text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-200 dark:border-gray-700 transition-colors';
+            el.className = 'flex-1 bg-[#1a2639] text-gray-400 text-center py-2 rounded-full text-[11px] font-bold cursor-pointer border border-gray-700 transition-colors';
         });
         
         const activeBtn = document.getElementById('btn-' + status);
-        activeBtn.className = `flex-1 ${isD ? 'bg-[#38bdf8] text-[#0b1320]' : 'bg-[#00a8ff] text-white'} text-center py-2 rounded-full text-[11px] font-bold cursor-pointer shadow-sm transition-colors`;
+        activeBtn.className = `flex-1 bg-[#38bdf8] text-[#0b1320] text-center py-2 rounded-full text-[11px] font-bold cursor-pointer shadow-sm transition-colors`;
         
         filterHistory();
     }
@@ -2638,39 +2612,37 @@ cat << 'EOF' > public/riwayat.html
         if(!filtered || filtered.length === 0) {
             c.innerHTML = `
             <div class="mt-10 flex flex-col items-center justify-center text-center px-6">
-                <div class="w-[5.5rem] h-[5.5rem] bg-gray-100 dark:bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-200 dark:border-[#1e293b]">
+                <div class="w-[5.5rem] h-[5.5rem] bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-[#1e293b]">
                     <i class="fas fa-receipt text-gray-400 text-4xl"></i>
                 </div>
-                <h2 class="text-gray-800 dark:text-white font-bold text-lg tracking-wide mb-2">Transaksi Tidak Ditemukan</h2>
+                <h2 class="text-white font-bold text-lg tracking-wide mb-2">Transaksi Tidak Ditemukan</h2>
             </div>`;
         } else {
             c.innerHTML = filtered.map((i) => {
                 // WARNA BADGE KEMBALI KE VERSI LAMA YANG AKURAT
                 let sc = '';
                 if(i.status === 'Gagal') {
-                    sc = 'bg-[#ffe4e6] text-[#e11d48] dark:bg-[#ffe4e6] dark:text-[#be123c]';
+                    sc = 'bg-red-100 text-red-600';
                 } else if(i.status === 'Sukses') {
-                    sc = 'bg-[#dcfce7] text-[#16a34a] dark:bg-[#dcfce7] dark:text-[#15803d]';
+                    sc = 'bg-[#e6f4ea] text-[#16a34a]'; // Warna hijau khas screenshot
                 } else {
-                    sc = 'bg-[#fef9c3] text-[#ca8a04] dark:bg-[#fef9c3] dark:text-[#a16207]';
+                    sc = 'bg-yellow-100 text-yellow-600';
                 }
                         
                 let rawIdx = allTrx.indexOf(i);
                 
-                // KARTU UI HYBRID (CLASSIC CLEAN + TAB MODERN)
+                // KARTU UI LEGACY REBORN: GELAP (#162032), TANGGAL DI KIRI, HARGA DI KANAN
                 return `
-                <div onclick="showDetailTrx(${rawIdx})" class="bg-white dark:bg-[#0b1320] p-4 border-b border-gray-200 dark:border-[#1e293b] cursor-pointer hover:bg-gray-50 dark:hover:bg-[#111c2e] transition-colors flex justify-between items-center">
-                    <div class="flex flex-col flex-1">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-[11px] text-gray-500 dark:text-gray-400 font-bold">${i.date}</span>
-                            <span class="text-[10px] font-extrabold px-2 py-0.5 rounded ${sc}">${i.status}</span>
-                        </div>
-                        <h4 class="font-extrabold text-[14px] text-gray-800 dark:text-gray-200 mb-0.5">${i.produk}</h4>
-                        <p class="text-[11px] font-bold text-gray-500 dark:text-gray-400">Tujuan: ${i.no_tujuan}</p>
+                <div onclick="showDetailTrx(${rawIdx})" class="bg-[#162032] p-4 border-b border-gray-800 cursor-pointer hover:bg-[#1e293b] transition-colors">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-[11px] text-gray-400 font-bold">${i.date}</span>
+                        <span class="text-[10px] font-extrabold px-2 py-0.5 rounded ${sc}">${i.status}</span>
                     </div>
-                    <div class="ml-3 text-right">
-                        <p class="text-[14px] font-black text-[#002147] dark:text-yellow-400">Rp ${(i.harga||0).toLocaleString('id-ID')}</p>
+                    <div class="flex justify-between items-center mb-1">
+                        <h4 class="font-extrabold text-[15px] text-gray-200">${i.produk}</h4>
+                        <p class="text-[15px] font-black text-yellow-400">Rp ${(i.harga||0).toLocaleString('id-ID')}</p>
                     </div>
+                    <p class="text-[11px] font-bold text-gray-500">Tujuan: ${i.no_tujuan}</p>
                 </div>`;
             }).join('');
         }
@@ -2680,16 +2652,13 @@ cat << 'EOF' > public/riwayat.html
 
     // FUNGSI KOMPLAIN WA DENGAN TEKS OTOMATIS SESUAI REQUEST
     window.komplainTrx = function(harga, tanggal, statusLengkap) {
-        // Teks presisi sesuai permintaan bos
-        let msg = `Halo Admin, saya ingin komplain transaksi dengan nominal Rp ${harga} pada tanggal ${tanggal}. Status: ${statusLengkap}. Mohon bantuannya.`;
+        let msg = `Halo, saya ingin komplain transaksi dengan nominal ${harga} pada tanggal ${tanggal}. Status: ${statusLengkap}.`;
         window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(msg), '_blank');
     }
 
-    // POPUP DETAIL MEWAH SESUAI SCREENSHOT
+    // POPUP DETAIL MEWAH
     window.showDetailTrx = function(idx) {
       const i = allTrx[idx];
-      const isD = localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null;
-      
       let rawStatus = i.status.toLowerCase();
       
       let htmlContent = `
@@ -2718,7 +2687,7 @@ cat << 'EOF' > public/riwayat.html
             </div>
         </div>
         
-        <button onclick="komplainTrx('${(i.harga||0).toLocaleString('id-ID')}', '${i.date}', '${rawStatus}')" class="w-full py-3.5 bg-[#ef4444] hover:bg-[#dc2626] text-white font-extrabold rounded-[12px] mb-3 transition-colors text-[14px]">
+        <button onclick="komplainTrx('${(i.harga||0)}', '${i.date}', '${rawStatus}')" class="w-full py-3.5 bg-[#ef4444] hover:bg-[#dc2626] text-white font-extrabold rounded-[12px] mb-3 transition-colors text-[14px]">
             Hubungi Admin (Komplain)
         </button>
         <button onclick="Swal.close()" class="w-full py-3.5 bg-transparent border border-[#334155] text-white hover:bg-[#1e293b] font-extrabold rounded-[12px] transition-colors text-[14px]">
@@ -2729,7 +2698,7 @@ cat << 'EOF' > public/riwayat.html
       Swal.fire({
         html: htmlContent,
         showConfirmButton: false,
-        background: isD ? '#111c2e' : '#111c2e', 
+        background: '#111c2e', 
         customClass: { popup: 'custom-swal-bg' },
         padding: 0
       });
@@ -2740,7 +2709,7 @@ cat << 'EOF' > public/riwayat.html
 EOF
 
 echo "[PART 4 SELESAI DITULIS. TINGGAL PART 5, 6, 7 (BACKEND & VPS MENU)!]"
-echo "[5/7] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V154)..."
+echo "[5/7] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V155)..."
 
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
@@ -3822,7 +3791,7 @@ echo "Menginstal modul Node.js..."
 npm install --silent
 npm install -g pm2 > /dev/null 2>&1
 
-echo "[6/7] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - THE MODERN HYBRID)..."
+echo "[6/7] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - THE LEGACY REBORN)..."
 
 cat << 'EOF' > /usr/bin/menu
 #!/bin/bash
@@ -3868,7 +3837,7 @@ while true; do
 
     clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V154) 💎        ${NC}"
+    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V155) 💎        ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo -e "   💰 SALDO DIGIFLAZZ: ${GREEN}$SALDO_DIGI${NC}"
     echo -e "${CYAN}======================================================${NC}"
@@ -4529,12 +4498,12 @@ EOF
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
 echo "=========================================================="
-echo "  SISTEM WEB V154 BERHASIL DIPERBARUI SECARA PENUH!       "
+echo "  SISTEM WEB V155 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
 
 EOF
-echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V154..."
+echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V155..."
 
 cd "$HOME/$DIR_NAME"
 
@@ -4555,17 +4524,17 @@ chmod +x /usr/bin/menu
 
 clear
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V154 SELESAI! 🚀      \033[0m"
+echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V155 SELESAI! 🚀      \033[0m"
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[0;36mFITUR BARU DI V154 (THE MODERN HYBRID EDITION):\033[0m"
-echo -e "  ✅ \033[1;33mUI RIWAYAT HYBRID\033[0m Desain Tab Modern + Kartu Classic + Tombol WA"
+echo -e "\033[0;36mFITUR BARU DI V155 (THE LEGACY REBORN EDITION):\033[0m"
+echo -e "  ✅ \033[1;33mUI RIWAYAT 1000% KEMBALI KE LAMA\033[0m Kartu Gelap, Harga Kuning & Badge Akurat"
+echo -e "  ✅ \033[1;33mMINIMAL TOPUP QRIS 1000\033[0m Lebih merakyat dan ramah member"
+echo -e "  ✅ \033[1;33mMARQUEE KUNING LEGEND\033[0m Teks kuning menyala bersih tanpa background"
 echo -e "  ✅ \033[1;33mREVOLUSI LAYANAN\033[0m SMS & Telp Masuk, E-Wallet Pindah, Tagihan Lenyap!"
-echo -e "  ✅ \033[1;33mMARQUEE SUPER MODERN\033[0m Desain Kapsul dengan Efek Teks Glowing"
 echo -e "  ✅ \033[1;33mMENU GITHUB DIHAPUS\033[0m Panel lebih bersih dan to the point"
 echo -e "  ✅ \033[1;33mUBAH LINK KOMUNITAS\033[0m Setting Telegram & WA langsung di VPS"
 echo -e "  ✅ \033[1;33mBUG 'Cannot GET /' FIXED\033[0m Routing Express 100% Mulus"
-echo -e "  ✅ \033[1;33m14 TIER MARGIN GOD MODE\033[0m Atur harga bertingkat sesuka hati"
-echo -e "  ✅ \033[1;33mTEKS KOMPLAIN OTOMATIS\033[0m Detail nominal, tanggal, status presisi!"
+echo -e "  ✅ \033[1;33mTEKS KOMPLAIN OTOMATIS\033[0m Detail nominal, tanggal, status presisi (Tanpa Rp di Topup)!"
 echo -e "\033[0;32m======================================================================\033[0m"
 echo -e "\033[1;37mCARA PENGGUNAAN SELANJUTNYA:\033[0m"
 echo -e "Ketik perintah: \033[1;32mmenu\033[0m (Lalu tekan Enter untuk buka Panel)"
