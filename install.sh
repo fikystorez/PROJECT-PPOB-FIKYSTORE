@@ -3217,7 +3217,7 @@ echo "Menginstal modul Node.js..."
 npm install --silent
 npm install -g pm2 > /dev/null 2>&1
 
-echo "[6/7] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - V164 AUTO QRIS DINAMIS)..."
+echo "[6/7] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - V163 AUTO QRIS BHM)..."
 
 cat << 'EOF' > /usr/bin/menu
 #!/bin/bash
@@ -3263,7 +3263,7 @@ while true; do
 
     clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V164) 💎        ${NC}"
+    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V163) 💎        ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo -e "   💰 SALDO DIGIFLAZZ: ${GREEN}$SALDO_DIGI${NC}"
     echo -e "${CYAN}======================================================${NC}"
@@ -3286,7 +3286,7 @@ while true; do
     echo -e "${PURPLE}[ 🌐 MANAJEMEN SERVER & API ]${NC}"
     echo -e "  ${GREEN}12.${NC} Setup Domain (Nginx + Cloudflare + UFW Firewall)"
     echo -e "  ${GREEN}13.${NC} 🔌 Setup API Digiflazz (Untuk Produk)"
-    echo -e "  ${YELLOW}14.${NC} 💸 Setup API GoPay Merchant & QRIS Otomatis (BHM)"
+    echo -e "  ${YELLOW}14.${NC} 💸 Setup API GoPay Merchant & QRIS (BHM Biz ID)"
     echo -e "  ${GREEN}15.${NC} 🔄 Refresh Katalog Digiflazz (Hapus Cache API)"
     echo ""
     echo -e "${PURPLE}[ 🛡️ PUSAT KOMANDO TELEGRAM ]${NC}"
@@ -3307,9 +3307,11 @@ while true; do
             read -p "Masukkan Nomor WA Bot (Awalan 62, cth: 62812...): " botnum
             
             if [ ! -z "$botnum" ]; then
+                # STOP PM2 DULU BIAR GAK BENTROK!
                 pm2 stop $BOT_NAME > /dev/null 2>&1
                 cd "$HOME/$DIR_NAME"
                 
+                # BIKIN SCRIPT SEMENTARA BUAT SIMPAN NOMOR
                 cat << 'JS' > temp_setup.js
 const fs = require('fs');
 const file = './config.json';
@@ -3325,6 +3327,7 @@ JS
                 echo -e "${CYAN}(Tunggu sekitar 5-10 detik. Jika kode sudah muncul, catat kodenya.)${NC}"
                 echo -e "${RED}(Setelah mencatat kode dan berhasil login, tekan CTRL+C lalu pilih menu 2 untuk jalankan bot di background)${NC}"
                 
+                # JALANKAN BOT SECARA MANUAL DI FOREGROUND
                 node index.js
             fi
             ;;
@@ -3514,6 +3517,7 @@ const fs = require('fs');
 const path = './public/banners';
 if(!fs.existsSync(path)) fs.mkdirSync(path, {recursive:true});
 
+// BACA FILE DAN OTOMATIS RENAME JIKA ADA SPASI (MENGATASI BUG URL)
 let rawFiles = fs.readdirSync(path).filter(f => f.match(/\.(jpg|jpeg|png|gif)$/i));
 rawFiles.forEach(f => {
     if(f.includes(' ')) {
@@ -3759,17 +3763,37 @@ JS
         14)
             clear
             echo -e "${CYAN}===============================================${NC}"
-            echo -e "${YELLOW} 💸 SETUP API GOPAY & QRIS OTOMATIS (BHM BIZ ID) ${NC}"
+            echo -e "${YELLOW} 💸 SETUP GOPAY MERCHANT (BHM BIZ API) UNTUK QRIS ${NC}"
             echo -e "${CYAN}===============================================${NC}"
-            echo "API ini akan menarik transaksi dari akun GoPay Anda,"
-            echo "lalu mengkonfirmasi deposit QRIS secara otomatis!"
+            echo -e "Fitur ini akan menghubungkan merchant GoPay Anda dan mengatur QRIS Dinamis!"
             echo ""
             read -p "Masukkan API Token BHM Biz Anda: " bhm_token
-            read -p "Masukkan Merchant ID (Angka, contoh: 123): " bhm_merchant
+            read -p "Masukkan Merchant ID (Angka, contoh: 123): " bhm_mid
             read -p "Masukkan Nomor HP GoPay (08...): " bhm_phone
-            echo ""
-            echo "Siapkan TEKS STRING dari QRIS Statis Anda."
-            echo "Teks QRIS berawalan '000201010211...' dan diakhiri dengan kombinasi 4 huruf/angka (CRC)."
+
+            if [ ! -z "$bhm_token" ] && [ ! -z "$bhm_phone" ] && [ ! -z "$bhm_mid" ]; then
+                echo -e "\n${CYAN}>> Mengirim Request OTP ke nomor $bhm_phone...${NC}"
+                req_otp=$(curl -sS -X POST http://gopay.bhm.biz.id/v1/gopay/merchants/connect/request-otp \
+                  -H 'Content-Type: application/json' \
+                  -d "{\"phone\":\"$bhm_phone\"}")
+                
+                echo -e "${YELLOW}Respon Server: $req_otp${NC}"
+                
+                read -p "Masukkan 4 Digit OTP dari WA/SMS Gojek: " bhm_otp
+                
+                if [ ! -z "$bhm_otp" ]; then
+                    echo -e "\n${CYAN}>> Memverifikasi OTP...${NC}"
+                    ver_otp=$(curl -sS -X POST http://gopay.bhm.biz.id/v1/gopay/merchants/$bhm_mid/connect/verify-otp \
+                      -H "Authorization: Bearer $bhm_token" \
+                      -H 'Content-Type: application/json' \
+                      -d "{\"otp\":\"$bhm_otp\"}")
+                    
+                    echo -e "${YELLOW}Respon Server: $ver_otp${NC}"
+                fi
+            fi
+
+            echo -e "\n${CYAN}Siapkan TEKS STRING dari QRIS Statis Anda.${NC}"
+            echo -e "Teks QRIS berawalan '000201010211...' dan diakhiri dengan kombinasi 4 huruf/angka (CRC)."
             read -p "Paste TEKS STRING QRIS Anda di sini: " qris_string
             
             cd "$HOME/$DIR_NAME"
@@ -3784,9 +3808,9 @@ if(process.argv[4] && process.argv[4] !== '') cfg.bhmGopayNumber = process.argv[
 if(process.argv[5] && process.argv[5] !== '') cfg.qrisStringCode = process.argv[5];
 
 fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
-console.log('\n✅ Data API BHM & String QRIS Statis Berhasil Disimpan!');
+console.log('\n✅ Konfigurasi GoPay BHM Biz & QRIS Dinamis berhasil disimpan!');
 JS
-            node temp_bhm.js "$bhm_token" "$bhm_merchant" "$bhm_phone" "$qris_string"
+            node temp_bhm.js "$bhm_token" "$bhm_mid" "$bhm_phone" "$qris_string"
             rm temp_bhm.js
             pm2 restart $BOT_NAME > /dev/null 2>&1
             read -p "Tekan Enter untuk kembali..." 
@@ -3957,7 +3981,7 @@ EOF
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
 echo "=========================================================="
-echo "  SISTEM WEB V164 BERHASIL DIPERBARUI SECARA PENUH!       "
+echo "  SISTEM WEB V163 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
 
