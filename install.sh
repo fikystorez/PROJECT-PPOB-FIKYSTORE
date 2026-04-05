@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V159 (THE PERFECT OXFORD - PART 1)
+# DIGITAL FIKY STORE - V160 (THE PERFECT OXFORD - PART 1)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
@@ -16,7 +16,7 @@ DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V159 (PART 1)           "
+echo "    MENGINSTAL DIGITAL FIKY STORE V160 (PART 1)           "
 echo "=========================================================="
 
 echo "[1/7] Memperbarui sistem dan menginstal Node.js..."
@@ -35,7 +35,7 @@ cd "$HOME/$DIR_NAME"
 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
-  "version": "1.5.9",
+  "version": "1.6.0",
   "description": "Aplikasi PPOB DIGITAL FIKY STORE",
   "main": "index.js",
   "scripts": {
@@ -63,7 +63,6 @@ body {
     font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; 
 }
 
-/* MARQUEE KUNING MAIZE SESUAI REQUEST */
 .marquee-wrapper {
     width: 100%;
     overflow: hidden;
@@ -81,7 +80,7 @@ body {
     font-size: 12px;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    color: #facc15; /* WARNA MAIZE KUNING FIKY STORE */
+    color: #facc15; 
 }
 
 @keyframes marquee-anim {
@@ -109,7 +108,7 @@ body {
     background: linear-gradient(135deg, #fde047 0%, #facc15 100%); 
     -webkit-background-clip: text; 
     -webkit-text-fill-color: transparent; 
-    margin-bottom: 1.5rem; 
+    margin-bottom: 1rem; 
     letter-spacing: 1px; 
     text-transform: uppercase; 
 }
@@ -234,8 +233,15 @@ cat << 'EOF' > public/index.html
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-[#fde047] flex flex-col min-h-screen">
-  <div class="centered-modal-box">
-    <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
+  <div class="centered-modal-box !pt-8">
+    <h1 class="brand-logo-text !mb-2">DIGITAL FIKY STORE</h1>
+    
+    <div class="overflow-hidden w-full mb-6 border-y border-[#1e293b] py-1.5 bg-[#0b1320] shadow-inner rounded-md">
+        <div class="marquee-wrapper h-4">
+            <span class="marquee-text text-[#facc15] text-[10px] tracking-wider">🚀 WELCOME TO DIGITAL FIKY STORE - PUSAT PPOB TERMURAH, CEPAT, AMAN, DAN TERPERCAYA 🚀</span>
+        </div>
+    </div>
+
     <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
     <p class="compact-text-small mb-6" id="loginDesc">Silahkan masukkan email/no HP dan password kamu!</p>
     
@@ -2427,7 +2433,7 @@ cat << 'EOF' > public/riwayat.html
 EOF
 
 echo "[PART 4 SELESAI DITULIS. TINGGAL PART 5, 6, 7 (BACKEND & VPS MENU)!]"
-echo "[5/7] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V159)..."
+echo "[5/7] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V160)..."
 
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
@@ -3496,6 +3502,19 @@ async function startBot() {
     }
 }
 
+// CATCH-ALL ROUTE (MENGHANCURKAN BUG CANNOT GET PERMANEN)
+app.get('*', (req, res) => {
+    let reqPath = req.path;
+    if (reqPath.endsWith('.html')) {
+        let pagePath = path.join(__dirname, 'public', reqPath);
+        if (fs.existsSync(pagePath)) {
+            return res.sendFile(pagePath);
+        }
+    }
+    // Jika user mengakses halaman yang tidak jelas, arahkan kembali ke menu login
+    res.redirect('/'); 
+});
+
 if (require.main === module) { 
     app.listen(3000, () => { 
         console.log('🌐 Web berjalan di port 3000'); 
@@ -3504,7 +3523,7 @@ if (require.main === module) {
 }
 EOF
 
-echo "[PART 5 SELESAI DITULIS. TINGGAL 2 PART LAGI!]"
+echo "[PART 5 SELESAI DITULIS. KUMPULKAN DAN JALANKAN VPSNYA!]"
 echo "Menginstal modul Node.js..."
 npm install --silent
 npm install -g pm2 > /dev/null 2>&1
