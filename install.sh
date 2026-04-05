@@ -3986,7 +3986,7 @@ echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
 
 EOF
-echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V164..."
+echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V163..."
 
 cd "$HOME/$DIR_NAME"
 
@@ -4007,10 +4007,10 @@ chmod +x /usr/bin/menu
 
 clear
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V164 SELESAI! 🚀      \033[0m"
+echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V163 SELESAI! 🚀      \033[0m"
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[0;36mFITUR BARU DI V164 (THE PERFECT OXFORD + AUTO QRIS DINAMIS):\033[0m"
-echo -e "  ✅ \033[1;33mAUTO QRIS DINAMIS (BHM API)\033[0m Generate QR & Cek Mutasi GoPay Merchant Otomatis!"
+echo -e "\033[0;36mFITUR BARU DI V163 (THE PERFECT OXFORD + AUTO QRIS STRING BHM):\033[0m"
+echo -e "  ✅ \033[1;33mAUTO QRIS DINAMIS (BHM API)\033[0m Generate QR otomatis dari String & Cek Mutasi GoPay!"
 echo -e "  ✅ \033[1;33mANIMASI WELCOME LOGIN\033[0m Teks berjalan elegan dengan inner-shadow"
 echo -e "  ✅ \033[1;33mANTI-BUG CANNOT GET\033[0m Sistem otomatis ngebaca file atau nampilin 404 keren!"
 echo -e "  ✅ \033[1;33mUI 1000% CLONE FOTO\033[0m Background Oxford, Harga & Aksesoris Kuning Maize"
