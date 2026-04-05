@@ -3282,19 +3282,20 @@ while true; do
     echo ""
     echo -e "${PURPLE}[ 🌐 MANAJEMEN SERVER & API ]${NC}"
     echo -e "  ${GREEN}12.${NC} Setup Domain (Nginx + Cloudflare + UFW Firewall)"
-    echo -e "  ${GREEN}13.${NC} 🔌 Setup API (Digiflazz & Auto GoPay BHM)"
-    echo -e "  ${GREEN}14.${NC} 🔄 Refresh Katalog Digiflazz (Hapus Cache API)"
+    echo -e "  ${GREEN}13.${NC} 🔌 Setup API Digiflazz (Untuk Produk)"
+    echo -e "  ${YELLOW}14.${NC} 💸 Setup API GoPay Otomatis (BHM Biz ID)"
+    echo -e "  ${GREEN}15.${NC} 🔄 Refresh Katalog Digiflazz (Hapus Cache API)"
     echo ""
     echo -e "${PURPLE}[ 🛡️ PUSAT KOMANDO TELEGRAM ]${NC}"
-    echo -e "  ${GREEN}15.${NC} ⚙️ Setup Telegram Bot (Trx, Topup, Backup)"
-    echo -e "  ${GREEN}16.${NC} ⏳ Setting Auto-Backup Telegram (Tiap X Jam)"
-    echo -e "  ${GREEN}17.${NC} 💾 BACKUP DATA MANUAL KE TELEGRAM"
-    echo -e "  ${GREEN}18.${NC} 📥 RESTORE DATA DARI DIRECT LINK"
+    echo -e "  ${GREEN}16.${NC} ⚙️ Setup Telegram Bot (Trx, Topup, Backup)"
+    echo -e "  ${GREEN}17.${NC} ⏳ Setting Auto-Backup Telegram (Tiap X Jam)"
+    echo -e "  ${GREEN}18.${NC} 💾 BACKUP DATA MANUAL KE TELEGRAM"
+    echo -e "  ${GREEN}19.${NC} 📥 RESTORE DATA DARI DIRECT LINK"
     echo ""
     echo -e "${PURPLE}[ ⚙️ SISTEM ]${NC}"
     echo -e "  ${RED}0.${NC} Keluar"
     echo -e "${CYAN}======================================================${NC}"
-    read -p "Pilih menu [0-18]: " choice
+    read -p "Pilih menu [0-19]: " choice
 
     case $choice in
         1) 
@@ -3736,21 +3737,12 @@ EOFNGINX
         13)
             clear
             echo -e "${CYAN}===============================================${NC}"
-            echo -e "${YELLOW}        🔌 SETUP API SERVER & PAYMENT          ${NC}"
+            echo -e "${YELLOW}           🔌 SETUP API DIGIFLAZZ              ${NC}"
             echo -e "${CYAN}===============================================${NC}"
-            echo "1. Setup API Provider Digiflazz (Untuk Produk)"
-            echo "2. Setup API GoPay Otomatis (BHM Biz ID)"
-            echo "0. Kembali"
-            echo ""
-            read -p "Pilih [0-2]: " api_sel
-            
-            if [ "$api_sel" == "1" ]; then
-                clear
-                echo -e "${YELLOW}--- SETUP API DIGIFLAZZ ---${NC}"
-                read -p "Username Digiflazz: " digi_user
-                read -p "API Key Digiflazz (Prod/Dev Key): " digi_key
-                cd "$HOME/$DIR_NAME"
-                cat << 'JS' > temp_digi.js
+            read -p "Username Digiflazz: " digi_user
+            read -p "API Key Digiflazz (Prod/Dev Key): " digi_key
+            cd "$HOME/$DIR_NAME"
+            cat << 'JS' > temp_digi.js
 const fs = require('fs');
 let file = './config.json';
 let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
@@ -3759,34 +3751,38 @@ cfg.digiKey = process.argv[3];
 fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
 console.log('✅ Konfigurasi API Digiflazz Disimpan!');
 JS
-                node temp_digi.js "$digi_user" "$digi_key"
-                rm temp_digi.js
-                pm2 restart $BOT_NAME > /dev/null 2>&1
-                
-            elif [ "$api_sel" == "2" ]; then
-                clear
-                echo -e "${YELLOW}--- SETUP API GOPAY OTOMATIS (BHM BIZ ID) ---${NC}"
-                echo "Catatan: Pastikan Anda sudah daftar & punya Token di gopay.bhm.biz.id"
-                read -p "Masukkan API Token BHM (cth: mapi_aSW...): " bhm_token
-                read -p "Masukkan Nomor GoPay Admin (cth: 08123...): " bhm_num
-                cd "$HOME/$DIR_NAME"
-                cat << 'JS' > temp_bhm.js
-const fs = require('fs');
-let file = './config.json';
-let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
-cfg.bhmToken = process.argv[2];
-cfg.bhmGopayNumber = process.argv[3];
-fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
-console.log('✅ Konfigurasi API GoPay (BHM) Berhasil Disimpan!');
-JS
-                node temp_bhm.js "$bhm_token" "$bhm_num"
-                rm temp_bhm.js
-                pm2 restart $BOT_NAME > /dev/null 2>&1
-            fi
-            read -p "Tekan Enter untuk kembali..." 
+            node temp_digi.js "$digi_user" "$digi_key"
+            rm temp_digi.js
+            pm2 restart $BOT_NAME > /dev/null 2>&1
+            read -p "Tekan Enter..." 
             ;;
             
         14)
+            clear
+            echo -e "${CYAN}===============================================${NC}"
+            echo -e "${YELLOW}   💸 SETUP API GOPAY OTOMATIS (BHM BIZ ID)    ${NC}"
+            echo -e "${CYAN}===============================================${NC}"
+            echo "Catatan: Pastikan Anda sudah daftar & punya Token di gopay.bhm.biz.id"
+            echo ""
+            read -p "Masukkan API Token BHM (cth: mapi_aSW...): " bhm_token
+            read -p "Masukkan Nomor GoPay Admin (cth: 08123...): " bhm_num
+            cd "$HOME/$DIR_NAME"
+            cat << 'JS' > temp_bhm.js
+const fs = require('fs');
+let file = './config.json';
+let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
+if(process.argv[2] && process.argv[2] !== '') cfg.bhmToken = process.argv[2];
+if(process.argv[3] && process.argv[3] !== '') cfg.bhmGopayNumber = process.argv[3];
+fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
+console.log('\n✅ Konfigurasi API GoPay (BHM) Berhasil Disimpan!');
+JS
+            node temp_bhm.js "$bhm_token" "$bhm_num"
+            rm temp_bhm.js
+            pm2 restart $BOT_NAME > /dev/null 2>&1
+            read -p "Tekan Enter untuk kembali..." 
+            ;;
+
+        15)
             clear
             cd "$HOME/$DIR_NAME" 
             cat << 'JS' > temp_clear_cache.js
@@ -3805,7 +3801,7 @@ JS
             read -p "Tekan Enter..." 
             ;;
             
-        15)
+        16)
             clear
             echo -e "${CYAN}===============================================${NC}"
             echo -e "${YELLOW}      ⚙️ SETUP 3 BOT TELEGRAM (PISAH)           ${NC}"
@@ -3869,7 +3865,7 @@ JS
             read -p "Tekan Enter..." 
             ;;
             
-        16)
+        17)
             clear
             echo "Format: 1 untuk tiap 1 jam, 0.5 untuk 30 menit."
             read -p "Berapa Jam Sekali Sistem Melakukan Auto-Backup?: " tele_jam
@@ -3888,7 +3884,7 @@ JS
             read -p "Tekan Enter..." 
             ;;
             
-        17)
+        18)
             clear
             echo "Memproses Backup Manual ke Telegram..."
             cd "$HOME/$DIR_NAME"
@@ -3903,7 +3899,7 @@ let t = cfg.teleTokenBackup || cfg.teleToken;
 let c = cfg.teleChatIdBackup || cfg.teleChatId;
 
 if(!t || !c) {
-    console.log('❌ Token/Chat ID Bot Backup belum disetting (Buka Menu 15)');
+    console.log('❌ Token/Chat ID Bot Backup belum disetting (Buka Menu 16)');
     process.exit();
 }
 
@@ -3930,7 +3926,7 @@ JS
             read -p "Tunggu sebentar lalu tekan Enter..." 
             ;;
             
-        18)
+        19)
             clear
             read -p "Masukkan Direct Link (URL) File ZIP Backup: " link_zip
             cd "$HOME/$DIR_NAME" 
