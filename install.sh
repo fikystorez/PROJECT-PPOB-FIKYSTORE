@@ -58,7 +58,7 @@ echo "[3/7] Membangun Antarmuka CSS & Halaman Auth (FULL UNCOMPRESSED)..."
 
 cat << 'EOF' > public/style.css
 body { 
-    background-color: #fde047; 
+    background-color: #F5D042; 
     margin: 0; 
     font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; 
 }
@@ -81,7 +81,7 @@ body {
     font-size: 12px;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    color: #facc15; /* WARNA MAIZE KUNING FIKY STORE */
+    color: #F5D042; /* WARNA MAIZE */
 }
 
 @keyframes marquee-anim {
@@ -90,7 +90,7 @@ body {
 }
 
 .centered-modal-box { 
-    background-color: #002147; 
+    background-color: #0A174E; /* WARNA OXFORD BLUE */
     padding: 2.5rem 1.5rem 2rem 1.5rem; 
     border-radius: 1.2rem; 
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); 
@@ -106,7 +106,7 @@ body {
 .brand-logo-text { 
     font-size: 1.8rem; 
     font-weight: 900; 
-    background: linear-gradient(135deg, #fde047 0%, #facc15 100%); 
+    background: linear-gradient(135deg, #F5D042 0%, #F5D042 100%); 
     -webkit-background-clip: text; 
     -webkit-text-fill-color: transparent; 
     margin-bottom: 1.5rem; 
@@ -123,7 +123,7 @@ body {
 .compact-input-box { 
     width: 100%; 
     padding: 0.6rem 0.75rem; 
-    border: 1px solid #334155; 
+    border: 1px solid #163599; 
     border-radius: 0.5rem; 
     font-size: 0.875rem; 
     outline: none; 
@@ -132,8 +132,8 @@ body {
 }
 
 .compact-input-box:focus { 
-    border-color: #fde047; 
-    box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.3); 
+    border-color: #F5D042; 
+    box-shadow: 0 0 0 3px rgba(245, 208, 66, 0.3); 
 }
 
 .password-toggle { 
@@ -152,7 +152,7 @@ body {
 
 .compact-link-small { 
     font-size: 0.8rem; 
-    color: #fde047; 
+    color: #F5D042; 
     text-decoration: none; 
     font-weight: bold; 
 }
@@ -160,8 +160,8 @@ body {
 .btn-yellow { 
     width: 100%; 
     padding: 0.625rem 1rem; 
-    background-color: #fde047; 
-    color: #002147; 
+    background-color: #F5D042; 
+    color: #0A174E; 
     font-weight: bold; 
     border-radius: 0.5rem; 
     cursor: pointer; 
@@ -171,7 +171,7 @@ body {
 }
 
 .btn-yellow:hover { 
-    background-color: #facc15; 
+    background-color: #E5C032; 
 }
 
 .hide-scrollbar::-webkit-scrollbar { 
@@ -184,7 +184,7 @@ body {
 }
 
 .swal2-popup { 
-    background-color: #002147 !important; 
+    background-color: #0A174E !important; 
     border-radius: 1.5rem !important; 
     color: #ffffff !important; 
     width: 320px !important; 
@@ -192,7 +192,7 @@ body {
 }
 
 .swal2-title { 
-    color: #fde047 !important; 
+    color: #F5D042 !important; 
     font-size: 1.25rem !important; 
     font-weight: 800 !important; 
 }
@@ -203,8 +203,8 @@ body {
 }
 
 .swal2-confirm { 
-    background: linear-gradient(135deg, #facc15 0%, #fde047 100%) !important; 
-    color: #001229 !important; 
+    background: linear-gradient(135deg, #F5D042 0%, #F5D042 100%) !important; 
+    color: #0A174E !important; 
     border-radius: 0.5rem !important; 
     font-weight: 800 !important; 
 }
@@ -233,7 +233,7 @@ cat << 'EOF' > public/index.html
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body class="bg-[#fde047] flex flex-col min-h-screen">
+<body class="bg-[#F5D042] flex flex-col min-h-screen">
   <div class="centered-modal-box">
     <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
     <h2 class="text-lg font-bold text-white mb-1">LOGIN AKUN</h2>
@@ -321,7 +321,7 @@ cat << 'EOF' > public/index.html
               icon: 'error', 
               title: 'Gagal', 
               text: data.error, 
-              background: '#002147', 
+              background: '#0A174E', 
               color: '#fff' 
           }); 
         }
@@ -330,7 +330,7 @@ cat << 'EOF' > public/index.html
               icon: 'error', 
               title: 'Oops...', 
               text: 'Kesalahan sistem.', 
-              background: '#002147', 
+              background: '#0A174E', 
               color: '#fff' 
           }); 
       }
@@ -352,7 +352,7 @@ cat << 'EOF' > public/register.html
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body class="bg-[#fde047] flex flex-col min-h-screen">
+<body class="bg-[#F5D042] flex flex-col min-h-screen">
   <div class="centered-modal-box" id="box-register">
     <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
     <h2 class="text-lg font-bold text-white mb-1">DAFTAR AKUN</h2>
@@ -446,7 +446,7 @@ cat << 'EOF' > public/register.html
               icon: 'error', 
               title: 'Gagal Daftar', 
               text: data.error, 
-              background: '#002147', 
+              background: '#0A174E', 
               color: '#fff' 
           }); 
         }
@@ -455,7 +455,7 @@ cat << 'EOF' > public/register.html
             icon: 'error', 
             title: 'Oops...', 
             text: 'Gagal memproses.', 
-            background: '#002147', 
+            background: '#0A174E', 
             color: '#fff' 
         }); 
       }
@@ -490,7 +490,7 @@ cat << 'EOF' > public/register.html
               icon: 'success', 
               title: 'Berhasil!', 
               text: 'Akun aktif.', 
-              background: '#002147', 
+              background: '#0A174E', 
               color: '#fff' 
           }).then(() => { 
             window.location.href = '/?phone=' + registeredPhone; 
@@ -500,7 +500,7 @@ cat << 'EOF' > public/register.html
               icon: 'error', 
               title: 'OTP Salah', 
               text: data.error, 
-              background: '#002147', 
+              background: '#0A174E', 
               color: '#fff' 
           }); 
         }
@@ -509,7 +509,7 @@ cat << 'EOF' > public/register.html
             icon: 'error', 
             title: 'Oops...', 
             text: 'Gagal verifikasi.', 
-            background: '#002147', 
+            background: '#0A174E', 
             color: '#fff' 
         }); 
       }
@@ -531,7 +531,7 @@ cat << 'EOF' > public/forgot.html
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body class="bg-[#fde047] flex flex-col min-h-screen">
+<body class="bg-[#F5D042] flex flex-col min-h-screen">
   <div class="centered-modal-box">
     <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
     <h2 class="text-lg font-bold text-white mb-1">RESET PASSWORD</h2>
@@ -611,7 +611,7 @@ cat << 'EOF' > public/forgot.html
               icon: 'error', 
               title: 'Gagal', 
               text: data.error, 
-              background: '#002147', 
+              background: '#0A174E', 
               color: '#fff' 
           }); 
         }
@@ -619,7 +619,7 @@ cat << 'EOF' > public/forgot.html
           Swal.fire({ 
               icon: 'error', 
               title: 'Oops...', 
-              background: '#002147', 
+              background: '#0A174E', 
               color: '#fff' 
           }); 
       }
@@ -651,7 +651,7 @@ cat << 'EOF' > public/forgot.html
               icon: 'success', 
               title: 'Berhasil!', 
               text: 'Password diubah.', 
-              background: '#002147', 
+              background: '#0A174E', 
               color: '#fff' 
           }).then(() => { 
               window.location.href = '/'; 
@@ -661,7 +661,7 @@ cat << 'EOF' > public/forgot.html
               icon: 'error', 
               title: 'Gagal', 
               text: 'OTP Salah.', 
-              background: '#002147', 
+              background: '#0A174E', 
               color: '#fff' 
           }); 
         }
@@ -669,7 +669,7 @@ cat << 'EOF' > public/forgot.html
           Swal.fire({ 
               icon: 'error', 
               title: 'Oops...', 
-              background: '#002147', 
+              background: '#0A174E', 
               color: '#fff' 
           }); 
       }
@@ -697,56 +697,56 @@ cat << 'EOF' > public/dashboard.html
       }
   </script>
 </head>
-<body class="bg-[#0b1320] font-sans transition-colors duration-300 text-white">
-  <div class="max-w-md mx-auto bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+<body class="bg-[#0A174E] font-sans transition-colors duration-300 text-white">
+  <div class="max-w-md mx-auto bg-[#0A174E] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
     
     <div id="maintenanceBanner" class="hidden bg-red-600 text-white text-center py-2 px-4 text-xs font-bold shadow-md z-50 sticky top-0">
       <i class="fas fa-tools mr-1 animate-pulse"></i> SISTEM SEDANG MAINTENANCE (23:00 - 00:30 WIB). TRANSAKSI DITUTUP.
     </div>
 
-    <div class="flex justify-between items-center p-4 bg-[#0b1320] sticky z-40 top-0" id="headerMain">
-      <i class="fas fa-bars text-xl cursor-pointer text-gray-300 hover:text-[#facc15] shrink-0" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')"></i>
+    <div class="flex justify-between items-center p-4 bg-[#0A174E] sticky z-40 top-0" id="headerMain">
+      <i class="fas fa-bars text-xl cursor-pointer text-gray-300 hover:text-[#F5D042] shrink-0" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')"></i>
       
-      <div class="marquee-wrapper border-l border-r border-[#1e293b] mx-3 px-2 h-6">
-          <span class="marquee-text text-[#facc15]">WELCOME TO THE DIGITAL FIKY STORE - PUSAT PPOB TERMURAH & TERPERCAYA - TRANSAKSI CEPAT AMAN</span>
+      <div class="marquee-wrapper border-l border-r border-[#163599] mx-3 px-2 h-6">
+          <span class="marquee-text text-[#F5D042]">WELCOME TO THE DIGITAL FIKY STORE - PUSAT PPOB TERMURAH & TERPERCAYA - TRANSAKSI CEPAT AMAN</span>
       </div>
 
-      <div class="text-[10px] font-extrabold text-[#38bdf8] bg-[#1e293b] border border-[#38bdf8]/30 px-3 py-1.5 rounded-full shrink-0 shadow-sm" id="headTrx">
+      <div class="text-[10px] font-extrabold text-[#38bdf8] bg-[#163599] border border-[#38bdf8]/30 px-3 py-1.5 rounded-full shrink-0 shadow-sm" id="headTrx">
           0 Trx
       </div>
     </div>
 
     <div id="sidebar" class="fixed inset-0 z-[100] transform -translate-x-full transition-transform duration-300 flex">
       <div class="w-full bg-black/60 backdrop-blur-sm" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')"></div>
-      <div class="absolute top-0 left-0 w-[80%] max-w-[300px] h-full bg-[#001730] shadow-2xl flex flex-col border-r border-[#0a2342]">
-        <div class="p-8 pb-4 flex flex-col items-center relative border-b border-[#1e293b]">
+      <div class="absolute top-0 left-0 w-[80%] max-w-[300px] h-full bg-[#081C4C] shadow-2xl flex flex-col border-r border-[#081C4C]">
+        <div class="p-8 pb-4 flex flex-col items-center relative border-b border-[#163599]">
           <button class="absolute top-5 right-5 text-gray-400 hover:text-red-500" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')">
               <i class="fas fa-times text-xl"></i>
           </button>
-          <div class="w-[4.5rem] h-[4.5rem] bg-[#050b14] rounded-full flex justify-center items-center text-[#facc15] font-extrabold text-3xl mb-3 shadow-md overflow-hidden" id="sidebarInitial">U</div>
+          <div class="w-[4.5rem] h-[4.5rem] bg-[#03071A] rounded-full flex justify-center items-center text-[#F5D042] font-extrabold text-3xl mb-3 shadow-md overflow-hidden" id="sidebarInitial">U</div>
           <h3 class="font-bold text-lg text-white" id="sidebarName">User</h3>
           <p class="text-sm text-gray-400" id="sidebarPhone">08...</p>
         </div>
         <div class="flex-1 overflow-y-auto py-2">
           <ul class="text-[14px]">
-            <li class="px-6 py-4 border-b border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-[#1a2639]" onclick="location.href='/profile.html'">
-                <i class="far fa-user w-6 text-center text-lg text-[#facc15]"></i>
+            <li class="px-6 py-4 border-b border-[#081C4C] flex items-center gap-4 cursor-pointer hover:bg-[#112C80]" onclick="location.href='/profile.html'">
+                <i class="far fa-user w-6 text-center text-lg text-[#F5D042]"></i>
                 <span class="font-semibold text-gray-100">Profil Akun</span>
             </li>
-            <li class="px-6 py-4 border-b border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-[#1a2639]" onclick="location.href='/riwayat.html'">
-                <i class="far fa-clock w-6 text-center text-lg text-[#facc15]"></i>
+            <li class="px-6 py-4 border-b border-[#081C4C] flex items-center gap-4 cursor-pointer hover:bg-[#112C80]" onclick="location.href='/riwayat.html'">
+                <i class="far fa-clock w-6 text-center text-lg text-[#F5D042]"></i>
                 <span class="font-semibold text-gray-100">Riwayat Transaksi</span>
             </li>
-            <li class="px-6 py-4 border-b border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-[#1a2639]" onclick="location.href='/mutasi.html'">
-                <i class="fas fa-exchange-alt w-6 text-center text-lg text-[#facc15]"></i>
+            <li class="px-6 py-4 border-b border-[#081C4C] flex items-center gap-4 cursor-pointer hover:bg-[#112C80]" onclick="location.href='/mutasi.html'">
+                <i class="fas fa-exchange-alt w-6 text-center text-lg text-[#F5D042]"></i>
                 <span class="font-semibold text-gray-100">Mutasi Saldo</span>
             </li>
-            <li class="px-6 py-4 border-b border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-[#1a2639]" onclick="location.href='/info.html'">
-                <i class="far fa-bell w-6 text-center text-lg text-[#facc15]"></i>
+            <li class="px-6 py-4 border-b border-[#081C4C] flex items-center gap-4 cursor-pointer hover:bg-[#112C80]" onclick="location.href='/info.html'">
+                <i class="far fa-bell w-6 text-center text-lg text-[#F5D042]"></i>
                 <span class="font-semibold text-gray-100">Pusat Informasi</span>
             </li>
-            <li class="px-6 py-4 border-b border-[#0a2342] flex items-center gap-4 cursor-pointer hover:bg-[#1a2639]" onclick="bantuanAdmin()">
-                <i class="fas fa-headset w-6 text-center text-lg text-[#facc15]"></i>
+            <li class="px-6 py-4 border-b border-[#081C4C] flex items-center gap-4 cursor-pointer hover:bg-[#112C80]" onclick="bantuanAdmin()">
+                <i class="fas fa-headset w-6 text-center text-lg text-[#F5D042]"></i>
                 <span class="font-semibold text-gray-100">Hubungi Admin</span>
             </li>
           </ul>
@@ -759,7 +759,7 @@ cat << 'EOF' > public/dashboard.html
       </div>
     </div>
 
-    <div class="mx-4 mt-4 bg-[#162032] rounded-[1.2rem] p-4 text-white relative overflow-hidden shadow-lg border border-[#1e293b]">
+    <div class="mx-4 mt-4 bg-[#0D2266] rounded-[1.2rem] p-4 text-white relative overflow-hidden shadow-lg border border-[#163599]">
       <div class="tech-bg opacity-30"></div> 
       <div class="relative z-10 flex justify-between items-center">
         <div class="flex items-center gap-3">
@@ -777,24 +777,24 @@ cat << 'EOF' > public/dashboard.html
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <button class="w-10 h-10 rounded-full bg-[#1e293b] flex items-center justify-center text-[#38bdf8] border border-[#334155] hover:bg-[#24344d] transition-colors z-10" onclick="bantuanAdmin()">
+          <button class="w-10 h-10 rounded-full bg-[#163599] flex items-center justify-center text-[#38bdf8] border border-[#163599] hover:bg-[#112C80] transition-colors z-10" onclick="bantuanAdmin()">
             <i class="fas fa-headset text-lg"></i>
           </button>
-          <button class="bg-[#facc15] text-[#001229] px-5 py-2.5 rounded-full text-[13px] font-extrabold shadow-md hover:bg-yellow-500 z-10 relative" onclick="openTopUp()">
+          <button class="bg-[#F5D042] text-[#0A174E] px-5 py-2.5 rounded-full text-[13px] font-extrabold shadow-md hover:bg-[#E5C032] z-10 relative" onclick="openTopUp()">
               Topup
           </button>
         </div>
       </div>
     </div>
 
-    <div id="bannerContainer" class="mx-4 mt-6 relative rounded-[1.2rem] h-[170px] overflow-hidden border border-[#1e293b] hidden shadow-md">
+    <div id="bannerContainer" class="mx-4 mt-6 relative rounded-[1.2rem] h-[170px] overflow-hidden border border-[#163599] hidden shadow-md">
       <div id="promoSlider" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth"></div>
       <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20" id="promoDots"></div>
     </div>
 
-    <div class="mx-4 mt-4 bg-[#162032] border border-[#1e293b] rounded-[1rem] p-3.5 shadow-sm flex justify-between items-center">
+    <div class="mx-4 mt-4 bg-[#0D2266] border border-[#163599] rounded-[1rem] p-3.5 shadow-sm flex justify-between items-center">
       <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-full bg-[#0b1320] flex items-center justify-center text-[#facc15] shadow-sm border border-[#1e293b]">
+        <div class="w-9 h-9 rounded-full bg-[#0A174E] flex items-center justify-center text-[#F5D042] shadow-sm border border-[#163599]">
             <i class="far fa-calendar-alt text-[15px]"></i>
         </div>
         <div class="flex flex-col">
@@ -808,7 +808,7 @@ cat << 'EOF' > public/dashboard.html
             <span class="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Waktu</span>
             <span class="text-xs font-extrabold text-gray-200 tracking-widest" id="realtimeClock">00:00:00</span>
         </div>
-        <div class="w-9 h-9 rounded-full bg-[#0b1320] flex items-center justify-center text-[#facc15] shadow-sm border border-[#1e293b]">
+        <div class="w-9 h-9 rounded-full bg-[#0A174E] flex items-center justify-center text-[#F5D042] shadow-sm border border-[#163599]">
             <i class="far fa-clock text-[15px]"></i>
         </div>
       </div>
@@ -818,49 +818,49 @@ cat << 'EOF' > public/dashboard.html
       <h3 class="font-extrabold text-white mb-4 text-[16px] ml-1">Layanan Produk</h3>
       <div class="grid grid-cols-4 gap-y-6 gap-x-3">
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=pulsa'">
-          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#162032] text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#1e293b]">
+          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#0D2266] text-[#F5D042] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#163599]">
               <i class="fas fa-mobile-alt"></i>
           </div>
           <span class="text-[11px] font-bold text-gray-300">PULSA</span>
         </div>
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=data'">
-          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#162032] text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#1e293b]">
+          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#0D2266] text-[#F5D042] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#163599]">
               <i class="fas fa-globe"></i>
           </div>
           <span class="text-[11px] font-bold text-gray-300">DATA</span>
         </div>
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/game.html'">
-          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#162032] text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#1e293b]">
+          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#0D2266] text-[#F5D042] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#163599]">
               <i class="fas fa-gamepad"></i>
           </div>
           <span class="text-[11px] font-bold text-gray-300">GAME</span>
         </div>
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=voucher'">
-          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#162032] text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#1e293b]">
+          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#0D2266] text-[#F5D042] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#163599]">
               <i class="fas fa-ticket-alt"></i>
           </div>
           <span class="text-[11px] font-bold text-gray-300">VOUCHER</span>
         </div>
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=smstelpon'">
-          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#162032] text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#1e293b]">
+          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#0D2266] text-[#F5D042] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#163599]">
               <i class="fas fa-phone-square-alt"></i>
           </div>
           <span class="text-[10px] font-bold text-gray-300 text-center">SMS & TELP</span>
         </div>
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=pln'">
-          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#162032] text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#1e293b]">
+          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#0D2266] text-[#F5D042] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#163599]">
               <i class="fas fa-bolt"></i>
           </div>
           <span class="text-[11px] font-bold text-gray-300">PLN</span>
         </div>
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=masaaktif'">
-          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#162032] text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#1e293b]">
+          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#0D2266] text-[#F5D042] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#163599]">
               <i class="fas fa-calendar-check"></i>
           </div>
           <span class="text-[10px] font-bold text-gray-300 text-center">MASA AKTIF</span>
         </div>
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=perdana'">
-          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#162032] text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#1e293b]">
+          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#0D2266] text-[#F5D042] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#163599]">
               <i class="fas fa-sim-card"></i>
           </div>
           <span class="text-[11px] font-bold text-gray-300 text-center">PERDANA</span>
@@ -872,13 +872,13 @@ cat << 'EOF' > public/dashboard.html
       <h3 class="font-extrabold text-white mb-4 text-[16px] ml-1">Produk Digital</h3>
       <div class="grid grid-cols-4 gap-y-6 gap-x-3">
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=ewallet'">
-          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#162032] text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#1e293b]">
+          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#0D2266] text-[#F5D042] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#163599]">
               <i class="fas fa-wallet"></i>
           </div>
           <span class="text-[11px] font-bold text-gray-300">E-WALLET</span>
         </div>
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=etoll'">
-          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#162032] text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#1e293b]">
+          <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#0D2266] text-[#F5D042] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#163599]">
               <i class="fas fa-id-card"></i>
           </div>
           <span class="text-[10px] font-bold text-gray-300 text-center">SALDO<br>E-TOLL</span>
@@ -890,14 +890,14 @@ cat << 'EOF' > public/dashboard.html
       <h3 class="font-extrabold text-white mb-2 text-[16px] ml-1">Komunitas & Update</h3>
       <p class="text-[11px] text-gray-400 mb-4 ml-1">Gabung ke saluran resmi kami untuk mendapatkan info promo, event, dan update terbaru langsung dari Digital Fiky Store!</p>
       <div class="grid grid-cols-2 gap-3">
-         <div class="bg-gradient-to-br from-[#162032] to-[#0b1320] border border-[#1e293b] rounded-2xl p-4 flex items-center cursor-pointer hover:shadow-md transition-shadow" onclick="bukaLinkKomunitas('tele')">
+         <div class="bg-gradient-to-br from-[#0D2266] to-[#0A174E] border border-[#163599] rounded-2xl p-4 flex items-center cursor-pointer hover:shadow-md transition-shadow" onclick="bukaLinkKomunitas('tele')">
              <i class="fab fa-telegram text-4xl text-blue-500 mr-3 drop-shadow-sm"></i>
              <div class="flex flex-col">
                  <h4 class="font-extrabold text-[13px] text-white">Telegram</h4>
                  <p class="text-[10px] font-bold text-gray-400 mt-0.5 uppercase tracking-wide">Join Channel</p>
              </div>
          </div>
-         <div class="bg-gradient-to-br from-[#162032] to-[#0b1320] border border-[#1e293b] rounded-2xl p-4 flex items-center cursor-pointer hover:shadow-md transition-shadow" onclick="bukaLinkKomunitas('wa')">
+         <div class="bg-gradient-to-br from-[#0D2266] to-[#0A174E] border border-[#163599] rounded-2xl p-4 flex items-center cursor-pointer hover:shadow-md transition-shadow" onclick="bukaLinkKomunitas('wa')">
              <i class="fab fa-whatsapp text-4xl text-green-500 mr-3 drop-shadow-sm"></i>
              <div class="flex flex-col">
                  <h4 class="font-extrabold text-[13px] text-white">WhatsApp</h4>
@@ -907,52 +907,52 @@ cat << 'EOF' > public/dashboard.html
       </div>
     </div>
 
-    <div class="mx-4 mt-8 mb-8 bg-[#162032] rounded-2xl border border-[#1e293b] shadow-sm p-4">
+    <div class="mx-4 mt-8 mb-8 bg-[#0D2266] rounded-2xl border border-[#163599] shadow-sm p-4">
       <div class="flex justify-between items-center mb-4">
           <h3 class="font-extrabold text-white text-[14px]">Statistik Penjualan Toko</h3>
           <span class="text-[9px] bg-blue-900/30 text-blue-400 px-2 py-0.5 rounded-full font-bold uppercase tracking-wide animate-pulse">Realtime</span>
       </div>
       <div class="grid grid-cols-4 gap-2">
-        <div class="bg-[#0b1320] p-2.5 rounded-xl border border-[#1e293b] text-center">
+        <div class="bg-[#0A174E] p-2.5 rounded-xl border border-[#163599] text-center">
           <p class="text-[9px] text-gray-400 font-extrabold mb-1 uppercase">Hari Ini</p>
-          <p class="text-[13px] font-black text-[#facc15]" id="statToday">0</p>
+          <p class="text-[13px] font-black text-[#F5D042]" id="statToday">0</p>
         </div>
-        <div class="bg-[#0b1320] p-2.5 rounded-xl border border-[#1e293b] text-center">
+        <div class="bg-[#0A174E] p-2.5 rounded-xl border border-[#163599] text-center">
           <p class="text-[9px] text-gray-400 font-extrabold mb-1 uppercase">Minggu Ini</p>
           <p class="text-[13px] font-black text-green-400" id="statWeek">0</p>
         </div>
-        <div class="bg-[#0b1320] p-2.5 rounded-xl border border-[#1e293b] text-center">
+        <div class="bg-[#0A174E] p-2.5 rounded-xl border border-[#163599] text-center">
           <p class="text-[9px] text-gray-400 font-extrabold mb-1 uppercase">Bulan Ini</p>
           <p class="text-[13px] font-black text-[#38bdf8]" id="statMonth">0</p>
         </div>
-        <div class="bg-[#0b1320] p-2.5 rounded-xl border border-[#1e293b] text-center">
+        <div class="bg-[#0A174E] p-2.5 rounded-xl border border-[#163599] text-center">
           <p class="text-[9px] text-gray-400 font-extrabold mb-1 uppercase">Semua</p>
           <p class="text-[13px] font-black text-purple-400" id="statAll">0</p>
         </div>
       </div>
     </div>
 
-    <div class="fixed bottom-0 w-full max-w-md bg-[#001229] border-t border-[#1e293b] flex justify-around p-3 pb-4 shadow-2xl z-40">
-      <div class="flex flex-col items-center cursor-pointer text-[#facc15]">
+    <div class="fixed bottom-0 w-full max-w-md bg-[#060F33] border-t border-[#163599] flex justify-around p-3 pb-4 shadow-2xl z-40">
+      <div class="flex flex-col items-center cursor-pointer text-[#F5D042]">
         <i class="fas fa-home text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">HOME</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/riwayat.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#F5D042]" onclick="location.href='/riwayat.html'">
         <i class="fas fa-file-alt text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">RIWAYAT</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/info.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#F5D042]" onclick="location.href='/info.html'">
         <i class="fas fa-bell text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">INFO</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/profile.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#F5D042]" onclick="location.href='/profile.html'">
         <i class="fas fa-user text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">PROFIL</span>
       </div>
     </div>
 
     <div id="topupOverlay" class="fixed inset-0 bg-black/60 z-[110] hidden opacity-0 transition-opacity" onclick="closeTopUp()"></div>
-    <div id="topupSheet" class="fixed bottom-0 left-0 right-0 bg-[#050b14] z-[120] rounded-t-[2rem] transform translate-y-full transition-transform max-w-md mx-auto pb-safe">
+    <div id="topupSheet" class="fixed bottom-0 left-0 right-0 bg-[#03071A] z-[120] rounded-t-[2rem] transform translate-y-full transition-transform max-w-md mx-auto pb-safe">
       <div class="w-12 h-1.5 bg-gray-700 rounded-full mx-auto my-3"></div>
       <div class="px-6 pb-6">
         <div class="flex justify-between mb-5">
@@ -962,18 +962,18 @@ cat << 'EOF' > public/dashboard.html
         
         <div class="relative w-full mb-4">
           <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">Rp</span>
-          <input type="number" id="inputNominal" class="w-full bg-[#0b1320] border border-gray-700 rounded-xl py-3 pl-10 pr-4 text-white font-bold focus:outline-none" placeholder="Ketik nominal...">
+          <input type="number" id="inputNominal" class="w-full bg-[#0A174E] border border-gray-700 rounded-xl py-3 pl-10 pr-4 text-white font-bold focus:outline-none" placeholder="Ketik nominal...">
         </div>
 
         <div class="flex justify-between gap-2 mb-6">
-          <button onclick="document.getElementById('inputNominal').value=10000" class="flex-1 bg-[#0b1320] border border-gray-800 text-white font-extrabold py-2.5 rounded-xl">10K</button>
-          <button onclick="document.getElementById('inputNominal').value=20000" class="flex-1 bg-[#0b1320] border border-gray-800 text-white font-extrabold py-2.5 rounded-xl">20K</button>
-          <button onclick="document.getElementById('inputNominal').value=50000" class="flex-1 bg-[#0b1320] border border-gray-800 text-white font-extrabold py-2.5 rounded-xl">50K</button>
-          <button onclick="document.getElementById('inputNominal').value=100000" class="flex-1 bg-[#0b1320] border border-gray-800 text-white font-extrabold py-2.5 rounded-xl">100K</button>
+          <button onclick="document.getElementById('inputNominal').value=10000" class="flex-1 bg-[#0A174E] border border-gray-800 text-white font-extrabold py-2.5 rounded-xl">10K</button>
+          <button onclick="document.getElementById('inputNominal').value=20000" class="flex-1 bg-[#0A174E] border border-gray-800 text-white font-extrabold py-2.5 rounded-xl">20K</button>
+          <button onclick="document.getElementById('inputNominal').value=50000" class="flex-1 bg-[#0A174E] border border-gray-800 text-white font-extrabold py-2.5 rounded-xl">50K</button>
+          <button onclick="document.getElementById('inputNominal').value=100000" class="flex-1 bg-[#0A174E] border border-gray-800 text-white font-extrabold py-2.5 rounded-xl">100K</button>
         </div>
 
         <div class="flex flex-col gap-3 mb-6">
-          <div onclick="selM('wa')" id="m-wa" class="flex items-center justify-between bg-[#0b1320] border border-gray-800 p-3 rounded-xl cursor-pointer">
+          <div onclick="selM('wa')" id="m-wa" class="flex items-center justify-between bg-[#0A174E] border border-gray-800 p-3 rounded-xl cursor-pointer">
             <div class="flex items-center gap-3">
               <i class="fab fa-whatsapp text-2xl text-green-500"></i>
               <div class="flex flex-col">
@@ -983,7 +983,7 @@ cat << 'EOF' > public/dashboard.html
             </div>
             <div id="r-wa" class="w-5 h-5 rounded-full border-[3px] border-gray-400"></div>
           </div>
-          <div onclick="selM('qris')" id="m-qris" class="flex items-center justify-between bg-[#0b1320] border border-gray-800 p-3 rounded-xl cursor-pointer">
+          <div onclick="selM('qris')" id="m-qris" class="flex items-center justify-between bg-[#0A174E] border border-gray-800 p-3 rounded-xl cursor-pointer">
             <div class="flex items-center gap-3">
               <i class="fas fa-qrcode text-2xl text-white"></i>
               <div class="flex flex-col">
@@ -995,7 +995,7 @@ cat << 'EOF' > public/dashboard.html
           </div>
         </div>
 
-        <button onclick="prosesTopup()" class="w-full py-3.5 bg-[#facc15] text-[#001229] font-extrabold rounded-xl shadow-md hover:bg-yellow-500 mb-3">Lanjutkan Pembayaran</button>
+        <button onclick="prosesTopup()" class="w-full py-3.5 bg-[#F5D042] text-[#0A174E] font-extrabold rounded-xl shadow-md hover:bg-[#E5C032] mb-3">Lanjutkan Pembayaran</button>
       </div>
     </div>
   </div>
@@ -1070,7 +1070,7 @@ cat << 'EOF' > public/dashboard.html
     function logout() {
       Swal.fire({
           title: 'Keluar Akun?', text: 'Apakah kamu yakin ingin keluar?', icon: 'warning',
-          showCancelButton: true, background: '#0b1320', color: '#fff'
+          showCancelButton: true, background: '#0A174E', color: '#fff'
       }).then(r => { if(r.isConfirmed) { localStorage.removeItem('user'); window.location.href = '/'; } });
     }
     
@@ -1128,15 +1128,15 @@ cat << 'EOF' > public/dashboard.html
       sel = m;
       ['wa','qris'].forEach(x => {
         document.getElementById('r-' + x).className = 'w-5 h-5 rounded-full border-[3px] border-gray-600 bg-transparent shrink-0';
-        document.getElementById('m-' + x).classList.remove('border-[#facc15]');
+        document.getElementById('m-' + x).classList.remove('border-[#F5D042]');
       });
-      document.getElementById('r-' + m).className = 'w-5 h-5 rounded-full border-[6px] border-[#facc15] bg-[#050b14] shrink-0';
-      document.getElementById('m-' + m).classList.add('border-[#facc15]');
+      document.getElementById('r-' + m).className = 'w-5 h-5 rounded-full border-[6px] border-[#F5D042] bg-[#03071A] shrink-0';
+      document.getElementById('m-' + m).classList.add('border-[#F5D042]');
     }
 
     async function prosesTopup() {
       const n = parseInt(document.getElementById('inputNominal').value);
-      const bg = '#0b1320'; const c = '#fff';
+      const bg = '#0A174E'; const c = '#fff';
       
       if(isMaintenance()) return Swal.fire({ icon: 'error', title: 'MAINTENANCE', text: 'Sistem sedang Maintenance Otomatis. Transaksi ditutup sementara.', background: bg, color: c });
       if(!n || n <= 0) return Swal.fire({icon: 'warning', title: 'Gagal', text: 'Isi nominal valid!', background: bg, color: c});
@@ -1145,7 +1145,6 @@ cat << 'EOF' > public/dashboard.html
       const fn = n + Math.floor(Math.random() * 90) + 10;
       
       if(sel === 'qris') {
-        // BATAS MINIMAL QRIS DIUBAH JADI RP 1.000 SESUAI REQUEST BOS
         if(n < 1000) return Swal.fire({icon: 'warning', title: 'Gagal', text: 'Minimal Top Up Rp 1.000', background: bg, color: c});
         
         closeTopUp();
@@ -1156,10 +1155,10 @@ cat << 'EOF' > public/dashboard.html
           Swal.fire({
             title: `<span class="font-bold text-lg">Scan QRIS</span>`,
             html: `
-                <p class="text-4xl text-yellow-500 font-extrabold mb-2">Rp ${fn.toLocaleString('id-ID')}</p>
+                <p class="text-4xl text-[#F5D042] font-extrabold mb-2">Rp ${fn.toLocaleString('id-ID')}</p>
                 <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold mb-3 animate-pulse">Sisa Waktu: <span id="qrisTimer">05:00</span></div>
                 <div class="bg-white p-3 rounded-xl inline-block border border-gray-200 mb-2"><img src="${qrisImg}" class="w-48 h-48 object-cover"></div>
-                <p class="text-xs text-blue-500">Transfer TEPAT sesuai nominal (3 digit akhir) agar otomatis masuk.</p>`,
+                <p class="text-xs text-[#F5D042]">Transfer TEPAT sesuai nominal (3 digit akhir) agar otomatis masuk.</p>`,
             showCancelButton: true, confirmButtonText: 'Sudah Transfer', cancelButtonText: 'Tutup', background: bg, color: c,
             didOpen: () => {
               let t = 300; let tmr = document.getElementById('qrisTimer');
@@ -1187,7 +1186,6 @@ cat << 'EOF' > public/dashboard.html
 </body>
 </html>
 EOF
-
 cat << 'EOF' > public/operator.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -1205,10 +1203,10 @@ cat << 'EOF' > public/operator.html
       }
   </script>
 </head>
-<body class="bg-[#0b1320] font-sans transition-colors duration-300 text-white">
-  <div class="max-w-md mx-auto bg-[#0b1320] min-h-screen relative shadow-2xl overflow-x-hidden flex flex-col">
+<body class="bg-[#0A174E] font-sans transition-colors duration-300 text-white">
+  <div class="max-w-md mx-auto bg-[#0A174E] min-h-screen relative shadow-2xl overflow-x-hidden flex flex-col">
     
-    <div class="flex items-center p-5 bg-[#0b1320] sticky top-0 z-40 border-b border-[#1e293b] shrink-0">
+    <div class="flex items-center p-5 bg-[#0A174E] sticky top-0 z-40 border-b border-[#163599] shrink-0">
       <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-white" onclick="goBack()"></i>
       <h1 class="text-[18px] font-bold text-white uppercase" id="pageTitle">Layanan</h1>
     </div>
@@ -1216,73 +1214,73 @@ cat << 'EOF' > public/operator.html
     <div class="flex-1 overflow-y-auto hide-scrollbar pb-10">
       <div id="operatorContainer" class="block">
         <div class="px-4 mt-6">
-          <div class="bg-[#111c2e] rounded-2xl overflow-hidden border border-[#1e293b] shadow-sm" id="opListRender"></div>
+          <div class="bg-[#0D2266] rounded-2xl overflow-hidden border border-[#163599] shadow-sm" id="opListRender"></div>
         </div>
       </div>
 
       <div id="categoryContainer" class="hidden">
-        <div class="flex justify-between items-center px-5 py-4 bg-[#001229] text-white">
+        <div class="flex justify-between items-center px-5 py-4 bg-[#060F33] text-white">
           <span class="font-bold text-[15px]" id="catSubtitle">Pilih Kategori</span>
-          <i class="fas fa-home text-lg cursor-pointer hover:text-[#facc15]" onclick="location.href='/dashboard.html'"></i>
+          <i class="fas fa-home text-lg cursor-pointer hover:text-[#F5D042]" onclick="location.href='/dashboard.html'"></i>
         </div>
-        <div class="bg-[#111c2e] shadow-sm pb-4" id="categoryList"></div>
+        <div class="bg-[#0D2266] shadow-sm pb-4" id="categoryList"></div>
       </div>
 
       <div id="productContainer" class="hidden">
-        <div class="flex justify-between items-center px-5 py-4 bg-[#001229] text-white">
+        <div class="flex justify-between items-center px-5 py-4 bg-[#060F33] text-white">
           <span class="font-bold text-[15px]" id="prodSubtitle">Pilih Produk</span>
-          <i class="fas fa-home text-lg cursor-pointer hover:text-[#facc15]" onclick="location.href='/dashboard.html'"></i>
+          <i class="fas fa-home text-lg cursor-pointer hover:text-[#F5D042]" onclick="location.href='/dashboard.html'"></i>
         </div>
-        <div class="px-4 py-4 bg-[#0b1320] border-b border-[#1e293b]">
+        <div class="px-4 py-4 bg-[#0A174E] border-b border-[#163599]">
           <label class="text-[10px] text-gray-500 font-bold mb-2 block uppercase" id="targetLabel">Target / Tujuan</label>
           <div class="relative flex items-center">
-            <input type="text" id="inputTarget" class="w-full bg-[#1a2639] border border-gray-700 text-white rounded-xl py-3 pl-4 pr-24 text-sm font-bold focus:outline-none focus:border-[#facc15]" placeholder="Ketik target...">
-            <div id="prefixIcon" class="absolute right-12 font-bold text-[10px] uppercase px-2 py-1 rounded bg-[#002147] text-yellow-400 hidden"></div>
+            <input type="text" id="inputTarget" class="w-full bg-[#112C80] border border-gray-700 text-white rounded-xl py-3 pl-4 pr-24 text-sm font-bold focus:outline-none focus:border-[#F5D042]" placeholder="Ketik target...">
+            <div id="prefixIcon" class="absolute right-12 font-bold text-[10px] uppercase px-2 py-1 rounded bg-[#0A174E] text-yellow-400 hidden"></div>
           </div>
         </div>
-        <div class="bg-[#111c2e] shadow-sm pb-4" id="productList"></div>
+        <div class="bg-[#0D2266] shadow-sm pb-4" id="productList"></div>
       </div>
     </div>
   </div>
 
   <div id="detailOverlay" class="fixed inset-0 bg-black/60 z-[130] hidden opacity-0 transition-opacity" onclick="closeDetail()"></div>
-  <div id="detailSheet" class="fixed bottom-0 left-0 right-0 bg-[#050b14] z-[140] rounded-t-[2rem] transform translate-y-full transition-transform max-w-md mx-auto flex flex-col max-h-[85vh]">
+  <div id="detailSheet" class="fixed bottom-0 left-0 right-0 bg-[#03071A] z-[140] rounded-t-[2rem] transform translate-y-full transition-transform max-w-md mx-auto flex flex-col max-h-[85vh]">
     <div class="w-12 h-1.5 bg-gray-700 rounded-full mx-auto my-3 shrink-0"></div>
-    <div class="px-5 pb-2 border-b border-[#1e293b] shrink-0 flex justify-between">
+    <div class="px-5 pb-2 border-b border-[#163599] shrink-0 flex justify-between">
       <h3 class="font-extrabold text-white">Detail Produk</h3>
       <i class="fas fa-times text-gray-400 hover:text-red-500 text-xl cursor-pointer" onclick="closeDetail()"></i>
     </div>
     <div class="p-5 overflow-y-auto hide-scrollbar flex-1">
       <div class="flex items-start gap-3 mb-4">
-        <div class="w-10 h-10 rounded-full bg-[#111c2e] border border-[#1e293b] flex items-center justify-center text-[#facc15] text-lg shrink-0 mt-1">
+        <div class="w-10 h-10 rounded-full bg-[#0D2266] border border-[#163599] flex items-center justify-center text-[#F5D042] text-lg shrink-0 mt-1">
             <i class="fas fa-box"></i>
         </div>
         <div>
           <h4 class="font-extrabold text-[15px] text-white" id="dtName">-</h4>
-          <p class="font-black text-lg text-[#facc15] mt-1" id="dtPrice">Rp 0</p>
+          <p class="font-black text-lg text-[#F5D042] mt-1" id="dtPrice">Rp 0</p>
         </div>
       </div>
-      <div class="bg-[#111c2e] rounded-xl p-3 mb-4 border border-[#1e293b] flex justify-between">
+      <div class="bg-[#0D2266] rounded-xl p-3 mb-4 border border-[#163599] flex justify-between">
         <span class="text-xs font-bold text-gray-500">No Tujuan:</span>
         <span class="text-sm font-bold text-red-500" id="dtTarget">Kosong</span>
       </div>
-      <div class="bg-[#111c2e] rounded-xl p-3 mb-4 border border-[#1e293b] flex justify-between items-center">
+      <div class="bg-[#0D2266] rounded-xl p-3 mb-4 border border-[#163599] flex justify-between items-center">
         <span class="text-xs font-bold text-gray-500">Status Server:</span>
         <div id="dtStatusServer"></div>
       </div>
       <div>
         <span class="text-xs font-bold text-gray-500 mb-2 block">Deskripsi:</span>
-        <div class="bg-[#111c2e] rounded-xl p-3 text-[11px] text-gray-300 border border-[#1e293b] leading-relaxed" id="dtDesc">Desc...</div>
+        <div class="bg-[#0D2266] rounded-xl p-3 text-[11px] text-gray-300 border border-[#163599] leading-relaxed" id="dtDesc">Desc...</div>
       </div>
     </div>
-    <div class="p-5 border-t border-[#1e293b] bg-[#050b14]">
+    <div class="p-5 border-t border-[#163599] bg-[#03071A]">
       <div class="flex gap-3 mb-3">
-        <button class="flex-1 py-2.5 rounded-xl border border-gray-700 font-bold text-sm text-gray-300 hover:bg-[#1a2639]" onclick="closeDetail()">Kembali</button>
+        <button class="flex-1 py-2.5 rounded-xl border border-gray-700 font-bold text-sm text-gray-300 hover:bg-[#112C80]" onclick="closeDetail()">Kembali</button>
         <button class="flex-1 py-2.5 rounded-xl bg-red-500 text-white font-bold text-sm shadow-sm hover:bg-red-600" onclick="bantuanAdmin()">
             <i class="fab fa-whatsapp mr-1"></i> Komplain
         </button>
       </div>
-      <button id="btnLanjutkan" class="w-full py-3.5 bg-[#facc15] text-[#001229] font-bold rounded-xl text-sm shadow-md transition-opacity" onclick="executeBuy()">
+      <button id="btnLanjutkan" class="w-full py-3.5 bg-[#F5D042] text-[#0A174E] font-bold rounded-xl text-sm shadow-md transition-opacity" onclick="executeBuy()">
           Lanjutkan Pembayaran
       </button>
     </div>
@@ -1424,7 +1422,6 @@ cat << 'EOF' > public/operator.html
       byu: { name: 'BY.U', logo: 'BY.U', digiBrand: 'BYU' }
     };
 
-    // PENAMBAHAN MENU SMS & TELPON BARU
     const smstelponData = {
       telkomsel: { name: 'TELKOMSEL', logo: 'TS', digiBrand: 'TELKOMSEL' },
       indosat: { name: 'INDOSAT', logo: 'IS', digiBrand: 'INDOSAT' },
@@ -1438,7 +1435,6 @@ cat << 'EOF' > public/operator.html
         pln_token: { name: 'Token PLN', logo: 'fas fa-bolt', isIcon: true, digiBrand: 'PLN' } 
     };
 
-    // TAGIHAN DIHAPUS DARI MASTER LIST
     const a = { ...o, ...dC, ...gC, ...e, ...etoll, ...pln, ...v, ...prd, ...smstelponData };
     
     let cL = {};
@@ -1460,8 +1456,8 @@ cat << 'EOF' > public/operator.html
     for (let k in cL) {
       let v = cL[k];
       h += `
-        <div class="flex items-center p-4 border-b border-[#1e293b] cursor-pointer hover:bg-[#1a2639] transition" onclick="selectProvider('${k}')">
-          <div class="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center text-[10px] bg-[#0b1320] text-gray-300 font-bold">
+        <div class="flex items-center p-4 border-b border-[#163599] cursor-pointer hover:bg-[#112C80] transition" onclick="selectProvider('${k}')">
+          <div class="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center text-[10px] bg-[#0A174E] text-gray-300 font-bold">
               ${v.isIcon ? `<i class="${v.logo} text-lg"></i>` : v.logo}
           </div>
           <div class="flex-1 ml-4 font-bold text-gray-200">${v.name}</div>
@@ -1531,16 +1527,16 @@ cat << 'EOF' > public/operator.html
               `<span class="text-[8px] bg-red-900/30 text-red-400 px-2 py-0.5 rounded-full font-bold uppercase tracking-wide border border-red-800 animate-pulse">❌ GANGGUAN</span>`;
             
             let clk = `showProductDetail('${sS}','${sN}',${p.price},${p.isLocal},'${sD}', ${p.is_open})`;
-            let opc = p.is_open ? '' : 'opacity-60 bg-[#1a2639]';
+            let opc = p.is_open ? '' : 'opacity-60 bg-[#112C80]';
 
             return `
-            <div class="flex justify-between px-5 py-4 border-b border-[#1e293b] cursor-pointer hover:bg-[#1a2639] transition ${opc}" onclick="${clk}">
+            <div class="flex justify-between px-5 py-4 border-b border-[#163599] cursor-pointer hover:bg-[#112C80] transition ${opc}" onclick="${clk}">
               <div class="w-2/3 text-[12px] font-bold text-gray-100 leading-tight">
                   ${p.name} ${p.isLocal ? '<i class="fas fa-check-circle text-green-500 ml-1"></i>' : ''}
               </div>
               <div class="text-right flex flex-col items-end justify-center">
                 <div class="mb-1">${bdg}</div>
-                <span class="text-[13px] font-extrabold text-[#facc15]">Rp ${p.price.toLocaleString('id-ID')}</span>
+                <span class="text-[13px] font-extrabold text-[#F5D042]">Rp ${p.price.toLocaleString('id-ID')}</span>
               </div>
             </div>`;
           }).join('');
@@ -1567,12 +1563,12 @@ cat << 'EOF' > public/operator.html
       if(!isOpen) {
           btn.innerText = "Produk Sedang Gangguan";
           btn.classList.add('opacity-50', 'cursor-not-allowed');
-          btn.classList.replace('bg-[#facc15]', 'bg-gray-600');
-          btn.classList.replace('text-[#001229]', 'text-gray-300');
+          btn.classList.replace('bg-[#F5D042]', 'bg-gray-600');
+          btn.classList.replace('text-[#0A174E]', 'text-gray-300');
       } else {
           btn.innerText = "Lanjutkan Pembayaran";
-          btn.classList.replace('bg-gray-600', 'bg-[#facc15]');
-          btn.classList.replace('text-gray-300', 'text-[#001229]');
+          btn.classList.replace('bg-gray-600', 'bg-[#F5D042]');
+          btn.classList.replace('text-gray-300', 'text-[#0A174E]');
           document.getElementById('inputTarget').dispatchEvent(new Event('input')); 
       }
       
@@ -1597,7 +1593,7 @@ cat << 'EOF' > public/operator.html
       if(!isProductOpen) {
           return Swal.fire({
               icon: 'error', title: 'Gangguan', text: 'Mohon maaf, produk ini sedang mengalami gangguan dari server pusat.',
-              background: '#0b1320', color: '#fff'
+              background: '#0A174E', color: '#fff'
           });
       }
 
@@ -1605,7 +1601,7 @@ cat << 'EOF' > public/operator.html
       if (!tr) return;
       
       closeDetail();
-      const bg = '#0b1320';
+      const bg = '#0A174E';
       const c = '#fff';
       
       if(isMaintenance()) {
@@ -1644,7 +1640,7 @@ cat << 'EOF' > public/operator.html
           let h = '';
           pr.items.forEach(i => {
             h += `
-            <div class="flex items-center px-5 py-4 border-b border-[#1e293b] cursor-pointer hover:bg-[#1a2639] transition" onclick="selectCategory('${i}')">
+            <div class="flex items-center px-5 py-4 border-b border-[#163599] cursor-pointer hover:bg-[#112C80] transition" onclick="selectCategory('${i}')">
                 <div class="flex-1 text-[13px] font-bold text-gray-200 uppercase">${i}</div>
                 <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
             </div>`;
@@ -1714,39 +1710,39 @@ cat << 'EOF' > public/game.html
       tailwind.config = { darkMode: 'class' }
   </script>
 </head>
-<body class="bg-[#0b1320] font-sans transition-colors duration-300 text-white">
-  <div class="max-w-md mx-auto bg-[#0b1320] min-h-screen relative shadow-2xl overflow-x-hidden">
+<body class="bg-[#0A174E] font-sans transition-colors duration-300 text-white">
+  <div class="max-w-md mx-auto bg-[#0A174E] min-h-screen relative shadow-2xl overflow-x-hidden">
     
-    <div class="flex items-center p-5 bg-[#0b1320] sticky top-0 z-40 border-b border-[#1e293b]">
+    <div class="flex items-center p-5 bg-[#0A174E] sticky top-0 z-40 border-b border-[#163599]">
       <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-white" onclick="history.back()"></i>
       <h1 class="text-[18px] font-bold text-white">Top Up Game</h1>
     </div>
 
     <div class="px-4 mt-6">
-      <div class="bg-[#111c2e] rounded-b-2xl rounded-t-xl overflow-hidden border border-[#1e293b] shadow-sm mt-4">
-        <div class="bg-black p-4 flex items-center gap-2">
-          <i class="fas fa-gamepad text-[#facc15] text-lg"></i>
+      <div class="bg-[#0D2266] rounded-b-2xl rounded-t-xl overflow-hidden border border-[#163599] shadow-sm mt-4">
+        <div class="bg-[#060F33] p-4 flex items-center gap-2">
+          <i class="fas fa-gamepad text-[#F5D042] text-lg"></i>
           <span class="font-bold text-white text-sm">Pilih Game</span>
         </div>
         <div class="p-4 grid grid-cols-3 gap-3">
           
-          <div class="bg-[#1a2639] border border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#facc15] transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=free_fire'">
-            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-600 flex items-center justify-center text-[#facc15] font-extrabold text-sm mb-2 shadow-sm">FF</div>
+          <div class="bg-[#112C80] border border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#F5D042] transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=free_fire'">
+            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-600 flex items-center justify-center text-[#F5D042] font-extrabold text-sm mb-2 shadow-sm">FF</div>
             <div class="text-[11px] font-bold text-gray-300 text-center">Free Fire</div>
           </div>
           
-          <div class="bg-[#1a2639] border border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#facc15] transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=mobile_legends'">
-            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-600 flex items-center justify-center text-[#facc15] font-extrabold text-xs text-center shadow-sm">ML</div>
+          <div class="bg-[#112C80] border border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#F5D042] transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=mobile_legends'">
+            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-600 flex items-center justify-center text-[#F5D042] font-extrabold text-xs text-center shadow-sm">ML</div>
             <div class="text-[11px] font-bold text-gray-300 text-center">Mobile<br>Legends</div>
           </div>
           
-          <div class="bg-[#1a2639] border border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#facc15] transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=pubg_mobile'">
-            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-600 flex items-center justify-center text-[#facc15] font-extrabold text-[10px] text-center shadow-sm">PUBG</div>
+          <div class="bg-[#112C80] border border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#F5D042] transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=pubg_mobile'">
+            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-600 flex items-center justify-center text-[#F5D042] font-extrabold text-[10px] text-center shadow-sm">PUBG</div>
             <div class="text-[11px] font-bold text-gray-300 text-center">PUBG<br>Mobile</div>
           </div>
           
-          <div class="bg-[#1a2639] border border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#facc15] transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=valorant'">
-            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-600 flex items-center justify-center text-[#facc15] font-extrabold text-[11px] text-center shadow-sm">VALO</div>
+          <div class="bg-[#112C80] border border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#F5D042] transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=valorant'">
+            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-600 flex items-center justify-center text-[#F5D042] font-extrabold text-[11px] text-center shadow-sm">VALO</div>
             <div class="text-[11px] font-bold text-gray-300 text-center">Valorant</div>
           </div>
           
@@ -1781,18 +1777,18 @@ cat << 'EOF' > public/riwayat_topup.html
       tailwind.config = { darkMode: 'class' }
   </script>
   <style>
-      .swal2-popup.custom-swal-bg { background-color: #002147 !important; border-radius: 1.5rem !important; width: 340px !important; padding: 1.5rem !important; border: 1px solid #1e3a8a; }
+      .swal2-popup.custom-swal-bg { background-color: #0A174E !important; border-radius: 1.5rem !important; width: 340px !important; padding: 1.5rem !important; border: 1px solid #163599; }
   </style>
 </head>
-<body class="bg-[#001229] font-sans transition-colors duration-300 text-white">
-  <div class="max-w-md mx-auto bg-[#001229] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+<body class="bg-[#060F33] font-sans transition-colors duration-300 text-white">
+  <div class="max-w-md mx-auto bg-[#060F33] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
     
-    <div class="flex items-center pt-5 px-5 pb-0 bg-[#001229] sticky top-0 z-50">
+    <div class="flex items-center pt-5 px-5 pb-0 bg-[#060F33] sticky top-0 z-50">
       <i class="fas fa-chevron-left text-xl cursor-pointer mr-4 text-white" onclick="location.href='/dashboard.html'"></i>
       <h1 class="text-[18px] font-extrabold text-white tracking-wide">Riwayat Transaksi</h1>
     </div>
 
-    <div class="flex bg-[#001229] sticky top-[60px] z-40 border-b border-[#1e3a8a] mt-4">
+    <div class="flex bg-[#060F33] sticky top-[60px] z-40 border-b border-[#163599] mt-4">
       <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-gray-500 cursor-pointer uppercase tracking-wide transition-colors" onclick="location.href='/riwayat.html'">
         Produk
       </div>
@@ -1801,16 +1797,16 @@ cat << 'EOF' > public/riwayat_topup.html
       </div>
     </div>
 
-    <div class="mx-4 mt-4 bg-[#002147] p-4 rounded-2xl border border-[#1e3a8a] shadow-sm">
+    <div class="mx-4 mt-4 bg-[#0A174E] p-4 rounded-2xl border border-[#163599] shadow-sm">
         <div class="relative mb-4">
             <i class="fas fa-search absolute left-3.5 top-3 text-gray-400 text-sm"></i>
-            <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-[#0b1320] border border-gray-700 text-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm font-bold focus:outline-none focus:border-[#38bdf8]" placeholder="Cari transaksi...">
+            <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-[#081C4C] border border-gray-700 text-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm font-bold focus:outline-none focus:border-[#38bdf8]" placeholder="Cari transaksi...">
         </div>
         <div class="flex justify-between mb-2 gap-2">
-            <div id="btn-Semua" onclick="setStatusFilter('Semua')" class="flex-1 bg-[#facc15] text-[#001229] text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer shadow-sm transition-colors">Semua</div>
-            <div id="btn-Sukses" onclick="setStatusFilter('Sukses')" class="flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#1e3a8a]">Sukses</div>
-            <div id="btn-Proses" onclick="setStatusFilter('Proses')" class="flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#1e3a8a]">Proses</div>
-            <div id="btn-Gagal" onclick="setStatusFilter('Gagal')" class="flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#1e3a8a]">Gagal</div>
+            <div id="btn-Semua" onclick="setStatusFilter('Semua')" class="flex-1 bg-[#F5D042] text-[#0A174E] text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer shadow-sm transition-colors">Semua</div>
+            <div id="btn-Sukses" onclick="setStatusFilter('Sukses')" class="flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#163599]">Sukses</div>
+            <div id="btn-Proses" onclick="setStatusFilter('Proses')" class="flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#163599]">Proses</div>
+            <div id="btn-Gagal" onclick="setStatusFilter('Gagal')" class="flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#163599]">Gagal</div>
         </div>
     </div>
 
@@ -1851,11 +1847,11 @@ cat << 'EOF' > public/riwayat_topup.html
         
         ['Semua', 'Sukses', 'Proses', 'Gagal'].forEach(btn => {
             const el = document.getElementById('btn-' + btn);
-            el.className = 'flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#1e3a8a]';
+            el.className = 'flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#163599]';
         });
         
         const activeBtn = document.getElementById('btn-' + status);
-        activeBtn.className = `flex-1 bg-[#facc15] text-[#001229] text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer shadow-sm transition-colors border border-[#facc15]`;
+        activeBtn.className = `flex-1 bg-[#F5D042] text-[#0A174E] text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer shadow-sm transition-colors border border-[#F5D042]`;
         
         filterHistory();
     }
@@ -1884,18 +1880,17 @@ cat << 'EOF' > public/riwayat_topup.html
         if(!filtered || filtered.length === 0) {
             c.innerHTML = `
             <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
-                <div class="w-[5.5rem] h-[5.5rem] bg-[#002147] rounded-full flex items-center justify-center mb-6 shadow-sm border border-[#1e3a8a]">
+                <div class="w-[5.5rem] h-[5.5rem] bg-[#0A174E] rounded-full flex items-center justify-center mb-6 shadow-sm border border-[#163599]">
                     <i class="fas fa-wallet text-gray-400 text-4xl"></i>
                 </div>
                 <h2 class="text-white font-bold text-lg tracking-wide mb-2">Belum Ada Top Up</h2>
                 <p class="text-gray-400 text-[13px] leading-relaxed mb-8 px-2">Anda belum melakukan pengisian saldo. Ayo isi saldo sekarang!</p>
-                <button class="bg-[#facc15] text-[#001229] font-extrabold py-3 px-8 rounded-full shadow-lg hover:opacity-90 transition" onclick="location.href='/dashboard.html'">Top Up Sekarang</button>
+                <button class="bg-[#F5D042] text-[#0A174E] font-extrabold py-3 px-8 rounded-full shadow-lg hover:opacity-90 transition" onclick="location.href='/dashboard.html'">Top Up Sekarang</button>
             </div>`;
         } else {
             c.innerHTML = filtered.map((i) => {
                 let isExp = i.status === 'Expired';
                 
-                // WARNA BADGE KEMBALI KE VERSI LAMA (Sesuai Screenshot: Huruf Menyala, Border Menyala)
                 let sc = '';
                 let statusText = isExp ? 'KEDALUWARSA' : i.status.toUpperCase();
                 
@@ -1912,11 +1907,10 @@ cat << 'EOF' > public/riwayat_topup.html
                 
                 let rawIdx = allTrx.indexOf(i);
                 
-                // KARTU UI CLONE OXFORD: GELAP (#002147), ICON KOTAK DI KIRI, HARGA KUNING KANAN ATAS
                 return `
-                <div onclick="showDetailTopup(${rawIdx})" class="bg-[#002147] p-4 rounded-[1.2rem] mb-3 border border-[#1e3a8a] shadow-sm cursor-pointer hover:bg-[#0a2342] transition-colors flex items-center justify-between">
+                <div onclick="showDetailTopup(${rawIdx})" class="bg-[#0A174E] p-4 rounded-[1.2rem] mb-3 border border-[#163599] shadow-sm cursor-pointer hover:bg-[#112C80] transition-colors flex items-center justify-between">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-[#0b1320] flex items-center justify-center shrink-0 border border-gray-700">
+                        <div class="w-12 h-12 rounded-xl bg-[#081C4C] flex items-center justify-center shrink-0 border border-gray-700">
                             <i class="fas fa-wallet text-gray-400 text-xl"></i>
                         </div>
                         <div class="flex flex-col">
@@ -1925,7 +1919,7 @@ cat << 'EOF' > public/riwayat_topup.html
                         </div>
                     </div>
                     <div class="flex flex-col items-end">
-                        <p class="text-[15px] font-black text-[#facc15] mb-1.5">Rp ${(i.nominal || 0).toLocaleString('id-ID')}</p>
+                        <p class="text-[15px] font-black text-[#F5D042] mb-1.5">Rp ${(i.nominal || 0).toLocaleString('id-ID')}</p>
                         <span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${sc}">${statusText}</span>
                     </div>
                 </div>`;
@@ -1953,7 +1947,7 @@ cat << 'EOF' > public/riwayat_topup.html
         let htmlContent = `
         <h3 class="text-white font-extrabold text-[19px] mb-5 text-center">Detail Transaksi</h3>
         
-        <div class="bg-[#0b1320] border border-[#1e3a8a] rounded-xl p-4 mb-5 text-left">
+        <div class="bg-[#081C4C] border border-[#163599] rounded-xl p-4 mb-5 text-left">
             <div class="flex justify-between mb-3">
                 <span class="text-gray-400 font-medium text-[13px]">Waktu</span>
                 <span class="text-white font-bold text-[13px]">${item.date}</span>
@@ -1968,7 +1962,7 @@ cat << 'EOF' > public/riwayat_topup.html
             </div>
             <div class="flex justify-between mb-3">
                 <span class="text-gray-400 font-medium text-[13px]">Nominal</span>
-                <span class="text-white font-bold text-[13px] text-[#facc15]">Rp ${(item.nominal || 0).toLocaleString('id-ID')}</span>
+                <span class="text-white font-bold text-[13px] text-[#F5D042]">Rp ${(item.nominal || 0).toLocaleString('id-ID')}</span>
             </div>
             <div class="flex justify-between mb-3">
                 <span class="text-gray-400 font-medium text-[13px]">Tujuan</span>
@@ -1983,7 +1977,7 @@ cat << 'EOF' > public/riwayat_topup.html
         <button onclick="komplainTopup('${item.nominal}', '${item.date}', '${rawStatus}')" class="w-full py-3.5 bg-[#ef4444] hover:bg-[#dc2626] text-white font-extrabold rounded-[12px] mb-3 transition-colors text-[14px]">
             Hubungi Admin (Komplain)
         </button>
-        <button onclick="Swal.close()" class="w-full py-3.5 bg-transparent border border-[#334155] text-white hover:bg-[#1e293b] font-extrabold rounded-[12px] transition-colors text-[14px]">
+        <button onclick="Swal.close()" class="w-full py-3.5 bg-transparent border border-[#163599] text-white hover:bg-[#112C80] font-extrabold rounded-[12px] transition-colors text-[14px]">
             Tutup
         </button>
         `;
@@ -1991,7 +1985,7 @@ cat << 'EOF' > public/riwayat_topup.html
         Swal.fire({
             html: htmlContent,
             showConfirmButton: false,
-            background: '#002147', 
+            background: '#0A174E', 
             customClass: { popup: 'custom-swal-bg' },
             padding: 0
         });
@@ -2000,7 +1994,7 @@ cat << 'EOF' > public/riwayat_topup.html
 </body>
 </html>
 EOF
-
+echo "[PART 3 SELESAI BOSKUUU!]"
 cat << 'EOF' > public/info.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -2015,35 +2009,35 @@ cat << 'EOF' > public/info.html
       tailwind.config = { darkMode: 'class' }
   </script>
 </head>
-<body class="bg-[#001229] font-sans transition-colors duration-300 text-white">
-  <div class="max-w-md mx-auto bg-[#001229] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+<body class="bg-[#060F33] font-sans transition-colors duration-300 text-white">
+  <div class="max-w-md mx-auto bg-[#060F33] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
     
-    <div class="flex items-center p-5 bg-[#001229] sticky top-0 z-40 border-b border-[#1e3a8a]">
+    <div class="flex items-center p-5 bg-[#060F33] sticky top-0 z-40 border-b border-[#163599]">
       <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-white" onclick="location.href='/dashboard.html'"></i>
       <h1 class="text-[18px] font-bold text-white">Pusat Informasi</h1>
     </div>
 
     <div class="p-4" id="infoList">
       <div class="mt-20 flex flex-col items-center justify-center text-gray-400">
-        <i class="fas fa-spinner fa-spin text-4xl mb-4 text-[#facc15]"></i>
+        <i class="fas fa-spinner fa-spin text-4xl mb-4 text-[#F5D042]"></i>
         <p class="text-sm font-bold">Memuat informasi...</p>
       </div>
     </div>
 
-    <div class="fixed bottom-0 w-full max-w-md bg-[#001229] border-t border-[#1e3a8a] flex justify-around p-3 pb-4 shadow-sm z-40">
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/dashboard.html'">
+    <div class="fixed bottom-0 w-full max-w-md bg-[#060F33] border-t border-[#163599] flex justify-around p-3 pb-4 shadow-sm z-40">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#F5D042]" onclick="location.href='/dashboard.html'">
         <i class="fas fa-home text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">HOME</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/riwayat.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#F5D042]" onclick="location.href='/riwayat.html'">
         <i class="fas fa-file-alt text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">RIWAYAT</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-[#facc15]">
+      <div class="flex flex-col items-center cursor-pointer text-[#F5D042]">
         <i class="fas fa-bell text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">INFO</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/profile.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#F5D042]" onclick="location.href='/profile.html'">
         <i class="fas fa-user text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">PROFIL</span>
       </div>
@@ -2069,11 +2063,11 @@ cat << 'EOF' > public/info.html
             </div>`;
       } else {
         l.innerHTML = d.info.reverse().map(i => `
-            <div class="relative bg-[#002147] border border-[#1e3a8a] rounded-2xl p-5 mb-4 shadow-sm overflow-hidden">
+            <div class="relative bg-[#0A174E] border border-[#163599] rounded-2xl p-5 mb-4 shadow-sm overflow-hidden">
                 <div class="absolute -right-2 top-4 text-7xl opacity-20 select-none">📢</div>
                 <div class="flex justify-between items-start mb-3 relative z-10">
-                    <h3 class="font-extrabold text-[#facc15] text-[15px] pr-2">${i.judul}</h3>
-                    <span class="text-[10px] text-gray-400 bg-[#0b1320] font-bold px-2 py-1 rounded-md border border-[#1e3a8a]">${i.date}</span>
+                    <h3 class="font-extrabold text-[#F5D042] text-[15px] pr-2">${i.judul}</h3>
+                    <span class="text-[10px] text-gray-400 bg-[#081C4C] font-bold px-2 py-1 rounded-md border border-[#163599]">${i.date}</span>
                 </div>
                 <p class="text-[13px] text-gray-300 leading-relaxed relative z-10 font-medium">${i.isi}</p>
             </div>`).join('');
@@ -2084,7 +2078,6 @@ cat << 'EOF' > public/info.html
 </html>
 EOF
 
-echo "[PART 3 SELESAI BOSKUUU!]"
 cat << 'EOF' > public/mutasi.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -2099,35 +2092,35 @@ cat << 'EOF' > public/mutasi.html
       tailwind.config = { darkMode: 'class' }
   </script>
 </head>
-<body class="bg-[#001229] font-sans transition-colors duration-300 text-white">
-  <div class="max-w-md mx-auto bg-[#001229] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+<body class="bg-[#060F33] font-sans transition-colors duration-300 text-white">
+  <div class="max-w-md mx-auto bg-[#060F33] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
     
-    <div class="flex items-center p-5 bg-[#001229] sticky top-0 z-40 border-b border-[#1e3a8a]">
+    <div class="flex items-center p-5 bg-[#060F33] sticky top-0 z-40 border-b border-[#163599]">
       <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-white" onclick="history.back()"></i>
       <h1 class="text-[18px] font-bold text-white">Mutasi Saldo</h1>
     </div>
 
     <div class="p-4" id="mutasiList">
-      <div class="mt-20 flex flex-col items-center justify-center text-[#facc15]">
+      <div class="mt-20 flex flex-col items-center justify-center text-[#F5D042]">
         <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
         <p class="text-sm font-bold text-gray-500">Memuat data mutasi...</p>
       </div>
     </div>
 
-    <div class="fixed bottom-0 w-full max-w-md bg-[#001229] border-t border-[#1e3a8a] flex justify-around p-3 pb-4 shadow-sm z-40">
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/dashboard.html'">
+    <div class="fixed bottom-0 w-full max-w-md bg-[#060F33] border-t border-[#163599] flex justify-around p-3 pb-4 shadow-sm z-40">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#F5D042]" onclick="location.href='/dashboard.html'">
         <i class="fas fa-home text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">HOME</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/riwayat.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#F5D042]" onclick="location.href='/riwayat.html'">
         <i class="fas fa-file-alt text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">RIWAYAT</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/info.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#F5D042]" onclick="location.href='/info.html'">
         <i class="fas fa-bell text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">INFO</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/profile.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#F5D042]" onclick="location.href='/profile.html'">
         <i class="fas fa-user text-xl"></i>
         <span class="text-[10px] mt-1 font-bold">PROFIL</span>
       </div>
@@ -2156,14 +2149,14 @@ cat << 'EOF' > public/mutasi.html
       if(!d.mutasi || d.mutasi.length === 0) {
         l.innerHTML = `
             <div class="mt-20 flex flex-col items-center justify-center text-center px-6">
-                <div class="w-[5.5rem] h-[5.5rem] bg-[#002147] rounded-full flex items-center justify-center mb-6 shadow-sm border border-[#1e3a8a]">
+                <div class="w-[5.5rem] h-[5.5rem] bg-[#0A174E] rounded-full flex items-center justify-center mb-6 shadow-sm border border-[#163599]">
                     <i class="fas fa-exchange-alt text-gray-400 text-4xl"></i>
                 </div>
                 <h2 class="text-white font-bold text-lg mb-2">Belum Ada Mutasi</h2>
             </div>`;
       } else {
         l.innerHTML = d.mutasi.reverse().map(m => `
-        <div class="bg-[#002147] border border-[#1e3a8a] rounded-2xl p-4 mb-3 flex justify-between shadow-sm">
+        <div class="bg-[#0A174E] border border-[#163599] rounded-2xl p-4 mb-3 flex justify-between shadow-sm">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full ${m.type === 'in' ? 'bg-green-900/30 text-green-400' : 'bg-red-900/30 text-red-400'} flex items-center justify-center text-lg shrink-0">
                     <i class="fas ${m.type === 'in' ? 'fa-arrow-down' : 'fa-arrow-up'}"></i>
@@ -2199,39 +2192,39 @@ cat << 'EOF' > public/profile.html
       tailwind.config = { darkMode: 'class' }
   </script>
 </head>
-<body class="bg-[#001229] font-sans transition-colors duration-300 text-white">
-  <div class="max-w-md mx-auto bg-[#001229] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+<body class="bg-[#060F33] font-sans transition-colors duration-300 text-white">
+  <div class="max-w-md mx-auto bg-[#060F33] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
     
-    <div class="bg-[#002147] p-8 pb-10 flex flex-col items-center relative rounded-b-[2rem] shadow-lg border-b border-[#1e3a8a]">
-      <div class="w-24 h-24 bg-[#0b1320] rounded-full flex justify-center items-center text-[#facc15] font-extrabold text-4xl mt-2 mb-3 shadow-md overflow-hidden border-2 border-[#1e3a8a]" id="profileCircle">U</div>
+    <div class="bg-[#0A174E] p-8 pb-10 flex flex-col items-center relative rounded-b-[2rem] shadow-lg border-b border-[#163599]">
+      <div class="w-24 h-24 bg-[#081C4C] rounded-full flex justify-center items-center text-[#F5D042] font-extrabold text-4xl mt-2 mb-3 shadow-md overflow-hidden border-2 border-[#163599]" id="profileCircle">U</div>
       <div class="flex items-center gap-3">
         <h2 class="text-2xl font-bold tracking-wide text-gray-100" id="profileName">User Name</h2>
-        <i class="fas fa-pencil-alt text-gray-400 hover:text-[#facc15] cursor-pointer text-lg" onclick="openEditModal()"></i>
+        <i class="fas fa-pencil-alt text-gray-400 hover:text-[#F5D042] cursor-pointer text-lg" onclick="openEditModal()"></i>
       </div>
     </div>
 
     <div class="mt-4 px-2">
-      <div class="flex items-center px-4 py-5 border-b border-[#1e3a8a]">
+      <div class="flex items-center px-4 py-5 border-b border-[#163599]">
         <i class="fas fa-envelope text-gray-400 w-10 text-xl text-center"></i>
         <div class="flex-1 text-[15px] font-bold text-gray-200 ml-2">Email</div>
         <div class="text-sm font-bold text-gray-400" id="profileEmail">-</div>
       </div>
-      <div class="flex items-center px-4 py-5 border-b border-[#1e3a8a]">
+      <div class="flex items-center px-4 py-5 border-b border-[#163599]">
         <i class="fas fa-phone-alt text-gray-400 w-10 text-xl text-center"></i>
         <div class="flex-1 text-[15px] font-bold text-gray-200 ml-2">No. Telp</div>
         <div class="text-sm font-bold text-gray-400" id="profilePhoneData">08...</div>
       </div>
-      <div class="flex items-center px-4 py-5 border-b border-[#1e3a8a]">
+      <div class="flex items-center px-4 py-5 border-b border-[#163599]">
         <i class="fas fa-wallet text-gray-400 w-10 text-xl text-center"></i>
         <div class="flex-1 text-[15px] font-bold text-gray-200 ml-2">Saldo Akun</div>
-        <div class="text-sm font-extrabold text-[#facc15]" id="profileSaldo">Rp 0</div>
+        <div class="text-sm font-extrabold text-[#F5D042]" id="profileSaldo">Rp 0</div>
       </div>
-      <div class="flex items-center px-4 py-5 border-b border-[#1e3a8a]">
+      <div class="flex items-center px-4 py-5 border-b border-[#163599]">
         <i class="fas fa-shopping-cart text-gray-400 w-10 text-xl text-center"></i>
         <div class="flex-1 text-[15px] font-bold text-gray-200 ml-2">Total Transaksi</div>
-        <div class="text-sm font-extrabold text-[#facc15]" id="profileTrx">0 Trx</div>
+        <div class="text-sm font-extrabold text-[#F5D042]" id="profileTrx">0 Trx</div>
       </div>
-      <div class="flex items-center px-4 py-5 border-b border-[#1e3a8a] cursor-pointer hover:bg-[#0a2342] transition-colors" onclick="location.href='/mutasi.html'">
+      <div class="flex items-center px-4 py-5 border-b border-[#163599] cursor-pointer hover:bg-[#112C80] transition-colors" onclick="location.href='/mutasi.html'">
         <i class="fas fa-exchange-alt text-gray-400 w-10 text-xl text-center"></i>
         <div class="flex-1 text-[15px] font-bold text-gray-200 ml-2">Mutasi Saldo</div>
         <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
@@ -2243,64 +2236,64 @@ cat << 'EOF' > public/profile.html
     </div>
 
     <div id="editProfileModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/70">
-        <div class="bg-[#002147] w-[90%] max-w-[340px] rounded-[1.25rem] border border-[#1e3a8a] shadow-2xl relative p-6 animate-slide-up">
+        <div class="bg-[#0A174E] w-[90%] max-w-[340px] rounded-[1.25rem] border border-[#163599] shadow-2xl relative p-6 animate-slide-up">
             <button onclick="closeEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500">
                 <i class="fas fa-times text-xl"></i>
             </button>
             <h3 class="text-center text-white font-extrabold text-lg mb-6">Ubah Profil</h3>
             
             <div class="relative w-20 h-20 mx-auto mb-8">
-                <div class="w-full h-full rounded-full border-2 border-[#facc15] flex items-center justify-center text-3xl font-bold bg-[#0b1320] overflow-hidden text-white" id="editModalInitial">U</div>
+                <div class="w-full h-full rounded-full border-2 border-[#F5D042] flex items-center justify-center text-3xl font-bold bg-[#081C4C] overflow-hidden text-white" id="editModalInitial">U</div>
                 <input type="file" id="avatarInput" accept="image/*" class="hidden" onchange="previewAvatar(event)">
-                <div class="absolute bottom-0 right-0 bg-[#facc15] rounded-full w-7 h-7 flex items-center justify-center text-[#001229] border-[3px] border-[#001229] cursor-pointer z-10" onclick="document.getElementById('avatarInput').click()">
+                <div class="absolute bottom-0 right-0 bg-[#F5D042] rounded-full w-7 h-7 flex items-center justify-center text-[#0A174E] border-[3px] border-[#0A174E] cursor-pointer z-10" onclick="document.getElementById('avatarInput').click()">
                     <i class="fas fa-camera text-[10px]"></i>
                 </div>
             </div>
 
             <div class="mb-4">
                 <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase">Email (Hanya Baca)</label>
-                <input type="email" id="editEmail" readonly class="w-full bg-[#0b1320]/50 border border-[#1e3a8a] rounded-lg px-3 py-3 text-gray-400 font-bold text-sm focus:outline-none cursor-not-allowed">
+                <input type="email" id="editEmail" readonly class="w-full bg-[#081C4C]/50 border border-[#163599] rounded-lg px-3 py-3 text-gray-400 font-bold text-sm focus:outline-none cursor-not-allowed">
             </div>
             <div class="mb-4">
                 <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase">Nama Pengguna</label>
-                <input type="text" id="editName" class="w-full bg-[#0b1320] border border-[#1e3a8a] rounded-lg px-3 py-3 text-white font-bold text-sm focus:outline-none focus:border-[#facc15]">
+                <input type="text" id="editName" class="w-full bg-[#081C4C] border border-[#163599] rounded-lg px-3 py-3 text-white font-bold text-sm focus:outline-none focus:border-[#F5D042]">
             </div>
             <div class="mb-4">
                 <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase">Nomor Telepon</label>
-                <input type="number" id="editPhone" class="w-full bg-[#0b1320] border border-[#1e3a8a] rounded-lg px-3 py-3 text-white font-bold text-sm focus:outline-none focus:border-[#facc15]">
+                <input type="number" id="editPhone" class="w-full bg-[#081C4C] border border-[#163599] rounded-lg px-3 py-3 text-white font-bold text-sm focus:outline-none focus:border-[#F5D042]">
             </div>
             <div class="mb-4">
                 <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase">Password Baru (Opsional)</label>
                 <div class="relative w-full">
-                    <input type="password" id="editPassword" class="w-full bg-[#0b1320] border border-[#1e3a8a] rounded-lg px-3 py-3 text-white font-bold text-sm focus:outline-none focus:border-[#facc15]" placeholder="Kosongkan jika tidak diganti">
+                    <input type="password" id="editPassword" class="w-full bg-[#081C4C] border border-[#163599] rounded-lg px-3 py-3 text-white font-bold text-sm focus:outline-none focus:border-[#F5D042]" placeholder="Kosongkan jika tidak diganti">
                     <i class="fas fa-eye absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-400" onclick="togglePasswordProfile('editPassword', this)"></i>
                 </div>
             </div>
 
             <div class="mb-6 hidden slide-down" id="editOtpContainer">
                 <label class="block text-[10px] font-bold text-gray-500 mb-1 text-center">OTP telah dikirim ke WA</label>
-                <input type="number" id="editOtpInput" class="w-full bg-[#0b1320] border border-green-500 rounded-lg px-3 py-3 text-white text-lg tracking-[0.5em] text-center font-extrabold focus:outline-none" placeholder="XXXX">
+                <input type="number" id="editOtpInput" class="w-full bg-[#081C4C] border border-green-500 rounded-lg px-3 py-3 text-white text-lg tracking-[0.5em] text-center font-extrabold focus:outline-none" placeholder="XXXX">
             </div>
 
-            <button id="btnSimpanProfil" onclick="saveProfile()" class="w-full py-3.5 bg-[#facc15] text-[#001229] font-extrabold rounded-xl mb-3 shadow-md hover:opacity-90">Simpan Profil</button>
+            <button id="btnSimpanProfil" onclick="saveProfile()" class="w-full py-3.5 bg-[#F5D042] text-[#0A174E] font-extrabold rounded-xl mb-3 shadow-md hover:opacity-90">Simpan Profil</button>
             <button onclick="deleteAccount()" class="w-full py-3.5 bg-red-500/10 text-red-500 font-bold rounded-xl border border-red-500/20 hover:bg-red-500/20">Hapus Akun Permanen</button>
         </div>
     </div>
 
-    <div class="fixed bottom-0 w-full max-w-md bg-[#001229] border-t border-[#1e3a8a] flex justify-around p-3 pb-4 shadow-sm z-40">
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/dashboard.html'">
+    <div class="fixed bottom-0 w-full max-w-md bg-[#060F33] border-t border-[#163599] flex justify-around p-3 pb-4 shadow-sm z-40">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#F5D042]" onclick="location.href='/dashboard.html'">
           <i class="fas fa-home text-xl"></i>
           <span class="text-[10px] mt-1 font-bold">HOME</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/riwayat.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#F5D042]" onclick="location.href='/riwayat.html'">
           <i class="fas fa-file-alt text-xl"></i>
           <span class="text-[10px] mt-1 font-bold">RIWAYAT</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/info.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#F5D042]" onclick="location.href='/info.html'">
           <i class="fas fa-bell text-xl"></i>
           <span class="text-[10px] mt-1 font-bold">INFO</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-[#facc15]">
+      <div class="flex flex-col items-center cursor-pointer text-[#F5D042]">
           <i class="fas fa-user text-xl"></i>
           <span class="text-[10px] mt-1 font-bold">PROFIL</span>
       </div>
@@ -2366,7 +2359,7 @@ cat << 'EOF' > public/profile.html
           text: 'Apakah kamu yakin ingin keluar?', 
           icon: 'warning',
           showCancelButton: true,
-          background: '#002147',
+          background: '#0A174E',
           color: '#fff',
           confirmButtonColor: '#d33'
       }).then(r => {
@@ -2426,7 +2419,7 @@ cat << 'EOF' > public/profile.html
         const otp = document.getElementById('editOtpInput').value;
         const newPassword = document.getElementById('editPassword').value;
         
-        const bg = '#002147'; 
+        const bg = '#0A174E'; 
         const col = '#fff';
         
         if(!newName || !rawPhone) {
@@ -2482,15 +2475,15 @@ cat << 'EOF' > public/profile.html
     function deleteAccount() {
         Swal.fire({ 
             title: 'Hapus Akun Permanen?', text: "Akun dan sisa saldo Anda akan hangus!", icon: 'error', 
-            showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#1e3a8a', 
-            confirmButtonText: 'Ya, Hapus!', background: '#002147', color: '#fff' 
+            showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#163599', 
+            confirmButtonText: 'Ya, Hapus!', background: '#0A174E', color: '#fff' 
         }).then(async (result) => {
             if (result.isConfirmed) {
-                Swal.fire({ title: 'Menghapus...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }, background: '#002147', color: '#fff' });
+                Swal.fire({ title: 'Menghapus...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }, background: '#0A174E', color: '#fff' });
                 try {
                     const res = await fetch('/api/auth/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: user.phone }) });
-                    if(res.ok) { localStorage.removeItem('user'); Swal.fire({ icon: 'success', title: 'Terhapus', text: 'Akun dihapus.', background: '#002147', color: '#fff' }).then(() => { location.href = '/'; }); }
-                } catch(e) { Swal.fire({ icon: 'error', title: 'Error', text: 'Gagal menghapus.', background: '#002147', color: '#fff' }); }
+                    if(res.ok) { localStorage.removeItem('user'); Swal.fire({ icon: 'success', title: 'Terhapus', text: 'Akun dihapus.', background: '#0A174E', color: '#fff' }).then(() => { location.href = '/'; }); }
+                } catch(e) { Swal.fire({ icon: 'error', title: 'Error', text: 'Gagal menghapus.', background: '#0A174E', color: '#fff' }); }
             }
         });
     }
@@ -2514,18 +2507,18 @@ cat << 'EOF' > public/riwayat.html
       tailwind.config = { darkMode: 'class' }
   </script>
   <style>
-      .swal2-popup.custom-swal-bg { background-color: #002147 !important; border-radius: 1.5rem !important; width: 340px !important; padding: 1.5rem !important; border: 1px solid #1e3a8a; }
+      .swal2-popup.custom-swal-bg { background-color: #0A174E !important; border-radius: 1.5rem !important; width: 340px !important; padding: 1.5rem !important; border: 1px solid #163599; }
   </style>
 </head>
-<body class="bg-[#001229] font-sans transition-colors duration-300 text-white">
-  <div class="max-w-md mx-auto bg-[#001229] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+<body class="bg-[#060F33] font-sans transition-colors duration-300 text-white">
+  <div class="max-w-md mx-auto bg-[#060F33] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
     
-    <div class="flex items-center pt-5 px-5 pb-0 bg-[#001229] sticky top-0 z-50">
+    <div class="flex items-center pt-5 px-5 pb-0 bg-[#060F33] sticky top-0 z-50">
       <i class="fas fa-chevron-left text-xl cursor-pointer mr-4 text-white" onclick="location.href='/dashboard.html'"></i>
       <h1 class="text-[18px] font-extrabold text-white uppercase tracking-wide">Riwayat Transaksi</h1>
     </div>
 
-    <div class="flex bg-[#001229] sticky top-[60px] z-40 border-b border-[#1e3a8a] mt-4 shadow-sm">
+    <div class="flex bg-[#060F33] sticky top-[60px] z-40 border-b border-[#163599] mt-4 shadow-sm">
       <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-[#38bdf8] border-b-[3px] border-[#38bdf8] cursor-pointer uppercase tracking-wide">
         Produk
       </div>
@@ -2534,16 +2527,16 @@ cat << 'EOF' > public/riwayat.html
       </div>
     </div>
 
-    <div class="mx-4 mt-4 bg-[#002147] p-4 rounded-2xl border border-[#1e3a8a] shadow-sm">
+    <div class="mx-4 mt-4 bg-[#0A174E] p-4 rounded-2xl border border-[#163599] shadow-sm">
         <div class="relative mb-4">
             <i class="fas fa-search absolute left-3.5 top-3 text-gray-400 text-sm"></i>
-            <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-[#0b1320] border border-gray-700 text-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm font-bold focus:outline-none focus:border-[#38bdf8]" placeholder="Cari transaksi (Nomor/SN)...">
+            <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-[#081C4C] border border-gray-700 text-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm font-bold focus:outline-none focus:border-[#38bdf8]" placeholder="Cari transaksi (Nomor/SN)...">
         </div>
         <div class="flex justify-between mb-2 gap-2">
-            <div id="btn-Semua" onclick="setStatusFilter('Semua')" class="flex-1 bg-[#facc15] text-[#001229] text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer shadow-sm transition-colors border border-[#facc15]">Semua</div>
-            <div id="btn-Sukses" onclick="setStatusFilter('Sukses')" class="flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#1e3a8a]">Sukses</div>
-            <div id="btn-Proses" onclick="setStatusFilter('Proses')" class="flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#1e3a8a]">Proses</div>
-            <div id="btn-Gagal" onclick="setStatusFilter('Gagal')" class="flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#1e3a8a]">Gagal</div>
+            <div id="btn-Semua" onclick="setStatusFilter('Semua')" class="flex-1 bg-[#F5D042] text-[#0A174E] text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer shadow-sm transition-colors border border-[#F5D042]">Semua</div>
+            <div id="btn-Sukses" onclick="setStatusFilter('Sukses')" class="flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#163599]">Sukses</div>
+            <div id="btn-Proses" onclick="setStatusFilter('Proses')" class="flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#163599]">Proses</div>
+            <div id="btn-Gagal" onclick="setStatusFilter('Gagal')" class="flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#163599]">Gagal</div>
         </div>
     </div>
 
@@ -2553,8 +2546,8 @@ cat << 'EOF' > public/riwayat.html
       </div>
     </div>
 
-    <div class="fixed bottom-0 w-full max-w-md bg-[#001229] border-t border-[#1e3a8a] flex justify-around p-3 pb-4 shadow-sm z-40">
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/dashboard.html'">
+    <div class="fixed bottom-0 w-full max-w-md bg-[#060F33] border-t border-[#163599] flex justify-around p-3 pb-4 shadow-sm z-40">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#F5D042]" onclick="location.href='/dashboard.html'">
           <i class="fas fa-home text-xl"></i>
           <span class="text-[10px] mt-1 font-bold">HOME</span>
       </div>
@@ -2562,11 +2555,11 @@ cat << 'EOF' > public/riwayat.html
           <i class="fas fa-file-alt text-xl"></i>
           <span class="text-[10px] mt-1 font-bold">RIWAYAT</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/info.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#F5D042]" onclick="location.href='/info.html'">
           <i class="fas fa-bell text-xl"></i>
           <span class="text-[10px] mt-1 font-bold">INFO</span>
       </div>
-      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/profile.html'">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#F5D042]" onclick="location.href='/profile.html'">
           <i class="fas fa-user text-xl"></i>
           <span class="text-[10px] mt-1 font-bold">PROFIL</span>
       </div>
@@ -2602,11 +2595,11 @@ cat << 'EOF' > public/riwayat.html
         
         ['Semua', 'Sukses', 'Proses', 'Gagal'].forEach(btn => {
             const el = document.getElementById('btn-' + btn);
-            el.className = 'flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#1e3a8a]';
+            el.className = 'flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#163599]';
         });
         
         const activeBtn = document.getElementById('btn-' + status);
-        activeBtn.className = `flex-1 bg-[#facc15] text-[#001229] text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer shadow-sm transition-colors border border-[#facc15]`;
+        activeBtn.className = `flex-1 bg-[#F5D042] text-[#0A174E] text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer shadow-sm transition-colors border border-[#F5D042]`;
         
         filterHistory();
     }
@@ -2632,14 +2625,13 @@ cat << 'EOF' > public/riwayat.html
         if(!filtered || filtered.length === 0) {
             c.innerHTML = `
             <div class="mt-10 flex flex-col items-center justify-center text-center px-6">
-                <div class="w-[5.5rem] h-[5.5rem] bg-[#002147] rounded-full flex items-center justify-center mb-6 shadow-sm border border-[#1e3a8a]">
+                <div class="w-[5.5rem] h-[5.5rem] bg-[#0A174E] rounded-full flex items-center justify-center mb-6 shadow-sm border border-[#163599]">
                     <i class="fas fa-receipt text-gray-400 text-4xl"></i>
                 </div>
                 <h2 class="text-white font-bold text-lg tracking-wide mb-2">Transaksi Tidak Ditemukan</h2>
             </div>`;
         } else {
             c.innerHTML = filtered.map((i) => {
-                // WARNA BADGE CLONE OUTLINE (Sesuai Foto bos)
                 let sc = '';
                 if(i.status === 'Gagal') {
                     sc = 'text-red-400 border border-red-500/50 bg-red-500/10';
@@ -2651,11 +2643,10 @@ cat << 'EOF' > public/riwayat.html
                         
                 let rawIdx = allTrx.indexOf(i);
                 
-                // KARTU UI CLONE OXFORD: GELAP (#002147), ICON BULAT KIRI, HARGA KUNING MAIZE KANAN ATAS
                 return `
-                <div onclick="showDetailTrx(${rawIdx})" class="bg-[#002147] p-4 rounded-[1.2rem] mb-3 border border-[#1e3a8a] shadow-sm cursor-pointer hover:bg-[#0a2342] transition-colors flex items-center justify-between">
+                <div onclick="showDetailTrx(${rawIdx})" class="bg-[#0A174E] p-4 rounded-[1.2rem] mb-3 border border-[#163599] shadow-sm cursor-pointer hover:bg-[#112C80] transition-colors flex items-center justify-between">
                     <div class="flex items-center gap-3 overflow-hidden">
-                        <div class="w-11 h-11 rounded-full bg-[#0b1320] border border-gray-700 flex items-center justify-center shrink-0">
+                        <div class="w-11 h-11 rounded-full bg-[#081C4C] border border-gray-700 flex items-center justify-center shrink-0">
                             <i class="fas fa-box text-gray-400 text-lg"></i>
                         </div>
                         <div class="flex flex-col truncate">
@@ -2664,7 +2655,7 @@ cat << 'EOF' > public/riwayat.html
                         </div>
                     </div>
                     <div class="flex flex-col items-end shrink-0 pl-2">
-                        <p class="text-[14px] font-black text-[#facc15] mb-1.5">Rp ${(i.harga||0).toLocaleString('id-ID')}</p>
+                        <p class="text-[14px] font-black text-[#F5D042] mb-1.5">Rp ${(i.harga||0).toLocaleString('id-ID')}</p>
                         <span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${sc}">${i.status}</span>
                     </div>
                 </div>`;
@@ -2674,13 +2665,11 @@ cat << 'EOF' > public/riwayat.html
 
     function renderHistory() { filterHistory(); }
 
-    // FUNGSI KOMPLAIN WA DENGAN TEKS OTOMATIS SESUAI REQUEST
     window.komplainTrx = function(harga, tanggal, statusLengkap) {
         let msg = `Halo, saya ingin komplain transaksi dengan nominal Rp ${harga} pada tanggal ${tanggal}. Status: ${statusLengkap}.`;
         window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(msg), '_blank');
     }
 
-    // POPUP DETAIL MEWAH OXFORD
     window.showDetailTrx = function(idx) {
       const i = allTrx[idx];
       let rawStatus = i.status.toLowerCase();
@@ -2688,14 +2677,14 @@ cat << 'EOF' > public/riwayat.html
       let htmlContent = `
         <h3 class="text-white font-extrabold text-[19px] mb-5 text-center">Detail Transaksi</h3>
         
-        <div class="bg-[#0b1320] border border-[#1e3a8a] rounded-xl p-4 mb-5 text-left">
+        <div class="bg-[#081C4C] border border-[#163599] rounded-xl p-4 mb-5 text-left">
             <div class="flex justify-between mb-3">
                 <span class="text-gray-400 font-medium text-[13px]">Waktu</span>
                 <span class="text-white font-bold text-[13px] text-right">${i.date}</span>
             </div>
             <div class="flex justify-between mb-3">
                 <span class="text-gray-400 font-medium text-[13px]">Status</span>
-                <span class="${i.status === 'Sukses' ? 'text-[#4ade80]' : (i.status === 'Proses' ? 'text-[#facc15]' : 'text-[#f87171]')} font-extrabold text-[13px] text-right uppercase">${i.status}</span>
+                <span class="${i.status === 'Sukses' ? 'text-[#4ade80]' : (i.status === 'Proses' ? 'text-[#F5D042]' : 'text-[#f87171]')} font-extrabold text-[13px] text-right uppercase">${i.status}</span>
             </div>
             <div class="flex justify-between mb-3">
                 <span class="text-gray-400 font-medium text-[13px]">Produk</span>
@@ -2714,7 +2703,7 @@ cat << 'EOF' > public/riwayat.html
         <button onclick="komplainTrx('${(i.harga||0).toLocaleString('id-ID')}', '${i.date}', '${rawStatus}')" class="w-full py-3.5 bg-[#ef4444] hover:bg-[#dc2626] text-white font-extrabold rounded-[12px] mb-3 transition-colors text-[14px]">
             Hubungi Admin (Komplain)
         </button>
-        <button onclick="Swal.close()" class="w-full py-3.5 bg-transparent border border-[#334155] text-white hover:bg-[#1e3a8a] font-extrabold rounded-[12px] transition-colors text-[14px]">
+        <button onclick="Swal.close()" class="w-full py-3.5 bg-transparent border border-[#163599] text-white hover:bg-[#112C80] font-extrabold rounded-[12px] transition-colors text-[14px]">
             Tutup
         </button>
       `;
@@ -2722,7 +2711,7 @@ cat << 'EOF' > public/riwayat.html
       Swal.fire({
         html: htmlContent,
         showConfirmButton: false,
-        background: '#002147', 
+        background: '#0A174E', 
         customClass: { popup: 'custom-swal-bg' },
         padding: 0
       });
@@ -4526,7 +4515,6 @@ echo "  SISTEM WEB V157 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
 
-EOF
 echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V157..."
 
 cd "$HOME/$DIR_NAME"
