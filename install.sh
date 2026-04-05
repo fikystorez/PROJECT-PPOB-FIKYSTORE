@@ -63,6 +63,7 @@ body {
     font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; 
 }
 
+/* MARQUEE KUNING MAIZE SESUAI REQUEST */
 .marquee-wrapper {
     width: 100%;
     overflow: hidden;
@@ -80,7 +81,7 @@ body {
     font-size: 12px;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    color: #facc15; 
+    color: #facc15; /* WARNA MAIZE KUNING FIKY STORE */
 }
 
 @keyframes marquee-anim {
@@ -1702,6 +1703,326 @@ cat << 'EOF' > public/operator.html
 </html>
 EOF
 
+echo "[PART 2 SELESAI BOSKUUU!]"
+cat << 'EOF' > public/game.html
+<!DOCTYPE html>
+<html lang="id" id="html-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Top Up Game - DIGITAL FIKY STORE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script>
+      tailwind.config = { darkMode: 'class' }
+  </script>
+</head>
+<body class="bg-[#0b1320] font-sans transition-colors duration-300 text-white">
+  <div class="max-w-md mx-auto bg-[#0b1320] min-h-screen relative shadow-2xl overflow-x-hidden">
+    
+    <div class="flex items-center p-5 bg-[#0b1320] sticky top-0 z-40 border-b border-[#1e293b]">
+      <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-white" onclick="history.back()"></i>
+      <h1 class="text-[18px] font-bold text-white">Top Up Game</h1>
+    </div>
+
+    <div class="px-4 mt-6">
+      <div class="bg-[#111c2e] rounded-b-2xl rounded-t-xl overflow-hidden border border-[#1e293b] shadow-sm mt-4">
+        <div class="bg-black p-4 flex items-center gap-2">
+          <i class="fas fa-gamepad text-[#facc15] text-lg"></i>
+          <span class="font-bold text-white text-sm">Pilih Game</span>
+        </div>
+        <div class="p-4 grid grid-cols-3 gap-3">
+          
+          <div class="bg-[#1a2639] border border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#facc15] transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=free_fire'">
+            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-600 flex items-center justify-center text-[#facc15] font-extrabold text-sm mb-2 shadow-sm">FF</div>
+            <div class="text-[11px] font-bold text-gray-300 text-center">Free Fire</div>
+          </div>
+          
+          <div class="bg-[#1a2639] border border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#facc15] transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=mobile_legends'">
+            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-600 flex items-center justify-center text-[#facc15] font-extrabold text-xs text-center shadow-sm">ML</div>
+            <div class="text-[11px] font-bold text-gray-300 text-center">Mobile<br>Legends</div>
+          </div>
+          
+          <div class="bg-[#1a2639] border border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#facc15] transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=pubg_mobile'">
+            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-600 flex items-center justify-center text-[#facc15] font-extrabold text-[10px] text-center shadow-sm">PUBG</div>
+            <div class="text-[11px] font-bold text-gray-300 text-center">PUBG<br>Mobile</div>
+          </div>
+          
+          <div class="bg-[#1a2639] border border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#facc15] transition-colors h-28" onclick="location.href='/operator.html?type=game&provider=valorant'">
+            <div class="w-[3.2rem] h-[3.2rem] rounded-full border border-gray-600 flex items-center justify-center text-[#facc15] font-extrabold text-[11px] text-center shadow-sm">VALO</div>
+            <div class="text-[11px] font-bold text-gray-300 text-center">Valorant</div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    if(!localStorage.getItem('user')) {
+        window.location.href = '/';
+    }
+    
+    document.getElementById('html-root').classList.add('dark');
+  </script>
+</body>
+</html>
+EOF
+
+cat << 'EOF' > public/riwayat_topup.html
+<!DOCTYPE html>
+<html lang="id" id="html-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riwayat Topup - DIGITAL FIKY STORE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script>
+      tailwind.config = { darkMode: 'class' }
+  </script>
+  <style>
+      .swal2-popup.custom-swal-bg { background-color: #111c2e !important; border-radius: 1.5rem !important; width: 340px !important; padding: 1.5rem !important; border: 1px solid #1e293b; }
+  </style>
+</head>
+<body class="bg-[#0b1320] font-sans transition-colors duration-300 text-white">
+  <div class="max-w-md mx-auto bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden">
+    
+    <div class="flex items-center pt-5 px-5 pb-0 bg-[#0b1320] sticky top-0 z-50">
+      <i class="fas fa-chevron-left text-xl cursor-pointer mr-4 text-white" onclick="location.href='/dashboard.html'"></i>
+      <h1 class="text-[18px] font-extrabold text-white tracking-wide">Riwayat Transaksi</h1>
+    </div>
+
+    <div class="flex bg-[#0b1320] sticky top-[60px] z-40 border-b border-[#1e293b] mt-4 shadow-sm">
+      <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-gray-500 cursor-pointer uppercase tracking-wide transition-colors" onclick="location.href='/riwayat.html'">
+        Produk
+      </div>
+      <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-[#facc15] border-b-[3px] border-[#facc15] cursor-pointer uppercase tracking-wide">
+        Topup Saldo
+      </div>
+    </div>
+
+    <div class="mx-4 mt-4 bg-[#111c2e] p-4 rounded-2xl border border-[#1e293b] shadow-sm">
+        <div class="relative mb-4">
+            <i class="fas fa-search absolute left-3.5 top-3 text-gray-400 text-sm"></i>
+            <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-[#0b1320] border border-gray-700 text-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm font-bold focus:outline-none focus:border-[#facc15]" placeholder="Cari transaksi...">
+        </div>
+        <div class="flex justify-between mb-2 gap-2">
+            <div id="btn-Semua" onclick="setStatusFilter('Semua')" class="flex-1 bg-[#facc15] text-[#0b1320] text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer shadow-sm transition-colors border border-[#facc15]">Semua</div>
+            <div id="btn-Sukses" onclick="setStatusFilter('Sukses')" class="flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#1a2639]">Sukses</div>
+            <div id="btn-Proses" onclick="setStatusFilter('Proses')" class="flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#1a2639]">Proses</div>
+            <div id="btn-Gagal" onclick="setStatusFilter('Gagal')" class="flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#1a2639]">Gagal</div>
+        </div>
+    </div>
+
+    <div class="px-4 mt-4" id="historyContainer">
+      <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
+        <i class="fas fa-spinner fa-spin text-4xl mb-4 text-[#facc15]"></i>
+        <p class="text-sm font-bold text-gray-500">Memuat riwayat top up...</p>
+      </div>
+    </div>
+
+    <div class="fixed bottom-0 w-full max-w-md bg-[#0b1320] border-t border-[#1e293b] flex justify-around p-3 pb-4 shadow-sm z-40">
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/dashboard.html'">
+          <i class="fas fa-home text-xl"></i>
+          <span class="text-[10px] mt-1 font-bold">HOME</span>
+      </div>
+      <div class="flex flex-col items-center cursor-pointer text-[#facc15]">
+          <i class="fas fa-file-alt text-xl"></i>
+          <span class="text-[10px] mt-1 font-bold">RIWAYAT</span>
+      </div>
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/info.html'">
+          <i class="fas fa-bell text-xl"></i>
+          <span class="text-[10px] mt-1 font-bold">INFO</span>
+      </div>
+      <div class="flex flex-col items-center cursor-pointer text-gray-400 hover:text-[#facc15]" onclick="location.href='/profile.html'">
+          <i class="fas fa-user text-xl"></i>
+          <span class="text-[10px] mt-1 font-bold">PROFIL</span>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    if(!user) { window.location.href = '/'; }
+    
+    document.getElementById('html-root').classList.add('dark');
+    
+    let allTrx = [];
+    let currentFilter = 'Semua';
+
+    fetch('/api/topup/history', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: user.phone })
+    })
+    .then(r => r.json())
+    .then(d => {
+      allTrx = d.history ? d.history.reverse() : [];
+      window.topupData = allTrx; // untuk keperluan popup
+      renderHistory();
+    })
+    .catch(e => {
+      document.getElementById('historyContainer').innerHTML = `<div class="mt-10 text-center text-red-500 font-bold">Gagal memuat data.</div>`;
+    });
+
+    function setStatusFilter(status) {
+        currentFilter = status;
+        
+        ['Semua', 'Sukses', 'Proses', 'Gagal'].forEach(btn => {
+            const el = document.getElementById('btn-' + btn);
+            el.className = 'flex-1 bg-transparent text-gray-400 text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#1a2639]';
+        });
+        
+        const activeBtn = document.getElementById('btn-' + status);
+        activeBtn.className = `flex-1 bg-[#facc15] text-[#0b1320] text-center py-2 rounded-xl text-[11px] font-bold cursor-pointer shadow-sm transition-colors border border-[#facc15]`;
+        
+        filterHistory();
+    }
+
+    function filterHistory() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        let filtered = allTrx;
+        
+        if(currentFilter !== 'Semua') {
+            if(currentFilter === 'Gagal') {
+                filtered = filtered.filter(i => i.status === 'Gagal' || i.status === 'Expired');
+            } else {
+                filtered = filtered.filter(i => i.status === currentFilter);
+            }
+        }
+        
+        if(query) {
+            filtered = filtered.filter(i => 
+                (i.method && i.method.toLowerCase().includes(query)) || 
+                (i.id && i.id.toLowerCase().includes(query))
+            );
+        }
+        
+        const c = document.getElementById('historyContainer');
+        
+        if(!filtered || filtered.length === 0) {
+            c.innerHTML = `
+            <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
+                <div class="w-[5.5rem] h-[5.5rem] bg-[#111c2e] rounded-full flex items-center justify-center mb-6 shadow-sm border border-[#1e293b]">
+                    <i class="fas fa-wallet text-gray-400 text-4xl"></i>
+                </div>
+                <h2 class="text-white font-bold text-lg tracking-wide mb-2">Belum Ada Top Up</h2>
+                <p class="text-gray-400 text-[13px] leading-relaxed mb-8 px-2">Anda belum melakukan pengisian saldo. Ayo isi saldo sekarang!</p>
+                <button class="bg-[#facc15] text-[#0b1320] font-extrabold py-3 px-8 rounded-full shadow-lg hover:opacity-90 transition" onclick="location.href='/dashboard.html'">Top Up Sekarang</button>
+            </div>`;
+        } else {
+            c.innerHTML = filtered.map((i) => {
+                let isExp = i.status === 'Expired';
+                
+                let sc = '';
+                let statusText = isExp ? 'KEDALUWARSA' : i.status.toUpperCase();
+                
+                if(isExp || i.status === 'Gagal') {
+                    sc = 'text-red-400 border border-red-500/50 bg-red-500/10';
+                } else if(i.status === 'Sukses') {
+                    sc = 'text-green-400 border border-green-500/50 bg-green-500/10'; 
+                } else {
+                    sc = 'text-[#facc15] border border-[#facc15]/50 bg-[#facc15]/10'; 
+                }
+                
+                let methodClean = i.method.includes('QRIS') ? 'QRIS' : (i.method.includes('Admin') ? 'Admin' : 'Manual WA');
+                let titleText = `Topup Saldo ${methodClean}`;
+                
+                let rawIdx = allTrx.indexOf(i);
+                
+                // KARTU UI: GELAP (#162032), ICON KOTAK DI KIRI, HARGA KUNING KANAN ATAS
+                return `
+                <div onclick="showDetailTopup(${rawIdx})" class="bg-[#162032] p-4 rounded-[1.2rem] mb-3 border border-[#1e293b] shadow-sm cursor-pointer hover:bg-[#1e293b] transition-colors flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-[#0b1320] flex items-center justify-center shrink-0 border border-gray-700">
+                            <i class="fas fa-wallet text-gray-400 text-xl"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <h4 class="font-extrabold text-[14px] text-gray-200 mb-1">${titleText}</h4>
+                            <span class="text-[11px] text-gray-400 font-medium">${i.date}</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end">
+                        <p class="text-[15px] font-black text-[#facc15] mb-1.5">Rp ${(i.nominal || 0).toLocaleString('id-ID')}</p>
+                        <span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${sc}">${statusText}</span>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+    }
+
+    function renderHistory() { filterHistory(); }
+
+    window.komplainTopup = function(nominal, tanggal, statusLengkap) {
+        let msg = `Halo, saya ingin komplain deposit dengan nominal ${nominal} pada tanggal ${tanggal}. Status: ${statusLengkap}.`;
+        window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(msg), '_blank');
+    }
+
+    window.showDetailTopup = function(index) {
+        const item = window.topupData[index];
+        
+        let statusText = item.status === 'Expired' ? 'Kedaluwarsa' : item.status;
+        let rawStatus = item.status.toLowerCase();
+        if(rawStatus === 'proses' && item.method.includes('QRIS')) rawStatus = 'pending_qris';
+        if(rawStatus === 'expired') rawStatus = 'gagal_kedaluwarsa';
+        
+        let methodClean = item.method.includes('QRIS') ? 'QRIS' : (item.method.includes('Admin') ? 'Admin' : 'Manual WA');
+        
+        let htmlContent = `
+        <h3 class="text-white font-extrabold text-[19px] mb-5 text-center">Detail Transaksi</h3>
+        
+        <div class="bg-[#0b1320] border border-[#1e293b] rounded-xl p-4 mb-5 text-left">
+            <div class="flex justify-between mb-3">
+                <span class="text-gray-400 font-medium text-[13px]">Waktu</span>
+                <span class="text-white font-bold text-[13px]">${item.date}</span>
+            </div>
+            <div class="flex justify-between mb-3">
+                <span class="text-gray-400 font-medium text-[13px]">Status</span>
+                <span class="text-white font-bold text-[13px]">${statusText}</span>
+            </div>
+            <div class="flex justify-between mb-3">
+                <span class="text-gray-400 font-medium text-[13px]">Layanan</span>
+                <span class="text-white font-bold text-[13px]">Topup Saldo ${methodClean}</span>
+            </div>
+            <div class="flex justify-between mb-3">
+                <span class="text-gray-400 font-medium text-[13px]">Nominal</span>
+                <span class="text-white font-bold text-[13px] text-[#facc15]">Rp ${(item.nominal || 0).toLocaleString('id-ID')}</span>
+            </div>
+            <div class="flex justify-between mb-3">
+                <span class="text-gray-400 font-medium text-[13px]">Tujuan</span>
+                <span class="text-white font-bold text-[13px]">Sistem Pembayaran</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-400 font-medium text-[13px]">SN/Ref</span>
+                <span class="text-white font-bold text-[13px]">${item.id}</span>
+            </div>
+        </div>
+        
+        <button onclick="komplainTopup('${item.nominal}', '${item.date}', '${rawStatus}')" class="w-full py-3.5 bg-[#ef4444] hover:bg-[#dc2626] text-white font-extrabold rounded-[12px] mb-3 transition-colors text-[14px]">
+            Hubungi Admin (Komplain)
+        </button>
+        <button onclick="Swal.close()" class="w-full py-3.5 bg-transparent border border-[#334155] text-white hover:bg-[#1a2639] font-extrabold rounded-[12px] transition-colors text-[14px]">
+            Tutup
+        </button>
+        `;
+
+        Swal.fire({
+            html: htmlContent,
+            showConfirmButton: false,
+            background: '#111c2e', 
+            customClass: { popup: 'custom-swal-bg' },
+            padding: 0
+        });
+    }
+  </script>
+</body>
+</html>
+EOF
+
 cat << 'EOF' > public/info.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -1785,6 +2106,7 @@ cat << 'EOF' > public/info.html
 </html>
 EOF
 
+echo "[PART 3 SELESAI BOSKUUU!]"
 cat << 'EOF' > public/mutasi.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -2339,7 +2661,7 @@ cat << 'EOF' > public/riwayat.html
             </div>`;
         } else {
             c.innerHTML = filtered.map((i) => {
-                // WARNA BADGE CLONE OUTLINE PURE MAIZE
+                // WARNA BADGE CLONE OUTLINE PURE MAIZE (Sesuai Foto bos)
                 let sc = '';
                 if(i.status === 'Gagal') {
                     sc = 'text-red-400 border border-red-500/50 bg-red-500/10';
@@ -2351,9 +2673,9 @@ cat << 'EOF' > public/riwayat.html
                         
                 let rawIdx = allTrx.indexOf(i);
                 
-                // KARTU UI CLONE: GELAP (#162032), ICON BULAT KIRI, HARGA KUNING MAIZE KANAN ATAS
+                // KARTU UI CLONE: GELAP (#111c2e), ICON BULAT KIRI, HARGA KUNING MAIZE KANAN ATAS
                 return `
-                <div onclick="showDetailTrx(${rawIdx})" class="bg-[#162032] p-4 rounded-[1.2rem] mb-3 border border-[#1e293b] shadow-sm cursor-pointer hover:bg-[#1e293b] transition-colors flex items-center justify-between">
+                <div onclick="showDetailTrx(${rawIdx})" class="bg-[#111c2e] p-4 rounded-[1.2rem] mb-3 border border-[#1e293b] shadow-sm cursor-pointer hover:bg-[#1a2639] transition-colors flex items-center justify-between">
                     <div class="flex items-center gap-3 overflow-hidden">
                         <div class="w-11 h-11 rounded-full bg-[#0b1320] border border-gray-700 flex items-center justify-center shrink-0">
                             <i class="fas fa-box text-gray-400 text-lg"></i>
@@ -2380,7 +2702,7 @@ cat << 'EOF' > public/riwayat.html
         window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(msg), '_blank');
     }
 
-    // POPUP DETAIL MEWAH
+    // POPUP DETAIL MEWAH (PURE MAIZE)
     window.showDetailTrx = function(idx) {
       const i = allTrx[idx];
       let rawStatus = i.status.toLowerCase();
@@ -2456,11 +2778,6 @@ const app = express();
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-
-// MENGATASI BUG CANNOT GET / SECARA PERMANEN
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
 
 // ==========================================
 // DATABASE & KONFIGURASI FILE
@@ -3502,18 +3819,35 @@ async function startBot() {
     }
 }
 
-// CATCH-ALL ROUTE (MENGHANCURKAN BUG CANNOT GET PERMANEN)
+// ==========================================
+// CATCH-ALL ROUTE ANTI-BUG & RAMAH USER
+// ==========================================
 app.get('*', (req, res) => {
     let reqPath = req.path;
+    
+    // Auto-tambah .html kalau user nggak sengaja ngetik link tanpa .html
+    if (!reqPath.includes('.') && reqPath !== '/') {
+        let altPath = path.join(__dirname, 'public', reqPath + '.html');
+        if (fs.existsSync(altPath)) return res.sendFile(altPath);
+    }
+
     if (reqPath.endsWith('.html')) {
         let pagePath = path.join(__dirname, 'public', reqPath);
-        if (fs.existsSync(pagePath)) {
-            return res.sendFile(pagePath);
-        }
+        if (fs.existsSync(pagePath)) return res.sendFile(pagePath);
     }
-    // Jika user mengakses halaman yang tidak jelas, arahkan kembali ke menu login
-    res.redirect('/'); 
+    
+    // JIKA FILE BENAR-BENAR TIDAK ADA, TAMPILKAN TEKS ERROR BUKAN LOGOUT
+    res.status(404).send(`
+        <div style="background-color:#0b1320; color:white; font-family:sans-serif; text-align:center; padding-top:50px; height:100vh;">
+            <h1 style="color:#facc15;">FILE TIDAK DITEMUKAN (404)</h1>
+            <p>Halaman <b>${reqPath}</b> tidak ada di server.</p>
+            <p>Sepertinya file HTML tersebut terpotong saat instalasi VPS (Copy-Paste).</p>
+            <br>
+            <button onclick="window.location.href='/dashboard.html'" style="background-color:#facc15; border:none; padding:10px 20px; font-weight:bold; border-radius:5px; cursor:pointer;">KEMBALI KE DASHBOARD</button>
+        </div>
+    `); 
 });
+
 
 if (require.main === module) { 
     app.listen(3000, () => { 
@@ -3523,12 +3857,12 @@ if (require.main === module) {
 }
 EOF
 
-echo "[PART 5 SELESAI DITULIS. KUMPULKAN DAN JALANKAN VPSNYA!]"
+echo "[PART 5 SELESAI DITULIS. TINGGAL 2 PART LAGI!]"
 echo "Menginstal modul Node.js..."
 npm install --silent
 npm install -g pm2 > /dev/null 2>&1
 
-echo "[6/7] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - V159 THE PERFECT OXFORD)..."
+echo "[6/7] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - V160 THE PERFECT OXFORD)..."
 
 cat << 'EOF' > /usr/bin/menu
 #!/bin/bash
@@ -3574,7 +3908,7 @@ while true; do
 
     clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V159) 💎        ${NC}"
+    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V160) 💎        ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo -e "   💰 SALDO DIGIFLAZZ: ${GREEN}$SALDO_DIGI${NC}"
     echo -e "${CYAN}======================================================${NC}"
@@ -4235,12 +4569,12 @@ EOF
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
 echo "=========================================================="
-echo "  SISTEM WEB V159 BERHASIL DIPERBARUI SECARA PENUH!       "
+echo "  SISTEM WEB V160 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
 
 EOF
-echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V159..."
+echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V160..."
 
 cd "$HOME/$DIR_NAME"
 
@@ -4261,17 +4595,17 @@ chmod +x /usr/bin/menu
 
 clear
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V159 SELESAI! 🚀      \033[0m"
+echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V160 SELESAI! 🚀      \033[0m"
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[0;36mFITUR BARU DI V159 (THE PERFECT OXFORD & MAIZE):\033[0m"
+echo -e "\033[0;36mFITUR BARU DI V160 (THE PERFECT OXFORD & MAIZE):\033[0m"
+echo -e "  ✅ \033[1;33mANIMASI WELCOME LOGIN\033[0m Teks berjalan elegan dengan inner-shadow"
+echo -e "  ✅ \033[1;33mANTI-BUG CANNOT GET\033[0m Sistem otomatis ngebaca file atau nampilin 404 keren!"
 echo -e "  ✅ \033[1;33mUI 1000% CLONE FOTO\033[0m Background Oxford, Harga & Aksesoris Kuning Maize"
 echo -e "  ✅ \033[1;33mSISA BIRU MUDA DIMUSNAHKAN\033[0m Background Profil/Riwayat/Info Full Hitam Gelap"
 echo -e "  ✅ \033[1;33mTELEGRAM KEMBALI BIRU\033[0m Icon Telegram kembali ke kodratnya"
 echo -e "  ✅ \033[1;33mMINIMAL TOPUP QRIS 1000\033[0m Lebih merakyat dan ramah member"
 echo -e "  ✅ \033[1;33mMARQUEE KUNING MAIZE\033[0m Teks berjalan bersih warna Maize (Tanpa 24 Jam)"
 echo -e "  ✅ \033[1;33mREVOLUSI LAYANAN\033[0m SMS & Telp Masuk, E-Wallet Pindah, Tagihan Lenyap!"
-echo -e "  ✅ \033[1;33mMENU GITHUB DIHAPUS\033[0m Panel lebih bersih dan to the point"
-echo -e "  ✅ \033[1;33mTEKS KOMPLAIN OTOMATIS\033[0m Detail nominal, tanggal, status presisi banget!"
 echo -e "\033[0;32m======================================================================\033[0m"
 echo -e "\033[1;37mCARA PENGGUNAAN SELANJUTNYA:\033[0m"
 echo -e "Ketik perintah: \033[1;32mmenu\033[0m (Lalu tekan Enter untuk buka Panel)"
