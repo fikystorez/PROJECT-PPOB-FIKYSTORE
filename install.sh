@@ -1167,7 +1167,8 @@ cat << 'EOF' > public/dashboard.html
             if(res.ok) {
                 Swal.close();
                 // Mengubah String QRIS Dinamis dari Server menjadi Gambar QR Code Asli
-                let finalQrisImg = data.qris_string ? `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(data.qris_string)}` : qrisImg;
+                // PERBAIKAN UI RESOLUSI DAN MARGIN DISINI
+                let finalQrisImg = data.qris_string ? `https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=2&data=${encodeURIComponent(data.qris_string)}` : qrisImg;
 
                 setTimeout(() => {
                   Swal.fire({
@@ -1175,7 +1176,7 @@ cat << 'EOF' > public/dashboard.html
                     html: `
                         <p class="text-4xl text-[#facc15] font-extrabold mb-2">Rp ${fn.toLocaleString('id-ID')}</p>
                         <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold mb-3 animate-pulse inline-block">Sisa Waktu: <span id="qrisTimer">05:00</span></div>
-                        <div class="bg-white p-3 rounded-xl inline-block border border-gray-200 mb-2 shadow-lg"><img src="${finalQrisImg}" class="w-56 h-56 object-cover"></div>
+                        <div class="bg-white p-4 rounded-xl inline-block border border-gray-200 mb-2 shadow-lg"><img src="${finalQrisImg}" class="w-64 h-64 object-contain" style="image-rendering: crisp-edges;"></div>
                         <p class="text-[11px] text-gray-300 font-medium">Scan QRIS di atas. <b class="text-[#facc15]">Nominal akan otomatis muncul</b> di aplikasi E-Wallet / M-Banking Anda!</p>`,
                     showCancelButton: true, confirmButtonText: 'Sudah Transfer', cancelButtonText: 'Tutup', background: bg, color: c,
                     didOpen: () => {
@@ -1210,7 +1211,6 @@ cat << 'EOF' > public/dashboard.html
 </body>
 </html>
 EOF
-
 cat << 'EOF' > public/operator.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -1950,7 +1950,6 @@ cat << 'EOF' > public/riwayat_topup.html
 </body>
 </html>
 EOF
-
 cat << 'EOF' > public/info.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -2681,7 +2680,6 @@ cat << 'EOF' > public/riwayat.html
 </body>
 </html>
 EOF
-
 echo "[PART 4 SELESAI DITULIS. TINGGAL PART 5, 6, 7 (BACKEND & VPS MENU)!]"
 echo "[5/7] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V164 AUTO QRIS DINAMIS)..."
 
@@ -3985,7 +3983,6 @@ echo "  SISTEM WEB V163 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
 
-EOF
 echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V163..."
 
 cd "$HOME/$DIR_NAME"
