@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V153 (THE LEGACY UI - PART 1)
+# DIGITAL FIKY STORE - V154 (THE MODERN HYBRID - PART 1)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
@@ -16,7 +16,7 @@ DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V153 (PART 1)           "
+echo "    MENGINSTAL DIGITAL FIKY STORE V154 (PART 1)           "
 echo "=========================================================="
 
 echo "[1/7] Memperbarui sistem dan menginstal Node.js..."
@@ -35,7 +35,7 @@ cd "$HOME/$DIR_NAME"
 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Aplikasi PPOB DIGITAL FIKY STORE",
   "main": "index.js",
   "scripts": {
@@ -63,24 +63,42 @@ body {
     font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; 
 }
 
-/* FIX ANIMASI TEKS BERJALAN (MARQUEE) */
-.marquee-wrapper {
+/* MARQUEE MODERN GLOWING EFFECT */
+.modern-marquee-wrapper {
     width: 100%;
     overflow: hidden;
     white-space: nowrap;
     box-sizing: border-box;
     display: flex;
     align-items: center;
+    background: linear-gradient(90deg, rgba(15,23,42,0.05) 0%, rgba(30,41,59,0.08) 50%, rgba(15,23,42,0.05) 100%);
+    border-radius: 50px;
+    padding: 6px 12px;
+    border: 1px solid rgba(0, 33, 71, 0.1);
 }
 
-.marquee-text {
+.dark .modern-marquee-wrapper {
+    background: linear-gradient(90deg, #0b1320 0%, #111c2e 50%, #0b1320 100%);
+    border: 1px solid #1e293b;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.modern-marquee-text {
     display: inline-block;
     padding-left: 100%;
-    animation: marquee-anim 15s linear infinite;
+    animation: marquee-anim 16s linear infinite;
     font-weight: 900;
-    font-size: 12px;
-    letter-spacing: 0.5px;
+    font-size: 11.5px;
+    letter-spacing: 0.8px;
     text-transform: uppercase;
+    color: #002147;
+}
+
+.dark .modern-marquee-text {
+    background: linear-gradient(to right, #fde047, #facc15, #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0px 0px 12px rgba(253, 224, 71, 0.3);
 }
 
 @keyframes marquee-anim {
@@ -706,8 +724,8 @@ cat << 'EOF' > public/dashboard.html
     <div class="flex justify-between items-center p-4 bg-white dark:bg-[#0b1320] shadow-sm dark:shadow-md sticky z-40 top-0" id="headerMain">
       <i class="fas fa-bars text-xl cursor-pointer text-gray-600 dark:text-gray-300 hover:text-[#002147] dark:hover:text-yellow-400 shrink-0" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')"></i>
       
-      <div class="marquee-wrapper border-l border-r border-gray-200 dark:border-gray-800 mx-3 px-2 h-6">
-          <span class="marquee-text text-[#002147] dark:text-yellow-400">WELCOME TO THE DIGITAL FIKY STORE - PUSAT PPOB TERMURAH & TERPERCAYA</span>
+      <div class="modern-marquee-wrapper mx-3">
+          <span class="modern-marquee-text">WELCOME TO THE DIGITAL FIKY STORE - PUSAT PPOB TERMURAH & TERPERCAYA - TRANSAKSI CEPAT AMAN 24 JAM</span>
       </div>
 
       <div class="text-[10px] font-extrabold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 px-3 py-1.5 rounded-full shrink-0 shadow-sm" id="headTrx">
@@ -849,11 +867,11 @@ cat << 'EOF' > public/dashboard.html
           </div>
           <span class="text-[11px] font-bold text-gray-600 dark:text-gray-300">VOUCHER</span>
         </div>
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=ewallet'">
+        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=smstelpon'">
           <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60">
-              <i class="fas fa-wallet"></i>
+              <i class="fas fa-phone-square-alt"></i>
           </div>
-          <span class="text-[11px] font-bold text-gray-600 dark:text-gray-300">E-WALLET</span>
+          <span class="text-[10px] font-bold text-gray-600 dark:text-gray-300 text-center">SMS & TELP</span>
         </div>
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=pln'">
           <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60">
@@ -879,11 +897,11 @@ cat << 'EOF' > public/dashboard.html
     <div class="mx-4 mt-8 mb-8">
       <h3 class="font-extrabold text-gray-800 dark:text-white mb-4 text-[16px] ml-1">Produk Digital</h3>
       <div class="grid grid-cols-4 gap-y-6 gap-x-3">
-        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=tagihan'">
+        <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=ewallet'">
           <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60">
-              <i class="fas fa-file-invoice-dollar"></i>
+              <i class="fas fa-wallet"></i>
           </div>
-          <span class="text-[11px] font-bold text-gray-600 dark:text-gray-300">TAGIHAN</span>
+          <span class="text-[11px] font-bold text-gray-600 dark:text-gray-300">E-WALLET</span>
         </div>
         <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=etoll'">
           <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-3xl shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60">
@@ -1010,26 +1028,19 @@ cat << 'EOF' > public/dashboard.html
 
   <script>
     const user = JSON.parse(localStorage.getItem('user'));
+    if(!user) { window.location.href = '/'; }
     
-    if(!user) {
-        window.location.href = '/';
-    }
-    
-    // FUNGSI CEK MAINTENANCE
     function isMaintenance() {
         const now = new Date();
         const h = now.getHours();
         const m = now.getMinutes();
-        if (h >= 23 || (h === 0 && m <= 30)) {
-            return true;
-        }
+        if (h >= 23 || (h === 0 && m <= 30)) { return true; }
         return false;
     }
 
     if(isMaintenance()) {
         const mb = document.getElementById('maintenanceBanner');
         if(mb) mb.classList.remove('hidden');
-        
         const hm = document.getElementById('headerMain');
         if(hm) hm.classList.remove('top-0');
     }
@@ -1059,12 +1070,8 @@ cat << 'EOF' > public/dashboard.html
       const minutes = String(now.getMinutes()).padStart(2, '0');
       const seconds = String(now.getSeconds()).padStart(2, '0');
       
-      if(document.getElementById('realtimeDate')) {
-          document.getElementById('realtimeDate').innerText = `${year}/${month}/${date}`;
-      }
-      if(document.getElementById('realtimeClock')) {
-          document.getElementById('realtimeClock').innerText = `${hours}:${minutes}:${seconds}`;
-      }
+      if(document.getElementById('realtimeDate')) document.getElementById('realtimeDate').innerText = `${year}/${month}/${date}`;
+      if(document.getElementById('realtimeClock')) document.getElementById('realtimeClock').innerText = `${hours}:${minutes}:${seconds}`;
     }
     
     setInterval(updateDateTime, 1000);
@@ -1073,7 +1080,6 @@ cat << 'EOF' > public/dashboard.html
     function updSal() {
       const el = document.getElementById('displaySaldo'); 
       const e = document.getElementById('eyeSaldo');
-      
       if(hideS) { 
           el.innerText = 'Rp •••••••'; 
           e.className = 'fas fa-eye-slash cursor-pointer text-gray-400 hover:text-white'; 
@@ -1083,22 +1089,13 @@ cat << 'EOF' > public/dashboard.html
       }
     }
     
-    function toggleSaldo() { 
-        hideS = !hideS; 
-        localStorage.setItem('hideSaldo', hideS); 
-        updSal(); 
-    }
+    function toggleSaldo() { hideS = !hideS; localStorage.setItem('hideSaldo', hideS); updSal(); }
     
-    function toggleSidebar() { 
-        document.getElementById('sidebar').classList.toggle('-translate-x-full'); 
-    }
-
     function applyDark() {
       const d = localStorage.getItem('darkMode') === 'true';
       const r = document.getElementById('html-root');
       const dot = document.getElementById('darkModeToggleDot');
       const bg = document.getElementById('darkModeToggleBg');
-      
       if(d) { 
           r.classList.add('dark'); 
           if(dot) dot.classList.add('translate-x-5'); 
@@ -1110,193 +1107,93 @@ cat << 'EOF' > public/dashboard.html
       }
     }
     
-    function toggleDarkMode() { 
-        localStorage.setItem('darkMode', !(localStorage.getItem('darkMode') === 'true')); 
-        applyDark(); 
-    }
-    
-    if(localStorage.getItem('darkMode') === null) {
-        localStorage.setItem('darkMode', 'true'); 
-    }
-    
+    function toggleDarkMode() { localStorage.setItem('darkMode', !(localStorage.getItem('darkMode') === 'true')); applyDark(); }
+    if(localStorage.getItem('darkMode') === null) { localStorage.setItem('darkMode', 'true'); }
     applyDark();
 
     function logout() {
       Swal.fire({
-          title: 'Keluar Akun?', 
-          text: 'Apakah kamu yakin ingin keluar?', 
-          icon: 'warning',
-          showCancelButton: true,
-          background: localStorage.getItem('darkMode') === 'true' ? '#0b1320' : '#fff',
+          title: 'Keluar Akun?', text: 'Apakah kamu yakin ingin keluar?', icon: 'warning',
+          showCancelButton: true, background: localStorage.getItem('darkMode') === 'true' ? '#0b1320' : '#fff',
           color: localStorage.getItem('darkMode') === 'true' ? '#fff' : '#000'
-      }).then(r => {
-        if(r.isConfirmed) {
-            localStorage.removeItem('user');
-            window.location.href = '/';
-        }
-      });
+      }).then(r => { if(r.isConfirmed) { localStorage.removeItem('user'); window.location.href = '/'; } });
     }
     
-    function bantuanAdmin() { 
-        window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(`Halo Admin DIGITAL FIKY STORE, saya butuh bantuan.`), '_blank'); 
-    }
+    function bantuanAdmin() { window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(`Halo Admin DIGITAL FIKY STORE, saya butuh bantuan.`), '_blank'); }
+    function bukaLinkKomunitas(tipe) { if(tipe === 'tele') window.open(linkTele, '_blank'); if(tipe === 'wa') window.open(linkWa, '_blank'); }
 
-    function bukaLinkKomunitas(tipe) {
-        if(tipe === 'tele') window.open(linkTele, '_blank');
-        if(tipe === 'wa') window.open(linkWa, '_blank');
-    }
+    fetch('/api/user/balance', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone: user.phone}) })
+    .then(r => r.json()).then(d => { curSal = d.saldo; updSal(); });
 
-    // FETCH SALDO PRIBADI
-    fetch('/api/user/balance', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({phone: user.phone})
-    })
-    .then(r => r.json())
-    .then(d => {
-        curSal = d.saldo;
-        updSal();
-    });
-
-    // FETCH TRANSAKSI PRIBADI (UNTUK HEADER TRX)
-    fetch('/api/user/transactions', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({phone: user.phone})
-    })
-    .then(r => r.json())
-    .then(d => {
-        let myTrxs = d.transactions || [];
-        document.getElementById('headTrx').innerText = myTrxs.length + ' Trx';
-    });
+    fetch('/api/user/transactions', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone: user.phone}) })
+    .then(r => r.json()).then(d => { document.getElementById('headTrx').innerText = (d.transactions || []).length + ' Trx'; });
     
-    // FETCH STATISTIK GLOBAL SELURUH TOKO
-    fetch('/api/global-stats')
-    .then(r => r.json())
-    .then(d => {
+    fetch('/api/global-stats').then(r => r.json()).then(d => {
         document.getElementById('statToday').innerText = d.today || 0;
         document.getElementById('statWeek').innerText = d.week || 0;
         document.getElementById('statMonth').innerText = d.month || 0;
         document.getElementById('statAll').innerText = d.all || 0;
-    })
-    .catch(e => {
-        console.log("Gagal memuat statistik global");
-    });
+    }).catch(e => {});
 
-    fetch('/api/config')
-    .then(r => r.json())
-    .then(d => {
-      if(d.qrisUrl) { qrisImg = d.qrisUrl; }
-      if(d.linkTele) { linkTele = d.linkTele; }
-      if(d.linkWa) { linkWa = d.linkWa; }
+    fetch('/api/config').then(r => r.json()).then(d => {
+      if(d.qrisUrl) qrisImg = d.qrisUrl;
+      if(d.linkTele) linkTele = d.linkTele;
+      if(d.linkWa) linkWa = d.linkWa;
       
       if(d.banners && d.banners.length > 0) {
         const bc = document.getElementById('bannerContainer');
         if(bc) {
           bc.classList.remove('hidden');
-          const s = document.getElementById('promoSlider'); 
-          const dc = document.getElementById('promoDots');
-          
-          s.innerHTML = d.banners.map(fileName => `
-              <div class="w-full h-full shrink-0 snap-center relative">
-                  <img src="/banners/${decodeURIComponent(fileName)}" class="absolute inset-0 w-full h-full object-cover">
-              </div>
-          `).join('');
-          
-          let dH = ''; 
-          for(let i = 0; i < d.banners.length; i++) {
-              dH += `<div class="w-2 h-2 rounded-full bg-white opacity-${i === 0 ? '100' : '40'} dot-indicator shadow-sm"></div>`;
-          }
-          
+          const s = document.getElementById('promoSlider'); const dc = document.getElementById('promoDots');
+          s.innerHTML = d.banners.map(fileName => `<div class="w-full h-full shrink-0 snap-center relative"><img src="/banners/${decodeURIComponent(fileName)}" class="absolute inset-0 w-full h-full object-cover"></div>`).join('');
+          let dH = ''; for(let i = 0; i < d.banners.length; i++) { dH += `<div class="w-2 h-2 rounded-full bg-white opacity-${i === 0 ? '100' : '40'} dot-indicator shadow-sm"></div>`; }
           dc.innerHTML = dH;
-          
-          let dots = document.querySelectorAll('.dot-indicator'); 
-          let cS = 0;
-          
+          let dots = document.querySelectorAll('.dot-indicator'); let cS = 0;
           s.addEventListener('scroll', () => {
             let sI = Math.round(s.scrollLeft / s.clientWidth);
-            dots.forEach((dt, i) => {
-                dt.classList.toggle('opacity-100', i === sI);
-                dt.classList.toggle('opacity-40', i !== sI);
-            });
+            dots.forEach((dt, i) => { dt.classList.toggle('opacity-100', i === sI); dt.classList.toggle('opacity-40', i !== sI); });
             cS = sI;
           });
-          
-          setInterval(() => {
-              cS = (cS + 1) % (dots.length || 1);
-              s.scrollTo({
-                  left: cS * s.clientWidth,
-                  behavior: 'smooth'
-              });
-          }, 3500);
+          setInterval(() => { cS = (cS + 1) % (dots.length || 1); s.scrollTo({ left: cS * s.clientWidth, behavior: 'smooth' }); }, 3500);
         }
       }
     });
 
     function openTopUp() { 
         document.getElementById('topupOverlay').classList.remove('hidden'); 
-        setTimeout(() => { 
-            document.getElementById('topupOverlay').classList.remove('opacity-0'); 
-            document.getElementById('topupSheet').classList.remove('translate-y-full'); 
-        }, 10); 
+        setTimeout(() => { document.getElementById('topupOverlay').classList.remove('opacity-0'); document.getElementById('topupSheet').classList.remove('translate-y-full'); }, 10); 
     }
     
     function closeTopUp() { 
-        document.getElementById('topupSheet').classList.add('translate-y-full'); 
-        document.getElementById('topupOverlay').classList.add('opacity-0'); 
+        document.getElementById('topupSheet').classList.add('translate-y-full'); document.getElementById('topupOverlay').classList.add('opacity-0'); 
         setTimeout(() => document.getElementById('topupOverlay').classList.add('hidden'), 300); 
     }
     
     function selM(m) {
-      sel = m; 
-      const isD = localStorage.getItem('darkMode') === 'true';
-      
+      sel = m; const isD = localStorage.getItem('darkMode') === 'true';
       ['wa','qris'].forEach(x => {
         document.getElementById('r-' + x).className = 'w-5 h-5 rounded-full border-[3px] border-gray-300 dark:border-gray-600 bg-transparent shrink-0';
         document.getElementById('m-' + x).classList.remove('border-yellow-400', 'border-[#002147]');
       });
-      
       document.getElementById('r-' + m).className = 'w-5 h-5 rounded-full border-[6px] border-[#002147] dark:border-yellow-400 bg-white dark:bg-[#050b14] shrink-0';
       document.getElementById('m-' + m).classList.add(isD ? 'border-yellow-400' : 'border-[#002147]');
     }
 
     async function prosesTopup() {
       const n = parseInt(document.getElementById('inputNominal').value);
-      const isD = localStorage.getItem('darkMode') === 'true'; 
-      const bg = isD ? '#0b1320' : '#fff'; 
-      const c = isD ? '#fff' : '#000';
+      const isD = localStorage.getItem('darkMode') === 'true'; const bg = isD ? '#0b1320' : '#fff'; const c = isD ? '#fff' : '#000';
       
-      if(isMaintenance()) {
-          return Swal.fire({
-              icon: 'error', 
-              title: 'MAINTENANCE', 
-              text: 'Sistem sedang Maintenance Otomatis (23:00 - 00:30 WIB). Transaksi ditutup sementara.', 
-              background: bg, 
-              color: c
-          });
-      }
-      
-      if(!n || n <= 0) {
-          return Swal.fire({icon: 'warning', title: 'Gagal', text: 'Isi nominal valid!', background: bg, color: c});
-      }
-      
-      if(!sel) {
-          return Swal.fire({icon: 'warning', title: 'Gagal', text: 'Pilih metode pembayaran!', background: bg, color: c});
-      }
+      if(isMaintenance()) return Swal.fire({ icon: 'error', title: 'MAINTENANCE', text: 'Sistem sedang Maintenance Otomatis. Transaksi ditutup sementara.', background: bg, color: c });
+      if(!n || n <= 0) return Swal.fire({icon: 'warning', title: 'Gagal', text: 'Isi nominal valid!', background: bg, color: c});
+      if(!sel) return Swal.fire({icon: 'warning', title: 'Gagal', text: 'Pilih metode pembayaran!', background: bg, color: c});
       
       const fn = n + Math.floor(Math.random() * 90) + 10;
       
       if(sel === 'qris') {
-        if(n < 10000) {
-            return Swal.fire({icon: 'warning', title: 'Gagal', text: 'Minimal Rp 10.000', background: bg, color: c});
-        }
+        if(n < 10000) return Swal.fire({icon: 'warning', title: 'Gagal', text: 'Minimal Rp 10.000', background: bg, color: c});
         closeTopUp();
         
-        await fetch('/api/topup/request', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({phone: user.phone, method: 'QRIS Otomatis', nominal: fn})
-        });
+        await fetch('/api/topup/request', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone: user.phone, method: 'QRIS Otomatis', nominal: fn}) });
         
         setTimeout(() => {
           Swal.fire({
@@ -1304,58 +1201,26 @@ cat << 'EOF' > public/dashboard.html
             html: `
                 <p class="text-4xl text-yellow-500 font-extrabold mb-2">Rp ${fn.toLocaleString('id-ID')}</p>
                 <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold mb-3 animate-pulse">Sisa Waktu: <span id="qrisTimer">05:00</span></div>
-                <div class="bg-white p-3 rounded-xl inline-block border border-gray-200 mb-2">
-                    <img src="${qrisImg}" class="w-48 h-48 object-cover">
-                </div>
-                <p class="text-xs text-blue-500">Transfer TEPAT sesuai nominal (3 digit akhir) agar otomatis masuk.</p>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'Sudah Transfer',
-            cancelButtonText: 'Tutup',
-            background: bg,
-            color: c,
+                <div class="bg-white p-3 rounded-xl inline-block border border-gray-200 mb-2"><img src="${qrisImg}" class="w-48 h-48 object-cover"></div>
+                <p class="text-xs text-blue-500">Transfer TEPAT sesuai nominal (3 digit akhir) agar otomatis masuk.</p>`,
+            showCancelButton: true, confirmButtonText: 'Sudah Transfer', cancelButtonText: 'Tutup', background: bg, color: c,
             didOpen: () => {
-              let t = 300; 
-              let tmr = document.getElementById('qrisTimer');
-              
+              let t = 300; let tmr = document.getElementById('qrisTimer');
               timerInterval = setInterval(() => { 
-                  t--; 
-                  let m = Math.floor(t / 60).toString().padStart(2, '0'); 
-                  let s = (t % 60).toString().padStart(2, '0'); 
-                  
+                  t--; let m = Math.floor(t / 60).toString().padStart(2, '0'); let s = (t % 60).toString().padStart(2, '0'); 
                   if(tmr) tmr.innerText = `${m}:${s}`; 
-                  
-                  if(t <= 0) { 
-                      clearInterval(timerInterval); 
-                      Swal.close(); 
-                      location.href = '/riwayat_topup.html'; 
-                  } 
+                  if(t <= 0) { clearInterval(timerInterval); Swal.close(); location.href = '/riwayat_topup.html'; } 
               }, 1000);
             }, 
             willClose: () => clearInterval(timerInterval)
           }).then(r => {
-            if(r.isConfirmed) {
-                Swal.fire({
-                    icon: 'success', 
-                    title: 'Diproses', 
-                    text: 'Sistem sedang memverifikasi...', 
-                    timer: 2000, 
-                    background: bg, 
-                    color: c
-                }).then(() => location.href = '/riwayat_topup.html');
-            } else {
-                location.href = '/riwayat_topup.html';
-            }
+            if(r.isConfirmed) { Swal.fire({ icon: 'success', title: 'Diproses', text: 'Sistem sedang memverifikasi...', timer: 2000, background: bg, color: c }).then(() => location.href = '/riwayat_topup.html'); } 
+            else { location.href = '/riwayat_topup.html'; }
           });
         }, 300);
       } else {
         closeTopUp();
-        
-        fetch('/api/topup/request', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({phone: user.phone, method: 'Manual WA', nominal: fn})
-        }).then(() => {
+        fetch('/api/topup/request', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone: user.phone, method: 'Manual WA', nominal: fn}) }).then(() => {
           window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(`Halo Admin DIGITAL FIKY STORE, saya mau Top Up Saldo Manual.\nNomor Akun: ${user.phone}\nNominal: *Rp ${fn.toLocaleString('id-ID')}*\n\nMohon instruksi selanjutnya.`), '_blank');
           setTimeout(() => location.href = '/riwayat_topup.html', 1000);
         });
@@ -1494,9 +1359,7 @@ cat << 'EOF' > public/operator.html
         const now = new Date();
         const h = now.getHours();
         const m = now.getMinutes();
-        if (h >= 23 || (h === 0 && m <= 30)) {
-            return true;
-        }
+        if (h >= 23 || (h === 0 && m <= 30)) { return true; }
         return false;
     }
 
@@ -1604,28 +1467,22 @@ cat << 'EOF' > public/operator.html
       byu: { name: 'BY.U', logo: 'BY.U', digiBrand: 'BYU' }
     };
 
-    const tagihanCategories = [
-      { id: 'tagihan_pln_pasca', name: 'PLN Pasca', icon: 'fas fa-lightbulb', placeholder: 'Masukkan ID Pelanggan PLN...' },
-      { id: 'tagihan_bpjs', name: 'BPJS', icon: 'fas fa-heartbeat', placeholder: 'Masukkan No BPJS (13 Digit)...' },
-      { id: 'tagihan_pgn', name: 'Gas Negara', icon: 'fas fa-fire', placeholder: 'Masukkan ID Pelanggan...' },
-      { id: 'tagihan_gas', name: 'Pertagas', icon: 'fas fa-fire-alt', placeholder: 'Masukkan ID Pelanggan...' },
-      { id: 'tagihan_telkom', name: 'Telkom/Indihome', icon: 'fas fa-wifi', placeholder: 'Masukkan No Telepon...' },
-      { id: 'tagihan_tv', name: 'TV Berbayar', icon: 'fas fa-tv', placeholder: 'Masukkan ID Pelanggan...' },
-      { id: 'tagihan_pasca', name: 'Tagihan Seluler', icon: 'fas fa-mobile-alt', placeholder: 'Masukkan Nomor HP...' },
-      { id: 'tagihan_finance', name: 'Finance', icon: 'fas fa-hand-holding-usd', placeholder: 'Masukkan Nomor Kontrak...' },
-      { id: 'tagihan_internet', name: 'Internet', icon: 'fas fa-globe', placeholder: 'Masukkan ID Pelanggan...' },
-      { id: 'tagihan_pdam', name: 'PDAM', icon: 'fas fa-tint', placeholder: 'Masukkan Nomor Pelanggan...' }
-    ];
+    // PENAMBAHAN MENU SMS & TELPON BARU
+    const smstelponData = {
+      telkomsel: { name: 'TELKOMSEL', logo: 'TS', digiBrand: 'TELKOMSEL' },
+      indosat: { name: 'INDOSAT', logo: 'IS', digiBrand: 'INDOSAT' },
+      tri: { name: 'TRI', logo: '3', digiBrand: 'TRI' },
+      xl: { name: 'XL', logo: 'XL', digiBrand: 'XL' },
+      axis: { name: 'AXIS', logo: 'AXIS', digiBrand: 'AXIS' },
+      smartfren: { name: 'SMARTFREN', logo: 'SF', digiBrand: 'SMARTFREN' }
+    };
 
     const pln = { 
         pln_token: { name: 'Token PLN', logo: 'fas fa-bolt', isIcon: true, digiBrand: 'PLN' } 
     };
 
-    const a = { ...o, ...dC, ...gC, ...e, ...etoll, ...pln, ...v, ...prd };
-    
-    tagihanCategories.forEach(t => { 
-        a[t.id] = { name: t.name, logo: t.icon, isIcon: true, placeholder: t.placeholder }; 
-    });
+    // TAGIHAN DIHAPUS DARI MASTER LIST
+    const a = { ...o, ...dC, ...gC, ...e, ...etoll, ...pln, ...v, ...prd, ...smstelponData };
     
     let cL = {};
 
@@ -1637,45 +1494,23 @@ cat << 'EOF' > public/operator.html
     else if (t === 'masaaktif') { oT = 'Masa Aktif'; cL = o; }
     else if (t === 'voucher') { oT = 'Voucher'; cL = v; }
     else if (t === 'perdana') { oT = 'Perdana'; cL = prd; }
-    else if (t === 'tagihan') { 
-        oT = 'Tagihan'; 
-        document.getElementById('operatorContainer').classList.replace('block', 'hidden');
-        
-        let gridHtml = '<div class="grid grid-cols-4 gap-y-6 gap-x-3 mt-4 mx-4">';
-        tagihanCategories.forEach(item => {
-            gridHtml += `
-            <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="selectProvider('${item.id}')">
-                <div class="w-[4.2rem] h-[4.2rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-[#002147] dark:text-yellow-400 flex items-center justify-center text-[26px] shadow-sm mb-2 border border-gray-200 dark:border-gray-800/60">
-                    <i class="${item.icon}"></i>
-                </div>
-                <span class="text-[9px] font-bold text-gray-600 dark:text-gray-300 text-center leading-tight">${item.name}</span>
-            </div>`;
-        });
-        gridHtml += '</div>';
-        
-        const tempDiv = document.createElement('div'); 
-        tempDiv.id = 'tagihanGridWrap';
-        tempDiv.innerHTML = `<h3 class="text-[10px] text-gray-500 dark:text-gray-400 font-bold mb-4 mx-4 mt-6">PILIH JENIS TAGIHAN</h3>` + gridHtml;
-        document.getElementById('operatorContainer').parentElement.insertBefore(tempDiv, document.getElementById('categoryContainer'));
-    }
+    else if (t === 'smstelpon') { oT = 'SMS & Telpon'; cL = smstelponData; }
     else { oT = 'Isi Pulsa'; cL = o; }
     
     document.getElementById('pageTitle').innerText = oT;
 
-    if (t !== 'tagihan') {
-        let h = '';
-        for (let k in cL) {
-          let v = cL[k];
-          h += `
-            <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('${k}')">
-              <div class="w-10 h-10 rounded-full border border-gray-400 flex items-center justify-center text-[10px] bg-white dark:bg-[#0b1320] text-gray-800 dark:text-gray-300 font-bold">
-                  ${v.isIcon ? `<i class="${v.logo} text-lg"></i>` : v.logo}
-              </div>
-              <div class="flex-1 ml-4 font-bold text-gray-800 dark:text-gray-200">${v.name}</div>
-            </div>`;
-        }
-        document.getElementById('opListRender').innerHTML = h;
+    let h = '';
+    for (let k in cL) {
+      let v = cL[k];
+      h += `
+        <div class="flex items-center p-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#1a2639] transition" onclick="selectProvider('${k}')">
+          <div class="w-10 h-10 rounded-full border border-gray-400 flex items-center justify-center text-[10px] bg-white dark:bg-[#0b1320] text-gray-800 dark:text-gray-300 font-bold">
+              ${v.isIcon ? `<i class="${v.logo} text-lg"></i>` : v.logo}
+          </div>
+          <div class="flex-1 ml-4 font-bold text-gray-800 dark:text-gray-200">${v.name}</div>
+        </div>`;
     }
+    document.getElementById('opListRender').innerHTML = h;
 
     if (pp && a[pp]) { setTimeout(() => selectProvider(pp), 50); }
 
@@ -1847,7 +1682,6 @@ cat << 'EOF' > public/operator.html
       if (pr) {
         cP = pr;
         document.getElementById('operatorContainer').classList.replace('block', 'hidden');
-        if (document.getElementById('tagihanGridWrap')) document.getElementById('tagihanGridWrap').classList.add('hidden');
         
         if (pr.items && pr.items.length > 0 && (t === 'data' || t === 'game')) {
           cS = 'category';
@@ -1894,8 +1728,7 @@ cat << 'EOF' > public/operator.html
         } else {
           cS = 'operator';
           document.getElementById('productContainer').classList.add('hidden');
-          if (t === 'tagihan') document.getElementById('tagihanGridWrap').classList.remove('hidden');
-          else document.getElementById('operatorContainer').classList.replace('hidden', 'block');
+          document.getElementById('operatorContainer').classList.replace('hidden', 'block');
           document.getElementById('pageTitle').innerText = oT;
         }
       } else if (cS === 'category') {
@@ -2006,8 +1839,8 @@ cat << 'EOF' > public/riwayat_topup.html
       <h1 class="text-[18px] font-extrabold text-gray-800 dark:text-white uppercase tracking-wide">Riwayat Topup</h1>
     </div>
 
-    <div class="flex bg-white dark:bg-[#0b1320] sticky top-[60px] z-40 border-b border-gray-200 dark:border-[#1e293b]">
-      <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-gray-400 cursor-pointer uppercase tracking-wide" onclick="location.href='/riwayat.html'">
+    <div class="flex bg-white dark:bg-[#0b1320] sticky top-[60px] z-40 border-b border-gray-200 dark:border-[#1e293b] shadow-sm">
+      <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-gray-400 cursor-pointer uppercase tracking-wide transition-colors" onclick="location.href='/riwayat.html'">
         Produk
       </div>
       <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-[#00a8ff] dark:text-[#38bdf8] border-b-[3px] border-[#00a8ff] dark:border-[#38bdf8] cursor-pointer uppercase tracking-wide">
@@ -2015,7 +1848,7 @@ cat << 'EOF' > public/riwayat_topup.html
       </div>
     </div>
 
-    <div class="px-4 mt-5" id="historyContainer">
+    <div class="mt-2" id="historyContainer">
       <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
         <i class="fas fa-spinner fa-spin text-4xl mb-4 text-[#002147] dark:text-yellow-400"></i>
         <p class="text-sm font-bold text-gray-500">Memuat riwayat top up...</p>
@@ -2061,7 +1894,7 @@ cat << 'EOF' > public/riwayat_topup.html
         c.innerHTML = window.topupData.map((i, idx) => {
           let isExp = i.status === 'Expired';
           
-          // WARNA BADGE PERSIS SCREENSHOT BOS
+          // WARNA BADGE KEMBALI KE VERSI LAMA YANG AKURAT
           let sc = '';
           let statusText = i.status;
           
@@ -2079,14 +1912,20 @@ cat << 'EOF' > public/riwayat_topup.html
           let methodClean = i.method.includes('QRIS') ? 'QRIS' : (i.method.includes('Admin') ? 'Admin' : 'Manual WA');
           let titleText = `Topup Saldo ${methodClean}`;
           
+          // KARTU UI HYBRID (CLASSIC CLEAN + TAB MODERN)
           return `
-            <div onclick="showDetailTopup(${idx})" class="bg-white dark:bg-[#111c2e] p-4 rounded-[14px] mb-3 border border-gray-200 dark:border-[#1e293b] shadow-sm cursor-pointer hover:border-gray-400 dark:hover:border-gray-500 transition-colors">
-                <div class="flex justify-between items-start mb-2">
-                    <span class="text-[12px] text-gray-500 dark:text-gray-400 font-bold">${i.date}</span>
-                    <span class="text-[11px] font-extrabold px-3 py-1 rounded-full ${sc}">${statusText}</span>
+            <div onclick="showDetailTopup(${idx})" class="bg-white dark:bg-[#0b1320] p-4 border-b border-gray-200 dark:border-[#1e293b] cursor-pointer hover:bg-gray-50 dark:hover:bg-[#111c2e] transition-colors flex justify-between items-center">
+                <div class="flex flex-col flex-1">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-[11px] text-gray-500 dark:text-gray-400 font-bold">${i.date}</span>
+                        <span class="text-[10px] font-extrabold px-2 py-0.5 rounded ${sc}">${statusText}</span>
+                    </div>
+                    <h4 class="font-extrabold text-[14px] text-gray-800 dark:text-gray-200 mb-0.5">${titleText}</h4>
+                    <p class="text-[11px] font-bold text-gray-500 dark:text-gray-400">Tujuan: Sistem Pembayaran</p>
                 </div>
-                <h4 class="font-extrabold text-[16px] text-gray-800 dark:text-white mb-0.5">${titleText}</h4>
-                <p class="text-[13px] font-bold text-gray-600 dark:text-gray-300">Tujuan: Sistem Pembayaran</p>
+                <div class="ml-3 text-right">
+                    <p class="text-[14px] font-black text-[#002147] dark:text-yellow-400">Rp ${(i.nominal || 0).toLocaleString('id-ID')}</p>
+                </div>
             </div>`;
         }).join('');
       }
@@ -2094,11 +1933,12 @@ cat << 'EOF' > public/riwayat_topup.html
 
     // FUNGSI KOMPLAIN WA DENGAN TEKS OTOMATIS SESUAI REQUEST
     window.komplainTopup = function(nominal, tanggal, statusLengkap) {
-        let msg = `Halo Admin, saya ingin komplain deposit dengan nominal ${nominal} pada tanggal ${tanggal}. Status saat ini: ${statusLengkap}. Mohon bantuannya.`;
+        // Teks presisi sesuai permintaan bos: "Halo, saya ingin komplain deposit dengan nominal 20190 pada tanggal 2026-03-25 15:50:33. Status: pending_qris..."
+        let msg = `Halo Admin, saya ingin komplain deposit dengan nominal Rp ${nominal} pada tanggal ${tanggal}. Status: ${statusLengkap}. Mohon bantuannya.`;
         window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(msg), '_blank');
     }
 
-    // POPUP DETAIL MEWAH SESUAI SCREENSHOT
+    // POPUP DETAIL MEWAH
     window.showDetailTopup = function(index) {
         const item = window.topupData[index];
         const isDark = localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null;
@@ -2106,7 +1946,7 @@ cat << 'EOF' > public/riwayat_topup.html
         let statusText = item.status === 'Expired' ? 'Gagal (Kedaluwarsa)' : item.status;
         let rawStatus = item.status.toLowerCase();
         if(rawStatus === 'proses' && item.method.includes('QRIS')) rawStatus = 'pending_qris';
-        if(rawStatus === 'expired') rawStatus = 'gagal (kedaluwarsa)';
+        if(rawStatus === 'expired') rawStatus = 'gagal_kedaluwarsa';
         
         let methodClean = item.method.includes('QRIS') ? 'QRIS' : (item.method.includes('Admin') ? 'Admin' : 'Manual WA');
         
@@ -2299,11 +2139,7 @@ cat << 'EOF' > public/mutasi.html
   
   <script>
     const user = JSON.parse(localStorage.getItem('user'));
-    
-    if(!user) {
-        window.location.href = '/';
-    }
-    
+    if(!user) { window.location.href = '/'; }
     if(localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null) {
         document.getElementById('html-root').classList.add('dark');
     }
@@ -2693,11 +2529,11 @@ cat << 'EOF' > public/riwayat.html
       <h1 class="text-[18px] font-extrabold text-gray-800 dark:text-white uppercase tracking-wide">Riwayat Transaksi</h1>
     </div>
 
-    <div class="flex bg-white dark:bg-[#0b1320] sticky top-[60px] z-40 border-b border-gray-200 dark:border-[#1e293b]">
+    <div class="flex bg-white dark:bg-[#0b1320] sticky top-[60px] z-40 border-b border-gray-200 dark:border-[#1e293b] shadow-sm">
       <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-[#00a8ff] dark:text-[#38bdf8] border-b-[3px] border-[#00a8ff] dark:border-[#38bdf8] cursor-pointer uppercase tracking-wide">
         Produk
       </div>
-      <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-gray-400 cursor-pointer uppercase tracking-wide" onclick="location.href='/riwayat_topup.html'">
+      <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-gray-400 cursor-pointer uppercase tracking-wide transition-colors" onclick="location.href='/riwayat_topup.html'">
         Topup Saldo
       </div>
     </div>
@@ -2715,7 +2551,7 @@ cat << 'EOF' > public/riwayat.html
         </div>
     </div>
 
-    <div class="px-4 mt-4" id="historyContainer">
+    <div class="mt-2" id="historyContainer">
       <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
         <i class="fas fa-spinner fa-spin text-4xl mb-4 text-[#00a8ff] dark:text-[#38bdf8]"></i>
       </div>
@@ -2809,7 +2645,7 @@ cat << 'EOF' > public/riwayat.html
             </div>`;
         } else {
             c.innerHTML = filtered.map((i) => {
-                // WARNA BADGE PERSIS SCREENSHOT BOS
+                // WARNA BADGE KEMBALI KE VERSI LAMA YANG AKURAT
                 let sc = '';
                 if(i.status === 'Gagal') {
                     sc = 'bg-[#ffe4e6] text-[#e11d48] dark:bg-[#ffe4e6] dark:text-[#be123c]';
@@ -2821,14 +2657,20 @@ cat << 'EOF' > public/riwayat.html
                         
                 let rawIdx = allTrx.indexOf(i);
                 
+                // KARTU UI HYBRID (CLASSIC CLEAN + TAB MODERN)
                 return `
-                <div onclick="showDetailTrx(${rawIdx})" class="bg-white dark:bg-[#111c2e] p-4 rounded-[14px] mb-3 border border-gray-200 dark:border-[#1e293b] shadow-sm cursor-pointer hover:border-gray-400 dark:hover:border-gray-500 transition-colors">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-[12px] text-gray-500 dark:text-gray-400 font-bold">${i.date}</span>
-                        <span class="text-[11px] font-extrabold px-3 py-1 rounded-full ${sc}">${i.status}</span>
+                <div onclick="showDetailTrx(${rawIdx})" class="bg-white dark:bg-[#0b1320] p-4 border-b border-gray-200 dark:border-[#1e293b] cursor-pointer hover:bg-gray-50 dark:hover:bg-[#111c2e] transition-colors flex justify-between items-center">
+                    <div class="flex flex-col flex-1">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[11px] text-gray-500 dark:text-gray-400 font-bold">${i.date}</span>
+                            <span class="text-[10px] font-extrabold px-2 py-0.5 rounded ${sc}">${i.status}</span>
+                        </div>
+                        <h4 class="font-extrabold text-[14px] text-gray-800 dark:text-gray-200 mb-0.5">${i.produk}</h4>
+                        <p class="text-[11px] font-bold text-gray-500 dark:text-gray-400">Tujuan: ${i.no_tujuan}</p>
                     </div>
-                    <h4 class="font-extrabold text-[16px] text-gray-800 dark:text-white mb-0.5">${i.produk}</h4>
-                    <p class="text-[13px] font-bold text-gray-600 dark:text-gray-300">Tujuan: ${i.no_tujuan}</p>
+                    <div class="ml-3 text-right">
+                        <p class="text-[14px] font-black text-[#002147] dark:text-yellow-400">Rp ${(i.harga||0).toLocaleString('id-ID')}</p>
+                    </div>
                 </div>`;
             }).join('');
         }
@@ -2838,7 +2680,8 @@ cat << 'EOF' > public/riwayat.html
 
     // FUNGSI KOMPLAIN WA DENGAN TEKS OTOMATIS SESUAI REQUEST
     window.komplainTrx = function(harga, tanggal, statusLengkap) {
-        let msg = `Halo Admin, saya ingin komplain transaksi dengan nominal Rp ${harga} pada tanggal ${tanggal}. Status saat ini: ${statusLengkap}. Mohon bantuannya.`;
+        // Teks presisi sesuai permintaan bos
+        let msg = `Halo Admin, saya ingin komplain transaksi dengan nominal Rp ${harga} pada tanggal ${tanggal}. Status: ${statusLengkap}. Mohon bantuannya.`;
         window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(msg), '_blank');
     }
 
@@ -2897,7 +2740,7 @@ cat << 'EOF' > public/riwayat.html
 EOF
 
 echo "[PART 4 SELESAI DITULIS. TINGGAL PART 5, 6, 7 (BACKEND & VPS MENU)!]"
-echo "[5/7] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V153)..."
+echo "[5/7] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V154)..."
 
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
@@ -3180,6 +3023,8 @@ app.post('/api/products', async (req, res) => {
             filtered = products.filter(p => p.category === 'Voucher' && p.brand.toLowerCase() === safeBrand); 
         } else if (type === 'perdana') { 
             filtered = products.filter(p => p.category === 'Perdana' && p.brand.toLowerCase() === safeBrand); 
+        } else if (type === 'smstelpon') {
+            filtered = products.filter(p => p.category === 'Paket SMS & Nelpon' && p.brand.toLowerCase() === safeBrand); 
         }
     }
 
@@ -3977,7 +3822,7 @@ echo "Menginstal modul Node.js..."
 npm install --silent
 npm install -g pm2 > /dev/null 2>&1
 
-echo "[6/7] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - THE LEGACY UI)..."
+echo "[6/7] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - THE MODERN HYBRID)..."
 
 cat << 'EOF' > /usr/bin/menu
 #!/bin/bash
@@ -4023,7 +3868,7 @@ while true; do
 
     clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V153) 💎        ${NC}"
+    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V154) 💎        ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo -e "   💰 SALDO DIGIFLAZZ: ${GREEN}$SALDO_DIGI${NC}"
     echo -e "${CYAN}======================================================${NC}"
@@ -4055,10 +3900,9 @@ while true; do
     echo -e "  ${GREEN}18.${NC} 📥 RESTORE DATA DARI DIRECT LINK"
     echo ""
     echo -e "${PURPLE}[ ⚙️ SISTEM ]${NC}"
-    echo -e "  ${YELLOW}19.${NC} Update Sistem"
     echo -e "  ${RED}0.${NC} Keluar"
     echo -e "${CYAN}======================================================${NC}"
-    read -p "Pilih menu [0-19]: " choice
+    read -p "Pilih menu [0-18]: " choice
 
     case $choice in
         1) 
@@ -4372,11 +4216,11 @@ JS
             read -p "Pilih: " pr_menu
             
             if [ "$pr_menu" == "1" ]; then
-                echo "1. Pulsa | 2. Data | 3. Game | 4. Voucher | 5. E-Wallet | 6. PLN | 7. Tagihan | 8. E-Toll | 9. Masa Aktif | 10. Perdana"
+                echo "1. Pulsa | 2. Data | 3. Game | 4. Voucher | 5. E-Wallet | 6. PLN | 7. E-Toll | 8. Masa Aktif | 9. Perdana | 10. SMS/Telpon"
                 read -p "Pilih Tipe [1-10]: " typ
                 case $typ in 
                     1) tp="pulsa";; 2) tp="data";; 3) tp="game";; 4) tp="voucher";; 5) tp="ewallet";; 
-                    6) tp="pln";; 7) tp="tagihan";; 8) tp="etoll";; 9) tp="masaaktif";; 10) tp="perdana";; 
+                    6) tp="pln";; 7) tp="etoll";; 8) tp="masaaktif";; 9) tp="perdana";; 10) tp="smstelpon";;
                 esac
                 read -p "Brand (XL/DANA dll): " p_brand
                 read -p "Kategori Sub: " p_cat
@@ -4677,19 +4521,6 @@ JS
             read -p "Tekan Enter..." 
             ;;
             
-        19) 
-            clear
-            echo -e "${YELLOW}Menarik update terbaru dari GitHub Anda...${NC}"
-            cd "$HOME/$DIR_NAME"
-            git pull origin main
-            npm install
-            chmod +x menu
-            cp menu /usr/bin/menu
-            pm2 restart all > /dev/null 2>&1
-            echo -e "${GREEN}✅ Update Selesai! Sistem sudah diperbarui dengan versi terbaru.${NC}"
-            read -p "Tekan Enter..."
-            ;;
-            
         0) exit 0 ;;
     esac
 done
@@ -4698,12 +4529,12 @@ EOF
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
 echo "=========================================================="
-echo "  SISTEM WEB V153 BERHASIL DIPERBARUI SECARA PENUH!       "
+echo "  SISTEM WEB V154 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
 
 EOF
-echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V153..."
+echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V154..."
 
 cd "$HOME/$DIR_NAME"
 
@@ -4724,18 +4555,17 @@ chmod +x /usr/bin/menu
 
 clear
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V153 SELESAI! 🚀      \033[0m"
+echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V154 SELESAI! 🚀      \033[0m"
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[0;36mFITUR BARU DI V153 (THE LEGACY UI EDITION):\033[0m"
-echo -e "  ✅ \033[1;33mUI RIWAYAT 1000% MIRIP SCREENSHOT\033[0m Desain Tab & Badge Akurat"
-echo -e "  ✅ \033[1;33mTEKS KOMPLAIN OTOMATIS\033[0m Format komplain detail sesuai pesanan"
-echo -e "  ✅ \033[1;33mMENU LAMA (CSV) DIHAPUS\033[0m Sesuai request bos"
-echo -e "  ✅ \033[1;33mMENU BARU (LINK KOMUNITAS)\033[0m Ubah link Tele/WA langsung dari VPS"
+echo -e "\033[0;36mFITUR BARU DI V154 (THE MODERN HYBRID EDITION):\033[0m"
+echo -e "  ✅ \033[1;33mUI RIWAYAT HYBRID\033[0m Desain Tab Modern + Kartu Classic + Tombol WA"
+echo -e "  ✅ \033[1;33mREVOLUSI LAYANAN\033[0m SMS & Telp Masuk, E-Wallet Pindah, Tagihan Lenyap!"
+echo -e "  ✅ \033[1;33mMARQUEE SUPER MODERN\033[0m Desain Kapsul dengan Efek Teks Glowing"
+echo -e "  ✅ \033[1;33mMENU GITHUB DIHAPUS\033[0m Panel lebih bersih dan to the point"
+echo -e "  ✅ \033[1;33mUBAH LINK KOMUNITAS\033[0m Setting Telegram & WA langsung di VPS"
 echo -e "  ✅ \033[1;33mBUG 'Cannot GET /' FIXED\033[0m Routing Express 100% Mulus"
-echo -e "  ✅ \033[1;33mTEKS BERJALAN (MARQUEE)\033[0m Jalan mulus tanpa numpuk"
-echo -e "  ✅ \033[1;33mSTATISTIK TOKO (4 TIER)\033[0m Hari Ini, Minggu, Bulan, Semua"
-echo -e "  ✅ \033[1;33mBUG BANNER SPASI FIXED\033[0m Rename otomatis spasi jadi garis bawah"
 echo -e "  ✅ \033[1;33m14 TIER MARGIN GOD MODE\033[0m Atur harga bertingkat sesuka hati"
+echo -e "  ✅ \033[1;33mTEKS KOMPLAIN OTOMATIS\033[0m Detail nominal, tanggal, status presisi!"
 echo -e "\033[0;32m======================================================================\033[0m"
 echo -e "\033[1;37mCARA PENGGUNAAN SELANJUTNYA:\033[0m"
 echo -e "Ketik perintah: \033[1;32mmenu\033[0m (Lalu tekan Enter untuk buka Panel)"
