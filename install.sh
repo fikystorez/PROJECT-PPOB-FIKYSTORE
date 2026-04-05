@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V163 (PERFECT OXFORD + AUTO QRIS BHM - PART 1)
+# DIGITAL FIKY STORE - V164 (PERFECT OXFORD + AUTO QRIS BHM - PART 1)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
@@ -16,7 +16,7 @@ DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V163 (PART 1)           "
+echo "    MENGINSTAL DIGITAL FIKY STORE V164 (PART 1)           "
 echo "=========================================================="
 
 echo "[1/7] Memperbarui sistem dan menginstal Node.js..."
@@ -35,7 +35,7 @@ cd "$HOME/$DIR_NAME"
 cat << 'EOF' > package.json
 {
   "name": "digital-fiky-store",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "Aplikasi PPOB DIGITAL FIKY STORE",
   "main": "index.js",
   "scripts": {
@@ -985,8 +985,8 @@ cat << 'EOF' > public/dashboard.html
             <div class="flex items-center gap-3">
               <i class="fas fa-qrcode text-2xl text-white"></i>
               <div class="flex flex-col">
-                <span class="font-bold text-sm text-white">Otomatis QRIS</span>
-                <span class="text-[10px] text-gray-500 leading-tight">Otomatis masuk via QRIS (Wajib sesuai nominal)</span>
+                <span class="font-bold text-sm text-white">Otomatis QRIS Dinamis</span>
+                <span class="text-[10px] text-gray-500 leading-tight">Otomatis masuk (Nominal instan muncul)</span>
               </div>
             </div>
             <div id="r-qris" class="w-5 h-5 rounded-full border-[3px] border-gray-600 bg-transparent shrink-0"></div>
@@ -1158,7 +1158,7 @@ cat << 'EOF' > public/dashboard.html
         
         closeTopUp();
         
-        Swal.fire({ title: 'Membuat QRIS...', allowOutsideClick: false, background: bg, color: c, didOpen: () => Swal.showLoading() });
+        Swal.fire({ title: 'Membuat QRIS Dinamis...', allowOutsideClick: false, background: bg, color: c, didOpen: () => Swal.showLoading() });
 
         try {
             let res = await fetch('/api/topup/request', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone: user.phone, method: 'QRIS Otomatis', nominal: fn}) });
@@ -1166,17 +1166,17 @@ cat << 'EOF' > public/dashboard.html
             
             if(res.ok) {
                 Swal.close();
-                // Mengubah String QRIS dari Server menjadi Gambar QR Code Asli
+                // Mengubah String QRIS Dinamis dari Server menjadi Gambar QR Code Asli
                 let finalQrisImg = data.qris_string ? `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(data.qris_string)}` : qrisImg;
 
                 setTimeout(() => {
                   Swal.fire({
-                    title: `<span class="font-bold text-lg text-[#facc15]">Scan QRIS</span>`,
+                    title: `<span class="font-bold text-lg text-[#facc15]">Scan QRIS Dinamis</span>`,
                     html: `
                         <p class="text-4xl text-[#facc15] font-extrabold mb-2">Rp ${fn.toLocaleString('id-ID')}</p>
                         <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold mb-3 animate-pulse inline-block">Sisa Waktu: <span id="qrisTimer">05:00</span></div>
                         <div class="bg-white p-3 rounded-xl inline-block border border-gray-200 mb-2 shadow-lg"><img src="${finalQrisImg}" class="w-56 h-56 object-cover"></div>
-                        <p class="text-[11px] text-gray-300 font-medium">Scan QRIS di atas dan saldo akan masuk otomatis dalam 1-3 menit.</p>`,
+                        <p class="text-[11px] text-gray-300 font-medium">Scan QRIS di atas. <b class="text-[#facc15]">Nominal akan otomatis muncul</b> di aplikasi E-Wallet / M-Banking Anda!</p>`,
                     showCancelButton: true, confirmButtonText: 'Sudah Transfer', cancelButtonText: 'Tutup', background: bg, color: c,
                     didOpen: () => {
                       let t = 300; let tmr = document.getElementById('qrisTimer');
@@ -1901,14 +1901,14 @@ cat << 'EOF' > public/riwayat_topup.html
                 let isExp = i.status === 'Expired';
                 let sc = isExp || i.status === 'Gagal' ? 'text-red-400 border border-red-500/50 bg-red-500/10' : (i.status === 'Sukses' ? 'text-green-400 border border-green-500/50 bg-green-500/10' : 'text-[#facc15] border border-[#facc15]/50 bg-[#facc15]/10');
                 let statusText = isExp ? 'KEDALUWARSA' : i.status.toUpperCase();
-                let methodClean = i.method.includes('QRIS') ? 'QRIS' : (i.method.includes('Admin') ? 'Admin' : 'Manual WA');
+                let methodClean = i.method.includes('QRIS') ? 'QRIS Dinamis' : (i.method.includes('Admin') ? 'Admin' : 'Manual WA');
                 let rawIdx = allTrx.indexOf(i);
                 
                 return `
                 <div onclick="showDetailTopup(${rawIdx})" class="bg-[#111c2e] p-4 rounded-[1.2rem] mb-3 border border-[#1e293b] shadow-sm cursor-pointer hover:bg-[#1a2639] transition-colors flex items-center justify-between">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-xl bg-[#0b1320] flex items-center justify-center shrink-0 border border-gray-700"><i class="fas fa-wallet text-gray-400 text-xl"></i></div>
-                        <div class="flex flex-col"><h4 class="font-extrabold text-[14px] text-gray-200 mb-1">Topup Saldo ${methodClean}</h4><span class="text-[11px] text-gray-400 font-medium">${i.date}</span></div>
+                        <div class="flex flex-col"><h4 class="font-extrabold text-[14px] text-gray-200 mb-1">Topup ${methodClean}</h4><span class="text-[11px] text-gray-400 font-medium">${i.date}</span></div>
                     </div>
                     <div class="flex flex-col items-end"><p class="text-[15px] font-black text-[#facc15] mb-1.5">Rp ${(i.nominal || 0).toLocaleString('id-ID')}</p><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${sc}">${statusText}</span></div>
                 </div>`;
@@ -1929,7 +1929,7 @@ cat << 'EOF' > public/riwayat_topup.html
         let rawStatus = item.status.toLowerCase();
         if(rawStatus === 'proses' && item.method.includes('QRIS')) rawStatus = 'pending_qris';
         if(rawStatus === 'expired') rawStatus = 'gagal_kedaluwarsa';
-        let methodClean = item.method.includes('QRIS') ? 'QRIS' : (item.method.includes('Admin') ? 'Admin' : 'Manual WA');
+        let methodClean = item.method.includes('QRIS') ? 'QRIS Dinamis' : (item.method.includes('Admin') ? 'Admin' : 'Manual WA');
         
         let htmlContent = `
         <h3 class="text-white font-extrabold text-[19px] mb-5 text-center">Detail Transaksi</h3>
@@ -2683,7 +2683,7 @@ cat << 'EOF' > public/riwayat.html
 EOF
 
 echo "[PART 4 SELESAI DITULIS. TINGGAL PART 5, 6, 7 (BACKEND & VPS MENU)!]"
-echo "[5/7] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V163 AUTO QRIS BHM)..."
+echo "[5/7] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - V164 AUTO QRIS DINAMIS)..."
 
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
@@ -2742,7 +2742,6 @@ if (!fs.existsSync(webUsersFile)) saveJSON(webUsersFile, {});
 if (!fs.existsSync(localProductsFile)) saveJSON(localProductsFile, []);
 if (!fs.existsSync(digiCacheFile)) saveJSON(digiCacheFile, { time: 0, data: [] }); 
 if (!fs.existsSync(infoFile)) saveJSON(infoFile, []);
-
 
 // ==========================================
 // FUNGSI AUTO MAINTENANCE (23:00 - 00:30 WIB)
@@ -2883,7 +2882,7 @@ app.post('/api/transaction/create', async (req, res) => {
     } catch (e) { res.status(500).json({ error: 'Terjadi kesalahan internal.' }); }
 });
 
-// INTERVAL PENGECEKAN STATUS TRANSAKSI DIGIFLAZZ (TIAP 20 DETIK)
+// INTERVAL PENGECEKAN STATUS TRANSAKSI DIGIFLAZZ
 setInterval(async () => {
     let db = loadJSON(dbFile); let config = loadJSON(configFile); let webUsers = loadJSON(webUsersFile); let changed = false;
     if (!config.digiUser || !config.digiKey) return;
@@ -2906,7 +2905,6 @@ setInterval(async () => {
     if (changed) saveJSON(dbFile, db);
 }, 20000); 
 
-
 // ==========================================
 // 🛠️ GENERATOR QRIS DINAMIS (RUMUS CRC16 CCITT)
 // ==========================================
@@ -2925,14 +2923,13 @@ function convertCRC16(str) {
 
 function generateDynamicQris(staticQris, amount) {
     try {
-        // Ambil string sebelum tag 6304
         let qrisWithoutCRC = staticQris.substring(0, staticQris.indexOf("6304"));
-        if(!qrisWithoutCRC) return staticQris; // Kalau format QRIS salah, balikin default
+        if(!qrisWithoutCRC) return staticQris; // Kalau string admin ngawur, kembalikan statis
         
         let amountStr = amount.toString();
         let amountLen = amountStr.length.toString().padStart(2, '0');
         
-        // Buat tag 54 (Nominal)
+        // Buat tag 54 (Nominal) => 54 + Panjang Nominal + Nominal
         let tag54 = "54" + amountLen + amountStr;
         
         // Gabungkan dan hitung CRC baru
@@ -2944,7 +2941,6 @@ function generateDynamicQris(staticQris, amount) {
         return staticQris;
     }
 }
-
 
 // ==========================================
 // 💰 FUNGSI AUTO-QRIS CHECKER (VIA MUTASI GOPAY BHM) 💰
@@ -2970,9 +2966,17 @@ setInterval(async () => {
 
     if (pendingQris.length > 0) {
         try {
-            let res = await axios.get('http://gopay.bhm.biz.id/api/transactions', {
+            // MENGGUNAKAN ENDPOINT TRANSAKSI GOPAY DARI BHM
+            let endpoint = 'http://gopay.bhm.biz.id/v1/gopay/transactions'; // Alternatif jika yang /api/transactions gangguan
+            let res = await axios.get(endpoint, {
                 headers: { 'Authorization': `Bearer ${config.bhmToken}` },
                 timeout: 10000
+            }).catch(async () => {
+                // Fallback ke endpoint satu lagi
+                return await axios.get('http://gopay.bhm.biz.id/api/transactions', {
+                    headers: { 'Authorization': `Bearer ${config.bhmToken}` },
+                    timeout: 10000
+                });
             });
             
             let txs = res.data.data || res.data || [];
@@ -2980,9 +2984,9 @@ setInterval(async () => {
             for (let p of pendingQris) {
                 let targetNominal = parseInt(p.topup.nominal);
                 
-                // Cari transaksi mutasi GoPay masuk (credit) yang nominalnya PAS
+                // Cari transaksi mutasi GoPay masuk (credit) yang nominalnya PAS dengan kode unik
                 let matchTx = txs.find(tx => {
-                    let amount = parseInt(tx.amount);
+                    let amount = parseInt(tx.amount); // Parse 50000.00 jadi 50000
                     let isCredit = (tx.type && tx.type.toLowerCase() === 'credit') || parseFloat(tx.amount) > 0;
                     return amount === targetNominal && isCredit;
                 });
@@ -2997,7 +3001,7 @@ setInterval(async () => {
 
                         p.topup.status = 'Sukses';
                         db[p.phone].saldo += targetNominal;
-                        db[p.phone].mutasi.push({ id: 'TU' + Date.now(), type: 'in', amount: targetNominal, desc: 'Topup QRIS Otomatis', date: new Date().toLocaleString('id-ID') });
+                        db[p.phone].mutasi.push({ id: 'TU' + Date.now(), type: 'in', amount: targetNominal, desc: 'Topup QRIS Dinamis (GoPay)', date: new Date().toLocaleString('id-ID') });
                         changed = true;
 
                         let uData = webUsers[p.phone] || {name: 'Unknown'};
@@ -3011,7 +3015,7 @@ setInterval(async () => {
     }
 
     if (changed) saveJSON(dbFile, db);
-}, 30000); 
+}, 30000); // 👈 Mesin akan beroperasi mencari GoPay setiap 30 Detik
 
 // FUNGSI AUTO BACKUP TELEGRAM
 function startAutoBackup() {
@@ -3027,7 +3031,7 @@ function startAutoBackup() {
 setTimeout(startAutoBackup, 15000); 
 
 // ==========================================
-// API TOPUP LOGIC (MENYERTAKAN GENERATE QRIS DINAMIS)
+// API TOPUP LOGIC (GENERATE QRIS DINAMIS)
 // ==========================================
 app.post('/api/topup/request', (req, res) => {
     const { phone, method, nominal } = req.body; 
@@ -3043,12 +3047,13 @@ app.post('/api/topup/request', (req, res) => {
     let finalQrisString = null;
 
     if (method === 'QRIS Otomatis') {
-        expiry = Date.now() + 5*60*1000; // 5 Menit
-        // Kalau admin sudah set String QRIS di panel, kita buatkan dinamisnya!
-        if (config.qrisStringCode) {
+        expiry = Date.now() + 5*60*1000; // Kadaluwarsa 5 Menit
+        
+        if (config.qrisStringCode && config.qrisStringCode !== '') {
+            // MENGUBAH STRING STATIS MENJADI DINAMIS BERDASARKAN NOMINAL UNIK
             finalQrisString = generateDynamicQris(config.qrisStringCode, nominal);
         } else {
-            return res.status(400).json({ error: 'Admin belum menyetting String QRIS di panel VPS.' });
+            return res.status(400).json({ error: 'Admin belum menyetting String QRIS di panel VPS. Hubungi Admin.' });
         }
     }
 
@@ -3058,10 +3063,10 @@ app.post('/api/topup/request', (req, res) => {
     saveJSON(dbFile, db); 
     
     let kodeUnik = nominal % 1000; let depositAsli = nominal - kodeUnik;
-    let msgTopup = `⏳ *TOP UP MENUNGGU PEMBAYARAN* ⏳\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n⌚ Waktu: ${dateStr}\n🏦 Metode: ${method}\n💰 Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n🎫 Unik: ${kodeUnik}\n💵 Diterima: Rp ${nominal.toLocaleString('id-ID')}`;
+    let msgTopup = `⏳ *TOP UP MENUNGGU PEMBAYARAN* ⏳\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n⌚ Waktu: ${dateStr}\n🏦 Metode: QRIS Dinamis\n💰 Nominal Scan: Rp ${nominal.toLocaleString('id-ID')}`;
     sendTeleNotif(msgTopup, 'topup'); 
     
-    // Kirim string QRIS ke frontend biar dirender jadi gambar
+    // Kirim string QRIS yang sudah disisipkan harga ke frontend
     res.json({ message: 'Top up direkam', qris_string: finalQrisString });
 });
 
@@ -3212,7 +3217,7 @@ echo "Menginstal modul Node.js..."
 npm install --silent
 npm install -g pm2 > /dev/null 2>&1
 
-echo "[6/7] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - V163 AUTO QRIS BHM)..."
+echo "[6/7] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - V164 AUTO QRIS DINAMIS)..."
 
 cat << 'EOF' > /usr/bin/menu
 #!/bin/bash
@@ -3258,7 +3263,7 @@ while true; do
 
     clear
     echo -e "${CYAN}======================================================${NC}"
-    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V163) 💎        ${NC}"
+    echo -e "${YELLOW}         💎 PANEL DIGITAL FIKY STORE (V164) 💎        ${NC}"
     echo -e "${CYAN}======================================================${NC}"
     echo -e "   💰 SALDO DIGIFLAZZ: ${GREEN}$SALDO_DIGI${NC}"
     echo -e "${CYAN}======================================================${NC}"
@@ -3281,7 +3286,7 @@ while true; do
     echo -e "${PURPLE}[ 🌐 MANAJEMEN SERVER & API ]${NC}"
     echo -e "  ${GREEN}12.${NC} Setup Domain (Nginx + Cloudflare + UFW Firewall)"
     echo -e "  ${GREEN}13.${NC} 🔌 Setup API Digiflazz (Untuk Produk)"
-    echo -e "  ${YELLOW}14.${NC} 💸 Setup API GoPay & QRIS Otomatis (BHM Biz ID)"
+    echo -e "  ${YELLOW}14.${NC} 💸 Setup API GoPay Merchant & QRIS Otomatis (BHM)"
     echo -e "  ${GREEN}15.${NC} 🔄 Refresh Katalog Digiflazz (Hapus Cache API)"
     echo ""
     echo -e "${PURPLE}[ 🛡️ PUSAT KOMANDO TELEGRAM ]${NC}"
@@ -3302,11 +3307,9 @@ while true; do
             read -p "Masukkan Nomor WA Bot (Awalan 62, cth: 62812...): " botnum
             
             if [ ! -z "$botnum" ]; then
-                # STOP PM2 DULU BIAR GAK BENTROK!
                 pm2 stop $BOT_NAME > /dev/null 2>&1
                 cd "$HOME/$DIR_NAME"
                 
-                # BIKIN SCRIPT SEMENTARA BUAT SIMPAN NOMOR
                 cat << 'JS' > temp_setup.js
 const fs = require('fs');
 const file = './config.json';
@@ -3322,7 +3325,6 @@ JS
                 echo -e "${CYAN}(Tunggu sekitar 5-10 detik. Jika kode sudah muncul, catat kodenya.)${NC}"
                 echo -e "${RED}(Setelah mencatat kode dan berhasil login, tekan CTRL+C lalu pilih menu 2 untuk jalankan bot di background)${NC}"
                 
-                # JALANKAN BOT SECARA MANUAL DI FOREGROUND
                 node index.js
             fi
             ;;
@@ -3512,7 +3514,6 @@ const fs = require('fs');
 const path = './public/banners';
 if(!fs.existsSync(path)) fs.mkdirSync(path, {recursive:true});
 
-// BACA FILE DAN OTOMATIS RENAME JIKA ADA SPASI (MENGATASI BUG URL)
 let rawFiles = fs.readdirSync(path).filter(f => f.match(/\.(jpg|jpeg|png|gif)$/i));
 rawFiles.forEach(f => {
     if(f.includes(' ')) {
@@ -3956,12 +3957,12 @@ EOF
 chmod +x /usr/bin/menu
 pm2 restart all > /dev/null 2>&1
 echo "=========================================================="
-echo "  SISTEM WEB V163 BERHASIL DIPERBARUI SECARA PENUH!       "
+echo "  SISTEM WEB V164 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
 echo "=========================================================="
 
 EOF
-echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V163..."
+echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V164..."
 
 cd "$HOME/$DIR_NAME"
 
@@ -3982,10 +3983,10 @@ chmod +x /usr/bin/menu
 
 clear
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V163 SELESAI! 🚀      \033[0m"
+echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V164 SELESAI! 🚀      \033[0m"
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[0;36mFITUR BARU DI V163 (THE PERFECT OXFORD + AUTO QRIS STRING):\033[0m"
-echo -e "  ✅ \033[1;33mAUTO QRIS DINAMIS (BHM API)\033[0m Generate QR otomatis dari String & Cek Mutasi GoPay!"
+echo -e "\033[0;36mFITUR BARU DI V164 (THE PERFECT OXFORD + AUTO QRIS DINAMIS):\033[0m"
+echo -e "  ✅ \033[1;33mAUTO QRIS DINAMIS (BHM API)\033[0m Generate QR & Cek Mutasi GoPay Merchant Otomatis!"
 echo -e "  ✅ \033[1;33mANIMASI WELCOME LOGIN\033[0m Teks berjalan elegan dengan inner-shadow"
 echo -e "  ✅ \033[1;33mANTI-BUG CANNOT GET\033[0m Sistem otomatis ngebaca file atau nampilin 404 keren!"
 echo -e "  ✅ \033[1;33mUI 1000% CLONE FOTO\033[0m Background Oxford, Harga & Aksesoris Kuning Maize"
