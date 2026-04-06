@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V166 (PERFECT OXFORD + FULL UNCOMPRESSED)
+# DIGITAL FIKY STORE - V166 (PERFECT MASTERPIECE)
 # PART 1: SETUP, STYLE, DAN AUTENTIKASI
 # ==========================================================
 
@@ -2011,7 +2011,13 @@ cat << 'EOF' > public/riwayat_topup.html
         tailwind.config = { darkMode: 'class' }
     </script>
     <style>
-        .swal2-popup.custom-swal-bg { background-color: #111c2e !important; border-radius: 1.5rem !important; width: 340px !important; padding: 1.5rem !important; border: 1px solid #1e293b; }
+        .swal2-popup.custom-swal-bg { 
+            background-color: #111c2e !important; 
+            border-radius: 1.5rem !important; 
+            width: 340px !important; 
+            padding: 1.5rem !important; 
+            border: 1px solid #1e293b; 
+        }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -2310,6 +2316,8 @@ cat << 'EOF' > public/info.html
 EOF
 
 echo "[PART 3 SELESAI BOSKUUU!]"
+echo "[7/8] Membangun Halaman Mutasi, Profil, dan Riwayat Transaksi (FULL UNCOMPRESSED)..."
+
 cat << 'EOF' > public/mutasi.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -2962,7 +2970,7 @@ cat << 'EOF' > public/riwayat.html
 EOF
 
 echo "[PART 4 SELESAI DITULIS. TINGGAL PART 5, 6, 7 (BACKEND & VPS MENU)!]"
-echo "[5/8] Menulis logika Backend Node.js (V166 FULL UNCOMPRESSED)..."
+echo "[5/8] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - FIX BHM API & SENSOR TELEGRAM)..."
 
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
@@ -3024,13 +3032,38 @@ if (!fs.existsSync(infoFile)) saveJSON(infoFile, []);
 
 
 // ==========================================
-// FUNGSI AUTO MAINTENANCE (23:00 - 00:30 WIB)
+// FUNGSI SENSOR DATA UNTUK TELEGRAM
+// ==========================================
+function censorName(name) {
+    if (!name) return 'Hamba Allah';
+    if (name.length <= 3) return name + '***';
+    return name.substring(0, 3) + '***';
+}
+
+function censorEmail(email) {
+    if (!email) return '***@gmail.com';
+    let parts = email.split('@');
+    let namePart = parts[0];
+    let domainPart = parts[1] || 'gmail.com';
+    if (namePart.length <= 3) return namePart + '***@' + domainPart;
+    return namePart.substring(0, 3) + '***@' + domainPart;
+}
+
+function censorWa(wa) {
+    if (!wa) return '080000000000';
+    if (wa.length <= 8) return wa;
+    return wa.substring(0, 4) + '****' + wa.substring(wa.length - 4);
+}
+
+// ==========================================
+// FUNGSI AUTO MAINTENANCE (FIX TIMEZONE WIB)
 // ==========================================
 function isMaintenance() {
-    const tzStr = new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"}); 
-    const nowWIB = new Date(tzStr); 
-    const h = nowWIB.getHours(); 
+    const tzStr = new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"});
+    const nowWIB = new Date(tzStr);
+    const h = nowWIB.getHours();
     const m = nowWIB.getMinutes();
+    
     if (h >= 23 || (h === 0 && m <= 30)) { 
         return true; 
     }
@@ -3044,7 +3077,7 @@ const sendTeleNotif = async (message, type = 'trx') => {
     let cfg = loadJSON(configFile);
     let token = ''; 
     let chatId = '';
-
+    
     if (type === 'trx') { 
         token = cfg.teleTokenTrx || cfg.teleToken; 
         chatId = cfg.teleChatIdTrx || cfg.teleChatId; 
@@ -3057,7 +3090,7 @@ const sendTeleNotif = async (message, type = 'trx') => {
     }
 
     if (!token || !chatId) return;
-
+    
     try { 
         await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, { 
             chat_id: chatId, 
@@ -3102,10 +3135,13 @@ app.post('/api/user/transactions', (req, res) => {
 
 app.get('/api/global-stats', (req, res) => {
     let db = loadJSON(dbFile); 
-    let now = new Date();
+    const tzStr = new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"});
+    let now = new Date(tzStr);
+    
     let todayStr = now.toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }).split(' ')[0]; 
     let startOfWeek = new Date(now); 
     startOfWeek.setDate(now.getDate() - now.getDay()); 
+    
     let tToday = 0, tWeek = 0, tMonth = 0, tAll = 0;
     
     for (let phone in db) {
@@ -3123,6 +3159,7 @@ app.get('/api/global-stats', (req, res) => {
             }
         });
     }
+    
     res.json({ today: tToday, week: tWeek, month: tMonth, all: tAll });
 });
 
@@ -3132,11 +3169,12 @@ app.get('/api/global-stats', (req, res) => {
 app.post('/api/admin/broadcast', (req, res) => {
     const { judul, message } = req.body; 
     let infoData = loadJSON(infoFile);
+    let dateStr = new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'});
     
     infoData.push({ 
         judul: judul || "📢 PENGUMUMAN RESMI", 
         isi: message, 
-        date: new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) 
+        date: dateStr 
     });
     
     saveJSON(infoFile, infoData); 
@@ -3195,6 +3233,7 @@ app.post('/api/products', async (req, res) => {
     
     if (config.digiUser && config.digiKey) {
         let timeDiff = Date.now() - digiCache.time;
+        
         if (timeDiff > 300000 || !digiCache.data || digiCache.data.length === 0) { 
             try {
                 let sign = crypto.createHash('md5').update(config.digiUser + config.digiKey + "pricelist").digest('hex');
@@ -3233,6 +3272,7 @@ app.post('/api/products', async (req, res) => {
             if (category) { 
                 const isWDP = category.toLowerCase().includes('weekly') || category.toLowerCase().includes('pass'); 
                 const isMember = category.toLowerCase().includes('member'); 
+                
                 if (isWDP || isMember) { 
                     filtered = filtered.filter(p => p.product_name.toLowerCase().includes('pass') || p.product_name.toLowerCase().includes('weekly') || p.product_name.toLowerCase().includes('member')); 
                 } else { 
@@ -3397,7 +3437,8 @@ app.post('/api/transaction/create', async (req, res) => {
         
         saveJSON(dbFile, db);
         
-        let msgTeleTrx = `🛒 *TRANSAKSI BARU (ORDER MASUK)* 🛒\n\n👤 Nama: ${uData.name}\n✉️ Email: ${uData.email}\n📱 WA: ${phone}\n\n📦 Produk: ${name}\n📱 Tujuan: ${target}\n💰 Harga: Rp ${price.toLocaleString('id-ID')}\n🔄 Status: ${trxStatus}\n🔖 Ref: ${ref_id}`;
+        // KIRIM NOTIF TELEGRAM DENGAN DATA DISENSOR
+        let msgTeleTrx = `🛒 *TRANSAKSI BARU (ORDER MASUK)* 🛒\n\n👤 Nama: ${censorName(uData.name)}\n✉️ Email: ${censorEmail(uData.email)}\n📱 WA: ${censorWa(phone)}\n\n📦 Produk: ${name}\n📱 Tujuan: ${target}\n💰 Harga: Rp ${price.toLocaleString('id-ID')}\n🔄 Status: ${trxStatus}\n🔖 Ref: ${ref_id}`;
         sendTeleNotif(msgTeleTrx, 'trx'); 
         
         res.json({ message: 'Transaksi berhasil diproses.' });
@@ -3442,7 +3483,7 @@ setInterval(async () => {
                         trx.sn_ref = digiData.sn || trx.sn_ref; 
                         changed = true; 
                         
-                        sendTeleNotif(`✅ *UPDATE: TRANSAKSI SUKSES* ✅\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n🔖 SN: ${trx.sn_ref}`, 'trx'); 
+                        sendTeleNotif(`✅ *UPDATE: TRANSAKSI SUKSES* ✅\n\n👤 Nama: ${censorName(uData.name)}\n📱 WA: ${censorWa(phone)}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n🔖 SN: ${trx.sn_ref}`, 'trx'); 
                     } else if (digiData.status === 'Gagal') { 
                         trx.status = 'Gagal'; 
                         trx.sn_ref = digiData.sn || digiData.message || 'Gagal Pusat'; 
@@ -3457,7 +3498,7 @@ setInterval(async () => {
                         }); 
                         
                         changed = true; 
-                        sendTeleNotif(`❌ *UPDATE: TRANSAKSI GAGAL (REFUND)* ❌\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n⚠️ Alasan: ${digiData.message || 'Gagal Pusat'}`, 'trx'); 
+                        sendTeleNotif(`❌ *UPDATE: TRANSAKSI GAGAL (REFUND)* ❌\n\n👤 Nama: ${censorName(uData.name)}\n📱 WA: ${censorWa(phone)}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n⚠️ Alasan: ${digiData.message || 'Gagal Pusat'}`, 'trx'); 
                     }
                 } catch(e) {}
             }
@@ -3532,50 +3573,61 @@ setInterval(async () => {
                 timeout: 10000
             });
             
-            let txs = res.data.data || res.data || [];
+            // 🔥 PROTEKTOR BAJA FIX txs.find BUG 🔥
+            let rawData = res.data;
+            let txs = [];
             
-            for (let p of pendingQris) {
-                let targetNominal = parseInt(p.topup.nominal);
-                
-                // Cari transaksi mutasi GoPay masuk (credit) yang nominalnya PAS
-                let matchTx = txs.find(tx => {
-                    let amount = parseInt(tx.amount);
-                    let isCredit = (tx.type && tx.type.toLowerCase() === 'credit') || parseFloat(tx.amount) > 0;
-                    return amount === targetNominal && isCredit;
-                });
-
-                if (matchTx) {
-                    if (!config.processedGopay) config.processedGopay = [];
+            if (Array.isArray(rawData)) {
+                txs = rawData;
+            } else if (rawData && Array.isArray(rawData.data)) {
+                txs = rawData.data;
+            } else if (rawData && rawData.data && Array.isArray(rawData.data.data)) {
+                txs = rawData.data.data;
+            }
+            // 🔥 SELESAI PROTEKTOR 🔥
+            
+            if (txs.length > 0) {
+                for (let p of pendingQris) {
+                    let targetNominal = parseInt(p.topup.nominal);
                     
-                    if (!config.processedGopay.includes(matchTx.transaction_id)) {
-                        config.processedGopay.push(matchTx.transaction_id);
-                        if(config.processedGopay.length > 500) config.processedGopay.shift();
-                        saveJSON(configFile, config);
+                    let matchTx = txs.find(tx => {
+                        let amount = parseInt(tx.amount);
+                        let isCredit = (tx.type && tx.type.toLowerCase() === 'credit') || parseFloat(tx.amount) > 0;
+                        return amount === targetNominal && isCredit;
+                    });
 
-                        // RECORD SALDO SEBELUM & SESUDAH SESUAI REQUEST BOS
-                        let nominalLengkap = targetNominal;
-                        let kodeUnik = nominalLengkap % 1000;
-                        let salSebelum = db[p.phone].saldo;
-                        let salSesudah = salSebelum + nominalLengkap;
-
-                        p.topup.status = 'Sukses';
-                        p.topup.saldo_sebelum = salSebelum;
-                        p.topup.saldo_sesudah = salSesudah;
-                        p.topup.kode_unik = kodeUnik;
-
-                        db[p.phone].saldo = salSesudah;
-                        db[p.phone].mutasi.push({ 
-                            id: 'TU' + Date.now(), 
-                            type: 'in', 
-                            amount: nominalLengkap, 
-                            desc: 'Topup QRIS Otomatis', 
-                            date: new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) 
-                        });
+                    if (matchTx) {
+                        if (!config.processedGopay) config.processedGopay = [];
                         
-                        changed = true;
+                        if (!config.processedGopay.includes(matchTx.transaction_id)) {
+                            config.processedGopay.push(matchTx.transaction_id);
+                            if(config.processedGopay.length > 500) config.processedGopay.shift();
+                            saveJSON(configFile, config);
 
-                        let uData = webUsers[p.phone] || {name: 'Unknown'};
-                        sendTeleNotif(`✅ *TOP UP QRIS OTOMATIS BERHASIL*\n\n👤 Nama: ${uData.name}\n📱 WA: ${p.phone}\n💰 Masuk: Rp ${nominalLengkap.toLocaleString('id-ID')}\n🔖 Ref GoPay: ${matchTx.transaction_id}`, 'topup');
+                            // RECORD SALDO SEBELUM & SESUDAH
+                            let nominalLengkap = targetNominal;
+                            let salSebelum = db[p.phone].saldo;
+                            let salSesudah = salSebelum + nominalLengkap;
+
+                            p.topup.status = 'Sukses';
+                            p.topup.saldo_sebelum = salSebelum;
+                            p.topup.saldo_sesudah = salSesudah;
+
+                            db[p.phone].saldo = salSesudah;
+                            db[p.phone].mutasi.push({ 
+                                id: 'TU' + Date.now(), 
+                                type: 'in', 
+                                amount: nominalLengkap, 
+                                desc: 'Topup QRIS Otomatis', 
+                                date: new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) 
+                            });
+                            
+                            changed = true;
+
+                            let uData = webUsers[p.phone] || {name: 'Unknown', email: 'Unknown'};
+                            
+                            sendTeleNotif(`✅ *TOP UP QRIS OTOMATIS BERHASIL*\n\n👤 Nama: ${censorName(uData.name)}\n✉️ Email: ${censorEmail(uData.email)}\n📱 WA: ${censorWa(p.phone)}\n💰 Masuk: Rp ${nominalLengkap.toLocaleString('id-ID')}\n🔖 Ref GoPay: ${matchTx.transaction_id}`, 'topup');
+                        }
                     }
                 }
             }
@@ -3633,7 +3685,7 @@ app.post('/api/topup/request', (req, res) => {
     let finalQrisString = null;
 
     if (method === 'QRIS Otomatis') {
-        expiry = Date.now() + 5 * 60 * 1000; 
+        expiry = Date.now() + 10*60*1000; 
         if (config.qrisStringCode) {
             finalQrisString = generateDynamicQris(config.qrisStringCode, nominal);
         } else {
@@ -3642,9 +3694,8 @@ app.post('/api/topup/request', (req, res) => {
     }
 
     let dateStr = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' });
-    
-    // RECORD AWAL UNTUK SALDO SEBELUM
     let salSebelum = db[phone].saldo;
+    let kodeUnik = nominal % 1000;
 
     const newTopup = { 
         id: 'TU' + Date.now(), 
@@ -3653,19 +3704,18 @@ app.post('/api/topup/request', (req, res) => {
         status: 'Proses', 
         date: dateStr, 
         expiry: expiry,
-        saldo_sebelum: salSebelum, // Disimpan saat request
-        kode_unik: nominal % 1000,
-        nama: uData.name,     // Disimpan untuk diakses di riwayat
-        email: uData.email,   // Disimpan untuk diakses di riwayat
-        wa: phone             // Disimpan untuk diakses di riwayat
+        saldo_sebelum: salSebelum,
+        kode_unik: kodeUnik,
+        nama: uData.name,
+        email: uData.email,
+        wa: phone
     };
     
     db[phone].topup.push(newTopup); 
     saveJSON(dbFile, db); 
     
-    let kodeUnik = nominal % 1000; 
     let depositAsli = nominal - kodeUnik;
-    let msgTopup = `⏳ *TOP UP MENUNGGU PEMBAYARAN* ⏳\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n⌚ Waktu: ${dateStr}\n🏦 Metode: ${method}\n💰 Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n🎫 Unik: ${kodeUnik}\n💵 Diterima: Rp ${nominal.toLocaleString('id-ID')}`;
+    let msgTopup = `⏳ *TOP UP MENUNGGU PEMBAYARAN* ⏳\n\n👤 Nama: ${censorName(uData.name)}\n📱 WA: ${censorWa(phone)}\n⌚ Waktu: ${dateStr}\n🏦 Metode: ${method}\n💰 Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n🎫 Unik: ${kodeUnik}\n💵 Diterima: Rp ${nominal.toLocaleString('id-ID')}`;
     
     sendTeleNotif(msgTopup, 'topup'); 
     res.json({ message: 'Top up direkam', qris_string: finalQrisString });
@@ -3731,8 +3781,8 @@ app.post('/api/admin/balance', async (req, res) => {
     if (action === 'add') { 
         let nominalLengkap = parseInt(amount);
         let salSesudah = salSebelum + nominalLengkap;
-        db[targetPhone].saldo = salSesudah; 
         
+        db[targetPhone].saldo = salSesudah; 
         db[targetPhone].mutasi.push({ 
             id: 'TRX'+Date.now(), 
             type: 'in', 
@@ -3756,7 +3806,7 @@ app.post('/api/admin/balance', async (req, res) => {
         }); 
         
         saveJSON(dbFile, db); 
-        sendTeleNotif(`✅ *TOP UP BERHASIL (ADMIN)*\n\n👤 Nama: ${webUsers[targetPhone].name}\n💰 Masuk: Rp ${nominalLengkap.toLocaleString('id-ID')}`, 'topup'); 
+        sendTeleNotif(`✅ *TOP UP BERHASIL (ADMIN)*\n\n👤 Nama: ${censorName(webUsers[targetPhone].name)}\n💰 Masuk: Rp ${nominalLengkap.toLocaleString('id-ID')}`, 'topup'); 
         res.json({ success: true, message: `\n✅ Saldo berhasil ditambah!` }); 
     } 
     else if (action === 'reduce') { 
@@ -3824,7 +3874,7 @@ app.post('/api/auth/verify', (req, res) => {
             saveJSON(dbFile, db); 
         }
         
-        sendTeleNotif(`🎊 *MEMBER BARU BERGABUNG* 🎊\n\n👤 Nama: ${webUsers[phone].name}\n📱 WA: ${phone}`, 'trx'); 
+        sendTeleNotif(`🎊 *MEMBER BARU BERGABUNG* 🎊\n\n👤 Nama: ${censorName(webUsers[phone].name)}\n📱 WA: ${censorWa(phone)}`, 'trx'); 
         res.json({ message: 'Sukses!' });
     } else { 
         res.status(400).json({ error: 'OTP Salah / Sesi tidak valid.' }); 
@@ -4016,7 +4066,7 @@ if (require.main === module) {
 }
 EOF
 
-echo "[PART 5 SELESAI DITULIS. TINGGAL 2 PART LAGI!]"
+echo "[PART 5 SELESAI DITULIS! TINGGAL MENU VPS DAN PENUTUP!]"
 echo "[6/8] Memperbarui Panel Manajemen VPS (V166 FULL UNCOMPRESSED)..."
 
 cat << 'EOF' > /usr/bin/menu
@@ -4739,7 +4789,14 @@ done
 EOF
 
 chmod +x /usr/bin/menu
-pm2 restart all > /dev/null 2>&1
+
+# ==========================================
+# MENGATUR AGAR MENU MUNCUL OTOMATIS SAAT LOGIN VPS
+# ==========================================
+if ! grep -q "/usr/bin/menu" ~/.bashrc; then
+    echo "/usr/bin/menu" >> ~/.bashrc
+fi
+
 echo "=========================================================="
 echo "  SISTEM WEB V166 BERHASIL DIPERBARUI SECARA PENUH!       "
 echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
@@ -4775,11 +4832,15 @@ echo -e "\033[0;32m=============================================================
 echo -e "\033[0;36mFITUR BARU DI V166 (THE PERFECT MASTERPIECE FULL UNCOMPRESSED):\033[0m"
 echo -e "  ✅ \033[1;33mPOP-UP QRIS MEWAH\033[0m Bayar QRIS nggak pindah halaman, plus ada Timer!"
 echo -e "  ✅ \033[1;33mNOMINAL TOP UP BARU\033[0m Pilihan instan 1K, 5K, 10K, 50K, 100K!"
-echo -e "  ✅ \033[1;33mSENSOR DATA MEMBER\033[0m Nama, Email, & WA di detail transaksi disensor (Fik***)!"
+echo -e "  ✅ \033[1;33mSENSOR DATA MEMBER\033[0m Nama, Email, & WA di detail transaksi & Tele disensor!"
 echo -e "  ✅ \033[1;33mBROADCAST SOSMED\033[0m Tembak pengumuman ke WA Channel & Telegram via VPS!"
-echo -e "  ✅ \033[1;33mAUTO QRIS DINAMIS\033[0m Generate QR & Cek Mutasi GoPay BHM otomatis!"
+echo -e "  ✅ \033[1;33mAUTO QRIS DINAMIS FIX\033[0m Bug API BHM libas tuntas, mutasi GoPay aman!"
+echo -e "  ✅ \033[1;33mMENU VPS AUTO-MEKAR\033[0m Buka Termius langsung disapa Panel tanpa ngetik!"
 echo -e "  ✅ \033[1;33mFULL UNCOMPRESSED\033[0m Kode rapi jali, no minify, gampang dibaca & diedit!"
 echo -e "\033[0;32m======================================================================\033[0m"
 echo -e "\033[1;37mCARA PENGGUNAAN SELANJUTNYA:\033[0m"
-echo -e "Ketik perintah: \033[1;32mmenu\033[0m (Lalu tekan Enter untuk buka Panel)"
+echo -e "Panel VPS sudah otomatis terbuka. Jika tertutup, ketik: \033[1;32mmenu\033[0m"
 echo -e "\033[0;32m======================================================================\033[0m"
+
+# MEMANGGIL MENU OTOMATIS SETELAH INSTALL SELESAI
+/usr/bin/menu
