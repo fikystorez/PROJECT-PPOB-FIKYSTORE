@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V165 (PERFECT OXFORD + UI QRIS MEWAH - PART 1)
+# DIGITAL FIKY STORE - V165 (PERFECT OXFORD + UI QRIS MEWAH)
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
@@ -685,8 +685,6 @@ cat << 'EOF' > public/forgot.html
 </body>
 </html>
 EOF
-echo "[PART 1 SELESAI BOSKUUU!]"
-echo "[PART 2 DITULIS: Memperbarui Dashboard dan Membuat Halaman QRIS Khusus...]"
 
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
@@ -1199,6 +1197,12 @@ cat << 'EOF' > public/dashboard.html
 </body>
 </html>
 EOF
+echo "[PART 1 SELESAI BOSKUUU!]"
+#!/bin/bash
+DIR_NAME="digital-fiky-store"
+cd "$HOME/$DIR_NAME"
+
+echo "[PART 2 DITULIS: Menyusun Halaman QRIS, Layanan, Riwayat, Info, Mutasi, dan Profil...]"
 
 cat << 'EOF' > public/qris.html
 <!DOCTYPE html>
@@ -1373,9 +1377,6 @@ cat << 'EOF' > public/qris.html
 </body>
 </html>
 EOF
-
-echo "[PART 2 SELESAI BOSKUUU!]"
-echo "[PART 3 DITULIS: Menyusun Halaman Layanan, Riwayat, dan Info...]"
 
 cat << 'EOF' > public/operator.html
 <!DOCTYPE html>
@@ -2298,9 +2299,6 @@ cat << 'EOF' > public/mutasi.html
 </html>
 EOF
 
-echo "[PART 3 SELESAI BOSKUUU!]"
-echo "[PART 4 DITULIS: Menyusun Profil, Riwayat, dan Backend Server...]"
-
 cat << 'EOF' > public/profile.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -2845,6 +2843,13 @@ cat << 'EOF' > public/riwayat.html
 </html>
 EOF
 
+echo "[PART 2 SELESAI BOSKUUU!]"
+#!/bin/bash
+DIR_NAME="digital-fiky-store"
+BOT_NAME="digital-fiky-bot"
+
+cd "$HOME/$DIR_NAME"
+
 echo "[5/8] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - FIX TIMEZONE & QRIS MEWAH)..."
 
 cat << 'EOF' > index.js
@@ -3140,7 +3145,12 @@ setInterval(async () => {
                 });
             });
             
-            let txs = res.data.data || res.data || [];
+            // 🔥 FIX BUG BHM GOPAY API: PROTEKSI TXS.FIND 🔥
+            let rawData = res.data.data || res.data;
+            let txs = Array.isArray(rawData) ? rawData : [];
+            
+            if (txs.length === 0) return; // Abaikan jika API error / kosong
+            // 🔥 ========================================= 🔥
             
             for (let p of pendingQris) {
                 let targetNominal = parseInt(p.topup.nominal);
@@ -3370,13 +3380,6 @@ if (require.main === module) {
     startBot(); 
 }
 EOF
-
-echo "[PART 4 SELESAI BOSKUUU!]"
-echo "[PART 5 DITULIS: Finalisasi Instalasi, Panel VPS, & Menyalakan Mesin!]"
-
-echo "Menginstal modul Node.js..."
-npm install --silent
-npm install -g pm2 > /dev/null 2>&1
 
 echo "[6/8] Memperbarui Panel Manajemen VPS (SUPER UNCOMPRESSED - V165 AUTO QRIS MEWAH)..."
 
@@ -4140,37 +4143,33 @@ done
 EOF
 
 chmod +x /usr/bin/menu
-pm2 restart all > /dev/null 2>&1
 
 echo "[8/8] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V165..."
 
 cd "$HOME/$DIR_NAME"
 
-# MENGHENTIKAN PROSES LAMA JIKA ADA
+echo "Menginstal npm dan menjalankan node module kembali..."
+npm install --silent > /dev/null 2>&1
 pm2 stop $BOT_NAME > /dev/null 2>&1
 pm2 delete $BOT_NAME > /dev/null 2>&1
 
-# MENJALANKAN SISTEM BARU DI BACKGROUND
 pm2 start index.js --name "$BOT_NAME"
 pm2 save > /dev/null 2>&1
 pm2 startup > /dev/null 2>&1
 
-# MEMBERSIHKAN SAMPAH CACHE BIAR VPS RINGAN
 npm cache clean --force > /dev/null 2>&1
-
-# MEMASTIKAN MENU PANEL BISA DIAKSES
-chmod +x /usr/bin/menu
 
 clear
 echo -e "\033[0;32m======================================================================\033[0m"
 echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V165 SELESAI! 🚀      \033[0m"
 echo -e "\033[0;32m======================================================================\033[0m"
 echo -e "\033[0;36mFITUR BARU DI V165 (PERFECT OXFORD + QRIS MEWAH & FIX TIMEZONE):\033[0m"
-echo -e "  ✅ \033[1;33mFIX BUG WAKTU MAINTENANCE\033[0m Waktu server dikunci ke zona WIB (Asia/Jakarta)!"
-echo -e "  ✅ \033[1;33mUI QRIS 1 Halaman Full\033[0m Desain mewah persis gambar, ada Timer 10 Menit!"
-echo -e "  ✅ \033[1;33mTombol Bagikan & Download\033[0m Lebih elegan, tidak lagi pakai popup kaku!"
-echo -e "  ✅ \033[1;33mAUTO QRIS BHM & CEK MUTASI\033[0m Pengecekan mutasi GoPay otomatis jalan!"
+echo -e "  ✅ \033[1;33mFIX BUG WAKTU MAINTENANCE\033[0m Waktu server dikunci ke zona WIB!"
+echo -e "  ✅ \033[1;33mUI QRIS 1 Halaman Full\033[0m Desain mewah persis gambar, ada Timer!"
+echo -e "  ✅ \033[1;33mTombol Bagikan & Download\033[0m Lebih elegan, tidak pakai popup kaku!"
+echo -e "  ✅ \033[1;33mAUTO QRIS BHM & CEK MUTASI\033[0m Pengecekan mutasi GoPay FIX!"
 echo -e "\033[0;32m======================================================================\033[0m"
 echo -e "\033[1;37mCARA PENGGUNAAN SELANJUTNYA:\033[0m"
 echo -e "Ketik perintah: \033[1;32mmenu\033[0m (Lalu tekan Enter untuk buka Panel)"
 echo -e "\033[0;32m======================================================================\033[0m"
+echo "Selesai"
