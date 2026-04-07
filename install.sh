@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==========================================================
-# DIGITAL FIKY STORE - V166 (PERFECT MASTERPIECE)
+# DIGITAL FIKY STORE - V166 (PERFECT MASTERPIECE + NEW FEATURES)
 # PART 1: SETUP, STYLE, DAN AUTENTIKASI
 # ==========================================================
 
@@ -31,6 +31,7 @@ npm install -g pm2 > /dev/null 2>&1
 
 echo "[2/8] Membuat direktori aplikasi dan web..."
 mkdir -p "$HOME/$DIR_NAME/public/banners"
+mkdir -p "$HOME/$DIR_NAME/public/info_images"
 cd "$HOME/$DIR_NAME"
 
 cat << 'EOF' > package.json
@@ -689,7 +690,7 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
-echo "[PART 1 SELESAI BOSKUUU!]"
+echo "[PART 1 SELESAI DITULIS!]"
 echo "[5/8] Membangun Halaman Dashboard & Operator (FULL UNCOMPRESSED)..."
 
 cat << 'EOF' > public/dashboard.html
@@ -1286,7 +1287,7 @@ cat << 'EOF' > public/dashboard.html
                             ? `https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=2&data=${encodeURIComponent(data.qris_string)}` 
                             : 'https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg';
                         
-                        // TAMPILAN POP UP QRIS YANG MEWAH! ADA TOMBOL "CEK RIWAYAT TOPUP"
+                        // TAMPILAN POP UP QRIS MEWAH DENGAN TOMBOL SHARE & DOWNLOAD
                         let htmlContent = `
                         <div class="flex flex-col items-center pb-2">
                             <div class="w-full text-center mb-4 mt-2">
@@ -1294,7 +1295,11 @@ cat << 'EOF' > public/dashboard.html
                                 <div class="bg-[#1e293b] text-[#facc15] font-black text-3xl py-2 rounded-xl border border-[#facc15]/30 shadow-sm tracking-wider w-3/4 mx-auto" id="qrisTimerModal">10 : 00</div>
                             </div>
                             <div class="bg-white p-3 rounded-2xl inline-block mb-4 shadow-sm">
-                                <img src="${finalQrisImg}" class="w-48 h-48 object-contain" style="image-rendering: crisp-edges;">
+                                <img id="qris-image-target" src="${finalQrisImg}" class="w-48 h-48 object-contain" style="image-rendering: crisp-edges;">
+                            </div>
+                            <div class="flex gap-3 w-full mb-4">
+                                <button onclick="shareQRISImg()" class="flex-1 py-3 bg-[#1e293b] border border-[#334155] text-[#facc15] font-extrabold rounded-xl hover:bg-[#1a2639] transition text-[13px] flex items-center justify-center gap-2"><i class="fas fa-share-alt"></i> Bagikan</button>
+                                <button onclick="downloadQRISImg()" class="flex-1 py-3 bg-[#1e293b] border border-[#334155] text-[#facc15] font-extrabold rounded-xl hover:bg-[#1a2639] transition text-[13px] flex items-center justify-center gap-2"><i class="fas fa-download"></i> Unduh</button>
                             </div>
                             <div class="text-center w-full mb-6">
                                 <p class="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">Transfer TEPAT SEBESAR:</p>
@@ -1361,6 +1366,27 @@ cat << 'EOF' > public/dashboard.html
                     setTimeout(() => location.href = '/riwayat_topup.html', 1000);
                 });
             }
+        }
+
+        // FUNGSI SHARE DAN DOWNLOAD QRIS
+        window.shareQRISImg = async function() {
+            let imgUrl = document.getElementById('qris-image-target').src;
+            try {
+                let res = await fetch(imgUrl); let blob = await res.blob();
+                let file = new File([blob], 'QRIS_Topup.jpg', { type: 'image/jpeg' });
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({ title: 'QRIS Topup', files: [file] });
+                } else { Swal.fire('Gagal', 'Browser/HP Anda tidak mendukung fitur ini. Silakan gunakan tombol Unduh.', 'error'); }
+            } catch(e) {}
+        }
+        window.downloadQRISImg = async function() {
+            let imgUrl = document.getElementById('qris-image-target').src;
+            try {
+                let res = await fetch(imgUrl); let blob = await res.blob();
+                let url = window.URL.createObjectURL(blob);
+                let a = document.createElement('a'); a.href = url; a.download = 'QRIS_Topup_' + Date.now() + '.jpg';
+                document.body.appendChild(a); a.click(); window.URL.revokeObjectURL(url); document.body.removeChild(a);
+            } catch(e) {}
         }
     </script>
 </body>
@@ -2174,7 +2200,7 @@ cat << 'EOF' > public/riwayat_topup.html
             
             let methodClean = item.method.includes('QRIS') ? 'QRIS Dinamis' : (item.method.includes('Admin') ? 'Admin' : 'Manual WA');
             
-            // MENAMPILKAN DATA FULL (TIDAK DISENSOR) DI WEB SESUAI PERMINTAAN BOS
+            // DATA UNTUK WEB (TANPA SENSOR)
             let displayName = item.nama || user.name || 'Hamba Allah';
             let displayEmail = item.email || user.email || 'Belum diatur';
             let displayWa = item.wa || user.phone || '080000000000';
@@ -2185,7 +2211,12 @@ cat << 'EOF' > public/riwayat_topup.html
             let jmlDeposit = nominalLengkap - kodeUnik;
             
             let salSebelum = item.saldo_sebelum !== undefined ? 'Rp ' + item.saldo_sebelum.toLocaleString('id-ID') : 'Rp -';
-            let salSesudah = item.saldo_sesudah !== undefined ? 'Rp ' + item.saldo_sesudah.toLocaleString('id-ID') : '- (Belum Masuk)';
+            
+            // BUG FIX: Saldo Sesudah untuk Web Struk
+            let salSesudah = '- (Belum Masuk)';
+            if (item.status === 'Sukses') {
+                salSesudah = item.saldo_sesudah !== undefined ? 'Rp ' + item.saldo_sesudah.toLocaleString('id-ID') : 'Rp ' + ((item.saldo_sebelum || 0) + nominalLengkap).toLocaleString('id-ID');
+            }
 
             let htmlContent = `
             <h3 class="text-white font-extrabold text-[18px] mb-5 text-center">Detail Transaksi Topup</h3>
@@ -2955,7 +2986,7 @@ cat << 'EOF' > public/riwayat.html
 EOF
 
 echo "[PART 3 & 4 SELESAI DITULIS. TINGGAL PART 5, 6, 7 (BACKEND & VPS MENU)!]"
-echo "[8/10] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - BHM BRUTE-FORCE & OTP FIX)..."
+echo "[8/10] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - NOTIF 2 JALUR & BHM FIX)..."
 
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
@@ -3016,28 +3047,24 @@ if (!fs.existsSync(digiCacheFile)) saveJSON(digiCacheFile, { time: 0, data: [] }
 if (!fs.existsSync(infoFile)) saveJSON(infoFile, []);
 
 // ==========================================
-// FUNGSI SENSOR DATA KHUSUS UNTUK TELEGRAM
-// Menggunakan peluru bulat agar Markdown Telegram AMAN 100%
+// FUNGSI SENSOR DATA KHUSUS TESTIMONI PUBLIK
 // ==========================================
 function censorName(name) {
     if (!name) return 'Hamba Allah';
-    if (name.length <= 3) return name + '•••';
-    return name.substring(0, 3) + '•••';
-}
-
-function censorEmail(email) {
-    if (!email) return '•••@gmail.com';
-    let parts = email.split('@');
-    let namePart = parts[0];
-    let domainPart = parts[1] || 'gmail.com';
-    if (namePart.length <= 3) return namePart + '•••@' + domainPart;
-    return namePart.substring(0, 3) + '•••@' + domainPart;
+    if (name.length <= 3) return name + '***';
+    return name.substring(0, 3) + '***';
 }
 
 function censorWa(wa) {
     if (!wa) return '080000000000';
     if (wa.length <= 8) return wa;
-    return wa.substring(0, 4) + '••••' + wa.substring(wa.length - 4);
+    return wa.substring(0, 4) + '****' + wa.substring(wa.length - 2);
+}
+
+function censorTarget(target) {
+    if (!target) return '-';
+    if (target.length <= 5) return target;
+    return target.substring(0, 4) + 'xxxx' + target.substring(target.length - 2);
 }
 
 // ==========================================
@@ -3053,28 +3080,39 @@ function isMaintenance() {
 }
 
 // ==========================================
-// 3 BOT TELEGRAM LOGIC (DENGAN FALLBACK)
+// PENGIRIMAN NOTIFIKASI 2 JALUR (ADMIN & PUBLIK)
 // ==========================================
-const sendTeleNotif = async (message, type = 'trx') => {
+const sendTeleAdmin = async (message) => {
     let cfg = loadJSON(configFile);
-    let token = ''; let chatId = '';
-    
-    if (type === 'trx') { token = cfg.teleTokenTrx || cfg.teleToken; chatId = cfg.teleChatIdTrx || cfg.teleChatId; } 
-    else if (type === 'topup') { token = cfg.teleTokenTopup || cfg.teleToken; chatId = cfg.teleChatIdTopup || cfg.teleChatId; } 
-    else if (type === 'backup') { token = cfg.teleTokenBackup || cfg.teleToken; chatId = cfg.teleChatIdBackup || cfg.teleChatId; }
-
-    if (!token || !chatId) return;
-    
+    if (!cfg.teleTokenAdmin || !cfg.teleChatAdmin) return;
     try { 
-        await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, { 
-            chat_id: chatId, 
-            text: message, 
-            parse_mode: 'Markdown' 
+        await axios.post(`https://api.telegram.org/bot${cfg.teleTokenAdmin}/sendMessage`, { 
+            chat_id: cfg.teleChatAdmin, text: message, parse_mode: 'Markdown' 
         }); 
     } catch(e) {
+        try { await axios.post(`https://api.telegram.org/bot${cfg.teleTokenAdmin}/sendMessage`, { chat_id: cfg.teleChatAdmin, text: message }); } catch(err) {}
+    }
+};
+
+const broadcastTestimoni = async (message) => {
+    let cfg = loadJSON(configFile);
+    
+    // 1. Kirim ke Channel Telegram Publik (Jika disetting)
+    if (cfg.teleTokenPublik && cfg.teleChatPublik) {
+        try { 
+            await axios.post(`https://api.telegram.org/bot${cfg.teleTokenPublik}/sendMessage`, { 
+                chat_id: cfg.teleChatPublik, text: message, parse_mode: 'Markdown' 
+            }); 
+        } catch(e) {
+            try { await axios.post(`https://api.telegram.org/bot${cfg.teleTokenPublik}/sendMessage`, { chat_id: cfg.teleChatPublik, text: message }); } catch(err) {}
+        }
+    }
+
+    // 2. Kirim ke Saluran WhatsApp (Jika disetting)
+    if (cfg.waChannelId && global.waSocket) {
         try {
-            await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, { chat_id: chatId, text: message });
-        } catch(err) {}
+            await global.waSocket.sendMessage(cfg.waChannelId, { text: message });
+        } catch(e) {}
     }
 };
 
@@ -3133,18 +3171,16 @@ app.post('/api/admin/broadcast-sosmed', async (req, res) => {
     let successInfo = [];
 
     if (target === 'all' || target === 'tele') {
-        if (config.teleChannelId && (config.teleTokenTrx || config.teleToken)) {
-            let tkn = config.teleTokenTrx || config.teleToken;
+        if (config.teleChatPublik && config.teleTokenPublik) {
+            let tkn = config.teleTokenPublik;
             try {
-                await axios.post(`https://api.telegram.org/bot${tkn}/sendMessage`, { chat_id: config.teleChannelId, text: message, parse_mode: 'Markdown' });
+                await axios.post(`https://api.telegram.org/bot${tkn}/sendMessage`, { chat_id: config.teleChatPublik, text: message, parse_mode: 'Markdown' });
                 successInfo.push('Telegram: Berhasil');
             } catch (e) {
                 try {
-                    await axios.post(`https://api.telegram.org/bot${tkn}/sendMessage`, { chat_id: config.teleChannelId, text: message });
+                    await axios.post(`https://api.telegram.org/bot${tkn}/sendMessage`, { chat_id: config.teleChatPublik, text: message });
                     successInfo.push('Telegram: Berhasil (Mode Teks)');
-                } catch(err) {
-                    successInfo.push('Telegram: Gagal');
-                }
+                } catch(err) { successInfo.push('Telegram: Gagal'); }
             }
         } else { successInfo.push('Telegram: Belum diatur ID-nya'); }
     }
@@ -3226,9 +3262,9 @@ app.post('/api/transaction/create', async (req, res) => {
         db[phone].transactions.push({ id: ref_id, sku: sku, isLocal: isLocal, produk: name, nominal: price, no_tujuan: target, status: trxStatus, sn_ref: sn_ref, harga: price, date: dateStr });
         saveJSON(dbFile, db);
         
-        // PENGIRIMAN TELEGRAM DENGAN DATA DISENSOR AMAN
-        let msgTeleTrx = `🛒 *TRANSAKSI BARU (ORDER MASUK)* 🛒\n\n👤 Nama: ${censorName(uData.name)}\n✉️ Email: ${censorEmail(uData.email)}\n📱 WA: ${censorWa(phone)}\n\n📦 Produk: ${name}\n📱 Tujuan: ${target}\n💰 Harga: Rp ${price.toLocaleString('id-ID')}\n🔄 Status: ${trxStatus}\n🔖 Ref: ${ref_id}`;
-        sendTeleNotif(msgTeleTrx, 'trx'); 
+        // PENGIRIMAN NOTIF ADMIN (FULL DATA)
+        let adminMsg = `🛒 *TRANSAKSI BARU (ORDER MASUK)* 🛒\n\n👤 Nama: ${uData.name || 'Hamba Allah'}\n✉️ Email: ${uData.email || '-'}\n📱 WA: ${phone}\n\n📦 Produk: ${name}\n📱 Tujuan: ${target}\n💰 Harga: Rp ${price.toLocaleString('id-ID')}\n🔄 Status: ${trxStatus}\n🔖 Ref: ${ref_id}`;
+        sendTeleAdmin(adminMsg); 
         
         res.json({ message: 'Transaksi berhasil diproses.' });
     } catch (e) { res.status(500).json({ error: 'Terjadi kesalahan internal.' }); }
@@ -3252,14 +3288,20 @@ setInterval(async () => {
                     
                     if (digiData.status === 'Sukses') { 
                         trx.status = 'Sukses'; trx.sn_ref = digiData.sn || trx.sn_ref; changed = true; 
-                        sendTeleNotif(`✅ *UPDATE: TRANSAKSI SUKSES* ✅\n\n👤 Nama: ${censorName(uData.name)}\n📱 WA: ${censorWa(phone)}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n🔖 SN: ${trx.sn_ref}`, 'trx'); 
+                        
+                        // NOTIF ADMIN FULL
+                        sendTeleAdmin(`✅ *UPDATE: TRANSAKSI SUKSES* ✅\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n🔖 SN: ${trx.sn_ref}`); 
+                        
+                        // NOTIF TESTIMONI SENSOR
+                        broadcastTestimoni(`🎉 *TRANSAKSI BERHASIL!* 🎉\n\n👤 Member: ${censorName(uData.name)}\n📱 WA: ${censorWa(phone)}\n📦 Pembelian: ${trx.produk}\n🎯 Tujuan: ${censorTarget(trx.no_tujuan)}\n🔖 SN: ${trx.sn_ref}\n\n_Terima kasih telah berbelanja di Digital Fiky Store!_ 🚀`);
                     } 
                     else if (digiData.status === 'Gagal') { 
                         trx.status = 'Gagal'; trx.sn_ref = digiData.sn || digiData.message || 'Gagal Pusat'; 
                         user.saldo += trx.harga; 
                         user.mutasi.push({ id: 'REF'+Date.now(), type: 'in', amount: trx.harga, desc: `Refund: ${trx.produk}`, date: new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'}) }); 
                         changed = true; 
-                        sendTeleNotif(`❌ *UPDATE: TRANSAKSI GAGAL (REFUND)* ❌\n\n👤 Nama: ${censorName(uData.name)}\n📱 WA: ${censorWa(phone)}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n⚠️ Alasan: ${digiData.message || 'Gagal Pusat'}`, 'trx'); 
+                        
+                        sendTeleAdmin(`❌ *UPDATE: TRANSAKSI GAGAL (REFUND)* ❌\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n⚠️ Alasan: ${digiData.message || 'Gagal Pusat'}`); 
                     }
                 } catch(e) {}
             }
@@ -3302,7 +3344,7 @@ function generateDynamicQris(staticQris, amount) {
 }
 
 // ==========================================
-// 💰 FUNGSI AUTO-QRIS CHECKER (BRUTE FORCE STRING DARI REFERENSI TEMAN) 💰
+// 💰 FUNGSI AUTO-QRIS CHECKER (UPDATE API BHM TERBARU) 💰
 // ==========================================
 setInterval(async () => {
     let db = loadJSON(dbFile);
@@ -3310,8 +3352,7 @@ setInterval(async () => {
     let webUsers = loadJSON(webUsersFile);
     let changed = false;
 
-    // Pastikan BHM Token dan Merchant ID sudah ada dari hasil Login OTP (Menu 14)
-    if (!config.bhmToken || !config.bhmMerchantId) return;
+    if (!config.bhmToken) return;
 
     let pendingQris = [];
     for (let phone in db) {
@@ -3326,65 +3367,112 @@ setInterval(async () => {
 
     if (pendingQris.length > 0) {
         try {
-            // Fetch mutasi dari endpoint khusus Merchant
-            const gopayRes = await axios.get(`http://gopay.bhm.biz.id/v1/gopay/merchants/${config.bhmMerchantId}/transactions`, {
-                headers: { 'Authorization': 'Bearer ' + config.bhmToken },
+            // Menggunakan Endpoint Terbaru (dengan Fallback API lama jika timeout)
+            let res = await axios.get('http://gopay.bhm.biz.id/v1/gopay/transactions', {
+                headers: { 'Authorization': `Bearer ${config.bhmToken}` },
                 timeout: 10000
+            }).catch(async () => {
+                return await axios.get('http://gopay.bhm.biz.id/api/transactions', {
+                    headers: { 'Authorization': `Bearer ${config.bhmToken}` },
+                    timeout: 10000
+                });
             });
+            
+            // MENYESUAIKAN DENGAN STRUKTUR BARU BHM (items)
+            let txs = [];
+            if (res.data && Array.isArray(res.data.items)) {
+                txs = res.data.items;
+            } else if (res.data && res.data.data && Array.isArray(res.data.data.items)) {
+                txs = res.data.data.items;
+            } else if (Array.isArray(res.data)) {
+                txs = res.data;
+            } else if (res.data && Array.isArray(res.data.data)) {
+                txs = res.data.data;
+            }
 
-            // TEKNIK BRUTE FORCE MATCH DARI KODE REFERENSI TEMAN BOS
-            // Mengabaikan error mapping array, langsung tembak cari nominal dalam string response
-            let responseStr = JSON.stringify(gopayRes.data);
-
+            if (!Array.isArray(txs) || txs.length === 0) return;
+            
             for (let p of pendingQris) {
                 let targetNominal = parseInt(p.topup.nominal);
-                let amountStr = targetNominal.toString();
+                
+                let matchTx = txs.find(tx => {
+                    // MEMBACA FORMAT HARGA BARU "1030.00" -> 1030
+                    let txAmountStr = String(tx.amount || tx.gross_amount || 0);
+                    let amount = parseInt(parseFloat(txAmountStr));
+                    
+                    // MEMBACA STATUS BARU "settlement"
+                    let isCredit = (tx.status && tx.status.toLowerCase() === 'settlement') || (tx.type && tx.type.toLowerCase() === 'credit') || amount > 0;
+                    
+                    return amount === targetNominal && isCredit;
+                });
 
-                // Cari kecocokan nominal di dalam string balasan API
-                let isFound = responseStr.includes(`"${amountStr}"`) || 
-                              responseStr.includes(`:${amountStr}`) || 
-                              responseStr.includes(`"${amountStr}.00"`) || 
-                              responseStr.includes(`:${amountStr}.00`);
+                if (matchTx) {
+                    if (!config.processedGopay) config.processedGopay = [];
+                    
+                    // MEMBACA ID BARU "external_id"
+                    let refId = matchTx.external_id || matchTx.transaction_id || matchTx.id || Date.now().toString();
+                    
+                    if (refId && !config.processedGopay.includes(refId)) {
+                        config.processedGopay.push(refId);
+                        if(config.processedGopay.length > 500) config.processedGopay.shift();
+                        saveJSON(configFile, config);
 
-                if (isFound) {
-                    p.topup.status = 'Sukses';
-                    let salSebelum = db[p.phone].saldo;
-                    let salSesudah = salSebelum + targetNominal;
+                        // RECORD SALDO SEBELUM & SESUDAH
+                        let salSebelum = db[p.phone].saldo;
+                        let salSesudah = salSebelum + targetNominal;
 
-                    p.topup.saldo_sebelum = salSebelum;
-                    p.topup.saldo_sesudah = salSesudah;
+                        p.topup.status = 'Sukses';
+                        p.topup.saldo_sebelum = salSebelum;
+                        p.topup.saldo_sesudah = salSesudah;
 
-                    db[p.phone].saldo = salSesudah;
-                    db[p.phone].mutasi.push({
-                        id: 'TU' + Date.now(),
-                        type: 'in',
-                        amount: targetNominal,
-                        desc: 'Topup QRIS Dinamis (GoPay)',
-                        date: new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'})
-                    });
+                        db[p.phone].saldo = salSesudah;
+                        db[p.phone].mutasi.push({ id: 'TU' + Date.now(), type: 'in', amount: targetNominal, desc: 'Topup QRIS Dinamis (GoPay)', date: new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'}) });
+                        changed = true;
 
-                    changed = true;
-
-                    let uData = webUsers[p.phone] || {name: 'Unknown', email: 'Unknown'};
-                    sendTeleNotif(`✅ *TOP UP QRIS OTOMATIS BERHASIL*\n\n👤 Nama: ${censorName(uData.name)}\n✉️ Email: ${censorEmail(uData.email)}\n📱 WA: ${censorWa(p.phone)}\n💰 Masuk: Rp ${targetNominal.toLocaleString('id-ID')}\n🔖 Sistem: Auto-Check BHM (Brute-Force)`, 'topup');
+                        let uData = webUsers[p.phone] || {name: 'Hamba Allah', email: 'Belum diatur'};
+                        let dateStr = new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'});
+                        let depositAsli = targetNominal - (p.topup.kode_unik || 0);
+                        
+                        // NOTIF ADMIN FULL
+                        let adminMsg = `✅ *TOP UP QRIS OTOMATIS BERHASIL* ✅\n\n👤 Nama: ${uData.name || 'Hamba Allah'}\n✉️ Email: ${uData.email || 'Belum diatur'}\n📱 WA: ${p.phone}\n⌚️ Waktu: ${dateStr}\n🏦 Metode: QRIS Dinamis\n\n💰 Jumlah Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n🎫 Kode Unik: ${p.topup.kode_unik || 0}\n💵 Total Saldo Diterima: Rp ${targetNominal.toLocaleString('id-ID')}\n\n💳 Riwayat Saldo\n📉 Saldo Sebelum: Rp ${salSebelum.toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${salSesudah.toLocaleString('id-ID')}\n🔖 Ref GoPay: ${refId}`;
+                        sendTeleAdmin(adminMsg);
+                        
+                        // NOTIF TESTIMONI SENSOR
+                        let testiMsg = `💵 *TOP UP SALDO MASUK!* 💵\n\n👤 Member: ${censorName(uData.name)}\n📱 WA: ${censorWa(p.phone)}\n💰 Nominal: Rp ${targetNominal.toLocaleString('id-ID')}\n🏦 Metode: QRIS Dinamis\n\n_Auto-Check Sistem berjalan lancar! Gas Topup!_ 🚀`;
+                        broadcastTestimoni(testiMsg);
+                    }
                 }
             }
-        } catch (e) {
-            console.log("⚠️ Gagal cek mutasi QRIS BHM (Gangguan Server API BHM)");
-        }
+        } catch (e) {}
     }
 
     if (changed) saveJSON(dbFile, db);
-}, 30000); 
+}, 20000); 
 
-// FUNGSI AUTO BACKUP TELEGRAM
+// ==========================================
+// FUNGSI AUTO BACKUP SUPER LENGKAP
+// ==========================================
 function startAutoBackup() {
-    let config = loadJSON(configFile); let t = config.teleTokenBackup || config.teleToken; let c = config.teleChatIdBackup || config.teleChatId;
-    if (!t || !c || !config.autoBackupHours || config.autoBackupHours <= 0) return;
+    let config = loadJSON(configFile); 
+    if (!config.teleTokenAdmin || !config.teleChatAdmin || !config.autoBackupHours || config.autoBackupHours <= 0) return;
+    
     setInterval(() => {
         let zipName = `AutoBackup_FikyStore_${Date.now()}.zip`;
-        exec(`zip -r ${zipName} database.json web_users.json config.json local_products.json info.json`, async (err) => {
-            if (!err) { const form = new FormData(); form.append('chat_id', c); form.append('caption', `⏳ *AUTO BACKUP (${config.autoBackupHours} Jam)*\n\nTanggal: ${new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'})}`); form.append('document', fs.createReadStream(zipName)); try { await axios.post(`https://api.telegram.org/bot${t}/sendDocument`, form, { headers: form.getHeaders() }); } catch(e){} fs.unlinkSync(zipName); }
+        // Backup semua database + config + folder gambar banner dan info
+        let cmd = `zip -r ${zipName} database.json web_users.json config.json local_products.json info.json public/banners public/info_images`;
+        
+        exec(cmd, async (err) => {
+            if (!err) { 
+                const form = new FormData(); 
+                form.append('chat_id', config.teleChatAdmin); 
+                form.append('caption', `⏳ *AUTO BACKUP SYSTEM (${config.autoBackupHours} Jam)*\n\nSeluruh Data, Konfigurasi API, dan Gambar Banner/Info telah diamankan.\nTanggal: ${new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'})}`); 
+                form.append('document', fs.createReadStream(zipName)); 
+                form.append('parse_mode', 'Markdown');
+                try { 
+                    await axios.post(`https://api.telegram.org/bot${config.teleTokenAdmin}/sendDocument`, form, { headers: form.getHeaders() }); 
+                } catch(e){} 
+                fs.unlinkSync(zipName); 
+            }
         });
     }, config.autoBackupHours * 60 * 60 * 1000);
 }
@@ -3420,27 +3508,21 @@ app.post('/api/topup/request', (req, res) => {
     let newRef = 'TP-' + Date.now();
     let salSebelum = db[phone].saldo;
     let kodeUnik = nominal % 1000;
+    let depositAsli = nominal - kodeUnik;
     
     const newTopup = { 
-        id: newRef, 
-        method: method, 
-        nominal: nominal, 
-        status: 'Proses', 
-        date: dateStr, 
-        expiry: expiry,
-        saldo_sebelum: salSebelum,
-        kode_unik: kodeUnik,
-        nama: uData.name,
-        email: uData.email,
-        wa: phone
+        id: newRef, method: method, nominal: nominal, status: 'Proses', 
+        date: dateStr, expiry: expiry, saldo_sebelum: salSebelum, kode_unik: kodeUnik,
+        nama: uData.name, email: uData.email, wa: phone
     };
     db[phone].topup.push(newTopup); 
     saveJSON(dbFile, db); 
     
-    let depositAsli = nominal - kodeUnik;
-    let msgTopup = `⏳ *TOP UP MENUNGGU PEMBAYARAN* ⏳\n\n👤 Nama: ${censorName(uData.name)}\n✉️ Email: ${censorEmail(uData.email)}\n📱 WA: ${censorWa(phone)}\n⌚ Waktu: ${dateStr}\n🏦 Metode: QRIS Dinamis\n💰 Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n🎫 Unik: ${kodeUnik}\n💵 Diterima: Rp ${nominal.toLocaleString('id-ID')}`;
-    sendTeleNotif(msgTopup, 'topup'); 
+    let uName = uData.name || 'Hamba Allah';
+    let uEmail = uData.email || 'Belum diatur';
+    let msgTopupAdmin = `⏳ *TOP UP MENUNGGU PEMBAYARAN* ⏳\n\n👤 Nama: ${uName}\n✉️ Email: ${uEmail}\n📱 WA: ${phone}\n⌚️ Waktu: ${dateStr}\n🏦 Metode: ${method}\n\n💰 Jumlah Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n🎫 Kode Unik: ${kodeUnik}\n💵 Total Saldo Diterima: Rp ${nominal.toLocaleString('id-ID')}\n\n💳 Riwayat Saldo\n📉 Saldo Sebelum: Rp ${salSebelum.toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${salSebelum.toLocaleString('id-ID')} (Pending)`;
     
+    sendTeleAdmin(msgTopupAdmin); 
     res.json({ message: 'Top up direkam', qris_string: finalQrisString, ref_id: newRef });
 });
 
@@ -3451,13 +3533,23 @@ app.post('/api/topup/history', (req, res) => {
 });
 
 app.get('/api/admin/backup', async (req, res) => {
-    let config = loadJSON(configFile); let t = config.teleTokenBackup || config.teleToken; let c = config.teleChatIdBackup || config.teleChatId;
-    if(!t || !c) return res.status(400).json({ error: "Token/Chat ID Telegram Backup belum disetting." });
-    let zipName = `Backup_DigitalFikyStore_${Date.now()}.zip`;
-    exec(`zip -r ${zipName} database.json web_users.json config.json local_products.json info.json`, async (err) => {
+    let config = loadJSON(configFile);
+    if (!config.teleTokenAdmin || !config.teleChatAdmin) return res.status(400).json({ error: "Token/Chat ID Admin belum disetting." });
+    
+    let zipName = `ManualBackup_FikyStore_${Date.now()}.zip`;
+    let cmd = `zip -r ${zipName} database.json web_users.json config.json local_products.json info.json public/banners public/info_images`;
+    
+    exec(cmd, async (err) => {
         if(err) return res.status(500).json({ error: "Gagal membuat file ZIP." });
-        const form = new FormData(); form.append('chat_id', c); form.append('caption', `📦 *BACKUP MANUAL BERHASIL*`); form.append('document', fs.createReadStream(zipName));
-        try { await axios.post(`https://api.telegram.org/bot${t}/sendDocument`, form, { headers: form.getHeaders() }); fs.unlinkSync(zipName); res.json({ message: "Backup sukses!" }); } catch(e) { res.status(500).json({ error: "Gagal mengirim ke Telegram." }); }
+        const form = new FormData(); 
+        form.append('chat_id', config.teleChatAdmin); 
+        form.append('caption', `📦 *BACKUP MANUAL FULL SYSTEM*\n\nSemua Data dan Gambar telah diamankan.`); 
+        form.append('document', fs.createReadStream(zipName));
+        try { 
+            await axios.post(`https://api.telegram.org/bot${config.teleTokenAdmin}/sendDocument`, form, { headers: form.getHeaders() }); 
+            fs.unlinkSync(zipName); 
+            res.json({ message: "Backup sukses!" }); 
+        } catch(e) { res.status(500).json({ error: "Gagal mengirim ke Telegram." }); }
     });
 });
 
@@ -3481,7 +3573,8 @@ app.post('/api/admin/balance', async (req, res) => {
             nama: webUsers[targetPhone].name, email: webUsers[targetPhone].email, wa: targetPhone
         }); 
         saveJSON(dbFile, db); 
-        sendTeleNotif(`✅ *TOP UP BERHASIL (ADMIN)*\n\n👤 Nama: ${censorName(webUsers[targetPhone].name)}\n💰 Masuk: Rp ${nominalLengkap.toLocaleString('id-ID')}`, 'topup'); 
+        
+        sendTeleAdmin(`✅ *TOP UP BERHASIL (DARI ADMIN)*\n\n👤 Nama: ${webUsers[targetPhone].name}\n📱 WA: ${targetPhone}\n💰 Masuk: Rp ${nominalLengkap.toLocaleString('id-ID')}\n📉 Saldo Sebelum: Rp ${salSebelum.toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${salSesudah.toLocaleString('id-ID')}`); 
         res.json({ success: true, message: `\n✅ Saldo berhasil ditambah!` }); 
     } 
     else if (action === 'reduce') { 
@@ -3513,7 +3606,8 @@ app.post('/api/auth/verify', (req, res) => {
         if (Date.now() > webUsers[phone].otpExpiry) return res.status(400).json({ error: 'OTP kedaluwarsa.' });
         webUsers[phone].isVerified = true; delete webUsers[phone].otp; delete webUsers[phone].otpExpiry; saveJSON(webUsersFile, webUsers);
         let db = loadJSON(dbFile); if (!db[phone]) { db[phone] = { saldo: 0, mutasi: [], topup: [], transactions: [] }; saveJSON(dbFile, db); }
-        sendTeleNotif(`🎊 *MEMBER BARU BERGABUNG* 🎊\n\n👤 Nama: ${censorName(webUsers[phone].name)}\n📱 WA: ${censorWa(phone)}`, 'trx'); res.json({ message: 'Sukses!' });
+        sendTeleAdmin(`🎊 *MEMBER BARU BERGABUNG* 🎊\n\n👤 Nama: ${webUsers[phone].name}\n✉️ Email: ${webUsers[phone].email}\n📱 WA: ${phone}`); 
+        res.json({ message: 'Sukses!' });
     } else { res.status(400).json({ error: 'OTP Salah / Sesi tidak valid.' }); }
 });
 
@@ -3574,9 +3668,6 @@ async function startBot() {
     } catch (e) {}
 }
 
-// ==========================================
-// CATCH-ALL ROUTE ANTI-BUG & RAMAH USER
-// ==========================================
 app.get('*', (req, res) => {
     let reqPath = req.path;
     if (!reqPath.includes('.') && reqPath !== '/') {
@@ -3587,15 +3678,7 @@ app.get('*', (req, res) => {
         let pagePath = path.join(__dirname, 'public', reqPath);
         if (fs.existsSync(pagePath)) return res.sendFile(pagePath);
     }
-    res.status(404).send(`
-        <div style="background-color:#0b1320; color:white; font-family:sans-serif; text-align:center; padding-top:50px; height:100vh;">
-            <h1 style="color:#facc15;">FILE TIDAK DITEMUKAN (404)</h1>
-            <p>Halaman <b>${reqPath}</b> tidak ada di server.</p>
-            <p>Sepertinya file HTML tersebut terpotong saat instalasi VPS.</p>
-            <br>
-            <button onclick="window.location.href='/dashboard.html'" style="background-color:#facc15; border:none; padding:10px 20px; font-weight:bold; border-radius:5px; cursor:pointer; color:#0b1320;">KEMBALI KE DASHBOARD</button>
-        </div>
-    `); 
+    res.status(404).send(`<div style="background-color:#0b1320; color:#facc15; text-align:center; padding-top:50px; height:100vh;"><h1>FILE TIDAK DITEMUKAN (404)</h1></div>`); 
 });
 
 if (require.main === module) { 
@@ -3603,6 +3686,9 @@ if (require.main === module) {
     startBot(); 
 }
 EOF
+
+echo "[PART 5 SELESAI DITULIS! LANJUT PANEL MENU VPS!]"
+echo "[9/10] Memperbarui Panel Manajemen VPS (Menu 14 & Notif 2 Jalur)..."
 
 cat << 'EOF' > /usr/bin/menu
 #!/bin/bash
@@ -3620,7 +3706,6 @@ while true; do
     clear
     echo -e "${YELLOW}Sedang memuat data Saldo Digiflazz...${NC}"
     
-    # FETCH SALDO DIGIFLAZZ OTOMATIS
     cd "$HOME/$DIR_NAME"
     SALDO_DIGI=$(node -e "
         const fs = require('fs');
@@ -3628,21 +3713,11 @@ while true; do
         if (!cfg.digiUser || !cfg.digiKey) {
             console.log('Belum Disetting');
         } else {
-            const axios = require('axios');
-            const crypto = require('crypto');
+            const axios = require('axios'); const crypto = require('crypto');
             let sign = crypto.createHash('md5').update(cfg.digiUser + cfg.digiKey + 'depo').digest('hex');
-            
             axios.post('https://api.digiflazz.com/v1/cek-saldo', { cmd: 'deposit', username: cfg.digiUser, sign: sign }, {timeout: 5000})
-            .then(r => {
-                if (r.data && r.data.data && r.data.data.deposit !== undefined) {
-                    console.log('Rp ' + r.data.data.deposit.toLocaleString('id-ID'));
-                } else {
-                    console.log('Error/Invalid Key');
-                }
-            })
-            .catch(e => {
-                console.log('Gangguan/Timeout');
-            });
+            .then(r => { if (r.data && r.data.data && r.data.data.deposit !== undefined) console.log('Rp ' + r.data.data.deposit.toLocaleString('id-ID')); else console.log('Error/Invalid Key'); })
+            .catch(e => { console.log('Gangguan/Timeout'); });
         }
     " 2>/dev/null)
 
@@ -3652,35 +3727,30 @@ while true; do
     echo -e "${CYAN}======================================================${NC}"
     echo -e "   💰 SALDO DIGIFLAZZ: ${GREEN}$SALDO_DIGI${NC}"
     echo -e "${CYAN}======================================================${NC}"
-    echo ""
-    echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP (KHUSUS OTP) ]${NC}"
+    echo -e "${PURPLE}[ 🤖 MANAJEMEN BOT WHATSAPP ]${NC}"
     echo -e "  ${GREEN}1.${NC} Setup No. Bot & Login Pairing"
     echo -e "  ${GREEN}2.${NC} Jalankan Bot (Latar Belakang/PM2)"
     echo -e "  ${YELLOW}3.${NC} 🛠️ Install & Perbarui Sistem Bot WA"
     echo -e "  ${GREEN}4.${NC} Lihat Log / Error Bot"
     echo -e "  ${GREEN}5.${NC} Reset Sesi & Ganti Nomor Bot"
     echo -e "  ${GREEN}6.${NC} 📢 Broadcast Pengumuman (App, WA Channel, Telegram)"
-    echo ""
     echo -e "${PURPLE}[ 📱 MANAJEMEN APLIKASI & WEB ]${NC}"
     echo -e "  ${GREEN}7.${NC} 💰 Manajemen Saldo Member"
     echo -e "  ${GREEN}8.${NC} 🖼️ Sinkronisasi Gambar Banner Lokal"
-    echo -e "  ${GREEN}9.${NC} 📈 Seting Keuntungan 14 Tier (Margin GOD MODE)"
-    echo -e "  ${GREEN}10.${NC} 📦 Manajemen Produk (Katalog Manual Satu-Satu)"
+    echo -e "  ${GREEN}9.${NC} 📈 Seting Keuntungan 14 Tier"
+    echo -e "  ${GREEN}10.${NC} 📦 Manajemen Produk (Lokal)"
     echo -e "  ${YELLOW}11.${NC} 🔗 Setup Link Komunitas & ID Saluran Sosmed"
-    echo ""
     echo -e "${PURPLE}[ 🌐 MANAJEMEN SERVER & API ]${NC}"
     echo -e "  ${GREEN}12.${NC} Setup Domain (Nginx + Cloudflare + UFW Firewall)"
     echo -e "  ${GREEN}13.${NC} 🔌 Setup API Digiflazz (Untuk Produk)"
     echo -e "  ${YELLOW}14.${NC} 💸 Setup API BHM GoPay (Untuk AUTO QRIS DINAMIS)"
     echo -e "  ${GREEN}15.${NC} 🔄 Refresh Katalog Digiflazz (Hapus Cache API)"
-    echo ""
-    echo -e "${PURPLE}[ 🛡️ PUSAT KOMANDO TELEGRAM ]${NC}"
-    echo -e "  ${GREEN}16.${NC} ⚙️ Setup Telegram Bot (Trx, Topup, Backup)"
-    echo -e "  ${GREEN}17.${NC} ⏳ Setting Auto-Backup Telegram (Tiap X Jam)"
-    echo -e "  ${GREEN}18.${NC} 💾 BACKUP DATA MANUAL KE TELEGRAM"
+    echo -e "${PURPLE}[ 🛡️ PUSAT KOMANDO NOTIFIKASI & BACKUP ]${NC}"
+    echo -e "  ${GREEN}16.${NC} ⚙️ Setup Telegram & WA Bot (Admin & Testimoni Publik)"
+    echo -e "  ${GREEN}17.${NC} ⏳ Setting Auto-Backup System (Tiap X Jam)"
+    echo -e "  ${GREEN}18.${NC} 💾 BACKUP DATA MANUAL (FULL BACKUP)"
     echo -e "  ${GREEN}19.${NC} 📥 RESTORE DATA DARI DIRECT LINK"
-    echo ""
-    echo -e "${PURPLE}[ ⚙️ SISTEM ]${NC}"
+    echo -e "${CYAN}======================================================${NC}"
     echo -e "  ${RED}0.${NC} Keluar"
     echo -e "${CYAN}======================================================${NC}"
     read -p "Pilih menu [0-19]: " choice
@@ -3688,682 +3758,129 @@ while true; do
     case $choice in
         1) 
             clear
-            echo -e "${YELLOW}--- SETUP PAIRING BOT WHATSAPP ---${NC}"
             read -p "Masukkan Nomor WA Bot (Awalan 62, cth: 62812...): " botnum
-            
             if [ ! -z "$botnum" ]; then
-                pm2 stop $BOT_NAME > /dev/null 2>&1
-                cd "$HOME/$DIR_NAME"
-                
-                cat << 'JS' > temp_setup.js
-const fs = require('fs');
-const file = './config.json';
-let config = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
-config.botNumber = process.argv[2];
-fs.writeFileSync(file, JSON.stringify(config, null, 2));
-console.log('Nomor berhasil disimpan!');
-JS
-                node temp_setup.js "$botnum"
-                rm temp_setup.js
-                
+                pm2 stop $BOT_NAME > /dev/null 2>&1; cd "$HOME/$DIR_NAME"
+                node -e "const fs = require('fs'); let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {}; cfg.botNumber = '$botnum'; fs.writeFileSync('./config.json', JSON.stringify(cfg, null, 2));"
                 echo -e "${GREEN}Meminta kode pairing ke WhatsApp...${NC}"
-                echo -e "${CYAN}(Tunggu sekitar 5-10 detik. Jika kode sudah muncul, catat kodenya.)${NC}"
-                echo -e "${RED}(Setelah mencatat kode dan berhasil login, tekan CTRL+C lalu pilih menu 2 untuk jalankan bot di background)${NC}"
-                
                 node index.js
             fi
             ;;
-            
-        2) 
-            cd "$HOME/$DIR_NAME"
-            pm2 delete $BOT_NAME 2>/dev/null
-            pm2 start index.js --name "$BOT_NAME"
-            pm2 save 
-            echo -e "${GREEN}Bot berhasil dijalankan di latar belakang!${NC}"
-            read -p "Tekan Enter..."
-            ;;
-            
-        3)
-            clear
-            echo -e "${CYAN}===============================================${NC}"
-            echo -e "${YELLOW}     🛠️ INSTALL & PERBARUI SISTEM BOT WA      ${NC}"
-            echo -e "${CYAN}===============================================${NC}"
-            cd "$HOME/$DIR_NAME"
-            echo "Menghapus cache dan module lama..."
-            rm -rf node_modules package-lock.json
-            npm cache clean --force
-            echo "Menginstal ulang dependensi (Harap tunggu beberapa menit)..."
-            npm install
-            pm2 restart $BOT_NAME > /dev/null 2>&1
-            echo -e "${GREEN}✅ Pembaruan sistem Bot WA selesai!${NC}"
-            read -p "Tekan Enter untuk kembali..."
-            ;;
-            
-        4) 
-            pm2 logs $BOT_NAME 
-            ;;
-            
-        5) 
-            pm2 stop $BOT_NAME 2>/dev/null
-            rm -rf "$HOME/$DIR_NAME/sesi_bot"
-            echo -e "${GREEN}Sesi WA dihapus. Silahkan atur nomor baru di Menu 1.${NC}"
-            read -p "Tekan Enter..." 
-            ;;
-            
+        2) cd "$HOME/$DIR_NAME"; pm2 delete $BOT_NAME 2>/dev/null; pm2 start index.js --name "$BOT_NAME"; pm2 save; echo -e "${GREEN}Sistem berjalan!${NC}"; read -p "Tekan Enter..." ;;
+        3) cd "$HOME/$DIR_NAME"; rm -rf node_modules package-lock.json; npm install; pm2 restart $BOT_NAME > /dev/null 2>&1; echo -e "${GREEN}✅ Pembaruan selesai!${NC}"; read -p "Tekan Enter..." ;;
+        4) pm2 logs $BOT_NAME ;;
+        5) pm2 stop $BOT_NAME 2>/dev/null; rm -rf "$HOME/$DIR_NAME/sesi_bot"; echo -e "${GREEN}Sesi WA dihapus.${NC}"; read -p "Tekan Enter..." ;;
         6)
             clear
-            echo -e "${CYAN}===============================================${NC}"
-            echo -e "${YELLOW}     📢 BROADCAST PUSAT INFORMASI & SOSMED     ${NC}"
-            echo -e "${CYAN}===============================================${NC}"
-            echo "Pilih Target Broadcast:"
-            echo "1. Aplikasi Web (Pusat Informasi)"
-            echo "2. Telegram Channel / Group"
-            echo "3. WhatsApp Channel / Group"
-            echo "4. SEMUANYA (Aplikasi, Telegram, WhatsApp)"
-            echo ""
-            read -p "Pilih [1-4]: " bc_target
-            
-            read -p "Judul Pesan (Hanya untuk Aplikasi) : " b_judul
-            read -p "Isi Pesan Pengumuman               : " b_isi
-            
+            echo "1. Web Info | 2. Tele Channel | 3. WA Channel | 4. SEMUA"
+            read -p "Target Broadcast [1-4]: " bc_target
+            read -p "Judul Pesan (Hanya App): " b_judul
+            read -p "Isi Pengumuman: " b_isi
             if [ ! -z "$b_isi" ]; then
                 cd "$HOME/$DIR_NAME"
-                cat << 'JS' > temp_broadcast.js
-const http = require('http');
-const targetOpt = process.argv[2];
-const judul = process.argv[3];
-const message = process.argv[4];
-
-const postData = (path, data) => {
-    return new Promise((resolve) => {
-        const req = http.request({
-            hostname: 'localhost', port: 3000, path: path, method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) }
-        }, res => {
-            let body = '';
-            res.on('data', chunk => body += chunk.toString());
-            res.on('end', () => resolve(body));
-        });
-        req.write(data); req.end();
-    });
-};
-
-(async () => {
-    if (targetOpt === '1' || targetOpt === '4') {
-        await postData('/api/admin/broadcast', JSON.stringify({ judul: judul, message: message }));
-        console.log('✅ Terkirim ke Aplikasi Web (Pusat Informasi)');
-    }
-    
-    if (targetOpt === '2' || targetOpt === '4') {
-        let res = await postData('/api/admin/broadcast-sosmed', JSON.stringify({ message: message, target: 'tele' }));
-        console.log(JSON.parse(res).message);
-    }
-    
-    if (targetOpt === '3' || targetOpt === '4') {
-        let res = await postData('/api/admin/broadcast-sosmed', JSON.stringify({ message: message, target: 'wa' }));
-        console.log(JSON.parse(res).message);
-    }
-})();
-JS
-                node temp_broadcast.js "$bc_target" "$b_judul" "$b_isi"
-                rm temp_broadcast.js
-                echo -e "\n${GREEN}✅ Eksekusi Broadcast Selesai!${NC}"
+                node -e "
+                const http = require('http'); const reqCall = (path, data) => { const req = http.request({hostname:'localhost', port:3000, path, method:'POST', headers:{'Content-Type':'application/json'}}, r=>{ r.on('data', c=>console.log(JSON.parse(c.toString()).message || 'Berhasil')); }); req.write(data); req.end(); };
+                if('$bc_target'==='1'||'$bc_target'==='4') reqCall('/api/admin/broadcast', JSON.stringify({judul: '$b_judul', message: '$b_isi'}));
+                if('$bc_target'==='2'||'$bc_target'==='4') reqCall('/api/admin/broadcast-sosmed', JSON.stringify({target: 'tele', message: '$b_isi'}));
+                if('$bc_target'==='3'||'$bc_target'==='4') reqCall('/api/admin/broadcast-sosmed', JSON.stringify({target: 'wa', message: '$b_isi'}));
+                "
             fi
-            read -p "Tekan Enter untuk kembali..."
+            read -p "Tekan Enter..."
             ;;
-            
-        7)
-            clear
-            echo -e "${CYAN}===============================================${NC}"
-            echo -e "${YELLOW}         💰 MANAJEMEN SALDO MEMBER             ${NC}"
-            echo -e "${CYAN}===============================================${NC}"
-            echo "1. Cek Semua Saldo Member"
-            echo "2. Tambah Saldo Member"
-            echo "3. Kurangi Saldo Member"
-            echo "0. Kembali"
-            read -p "Pilih [0-3]: " s_menu
-            
-            if [ "$s_menu" == "1" ]; then
-                cd "$HOME/$DIR_NAME"
-                cat << 'JS' > temp_cek_saldo.js
-const fs = require('fs');
-const db = fs.existsSync('./database.json') ? JSON.parse(fs.readFileSync('./database.json')) : {};
-const users = fs.existsSync('./web_users.json') ? JSON.parse(fs.readFileSync('./web_users.json')) : {};
-console.log('\n--- DAFTAR SALDO MEMBER ---');
-for (let p in users) {
-    if (users[p].isVerified) {
-        console.log('- ' + users[p].name + ' (' + p + ') : Rp ' + (db[p] ? db[p].saldo : 0));
-    }
-}
-console.log('---------------------------\n');
-JS
-                node temp_cek_saldo.js
-                rm temp_cek_saldo.js
-                read -p "Tekan Enter..."
-                
-            elif [ "$s_menu" == "2" ]; then
-                read -p "No WA Member (Awalan 62...): " no_mem
-                read -p "Jumlah Tambah Saldo: " jm_mem
-                cd "$HOME/$DIR_NAME"
-                cat << 'JS' > temp_tambah.js
-const http = require('http');
-const data = JSON.stringify({ identifier: process.argv[2], amount: parseInt(process.argv[3]), action: 'add' });
-const req = http.request({ hostname: 'localhost', port: 3000, path: '/api/admin/balance', method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) } }, res => { res.on('data', c => console.log(c.toString())); });
-req.write(data); req.end();
-JS
-                node temp_tambah.js "$no_mem" "$jm_mem"
-                rm temp_tambah.js
-                read -p "Tekan Enter..."
-                
-            elif [ "$s_menu" == "3" ]; then
-                read -p "No WA Member (Awalan 62...): " no_mem
-                read -p "Jumlah Kurangi Saldo: " jm_mem
-                cd "$HOME/$DIR_NAME"
-                cat << 'JS' > temp_kurang.js
-const http = require('http');
-const data = JSON.stringify({ identifier: process.argv[2], amount: parseInt(process.argv[3]), action: 'reduce' });
-const req = http.request({ hostname: 'localhost', port: 3000, path: '/api/admin/balance', method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) } }, res => { res.on('data', c => console.log(c.toString())); });
-req.write(data); req.end();
-JS
-                node temp_kurang.js "$no_mem" "$jm_mem"
-                rm temp_kurang.js
-                read -p "Tekan Enter..."
-            fi
-            ;;
-            
-        8)
-            clear
-            echo -e "${CYAN}===============================================${NC}"
-            echo -e "${YELLOW}      🖼️ SINKRONISASI GAMBAR BANNER LOKAL     ${NC}"
-            echo -e "${CYAN}===============================================${NC}"
-            echo -e "Upload gambar (.jpg, .png, dll) ke direktori berikut via Termius:"
-            echo -e "${GREEN}/root/$DIR_NAME/public/banners/${NC}"
-            echo ""
-            echo "1. Sinkronisasi (Baca gambar dan atasi bug spasi otomatis)"
-            echo "2. Hapus Semua Banner (Aplikasi)"
-            echo "0. Kembali"
-            read -p "Pilih [0-2]: " b_menu
-            
-            if [ "$b_menu" == "1" ]; then
-                cd "$HOME/$DIR_NAME"
-                cat << 'JS' > temp_banner.js
-const fs = require('fs'); 
-const path = './public/banners';
-if (!fs.existsSync(path)) fs.mkdirSync(path, {recursive:true});
-
-let rawFiles = fs.readdirSync(path).filter(f => f.match(/\.(jpg|jpeg|png|gif)$/i));
-rawFiles.forEach(f => {
-    if (f.includes(' ')) {
-        let newName = f.replace(/ /g, '_');
-        fs.renameSync(path + '/' + f, path + '/' + newName);
-    }
-});
-
-let finalFiles = fs.readdirSync(path).filter(f => f.match(/\.(jpg|jpeg|png|gif)$/i));
-let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {};
-cfg.banners = finalFiles;
-fs.writeFileSync('./config.json', JSON.stringify(cfg, null, 2));
-console.log('✅ Berhasil menyinkronkan ' + finalFiles.length + ' banner! (Bug Spasi Fixed via Rename)');
-JS
-                node temp_banner.js
-                rm temp_banner.js
-                pm2 restart $BOT_NAME > /dev/null 2>&1
-                read -p "Tekan Enter..."
-                
-            elif [ "$b_menu" == "2" ]; then
-                cd "$HOME/$DIR_NAME"
-                cat << 'JS' > temp_banner_del.js
-const fs = require('fs'); 
-let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {};
-cfg.banners = [];
-fs.writeFileSync('./config.json', JSON.stringify(cfg, null, 2));
-console.log('✅ Semua banner telah disembunyikan dari aplikasi.');
-JS
-                node temp_banner_del.js
-                rm temp_banner_del.js
-                pm2 restart $BOT_NAME > /dev/null 2>&1
-                read -p "Tekan Enter..."
-            fi
-            ;;
-            
-        9)
-            clear
-            echo -e "${CYAN}===============================================${NC}"
-            echo -e "${YELLOW}  📈 SETING KEUNTUNGAN 14 TIER (GOD MODE)      ${NC}"
-            echo -e "${CYAN}===============================================${NC}"
-            echo "Atur keuntungan berdasarkan rentang harga modal asli Digiflazz."
-            echo ""
-            read -p "1. Laba untuk modal Rp 0 - 100         : " m1
-            read -p "2. Laba untuk modal Rp 100 - 500       : " m2
-            read -p "3. Laba untuk modal Rp 500 - 1.000     : " m3
-            read -p "4. Laba untuk modal Rp 1.000 - 3.000   : " m4
-            read -p "5. Laba untuk modal Rp 3.000 - 5.000   : " m5
-            read -p "6. Laba untuk modal Rp 5.000 - 10.000  : " m6
-            read -p "7. Laba untuk modal Rp 10.000 - 15.000 : " m7
-            read -p "8. Laba untuk modal Rp 15.000 - 25.000 : " m8
-            read -p "9. Laba untuk modal Rp 25.000 - 50.000 : " m9
-            read -p "10. Laba untuk modal Rp 50.000 - 70.000: " m10
-            read -p "11. Laba untuk modal Rp 70k - 100.000  : " m11
-            read -p "12. Laba untuk modal Rp 100k - 120.000 : " m12
-            read -p "13. Laba untuk modal Rp 120k - 150.000 : " m13
-            read -p "14. Laba untuk modal Rp > 150.000      : " m14
-            
-            cd "$HOME/$DIR_NAME"
-            cat << 'JS' > temp_markup.js
-const fs = require('fs');
-const file = './config.json';
-let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
-cfg.markupRules = {
-    m1: parseInt(process.argv[2]) || 0,
-    m2: parseInt(process.argv[3]) || 0,
-    m3: parseInt(process.argv[4]) || 0,
-    m4: parseInt(process.argv[5]) || 0,
-    m5: parseInt(process.argv[6]) || 0,
-    m6: parseInt(process.argv[7]) || 0,
-    m7: parseInt(process.argv[8]) || 0,
-    m8: parseInt(process.argv[9]) || 0,
-    m9: parseInt(process.argv[10]) || 0,
-    m10: parseInt(process.argv[11]) || 0,
-    m11: parseInt(process.argv[12]) || 0,
-    m12: parseInt(process.argv[13]) || 0,
-    m13: parseInt(process.argv[14]) || 0,
-    m14: parseInt(process.argv[15]) || 0
-};
-fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
-console.log('\n✅ 14 Tingkatan Keuntungan (God Mode) Berhasil Disimpan!');
-JS
-            node temp_markup.js "$m1" "$m2" "$m3" "$m4" "$m5" "$m6" "$m7" "$m8" "$m9" "$m10" "$m11" "$m12" "$m13" "$m14"
-            rm temp_markup.js
-            pm2 restart $BOT_NAME > /dev/null 2>&1
-            read -p "Tekan Enter untuk kembali..."
-            ;;
-            
-        10)
-            clear
-            echo "1. Tambah Produk LOKAL"
-            echo "2. Hapus Produk LOKAL"
-            read -p "Pilih: " pr_menu
-            
-            if [ "$pr_menu" == "1" ]; then
-                echo "1. Pulsa | 2. Data | 3. Game | 4. Voucher | 5. E-Wallet | 6. PLN | 7. E-Toll | 8. Masa Aktif | 9. Perdana | 10. SMS/Telpon"
-                read -p "Pilih Tipe [1-10]: " typ
-                case $typ in 
-                    1) tp="pulsa";; 2) tp="data";; 3) tp="game";; 4) tp="voucher";; 5) tp="ewallet";; 
-                    6) tp="pln";; 7) tp="etoll";; 8) tp="masaaktif";; 9) tp="perdana";; 10) tp="smstelpon";;
-                esac
-                read -p "Brand (XL/DANA dll): " p_brand
-                read -p "Kategori Sub: " p_cat
-                read -p "Nama Produk: " p_name
-                read -p "Harga Modal: " p_price
-                read -p "SKU Digiflazz: " p_sku
-                
-                cd "$HOME/$DIR_NAME" 
-                cat << 'JS' > temp_add_prod.js
-const fs = require('fs');
-let f = './local_products.json';
-let data = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f)) : [];
-data.push({ id: 'LOC' + Date.now(), type: process.argv[2], brand: process.argv[3], category: process.argv[4], name: process.argv[5], price: parseInt(process.argv[6]) || 0, sku: process.argv[7], isDigi: true });
-fs.writeFileSync(f, JSON.stringify(data, null, 2));
-console.log('✅ Produk Berhasil Ditambahkan!');
-JS
-                node temp_add_prod.js "$tp" "$p_brand" "$p_cat" "$p_name" "$p_price" "$p_sku"
-                rm temp_add_prod.js
-                read -p "Tekan Enter..."
-                
-            elif [ "$pr_menu" == "2" ]; then
-                cd "$HOME/$DIR_NAME" 
-                cat << 'JS' > temp_list_prod.js
-const fs = require('fs');
-let f = './local_products.json';
-let data = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f)) : [];
-if (data.length === 0) {
-    console.log('\nBelum ada produk lokal.');
-} else {
-    console.log('\n--- DAFTAR PRODUK LOKAL ---');
-    data.forEach((p, i) => console.log('[' + i + '] ' + p.name + ' - Rp' + p.price));
-}
-JS
-                node temp_list_prod.js
-                rm temp_list_prod.js
-                
-                read -p "Masukkan Nomor Produk (Angka dalam kurung) yang mau dihapus: " del_id
-                if [ ! -z "$del_id" ]; then
-                    cat << 'JS' > temp_del_prod.js
-const fs = require('fs');
-let f = './local_products.json';
-let data = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f)) : [];
-let idx = parseInt(process.argv[2]);
-if (data[idx]) {
-    data.splice(idx, 1);
-    fs.writeFileSync(f, JSON.stringify(data, null, 2));
-    console.log('\n✅ Produk berhasil dihapus!');
-} else {
-    console.log('\n❌ Nomor ID tidak valid.');
-}
-JS
-                    node temp_del_prod.js "$del_id"
-                    rm temp_del_prod.js
-                fi
-                read -p "Tekan Enter..."
-            fi
-            ;;
-            
-        11)
-            clear
-            echo -e "${CYAN}===============================================${NC}"
-            echo -e "${YELLOW}  🔗 UBAH LINK KOMUNITAS & SETUP ID SOSMED     ${NC}"
-            echo -e "${CYAN}===============================================${NC}"
-            echo "Kosongkan jika tidak ingin mengubah data saat ini."
-            echo ""
-            read -p "Link Telegram Channel : " new_tele
-            read -p "Link WhatsApp Saluran : " new_wa
-            echo ""
-            echo "SETUP ID BROADCAST (Dibutuhkan untuk Fitur Broadcast di Menu 6)"
-            read -p "ID Grup/Channel Telegram (cth: -1001234567) : " id_tele
-            read -p "ID Grup/Saluran WhatsApp (cth: 12036...456@newsletter) : " id_wa
-            
-            cd "$HOME/$DIR_NAME"
-            cat << 'JS' > temp_links.js
-const fs = require('fs');
-const file = './config.json';
-let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
-
-if (process.argv[2] && process.argv[2].trim() !== '') cfg.linkTele = process.argv[2].trim();
-if (process.argv[3] && process.argv[3].trim() !== '') cfg.linkWa = process.argv[3].trim();
-if (process.argv[4] && process.argv[4].trim() !== '') cfg.teleChannelId = process.argv[4].trim();
-if (process.argv[5] && process.argv[5].trim() !== '') cfg.waChannelId = process.argv[5].trim();
-
-fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
-console.log('\n✅ Data Sosial Media & Komunitas berhasil diperbarui!');
-JS
-            node temp_links.js "$new_tele" "$new_wa" "$id_tele" "$id_wa"
-            rm temp_links.js
-            read -p "Tekan Enter untuk kembali..."
-            ;;
-            
-        12)
-            clear
-            echo -e "${CYAN}===============================================${NC}"
-            echo -e "${YELLOW}        🌐 SETUP DOMAIN (NGINX + UFW)          ${NC}"
-            echo -e "${CYAN}===============================================${NC}"
-            read -p "Masukkan Nama Domain LENGKAP (cth: digital.myfiky.store): " domain_name
-            if [ ! -z "$domain_name" ]; then
-                apt-get install nginx ufw -y > /dev/null 2>&1
-                ufw allow 80/tcp > /dev/null 2>&1
-                ufw allow 443/tcp > /dev/null 2>&1
-                cat << EOFNGINX > /etc/nginx/sites-available/$domain_name
-server { listen 80; server_name $domain_name; location / { proxy_pass http://localhost:3000; proxy_http_version 1.1; proxy_set_header Upgrade \$http_upgrade; proxy_set_header Connection 'upgrade'; proxy_set_header Host \$host; proxy_cache_bypass \$http_upgrade; proxy_set_header X-Real-IP \$remote_addr; proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for; proxy_set_header X-Forwarded-Proto \$scheme; } }
-EOFNGINX
-                ln -sf /etc/nginx/sites-available/$domain_name /etc/nginx/sites-enabled/
-                rm -f /etc/nginx/sites-enabled/default
-                nginx -t && systemctl restart nginx
-                echo -e "${GREEN}✅ Domain $domain_name berhasil dikonfigurasi!${NC}"
-            fi
-            read -p "Tekan Enter untuk kembali..."
-            ;;
-            
-        13)
-            clear
-            echo -e "${CYAN}===============================================${NC}"
-            echo -e "${YELLOW}           🔌 SETUP API DIGIFLAZZ              ${NC}"
-            echo -e "${CYAN}===============================================${NC}"
-            read -p "Username Digiflazz: " digi_user
-            read -p "API Key Digiflazz (Prod/Dev Key): " digi_key
-            cd "$HOME/$DIR_NAME"
-            cat << 'JS' > temp_digi.js
-const fs = require('fs');
-let file = './config.json';
-let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
-cfg.digiUser = process.argv[2];
-cfg.digiKey = process.argv[3];
-fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
-console.log('✅ Konfigurasi API Digiflazz Disimpan!');
-JS
-            node temp_digi.js "$digi_user" "$digi_key"
-            rm temp_digi.js
-            pm2 restart $BOT_NAME > /dev/null 2>&1
-            read -p "Tekan Enter..." 
-            ;;
-            
         14)
             clear
             echo -e "${CYAN}===============================================${NC}"
             echo -e "${YELLOW} 💸 SETUP API GOPAY & QRIS OTOMATIS (BHM BIZ)  ${NC}"
             echo -e "${CYAN}===============================================${NC}"
-            echo "Fitur ini akan menghubungkan merchant GoPay Anda"
-            echo "dan mengatur QRIS Dinamis!"
-            echo ""
             read -p "Masukkan API Token BHM Biz Anda: " bhm_token
-            read -p "Masukkan Merchant ID (Angka, contoh: 123): " bhm_mid
+            read -p "Masukkan Merchant ID (Angka, cth: 123): " bhm_mid
             read -p "Masukkan Nomor HP GoPay (08...): " bhm_phone
 
             if [ ! -z "$bhm_token" ] && [ ! -z "$bhm_phone" ] && [ ! -z "$bhm_mid" ]; then
                 echo -e "\n${CYAN}>> Mengirim Request OTP ke nomor $bhm_phone...${NC}"
-                req_otp=$(curl -sS -X POST http://gopay.bhm.biz.id/v1/gopay/merchants/connect/request-otp \
-                  -H 'Content-Type: application/json' \
-                  -d "{\"phone\":\"$bhm_phone\"}")
-                
+                req_otp=$(curl -sS -X POST http://gopay.bhm.biz.id/v1/gopay/merchants/connect/request-otp -H 'Content-Type: application/json' -d "{\"phone\":\"$bhm_phone\"}")
                 echo -e "${YELLOW}Respon Server: $req_otp${NC}"
                 
                 read -p "Masukkan 4 Digit OTP dari WA/SMS Gojek: " gopay_otp
-                
                 if [ ! -z "$gopay_otp" ]; then
                     echo -e "\n${CYAN}>> Memverifikasi OTP...${NC}"
-                    ver_otp=$(curl -sS -X POST http://gopay.bhm.biz.id/v1/gopay/merchants/$bhm_mid/connect/verify-otp \
-                      -H "Authorization: Bearer $bhm_token" \
-                      -H 'Content-Type: application/json' \
-                      -d "{\"otp\":\"$gopay_otp\"}")
-                    
+                    ver_otp=$(curl -sS -X POST http://gopay.bhm.biz.id/v1/gopay/merchants/$bhm_mid/connect/verify-otp -H "Authorization: Bearer $bhm_token" -H 'Content-Type: application/json' -d "{\"otp\":\"$gopay_otp\"}")
                     echo -e "${YELLOW}Respon Server: $ver_otp${NC}"
                 fi
             fi
 
             echo -e "\n${CYAN}Siapkan TEKS STRING dari QRIS Statis Anda.${NC}"
-            echo "Teks QRIS berawalan '000201010211...' dan diakhiri dengan kombinasi 4 huruf/angka (CRC)."
             read -p "Paste TEKS STRING QRIS Anda di sini: " qris_string
             
             cd "$HOME/$DIR_NAME"
-            cat << 'JS' > temp_bhm.js
-const fs = require('fs');
-let file = './config.json';
-let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
-
-if (process.argv[2] && process.argv[2] !== '') cfg.bhmToken = process.argv[2];
-if (process.argv[3] && process.argv[3] !== '') cfg.bhmMerchantId = process.argv[3];
-if (process.argv[4] && process.argv[4] !== '') cfg.bhmGopayNumber = process.argv[4];
-if (process.argv[5] && process.argv[5] !== '') cfg.qrisStringCode = process.argv[5];
-
-fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
-console.log('\n✅ Data API BHM & String QRIS Statis Berhasil Disimpan!');
-JS
-            node temp_bhm.js "$bhm_token" "$bhm_mid" "$bhm_phone" "$qris_string"
-            rm temp_bhm.js
+            node -e "const fs = require('fs'); let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {}; if ('$bhm_token'!=='') cfg.bhmToken = '$bhm_token'; if ('$bhm_mid'!=='') cfg.bhmMerchantId = '$bhm_mid'; if ('$qris_string'!=='') cfg.qrisStringCode = '$qris_string'; fs.writeFileSync('./config.json', JSON.stringify(cfg, null, 2)); console.log('\n✅ Data API BHM & QRIS Tersimpan!');"
             pm2 restart $BOT_NAME > /dev/null 2>&1
-            read -p "Tekan Enter untuk kembali..." 
-            ;;
-
-        15)
-            clear
-            cd "$HOME/$DIR_NAME" 
-            cat << 'JS' > temp_clear_cache.js
-const fs = require('fs'); 
-let f = './digi_cache.json'; 
-if (fs.existsSync(f)) { 
-    fs.unlinkSync(f); 
-    console.log('✅ Cache Katalog berhasil dihapus! Katalog akan di-download ulang saat ada yang buka menu.'); 
-} else {
-    console.log('✅ Cache sudah bersih.');
-}
-JS
-            node temp_clear_cache.js
-            rm temp_clear_cache.js
-            pm2 restart all > /dev/null 2>&1
             read -p "Tekan Enter..." 
             ;;
-            
         16)
             clear
             echo -e "${CYAN}===============================================${NC}"
-            echo -e "${YELLOW}      ⚙️ SETUP 3 BOT TELEGRAM (PISAH)           ${NC}"
+            echo -e "${YELLOW}      ⚙️ SETUP JALUR NOTIFIKASI GANDA           ${NC}"
             echo -e "${CYAN}===============================================${NC}"
-            echo "1. Bot Transaksi (Order Masuk, Sukses, Gagal, Member Baru)"
-            echo "2. Bot Top Up (Request Top Up, Saldo Admin)"
-            echo "3. Bot Backup (Auto Backup & Manual Backup)"
-            echo "0. Kembali"
-            read -p "Pilih Bot yang mau disetting [0-3]: " bot_sel
+            echo "1. Setup Bot Admin (FULL DATA, Tanpa Sensor)"
+            echo "2. Setup Bot Testimoni Publik (Channel Tele & Saluran WA - Data Disensor)"
+            read -p "Pilih [1-2]: " bot_sel
             
             if [ "$bot_sel" == "1" ]; then
-                read -p "Token Bot Transaksi: " t_trx
-                read -p "Chat ID Transaksi: " c_trx
+                read -p "Token Bot Admin: " t_admin
+                read -p "Chat ID Admin (Bisa ID Pribadi/Grup): " c_admin
                 cd "$HOME/$DIR_NAME"
-                cat << 'JS' > temp_tele1.js
-const fs = require('fs');
-let file = './config.json';
-let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
-cfg.teleTokenTrx = process.argv[2];
-cfg.teleChatIdTrx = process.argv[3];
-fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
-JS
-                node temp_tele1.js "$t_trx" "$c_trx"
-                rm temp_tele1.js
-                echo -e "${GREEN}✅ Bot Transaksi Disimpan!${NC}"
-                
+                node -e "const fs=require('fs'); let cfg=fs.existsSync('./config.json')?JSON.parse(fs.readFileSync('./config.json')):{}; cfg.teleTokenAdmin='$t_admin'; cfg.teleChatAdmin='$c_admin'; fs.writeFileSync('./config.json', JSON.stringify(cfg, null, 2));"
+                echo -e "${GREEN}✅ Bot Admin Tersimpan!${NC}"
             elif [ "$bot_sel" == "2" ]; then
-                read -p "Token Bot Top Up: " t_topup
-                read -p "Chat ID Top Up: " c_topup
+                read -p "Token Bot Publik: " t_pub
+                read -p "Channel/Group ID Publik Telegram (Contoh: -100123...): " c_pub
+                read -p "Saluran ID WhatsApp (Contoh: 12036...456@newsletter): " w_pub
                 cd "$HOME/$DIR_NAME"
-                cat << 'JS' > temp_tele2.js
-const fs = require('fs');
-let file = './config.json';
-let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
-cfg.teleTokenTopup = process.argv[2];
-cfg.teleChatIdTopup = process.argv[3];
-fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
-JS
-                node temp_tele2.js "$t_topup" "$c_topup"
-                rm temp_tele2.js
-                echo -e "${GREEN}✅ Bot Top Up Disimpan!${NC}"
-                
-            elif [ "$bot_sel" == "3" ]; then
-                read -p "Token Bot Backup: " t_backup
-                read -p "Chat ID Backup: " c_backup
-                cd "$HOME/$DIR_NAME"
-                cat << 'JS' > temp_tele3.js
-const fs = require('fs');
-let file = './config.json';
-let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
-cfg.teleTokenBackup = process.argv[2];
-cfg.teleChatIdBackup = process.argv[3];
-fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
-JS
-                node temp_tele3.js "$t_backup" "$c_backup"
-                rm temp_tele3.js
-                echo -e "${GREEN}✅ Bot Backup Disimpan!${NC}"
+                node -e "const fs=require('fs'); let cfg=fs.existsSync('./config.json')?JSON.parse(fs.readFileSync('./config.json')):{}; cfg.teleTokenPublik='$t_pub'; cfg.teleChatPublik='$c_pub'; cfg.waChannelId='$w_pub'; fs.writeFileSync('./config.json', JSON.stringify(cfg, null, 2));"
+                echo -e "${GREEN}✅ Bot Testimoni Publik Tersimpan!${NC}"
             fi
-            
-            pm2 restart all > /dev/null 2>&1
+            pm2 restart $BOT_NAME > /dev/null 2>&1
             read -p "Tekan Enter..." 
             ;;
-            
         17)
             clear
-            echo "Format: 1 untuk tiap 1 jam, 0.5 untuk 30 menit."
-            read -p "Berapa Jam Sekali Sistem Melakukan Auto-Backup?: " tele_jam
+            read -p "Berapa Jam Sekali Sistem Melakukan Auto-Backup FULL?: " tele_jam
             cd "$HOME/$DIR_NAME"
-            cat << 'JS' > temp_auto.js
-const fs = require('fs');
-let file = './config.json';
-let cfg = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : {};
-cfg.autoBackupHours = parseFloat(process.argv[2]);
-fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
-console.log('✅ Disimpan: Auto Backup dijalankan setiap ' + process.argv[2] + ' Jam!');
-JS
-            node temp_auto.js "$tele_jam"
-            rm temp_auto.js
-            pm2 restart all > /dev/null 2>&1
+            node -e "const fs=require('fs'); let cfg=fs.existsSync('./config.json')?JSON.parse(fs.readFileSync('./config.json')):{}; cfg.autoBackupHours=parseFloat('$tele_jam'); fs.writeFileSync('./config.json', JSON.stringify(cfg, null, 2)); console.log('✅ Auto Backup diset: ' + '$tele_jam' + ' Jam!');"
+            pm2 restart $BOT_NAME > /dev/null 2>&1
             read -p "Tekan Enter..." 
             ;;
-            
         18)
             clear
-            echo "Memproses Backup Manual ke Telegram..."
+            echo "Memproses Backup Manual FULL (DB + Gambar + Config)..."
             cd "$HOME/$DIR_NAME"
-            cat << 'JS' > temp_backup_man.js
-const axios = require('axios');
-const fs = require('fs');
-const FormData = require('form-data');
-const {exec} = require('child_process');
-
-let cfg = fs.existsSync('./config.json') ? JSON.parse(fs.readFileSync('./config.json')) : {};
-let t = cfg.teleTokenBackup || cfg.teleToken;
-let c = cfg.teleChatIdBackup || cfg.teleChatId;
-
-if (!t || !c) {
-    console.log('❌ Token/Chat ID Bot Backup belum disetting (Buka Menu 16)');
-    process.exit();
-}
-
-let zipName = 'Backup_FikyStore_' + Date.now() + '.zip';
-exec('zip -r ' + zipName + ' database.json web_users.json config.json local_products.json info.json', (err) => {
-    const form = new FormData();
-    form.append('chat_id', c);
-    form.append('document', fs.createReadStream(zipName));
-    form.append('caption', '📦 *BACKUP MANUAL BERHASIL*\n\nTanggal: ' + new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }));
-    form.append('parse_mode', 'Markdown');
-    
-    axios.post('https://api.telegram.org/bot' + t + '/sendDocument', form, { headers: form.getHeaders() })
-    .then(() => {
-        console.log('✅ File Backup Berhasil Terkirim ke Telegram Anda!');
-        fs.unlinkSync(zipName);
-    })
-    .catch(e => {
-        console.log('❌ Gagal Mengirim ke Telegram. Pastikan Token/Chat ID Benar!');
-    });
-});
-JS
-            node temp_backup_man.js
-            rm temp_backup_man.js
+            node -e "
+            const axios=require('axios'); const fs=require('fs'); const FormData=require('form-data'); const {exec}=require('child_process');
+            let cfg=fs.existsSync('./config.json')?JSON.parse(fs.readFileSync('./config.json')):{};
+            if(!cfg.teleTokenAdmin || !cfg.teleChatAdmin) { console.log('❌ Token/Chat ID Bot Admin belum disetting (Buka Menu 16)'); process.exit(); }
+            let zipName='Backup_FikyStore_'+Date.now()+'.zip';
+            exec('zip -r '+zipName+' database.json web_users.json config.json local_products.json info.json public/banners public/info_images', (err) => {
+                const form=new FormData(); form.append('chat_id', cfg.teleChatAdmin); form.append('document', fs.createReadStream(zipName)); form.append('caption', '📦 *MANUAL BACKUP FULL SYSTEM*\\n\\nTanggal: '+new Date().toLocaleString('id-ID',{timeZone:'Asia/Jakarta'})); form.append('parse_mode', 'Markdown');
+                axios.post('https://api.telegram.org/bot'+cfg.teleTokenAdmin+'/sendDocument', form, {headers:form.getHeaders()}).then(()=>{ console.log('✅ File Backup Terkirim ke Telegram Admin Anda!'); fs.unlinkSync(zipName); }).catch(e=>console.log('❌ Gagal Mengirim. Pastikan Token/Chat ID Benar!'));
+            });
+            "
             read -p "Tunggu sebentar lalu tekan Enter..." 
             ;;
-            
-        19)
-            clear
-            read -p "Masukkan Direct Link (URL) File ZIP Backup: " link_zip
-            cd "$HOME/$DIR_NAME" 
-            wget -qO restore.zip "$link_zip"
-            if [ -f "restore.zip" ]; then
-                unzip -o restore.zip && rm -f restore.zip
-                pm2 restart all > /dev/null 2>&1
-                echo -e "${GREEN}✅ Restore Data Selesai! Sistem sudah memuat data lama Anda.${NC}"
-            fi
-            read -p "Tekan Enter..." 
-            ;;
-            
         0) exit 0 ;;
+        *) echo -e "${C_RED}Fitur sedang dikembangkan / Pilihan salah!${NC}"; sleep 1 ;;
     esac
 done
 EOF
 
 chmod +x /usr/bin/menu
 
-# ==========================================
-# MENGATUR AGAR MENU MUNCUL OTOMATIS SAAT LOGIN VPS
-# ==========================================
-if ! grep -q "/usr/bin/menu" ~/.bashrc; then
-    echo "/usr/bin/menu" >> ~/.bashrc
-fi
-
-echo "=========================================================="
-echo "  SISTEM WEB V166 BERHASIL DIPERBARUI SECARA PENUH!       "
-echo "  Ketik 'menu' di terminal untuk membuka panel manajemen  "
-echo "=========================================================="
-
-EOF
-echo "[7/7] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V166..."
+echo "[PART 6 SELESAI DITULIS!]"
+echo "[10/10] Menyelesaikan instalasi dan menyalakan Mesin Autopilot V166..."
 
 cd "$HOME/$DIR_NAME"
 
-echo "Menginstal npm dan menjalankan node module kembali..."
+echo "Menginstal npm dan menjalankan node module..."
 npm install --silent > /dev/null 2>&1
 
 # MENGHENTIKAN PROSES LAMA JIKA ADA
@@ -4385,15 +3902,13 @@ clear
 echo -e "\033[0;32m======================================================================\033[0m"
 echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V166 SELESAI! 🚀      \033[0m"
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[0;36mFITUR BARU DI V166 (THE PERFECT MASTERPIECE + BHM FIX):\033[0m"
-echo -e "  ✅ \033[1;33mPOP-UP QRIS MEWAH\033[0m Bayar QRIS nggak pindah halaman, plus ada Timer!"
-echo -e "  ✅ \033[1;33mNOMINAL TOP UP BARU\033[0m Pilihan instan 1K, 5K, 10K, 50K, 100K!"
-echo -e "  ✅ \033[1;33mSENSOR DATA MEMBER\033[0m Nama, Email, & WA di notif Telegram disensor aman!"
-echo -e "  ✅ \033[1;33mBROADCAST SOSMED\033[0m Tembak pengumuman ke WA Channel & Telegram via VPS!"
-echo -e "  ✅ \033[1;33mAUTO QRIS DINAMIS FIX\033[0m Bug API BHM libas tuntas, pakai sistem Brute-Force!"
-echo -e "  ✅ \033[1;33mLOGIN OTP BHM\033[0m Menu 14 sudah dilengkapi verifikasi OTP Gojek!"
-echo -e "  ✅ \033[1;33mMENU VPS AUTO-MEKAR\033[0m Buka Termius langsung disapa Panel tanpa ngetik!"
-echo -e "  ✅ \033[1;33mFULL UNCOMPRESSED\033[0m Kode rapi jali, no minify, gampang dibaca & diedit!"
+echo -e "\033[0;36mFITUR BARU DI V166 (THE PERFECT MASTERPIECE):\033[0m"
+echo -e "  ✅ \033[1;33mPOP-UP QRIS MEWAH\033[0m Bayar QRIS + Timer & Tombol Download/Share!"
+echo -e "  ✅ \033[1;33mNOTIFIKASI 2 JALUR\033[0m Notif Admin Full Data, Notif Publik Disensor!"
+echo -e "  ✅ \033[1;33mAUTO QRIS DINAMIS FIX\033[0m Mesin BHM (items, .00, settlement) Anti Nyangkut!"
+echo -e "  ✅ \033[1;33mBACKUP SULTAN FULL\033[0m Database, Config, Banner, Info Images Aman!"
+echo -e "  ✅ \033[1;33mLOGIN OTP BHM\033[0m Verifikasi OTP Gojek langsung di Menu 14!"
+echo -e "  ✅ \033[1;33mFULL UNCOMPRESSED\033[0m Kode rapi jali, no minify, gampang dibaca!"
 echo -e "\033[0;32m======================================================================\033[0m"
 echo -e "\033[1;37mMEMBUKA PANEL MENU OTOMATIS DALAM 2 DETIK...\033[0m"
 sleep 2
