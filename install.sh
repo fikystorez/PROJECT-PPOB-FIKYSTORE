@@ -2970,7 +2970,7 @@ cat << 'EOF' > public/riwayat.html
 EOF
 
 echo "[PART 4 SELESAI DITULIS. TINGGAL PART 5, 6, 7 (BACKEND & VPS MENU)!]"
-echo "[5/8] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - FIX BHM API & SENSOR TELEGRAM)..."
+echo "[5/8] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - FIX BHM MERCHANT API & SENSOR TELEGRAM)..."
 
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
@@ -3031,8 +3031,8 @@ if (!fs.existsSync(digiCacheFile)) saveJSON(digiCacheFile, { time: 0, data: [] }
 if (!fs.existsSync(infoFile)) saveJSON(infoFile, []);
 
 // ==========================================
-// FUNGSI SENSOR DATA UNTUK TELEGRAM (ANTI ERROR 400)
-// MENGGUNAKAN SIMBOL • AGAR MARKDOWN TELEGRAM TIDAK CRASH
+// FUNGSI SENSOR DATA KHUSUS UNTUK TELEGRAM
+// Menggunakan simbol bulat agar tidak merusak Markdown Telegram
 // ==========================================
 function censorName(name) {
     if (!name) return 'Hamba Allah';
@@ -3068,7 +3068,7 @@ function isMaintenance() {
 }
 
 // ==========================================
-// 3 BOT TELEGRAM LOGIC DENGAN FALLBACK
+// 3 BOT TELEGRAM LOGIC (DENGAN SENSOR)
 // ==========================================
 const sendTeleNotif = async (message, type = 'trx') => {
     let cfg = loadJSON(configFile);
@@ -3081,24 +3081,15 @@ const sendTeleNotif = async (message, type = 'trx') => {
     if (!token || !chatId) return;
     
     try { 
-        // Percobaan pertama dengan Markdown
         await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, { 
             chat_id: chatId, 
             text: message, 
             parse_mode: 'Markdown' 
         }); 
     } catch(e) {
-        console.error("Gagal kirim notif Telegram Markdown:", e.message);
         try {
-            // Fallback (Cadangan) tanpa Markdown jika teks mengandung karakter aneh
-            await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, { 
-                chat_id: chatId, 
-                text: message 
-            });
-            console.log("Berhasil mengirim notif via mode teks biasa (Fallback).");
-        } catch(err) {
-            console.error("Telegram Fallback juga gagal:", err.message);
-        }
+            await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, { chat_id: chatId, text: message });
+        } catch(err) {}
     }
 };
 
@@ -3144,9 +3135,6 @@ app.get('/api/global-stats', (req, res) => {
     res.json({ today: tToday, week: tWeek, month: tMonth, all: tAll });
 });
 
-// ==========================================
-// API BROADCAST (APLIKASI & SOSMED)
-// ==========================================
 app.post('/api/admin/broadcast', (req, res) => {
     const { judul, message } = req.body; let infoData = loadJSON(infoFile);
     let dateStr = new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'});
@@ -3252,10 +3240,9 @@ app.post('/api/transaction/create', async (req, res) => {
         db[phone].transactions.push({ id: ref_id, sku: sku, isLocal: isLocal, produk: name, nominal: price, no_tujuan: target, status: trxStatus, sn_ref: sn_ref, harga: price, date: dateStr });
         saveJSON(dbFile, db);
         
-        // PENGIRIMAN TELEGRAM DENGAN DATA DISENSOR (AMAN DARI BUG)
+        // TELEGRAM NOTIF (DISENSOR AMAN)
         let msgTeleTrx = `🛒 *TRANSAKSI BARU (ORDER MASUK)* 🛒\n\n👤 Nama: ${censorName(uData.name)}\n✉️ Email: ${censorEmail(uData.email)}\n📱 WA: ${censorWa(phone)}\n\n📦 Produk: ${name}\n📱 Tujuan: ${target}\n💰 Harga: Rp ${price.toLocaleString('id-ID')}\n🔄 Status: ${trxStatus}\n🔖 Ref: ${ref_id}`;
         sendTeleNotif(msgTeleTrx, 'trx'); 
-        
         res.json({ message: 'Transaksi berhasil diproses.' });
     } catch (e) { res.status(500).json({ error: 'Terjadi kesalahan internal.' }); }
 });
@@ -3351,12 +3338,16 @@ setInterval(async () => {
 
     if (pendingQris.length > 0) {
         try {
-            let res = await axios.get('http://gopay.bhm.biz.id/api/transactions', {
+            // 🔥 PERBAIKAN ENDPOINT MERCHANT ID BHM 🔥
+            // Menggunakan endpoint merchant spesifik agar bisa membaca mutasi QRIS
+            let endpoint = `http://gopay.bhm.biz.id/v1/gopay/merchants/${config.bhmMerchantId || ''}/transactions`;
+            let fallbackEndpoint = `http://gopay.bhm.biz.id/api/transactions?merchant_id=${config.bhmMerchantId || ''}`;
+
+            let res = await axios.get(endpoint, {
                 headers: { 'Authorization': `Bearer ${config.bhmToken}` },
                 timeout: 10000
             }).catch(async () => {
-                // Fallback URL jika /api/transactions mati
-                return await axios.get('http://gopay.bhm.biz.id/v1/gopay/transactions', {
+                return await axios.get(fallbackEndpoint, {
                     headers: { 'Authorization': `Bearer ${config.bhmToken}` },
                     timeout: 10000
                 });
@@ -3375,17 +3366,21 @@ setInterval(async () => {
             }
 
             if (!Array.isArray(txs) || txs.length === 0) {
-                // Jika masih bukan array atau kosong, hentikan proses dengan aman
+                // Jangan paksa proses kalau kosong/bukan array
                 return;
             }
-            // 🔥 SELESAI PROTEKTOR 🔥
+            
+            console.log(`[AUTO-QRIS] Memeriksa ${pendingQris.length} tagihan. Ditemukan ${txs.length} mutasi BHM.`);
+            // 🔥 ========================================= 🔥
             
             for (let p of pendingQris) {
                 let targetNominal = parseInt(p.topup.nominal);
                 
                 let matchTx = txs.find(tx => {
-                    let amount = parseInt(tx.amount);
-                    let isCredit = (tx.type && tx.type.toLowerCase() === 'credit') || parseFloat(tx.amount) > 0;
+                    // Proteksi pembacaan nominal dengan aman (mengabaikan desimal .00)
+                    let txAmountStr = String(tx.amount || tx.gross_amount || 0);
+                    let amount = parseInt(txAmountStr.split('.')[0]); 
+                    let isCredit = (tx.type && tx.type.toLowerCase() === 'credit') || amount > 0;
                     return amount === targetNominal && isCredit;
                 });
 
@@ -3397,22 +3392,27 @@ setInterval(async () => {
                         if(config.processedGopay.length > 500) config.processedGopay.shift();
                         saveJSON(configFile, config);
 
-                        p.topup.status = 'Sukses';
-                        db[p.phone].saldo += targetNominal;
-                        
-                        // Set nilai sal_sesudah setelah saldo ditambah
-                        p.topup.saldo_sesudah = db[p.phone].saldo; 
+                        // RECORD SALDO SEBELUM & SESUDAH
+                        let nominalLengkap = targetNominal;
+                        let salSebelum = db[p.phone].saldo;
+                        let salSesudah = salSebelum + nominalLengkap;
 
-                        db[p.phone].mutasi.push({ id: 'TU' + Date.now(), type: 'in', amount: targetNominal, desc: 'Topup QRIS Dinamis (GoPay)', date: new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'}) });
+                        p.topup.status = 'Sukses';
+                        p.topup.saldo_sebelum = salSebelum;
+                        p.topup.saldo_sesudah = salSesudah;
+
+                        db[p.phone].saldo = salSesudah;
+                        db[p.phone].mutasi.push({ id: 'TU' + Date.now(), type: 'in', amount: nominalLengkap, desc: 'Topup QRIS Dinamis (GoPay)', date: new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'}) });
                         changed = true;
 
                         let uData = webUsers[p.phone] || {name: 'Unknown', email: 'Unknown'};
-                        sendTeleNotif(`✅ *TOP UP QRIS OTOMATIS BERHASIL*\n\n👤 Nama: ${censorName(uData.name)}\n✉️ Email: ${censorEmail(uData.email)}\n📱 WA: ${censorWa(p.phone)}\n💰 Masuk: Rp ${targetNominal.toLocaleString('id-ID')}\n🔖 Ref GoPay: ${matchTx.transaction_id}`, 'topup');
+                        
+                        sendTeleNotif(`✅ *TOP UP QRIS OTOMATIS BERHASIL*\n\n👤 Nama: ${censorName(uData.name)}\n✉️ Email: ${censorEmail(uData.email)}\n📱 WA: ${censorWa(p.phone)}\n💰 Masuk: Rp ${nominalLengkap.toLocaleString('id-ID')}\n🔖 Ref GoPay: ${matchTx.transaction_id}`, 'topup');
                     }
                 }
             }
         } catch (e) {
-            console.log("⚠️ Pengecekan Mutasi BHM diskip sementara (Jaringan/Timeout)");
+            console.log("⚠️ [AUTO-QRIS] Gagal membaca Mutasi BHM API (Jaringan/Timeout)");
         }
     }
 
@@ -3449,7 +3449,7 @@ app.post('/api/topup/request', (req, res) => {
     let finalQrisString = null;
 
     if (method === 'QRIS Otomatis') {
-        expiry = Date.now() + 10*60*1000; // Timer Kadaluwarsa 10 Menit sesuai Request Gambar
+        expiry = Date.now() + 10*60*1000; 
         
         if (config.qrisStringCode && config.qrisStringCode !== '') {
             finalQrisString = generateDynamicQris(config.qrisStringCode, nominal);
