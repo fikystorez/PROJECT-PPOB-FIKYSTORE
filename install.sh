@@ -1929,7 +1929,7 @@ cat << 'EOF' > public/operator.html
 EOF
 
 echo "[PART 2 SELESAI BOSKUUU!]"
-echo "[6/8] Membangun Halaman Game, Riwayat Topup, dan Info (FULL UNCOMPRESSED)..."
+echo "[6/8] Membangun Halaman Lanjutan: Game, Topup, Info, Mutasi, Profil, Riwayat (FULL UNCOMPRESSED)..."
 
 cat << 'EOF' > public/game.html
 <!DOCTYPE html>
@@ -2174,16 +2174,10 @@ cat << 'EOF' > public/riwayat_topup.html
             
             let methodClean = item.method.includes('QRIS') ? 'QRIS Dinamis' : (item.method.includes('Admin') ? 'Admin' : 'Manual WA');
             
-            // SENSOR DATA MEMBER SEPARO SESUAI REQUEST BOS
-            let rawName = item.nama || user.name || 'Hamba Allah';
-            let maskName = rawName.length > 3 ? rawName.substring(0, 3) + '*'.repeat(rawName.length - 3) : rawName + '***';
-
-            let rawEmail = item.email || user.email || 'email@gmail.com';
-            let emailParts = rawEmail.split('@');
-            let maskEmail = emailParts[0].length > 3 ? emailParts[0].substring(0,3) + '***@' + (emailParts[1] || 'gmail.com') : '***@' + (emailParts[1] || 'gmail.com');
-
-            let rawWa = item.wa || user.phone || '080000000000';
-            let maskWa = rawWa.length > 8 ? rawWa.substring(0, 4) + '****' + rawWa.substring(rawWa.length - 4) : rawWa;
+            // MENAMPILKAN DATA FULL (TIDAK DISENSOR) DI WEB SESUAI PERMINTAAN BOS
+            let displayName = item.nama || user.name || 'Hamba Allah';
+            let displayEmail = item.email || user.email || 'Belum diatur';
+            let displayWa = item.wa || user.phone || '080000000000';
 
             // KALKULASI SALDO DAN UNIK
             let nominalLengkap = item.nominal || 0;
@@ -2198,9 +2192,9 @@ cat << 'EOF' > public/riwayat_topup.html
             <div class="bg-[#0b1320] border border-[#1e293b] rounded-xl p-4 mb-5 text-left overflow-y-auto max-h-[60vh] hide-scrollbar">
                 
                 <p class="text-[10px] text-gray-500 font-bold mb-2 uppercase tracking-widest border-b border-[#1e293b] pb-1">Data Pelanggan</p>
-                <div class="flex justify-between mb-3"><span class="text-gray-400 font-medium text-[12px]">Nama</span><span class="text-white font-bold text-[12px] text-right">${maskName}</span></div>
-                <div class="flex justify-between mb-3"><span class="text-gray-400 font-medium text-[12px]">Email</span><span class="text-white font-bold text-[12px] text-right">${maskEmail}</span></div>
-                <div class="flex justify-between mb-4"><span class="text-gray-400 font-medium text-[12px]">No. WA</span><span class="text-white font-bold text-[12px] text-right">${maskWa}</span></div>
+                <div class="flex justify-between mb-3"><span class="text-gray-400 font-medium text-[12px]">Nama</span><span class="text-white font-bold text-[12px] text-right">${displayName}</span></div>
+                <div class="flex justify-between mb-3"><span class="text-gray-400 font-medium text-[12px]">Email</span><span class="text-white font-bold text-[12px] text-right">${displayEmail}</span></div>
+                <div class="flex justify-between mb-4"><span class="text-gray-400 font-medium text-[12px]">No. WA</span><span class="text-white font-bold text-[12px] text-right">${displayWa}</span></div>
                 
                 <p class="text-[10px] text-gray-500 font-bold mb-2 uppercase tracking-widest border-b border-[#1e293b] pb-1">Rincian Topup</p>
                 <div class="flex justify-between mb-3"><span class="text-gray-400 font-medium text-[12px]">Waktu</span><span class="text-white font-bold text-[11px] text-right">${item.date}</span></div>
@@ -2314,9 +2308,6 @@ cat << 'EOF' > public/info.html
 </body>
 </html>
 EOF
-
-echo "[PART 3 SELESAI BOSKUUU!]"
-echo "[7/8] Membangun Halaman Mutasi, Profil, dan Riwayat Transaksi (FULL UNCOMPRESSED)..."
 
 cat << 'EOF' > public/mutasi.html
 <!DOCTYPE html>
@@ -2916,25 +2907,19 @@ cat << 'EOF' > public/riwayat.html
             const i = allTrx[idx];
             let rawStatus = i.status.toLowerCase();
             
-            // SENSOR DATA MEMBER SEPARO SESUAI REQUEST BOS
-            let rawName = user.name || 'Hamba Allah';
-            let maskName = rawName.length > 3 ? rawName.substring(0, 3) + '*'.repeat(rawName.length - 3) : rawName + '***';
-
-            let rawEmail = user.email || 'email@gmail.com';
-            let emailParts = rawEmail.split('@');
-            let maskEmail = emailParts[0].length > 3 ? emailParts[0].substring(0,3) + '***@' + (emailParts[1] || 'gmail.com') : '***@' + (emailParts[1] || 'gmail.com');
-
-            let rawWa = user.phone || '080000000000';
-            let maskWa = rawWa.length > 8 ? rawWa.substring(0, 4) + '****' + rawWa.substring(rawWa.length - 4) : rawWa;
+            // MENAMPILKAN DATA FULL (TIDAK DISENSOR) DI WEB
+            let displayName = user.name || 'Hamba Allah';
+            let displayEmail = user.email || 'Belum diatur';
+            let displayWa = user.phone || '080000000000';
             
             let htmlContent = `
             <h3 class="text-white font-extrabold text-[18px] mb-5 text-center">Detail Transaksi Produk</h3>
             <div class="bg-[#0b1320] border border-[#1e293b] rounded-xl p-4 mb-5 text-left overflow-y-auto max-h-[60vh] hide-scrollbar">
                 
                 <p class="text-[10px] text-gray-500 font-bold mb-2 uppercase tracking-widest border-b border-[#1e293b] pb-1">Data Pelanggan</p>
-                <div class="flex justify-between mb-3"><span class="text-gray-400 font-medium text-[12px]">Nama</span><span class="text-white font-bold text-[12px] text-right">${maskName}</span></div>
-                <div class="flex justify-between mb-3"><span class="text-gray-400 font-medium text-[12px]">Email</span><span class="text-white font-bold text-[12px] text-right">${maskEmail}</span></div>
-                <div class="flex justify-between mb-4"><span class="text-gray-400 font-medium text-[12px]">No. WA</span><span class="text-white font-bold text-[12px] text-right">${maskWa}</span></div>
+                <div class="flex justify-between mb-3"><span class="text-gray-400 font-medium text-[12px]">Nama</span><span class="text-white font-bold text-[12px] text-right">${displayName}</span></div>
+                <div class="flex justify-between mb-3"><span class="text-gray-400 font-medium text-[12px]">Email</span><span class="text-white font-bold text-[12px] text-right">${displayEmail}</span></div>
+                <div class="flex justify-between mb-4"><span class="text-gray-400 font-medium text-[12px]">No. WA</span><span class="text-white font-bold text-[12px] text-right">${displayWa}</span></div>
                 
                 <p class="text-[10px] text-gray-500 font-bold mb-2 uppercase tracking-widest border-b border-[#1e293b] pb-1">Rincian Pembelian</p>
                 <div class="flex justify-between mb-3"><span class="text-gray-400 font-medium text-[12px]">Waktu</span><span class="text-white font-bold text-[11px] text-right">${i.date}</span></div>
@@ -2969,8 +2954,8 @@ cat << 'EOF' > public/riwayat.html
 </html>
 EOF
 
-echo "[PART 4 SELESAI DITULIS. TINGGAL PART 5, 6, 7 (BACKEND & VPS MENU)!]"
-echo "[5/8] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - FIX BHM API BRUTE FORCE & SENSOR TELEGRAM)..."
+echo "[PART 3 & 4 SELESAI DITULIS. TINGGAL PART 5, 6, 7 (BACKEND & VPS MENU)!]"
+echo "[8/10] Menulis logika Backend Node.js (SUPER UNCOMPRESSED - BHM BRUTE-FORCE & OTP FIX)..."
 
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
@@ -3031,8 +3016,8 @@ if (!fs.existsSync(digiCacheFile)) saveJSON(digiCacheFile, { time: 0, data: [] }
 if (!fs.existsSync(infoFile)) saveJSON(infoFile, []);
 
 // ==========================================
-// FUNGSI SENSOR DATA UNTUK TELEGRAM (ANTI ERROR 400)
-// Menggunakan simbol bulat agar Markdown Telegram aman
+// FUNGSI SENSOR DATA KHUSUS UNTUK TELEGRAM
+// Menggunakan peluru bulat agar Markdown Telegram AMAN 100%
 // ==========================================
 function censorName(name) {
     if (!name) return 'Hamba Allah';
@@ -3068,7 +3053,7 @@ function isMaintenance() {
 }
 
 // ==========================================
-// 3 BOT TELEGRAM LOGIC DENGAN FALLBACK
+// 3 BOT TELEGRAM LOGIC (DENGAN FALLBACK)
 // ==========================================
 const sendTeleNotif = async (message, type = 'trx') => {
     let cfg = loadJSON(configFile);
@@ -3325,7 +3310,8 @@ setInterval(async () => {
     let webUsers = loadJSON(webUsersFile);
     let changed = false;
 
-    if (!config.bhmToken) return;
+    // Pastikan BHM Token dan Merchant ID sudah ada dari hasil Login OTP (Menu 14)
+    if (!config.bhmToken || !config.bhmMerchantId) return;
 
     let pendingQris = [];
     for (let phone in db) {
@@ -3340,19 +3326,21 @@ setInterval(async () => {
 
     if (pendingQris.length > 0) {
         try {
-            const gopayRes = await axios.get('http://gopay.bhm.biz.id/api/transactions', {
+            // Fetch mutasi dari endpoint khusus Merchant
+            const gopayRes = await axios.get(`http://gopay.bhm.biz.id/v1/gopay/merchants/${config.bhmMerchantId}/transactions`, {
                 headers: { 'Authorization': 'Bearer ' + config.bhmToken },
                 timeout: 10000
             });
 
             // TEKNIK BRUTE FORCE MATCH DARI KODE REFERENSI TEMAN BOS
-            // Mengabaikan format API, langsung tembak cari nominal dalam string response
+            // Mengabaikan error mapping array, langsung tembak cari nominal dalam string response
             let responseStr = JSON.stringify(gopayRes.data);
 
             for (let p of pendingQris) {
                 let targetNominal = parseInt(p.topup.nominal);
                 let amountStr = targetNominal.toString();
 
+                // Cari kecocokan nominal di dalam string balasan API
                 let isFound = responseStr.includes(`"${amountStr}"`) || 
                               responseStr.includes(`:${amountStr}`) || 
                               responseStr.includes(`"${amountStr}.00"`) || 
@@ -3378,7 +3366,7 @@ setInterval(async () => {
                     changed = true;
 
                     let uData = webUsers[p.phone] || {name: 'Unknown', email: 'Unknown'};
-                    sendTeleNotif(`✅ *TOP UP QRIS OTOMATIS BERHASIL*\n\n👤 Nama: ${censorName(uData.name)}\n✉️ Email: ${censorEmail(uData.email)}\n📱 WA: ${censorWa(p.phone)}\n💰 Masuk: Rp ${targetNominal.toLocaleString('id-ID')}\n🔖 Sistem: Auto-Check BHM`, 'topup');
+                    sendTeleNotif(`✅ *TOP UP QRIS OTOMATIS BERHASIL*\n\n👤 Nama: ${censorName(uData.name)}\n✉️ Email: ${censorEmail(uData.email)}\n📱 WA: ${censorWa(p.phone)}\n💰 Masuk: Rp ${targetNominal.toLocaleString('id-ID')}\n🔖 Sistem: Auto-Check BHM (Brute-Force)`, 'topup');
                 }
             }
         } catch (e) {
@@ -3615,9 +3603,6 @@ if (require.main === module) {
     startBot(); 
 }
 EOF
-
-echo "[PART 5 SELESAI DITULIS! TINGGAL MENU VPS DAN PENUTUP!]"
-echo "[6/8] Memperbarui Panel Manajemen VPS (V166 FULL UNCOMPRESSED)..."
 
 cat << 'EOF' > /usr/bin/menu
 #!/bin/bash
@@ -4143,16 +4128,37 @@ JS
         14)
             clear
             echo -e "${CYAN}===============================================${NC}"
-            echo -e "${YELLOW} 💸 SETUP API GOPAY & QRIS OTOMATIS (BHM BIZ ID) ${NC}"
+            echo -e "${YELLOW} 💸 SETUP API GOPAY & QRIS OTOMATIS (BHM BIZ)  ${NC}"
             echo -e "${CYAN}===============================================${NC}"
-            echo "API ini akan menarik transaksi dari akun GoPay Anda,"
-            echo "lalu mengkonfirmasi deposit QRIS secara otomatis!"
+            echo "Fitur ini akan menghubungkan merchant GoPay Anda"
+            echo "dan mengatur QRIS Dinamis!"
             echo ""
             read -p "Masukkan API Token BHM Biz Anda: " bhm_token
-            read -p "Masukkan Merchant ID (Angka, contoh: 123): " bhm_merchant
+            read -p "Masukkan Merchant ID (Angka, contoh: 123): " bhm_mid
             read -p "Masukkan Nomor HP GoPay (08...): " bhm_phone
-            echo ""
-            echo "Siapkan TEKS STRING dari QRIS Statis Anda."
+
+            if [ ! -z "$bhm_token" ] && [ ! -z "$bhm_phone" ] && [ ! -z "$bhm_mid" ]; then
+                echo -e "\n${CYAN}>> Mengirim Request OTP ke nomor $bhm_phone...${NC}"
+                req_otp=$(curl -sS -X POST http://gopay.bhm.biz.id/v1/gopay/merchants/connect/request-otp \
+                  -H 'Content-Type: application/json' \
+                  -d "{\"phone\":\"$bhm_phone\"}")
+                
+                echo -e "${YELLOW}Respon Server: $req_otp${NC}"
+                
+                read -p "Masukkan 4 Digit OTP dari WA/SMS Gojek: " gopay_otp
+                
+                if [ ! -z "$gopay_otp" ]; then
+                    echo -e "\n${CYAN}>> Memverifikasi OTP...${NC}"
+                    ver_otp=$(curl -sS -X POST http://gopay.bhm.biz.id/v1/gopay/merchants/$bhm_mid/connect/verify-otp \
+                      -H "Authorization: Bearer $bhm_token" \
+                      -H 'Content-Type: application/json' \
+                      -d "{\"otp\":\"$gopay_otp\"}")
+                    
+                    echo -e "${YELLOW}Respon Server: $ver_otp${NC}"
+                fi
+            fi
+
+            echo -e "\n${CYAN}Siapkan TEKS STRING dari QRIS Statis Anda.${NC}"
             echo "Teks QRIS berawalan '000201010211...' dan diakhiri dengan kombinasi 4 huruf/angka (CRC)."
             read -p "Paste TEKS STRING QRIS Anda di sini: " qris_string
             
@@ -4170,7 +4176,7 @@ if (process.argv[5] && process.argv[5] !== '') cfg.qrisStringCode = process.argv
 fs.writeFileSync(file, JSON.stringify(cfg, null, 2));
 console.log('\n✅ Data API BHM & String QRIS Statis Berhasil Disimpan!');
 JS
-            node temp_bhm.js "$bhm_token" "$bhm_merchant" "$bhm_phone" "$qris_string"
+            node temp_bhm.js "$bhm_token" "$bhm_mid" "$bhm_phone" "$qris_string"
             rm temp_bhm.js
             pm2 restart $BOT_NAME > /dev/null 2>&1
             read -p "Tekan Enter untuk kembali..." 
@@ -4379,12 +4385,13 @@ clear
 echo -e "\033[0;32m======================================================================\033[0m"
 echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V166 SELESAI! 🚀      \033[0m"
 echo -e "\033[0;32m======================================================================\033[0m"
-echo -e "\033[0;36mFITUR BARU DI V166 (THE PERFECT MASTERPIECE FULL UNCOMPRESSED):\033[0m"
+echo -e "\033[0;36mFITUR BARU DI V166 (THE PERFECT MASTERPIECE + BHM FIX):\033[0m"
 echo -e "  ✅ \033[1;33mPOP-UP QRIS MEWAH\033[0m Bayar QRIS nggak pindah halaman, plus ada Timer!"
 echo -e "  ✅ \033[1;33mNOMINAL TOP UP BARU\033[0m Pilihan instan 1K, 5K, 10K, 50K, 100K!"
-echo -e "  ✅ \033[1;33mSENSOR DATA MEMBER\033[0m Nama, Email, & WA di notif Telegram disensor!"
+echo -e "  ✅ \033[1;33mSENSOR DATA MEMBER\033[0m Nama, Email, & WA di notif Telegram disensor aman!"
 echo -e "  ✅ \033[1;33mBROADCAST SOSMED\033[0m Tembak pengumuman ke WA Channel & Telegram via VPS!"
-echo -e "  ✅ \033[1;33mAUTO QRIS DINAMIS FIX\033[0m Bug API BHM libas tuntas, mutasi GoPay aman!"
+echo -e "  ✅ \033[1;33mAUTO QRIS DINAMIS FIX\033[0m Bug API BHM libas tuntas, pakai sistem Brute-Force!"
+echo -e "  ✅ \033[1;33mLOGIN OTP BHM\033[0m Menu 14 sudah dilengkapi verifikasi OTP Gojek!"
 echo -e "  ✅ \033[1;33mMENU VPS AUTO-MEKAR\033[0m Buka Termius langsung disapa Panel tanpa ngetik!"
 echo -e "  ✅ \033[1;33mFULL UNCOMPRESSED\033[0m Kode rapi jali, no minify, gampang dibaca & diedit!"
 echo -e "\033[0;32m======================================================================\033[0m"
