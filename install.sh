@@ -56,7 +56,7 @@ cat << 'EOF' > package.json
 }
 EOF
 
-echo "[3/10] Membangun Antarmuka CSS (FULL UNCOMPRESSED)..."
+echo "[3/10] Membangun Antarmuka CSS (DUAL THEME SUPPORT)..."
 
 cat << 'EOF' > public/style.css
 body { 
@@ -182,7 +182,7 @@ cat << 'EOF' > public/index.html
     </script>
 </head>
 <body class="bg-slate-50 dark:bg-[#0b1320] flex flex-col min-h-screen transition-colors duration-300">
-    <div class="bg-white dark:bg-[#111c2e] border border-slate-200 dark:border-[#1e293b] p-10 pb-8 rounded-[1.2rem] shadow-xl w-[90%] max-w-[360px] text-center mx-auto mt-[10vh]">
+    <div class="bg-white dark:bg-[#111c2e] border border-slate-200 dark:border-[#1e293b] p-8 rounded-[1.2rem] shadow-xl w-[90%] max-w-[340px] text-center mx-auto mt-[10vh]">
         <h1 class="brand-logo-text !mb-2">DIGITAL FIKY STORE</h1>
         
         <div class="overflow-hidden w-full mb-6 border-y border-slate-200 dark:border-[#1e293b] py-1.5 bg-slate-100 dark:bg-[#0b1320] shadow-inner rounded-md">
@@ -196,16 +196,16 @@ cat << 'EOF' > public/index.html
         
         <form id="loginForm">
             <div class="compact-input-wrapper">
-                <input type="text" id="identifier" class="w-full p-3 border border-slate-300 dark:border-[#1e293b] rounded-xl text-sm outline-none bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white font-bold focus:border-yellow-500 dark:focus:border-[#facc15]" required placeholder="Email / No. HP">
+                <input type="text" id="identifier" class="w-full p-2.5 border border-slate-300 dark:border-[#1e293b] rounded-xl text-sm outline-none bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white font-bold focus:border-yellow-500 dark:focus:border-[#facc15]" required placeholder="Email / No. HP">
             </div>
             <div class="compact-input-wrapper">
-                <input type="password" id="password" class="w-full p-3 border border-slate-300 dark:border-[#1e293b] rounded-xl text-sm outline-none bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white font-bold focus:border-yellow-500 dark:focus:border-[#facc15]" required placeholder="Password">
+                <input type="password" id="password" class="w-full p-2.5 border border-slate-300 dark:border-[#1e293b] rounded-xl text-sm outline-none bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white font-bold focus:border-yellow-500 dark:focus:border-[#facc15]" required placeholder="Password">
                 <i class="fas fa-eye password-toggle text-slate-400 dark:text-slate-500" onclick="togglePassword('password', this)"></i>
             </div>
             <div class="text-right mb-5 mt-1">
                 <a href="/forgot.html" class="text-[0.8rem] font-bold text-yellow-600 dark:text-[#facc15] hover:underline">Lupa password?</a>
             </div>
-            <button type="submit" class="w-full py-3 bg-yellow-400 dark:bg-[#facc15] text-slate-900 dark:text-[#0b1320] font-black rounded-xl cursor-pointer hover:opacity-90 shadow-md transition-all">Login Sekarang</button>
+            <button type="submit" class="w-full py-2.5 bg-yellow-400 dark:bg-[#facc15] text-slate-900 dark:text-[#0b1320] font-black rounded-xl cursor-pointer hover:opacity-90 shadow-md transition-all">Login Sekarang</button>
         </form>
 
         <div class="mt-6 text-center text-[0.8rem] text-slate-500 dark:text-slate-400">
@@ -317,26 +317,26 @@ cat << 'EOF' > public/register.html
     </script>
 </head>
 <body class="bg-slate-50 dark:bg-[#0b1320] flex flex-col min-h-screen transition-colors duration-300">
-    <div class="bg-white dark:bg-[#111c2e] border border-slate-200 dark:border-[#1e293b] p-10 pb-8 rounded-[1.2rem] shadow-xl w-[90%] max-w-[360px] text-center mx-auto mt-10" id="box-register">
+    <div class="bg-white dark:bg-[#111c2e] border border-slate-200 dark:border-[#1e293b] p-8 rounded-[1.2rem] shadow-xl w-[90%] max-w-[340px] text-center mx-auto mt-10" id="box-register">
         <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
         <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-1">DAFTAR AKUN</h2>
         <p class="text-[0.8rem] text-slate-500 dark:text-gray-400 mb-4">Silahkan lengkapi data untuk mendaftar!</p>
         
         <form id="registerForm">
             <div class="compact-input-wrapper">
-                <input type="text" id="name" class="w-full p-3 border border-slate-300 dark:border-[#1e293b] rounded-xl text-sm outline-none bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white font-bold focus:border-yellow-500 dark:focus:border-[#facc15]" required placeholder="Nama Lengkap">
+                <input type="text" id="name" class="w-full p-2.5 border border-slate-300 dark:border-[#1e293b] rounded-xl text-sm outline-none bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white font-bold focus:border-yellow-500 dark:focus:border-[#facc15]" required placeholder="Nama Lengkap">
             </div>
             <div class="compact-input-wrapper">
-                <input type="number" id="phone" class="w-full p-3 border border-slate-300 dark:border-[#1e293b] rounded-xl text-sm outline-none bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white font-bold focus:border-yellow-500 dark:focus:border-[#facc15]" required placeholder="Nomor WA (08123...)">
+                <input type="number" id="phone" class="w-full p-2.5 border border-slate-300 dark:border-[#1e293b] rounded-xl text-sm outline-none bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white font-bold focus:border-yellow-500 dark:focus:border-[#facc15]" required placeholder="Nomor WA (08123...)">
             </div>
             <div class="compact-input-wrapper">
-                <input type="email" id="email" class="w-full p-3 border border-slate-300 dark:border-[#1e293b] rounded-xl text-sm outline-none bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white font-bold focus:border-yellow-500 dark:focus:border-[#facc15]" required placeholder="Email">
+                <input type="email" id="email" class="w-full p-2.5 border border-slate-300 dark:border-[#1e293b] rounded-xl text-sm outline-none bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white font-bold focus:border-yellow-500 dark:focus:border-[#facc15]" required placeholder="Email">
             </div>
             <div class="compact-input-wrapper">
-                <input type="password" id="password" class="w-full p-3 border border-slate-300 dark:border-[#1e293b] rounded-xl text-sm outline-none bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white font-bold focus:border-yellow-500 dark:focus:border-[#facc15]" required placeholder="Password">
+                <input type="password" id="password" class="w-full p-2.5 border border-slate-300 dark:border-[#1e293b] rounded-xl text-sm outline-none bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white font-bold focus:border-yellow-500 dark:focus:border-[#facc15]" required placeholder="Password">
                 <i class="fas fa-eye password-toggle text-slate-400 dark:text-slate-500" onclick="togglePassword('password', this)"></i>
             </div>
-            <button type="submit" class="w-full py-3 mt-2 bg-yellow-400 dark:bg-[#facc15] text-slate-900 dark:text-[#0b1320] font-black rounded-xl cursor-pointer hover:opacity-90 shadow-md transition-all">Daftar Sekarang</button>
+            <button type="submit" class="w-full py-2.5 mt-2 bg-yellow-400 dark:bg-[#facc15] text-slate-900 dark:text-[#0b1320] font-black rounded-xl cursor-pointer hover:opacity-90 shadow-md transition-all">Daftar Sekarang</button>
         </form>
 
         <div class="mt-5 text-center text-[0.8rem] text-slate-500 dark:text-slate-400">
@@ -344,7 +344,7 @@ cat << 'EOF' > public/register.html
         </div>
     </div>
 
-    <div class="bg-white dark:bg-[#111c2e] border border-slate-200 dark:border-[#1e293b] p-10 pb-8 rounded-[1.2rem] shadow-xl w-[90%] max-w-[360px] text-center mx-auto mt-16 hidden" id="box-otp">
+    <div class="bg-white dark:bg-[#111c2e] border border-slate-200 dark:border-[#1e293b] p-8 rounded-[1.2rem] shadow-xl w-[90%] max-w-[340px] text-center mx-auto mt-16 hidden" id="box-otp">
         <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
         <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-1">VERIFIKASI WA</h2>
         <p class="text-[0.8rem] text-slate-500 dark:text-gray-400 mb-5">4 Digit kode OTP telah dikirim ke WhatsApp Anda.</p>
@@ -504,16 +504,16 @@ cat << 'EOF' > public/forgot.html
     </script>
 </head>
 <body class="bg-slate-50 dark:bg-[#0b1320] flex flex-col min-h-screen transition-colors duration-300">
-    <div class="bg-white dark:bg-[#111c2e] border border-slate-200 dark:border-[#1e293b] p-10 pb-8 rounded-[1.2rem] shadow-xl w-[90%] max-w-[360px] text-center mx-auto mt-16">
+    <div class="bg-white dark:bg-[#111c2e] border border-slate-200 dark:border-[#1e293b] p-8 rounded-[1.2rem] shadow-xl w-[90%] max-w-[340px] text-center mx-auto mt-16">
         <h1 class="brand-logo-text">DIGITAL FIKY STORE</h1>
         <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-1">RESET PASSWORD</h2>
         
         <form id="requestOtpForm">
             <p class="text-[0.8rem] text-slate-500 dark:text-gray-400 mb-5">Masukkan Nomor WA Anda untuk reset password.</p>
             <div class="compact-input-wrapper">
-                <input type="number" id="phone" class="w-full p-3 border border-slate-300 dark:border-[#1e293b] rounded-xl text-sm outline-none bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white font-bold focus:border-yellow-500 dark:focus:border-[#facc15] text-center" required placeholder="08123...">
+                <input type="number" id="phone" class="w-full p-2.5 border border-slate-300 dark:border-[#1e293b] rounded-xl text-sm outline-none bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white font-bold focus:border-yellow-500 dark:focus:border-[#facc15] text-center" required placeholder="08123...">
             </div>
-            <button type="submit" class="w-full py-3 mt-2 bg-yellow-400 dark:bg-[#facc15] text-slate-900 dark:text-[#0b1320] font-black rounded-xl cursor-pointer hover:opacity-90 shadow-md transition-all">Kirim OTP Reset</button>
+            <button type="submit" class="w-full py-2.5 mt-2 bg-yellow-400 dark:bg-[#facc15] text-slate-900 dark:text-[#0b1320] font-black rounded-xl cursor-pointer hover:opacity-90 shadow-md transition-all">Kirim OTP Reset</button>
         </form>
 
         <form id="resetForm" class="hidden mt-4">
@@ -524,10 +524,10 @@ cat << 'EOF' > public/forgot.html
             </div>
             <div class="compact-input-wrapper mt-3">
                 <label class="block text-[11px] text-slate-500 dark:text-gray-400 font-bold mb-1 text-center">Password Baru</label>
-                <input type="password" id="newPassword" class="w-full p-3 border border-slate-300 dark:border-[#1e293b] rounded-xl text-sm outline-none bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white font-bold focus:border-yellow-500 dark:focus:border-[#facc15]" required placeholder="Ketik disini">
+                <input type="password" id="newPassword" class="w-full p-2.5 border border-slate-300 dark:border-[#1e293b] rounded-xl text-sm outline-none bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white font-bold focus:border-yellow-500 dark:focus:border-[#facc15]" required placeholder="Ketik disini">
                 <i class="fas fa-eye password-toggle text-slate-400 dark:text-slate-500" onclick="togglePassword('newPassword', this)" style="top:70%;"></i>
             </div>
-            <button type="submit" class="w-full py-3 mt-3 bg-yellow-400 dark:bg-[#facc15] text-slate-900 dark:text-[#0b1320] font-black rounded-xl cursor-pointer hover:opacity-90 shadow-md transition-all">Simpan Password</button>
+            <button type="submit" class="w-full py-2.5 mt-3 bg-yellow-400 dark:bg-[#facc15] text-slate-900 dark:text-[#0b1320] font-black rounded-xl cursor-pointer hover:opacity-90 shadow-md transition-all">Simpan Password</button>
         </form>
 
         <div class="mt-6 text-center text-[0.8rem] text-slate-500 dark:text-slate-400">
@@ -745,147 +745,188 @@ cat << 'EOF' > public/dashboard.html
             </div>
         </div>
 
-        <div class="mx-4 mt-4 bg-white dark:bg-[#111c2e] rounded-[1.2rem] p-4 text-slate-800 dark:text-white relative overflow-hidden shadow-lg border border-slate-200 dark:border-[#1e293b] transition-colors duration-300">
-            <div class="absolute right-0 top-0 opacity-10 dark:opacity-30"><i class="fas fa-wallet text-9xl"></i></div> 
+        <div class="mx-4 mt-4 bg-white dark:bg-[#111c2e] rounded-[1.2rem] p-4 text-slate-800 dark:text-white relative overflow-hidden shadow-md border border-slate-200 dark:border-[#1e293b] transition-colors duration-300">
+            <div class="absolute right-0 top-0 opacity-10 dark:opacity-30"><i class="fas fa-wallet text-8xl"></i></div> 
             <div class="relative z-10 flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-xl bg-slate-50 dark:bg-[#0b1320] flex items-center justify-center text-orange-500 dark:text-[#facc15] border border-orange-200 dark:border-[#facc15]/20 transition-colors">
+                    <div class="w-11 h-11 rounded-xl bg-slate-50 dark:bg-[#0b1320] flex items-center justify-center text-orange-500 dark:text-[#facc15] border border-orange-200 dark:border-[#facc15]/20 transition-colors shadow-sm">
                         <i class="fas fa-wallet text-xl"></i>
                     </div>
                     <div class="flex flex-col">
                         <div class="flex items-center gap-2 mb-0.5">
-                            <span class="text-xs text-slate-500 dark:text-gray-300 font-medium">
+                            <span class="text-[11px] text-slate-500 dark:text-gray-400 font-bold tracking-wide uppercase">
                                 Saldo Aktif 
-                                <i class="fas fa-eye cursor-pointer hover:text-orange-500 dark:hover:text-[#facc15]" onclick="toggleSaldo()" id="eyeSaldo"></i>
+                                <i class="fas fa-eye cursor-pointer hover:text-orange-500 dark:hover:text-[#facc15] ml-1" onclick="toggleSaldo()" id="eyeSaldo"></i>
                             </span>
                         </div>
-                        <h2 class="text-[19px] font-extrabold mt-0.5" id="displaySaldo">Rp •••••••</h2>
+                        <h2 class="text-[18px] font-black mt-0.5 text-slate-800 dark:text-white" id="displaySaldo">Rp •••••••</h2>
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button class="w-10 h-10 rounded-full bg-slate-50 dark:bg-[#0b1320] flex items-center justify-center text-orange-500 dark:text-[#facc15] border border-slate-200 dark:border-[#1e293b] hover:bg-slate-100 dark:hover:bg-[#1a2639] transition-colors z-10" onclick="bantuanAdmin()">
+                    <button class="w-10 h-10 rounded-full bg-slate-50 dark:bg-[#0b1320] flex items-center justify-center text-orange-500 dark:text-[#facc15] border border-slate-200 dark:border-[#1e293b] hover:bg-slate-100 dark:hover:bg-[#1a2639] transition-colors z-10 shadow-sm" onclick="bantuanAdmin()">
                         <i class="fas fa-headset text-lg"></i>
                     </button>
-                    <button class="bg-yellow-400 dark:bg-[#facc15] text-slate-900 dark:text-[#0b1320] px-5 py-2.5 rounded-full text-[13px] font-extrabold shadow-md hover:opacity-90 z-10 relative transition-colors" onclick="openTopUp()">
+                    <button class="bg-yellow-400 dark:bg-[#facc15] text-slate-900 dark:text-[#0b1320] px-5 py-2.5 rounded-full text-[12px] font-extrabold shadow-md hover:opacity-90 z-10 relative transition-colors" onclick="openTopUp()">
                         Topup
                     </button>
                 </div>
             </div>
         </div>
 
-        <div id="bannerContainer" class="mx-4 mt-6 relative rounded-[1.2rem] h-[170px] overflow-hidden border border-slate-200 dark:border-[#1e293b] hidden shadow-md">
+        <div id="bannerContainer" class="mx-4 mt-6 relative rounded-[1.2rem] h-[150px] overflow-hidden border border-slate-200 dark:border-[#1e293b] hidden shadow-md">
             <div id="promoSlider" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth"></div>
             <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20" id="promoDots"></div>
         </div>
 
-        <div class="mx-4 mt-4 bg-white dark:bg-[#111c2e] border border-slate-200 dark:border-[#1e293b] rounded-[1rem] p-3.5 shadow-sm flex justify-between items-center transition-colors duration-300">
+        <div class="mx-4 mt-5 bg-white dark:bg-[#111c2e] border border-slate-200 dark:border-[#1e293b] rounded-[1rem] p-3.5 shadow-sm flex justify-between items-center transition-colors duration-300">
             <div class="flex items-center gap-3">
                 <div class="w-9 h-9 rounded-full bg-slate-50 dark:bg-[#0b1320] flex items-center justify-center text-orange-500 dark:text-[#facc15] shadow-sm border border-slate-200 dark:border-[#1e293b] transition-colors">
-                    <i class="far fa-calendar-alt text-[15px]"></i>
+                    <i class="far fa-calendar-alt text-[14px]"></i>
                 </div>
                 <div class="flex flex-col">
                     <span class="text-[9px] text-slate-400 dark:text-gray-400 font-bold uppercase mb-0.5">Tanggal</span>
-                    <span class="text-xs font-extrabold text-slate-700 dark:text-gray-200" id="realtimeDate">YYYY/MM/DD</span>
+                    <span class="text-[11px] font-extrabold text-slate-700 dark:text-gray-200" id="realtimeDate">YYYY/MM/DD</span>
                 </div>
             </div>
             <div class="h-8 w-px bg-slate-200 dark:bg-[#1e293b] mx-2 transition-colors"></div>
             <div class="flex items-center gap-3">
                 <div class="flex flex-col text-right">
                     <span class="text-[9px] text-slate-400 dark:text-gray-400 font-bold uppercase mb-0.5">Waktu</span>
-                    <span class="text-xs font-extrabold text-slate-700 dark:text-gray-200 tracking-widest" id="realtimeClock">00:00:00</span>
+                    <span class="text-[11px] font-extrabold text-slate-700 dark:text-gray-200 tracking-widest" id="realtimeClock">00:00:00</span>
                 </div>
                 <div class="w-9 h-9 rounded-full bg-slate-50 dark:bg-[#0b1320] flex items-center justify-center text-orange-500 dark:text-[#facc15] shadow-sm border border-slate-200 dark:border-[#1e293b] transition-colors">
-                    <i class="far fa-clock text-[15px]"></i>
+                    <i class="far fa-clock text-[14px]"></i>
                 </div>
             </div>
         </div>
 
         <div class="mx-4 mt-8 mb-4">
-            <h3 class="font-extrabold text-slate-800 dark:text-white mb-4 text-[16px] ml-1 transition-colors">Layanan Produk PPOB</h3>
+            <h3 class="font-extrabold text-slate-800 dark:text-white mb-4 text-[15px] ml-1 transition-colors tracking-wide">Layanan Produk PPOB</h3>
             <div class="grid grid-cols-3 gap-y-6 gap-x-3">
                 
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=pulsa'">
-                    <div class="w-20 h-20 rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-orange-500 dark:text-[#facc15] flex items-center justify-center text-4xl shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-orange-500 dark:text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors">
                         <i class="fas fa-mobile-alt"></i>
                     </div>
-                    <span class="text-[12px] font-bold text-slate-700 dark:text-gray-300">PULSA</span>
+                    <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300">PULSA</span>
                 </div>
                 
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=data'">
-                    <div class="w-20 h-20 rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-orange-500 dark:text-[#facc15] flex items-center justify-center text-4xl shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-orange-500 dark:text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors">
                         <i class="fas fa-globe"></i>
                     </div>
-                    <span class="text-[12px] font-bold text-slate-700 dark:text-gray-300">DATA</span>
+                    <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300">DATA</span>
                 </div>
                 
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/game.html'">
-                    <div class="w-20 h-20 rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-orange-500 dark:text-[#facc15] flex items-center justify-center text-4xl shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-orange-500 dark:text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors">
                         <i class="fas fa-gamepad"></i>
                     </div>
-                    <span class="text-[12px] font-bold text-slate-700 dark:text-gray-300">GAME</span>
+                    <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300">GAME</span>
                 </div>
                 
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=voucher'">
-                    <div class="w-20 h-20 rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-orange-500 dark:text-[#facc15] flex items-center justify-center text-4xl shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-orange-500 dark:text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors">
                         <i class="fas fa-ticket-alt"></i>
                     </div>
-                    <span class="text-[12px] font-bold text-slate-700 dark:text-gray-300">VOUCHER</span>
+                    <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300">VOUCHER</span>
                 </div>
                 
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=smstelpon'">
-                    <div class="w-20 h-20 rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-orange-500 dark:text-[#facc15] flex items-center justify-center text-4xl shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-orange-500 dark:text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors">
                         <i class="fas fa-phone-square-alt"></i>
                     </div>
-                    <span class="text-[12px] font-bold text-slate-700 dark:text-gray-300 text-center leading-tight mt-1">SMS & TELP</span>
+                    <span class="text-[10px] font-bold text-slate-700 dark:text-gray-300 text-center leading-tight mt-1">SMS & TELP</span>
                 </div>
                 
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=pln'">
-                    <div class="w-20 h-20 rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-orange-500 dark:text-[#facc15] flex items-center justify-center text-4xl shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-orange-500 dark:text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors">
                         <i class="fas fa-bolt"></i>
                     </div>
-                    <span class="text-[12px] font-bold text-slate-700 dark:text-gray-300">PLN</span>
+                    <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300">PLN</span>
                 </div>
                 
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=masaaktif'">
-                    <div class="w-20 h-20 rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-orange-500 dark:text-[#facc15] flex items-center justify-center text-4xl shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-orange-500 dark:text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors">
                         <i class="fas fa-calendar-check"></i>
                     </div>
-                    <span class="text-[12px] font-bold text-slate-700 dark:text-gray-300 text-center leading-tight mt-1">MASA AKTIF</span>
+                    <span class="text-[10px] font-bold text-slate-700 dark:text-gray-300 text-center leading-tight mt-1">MASA AKTIF</span>
                 </div>
                 
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=perdana'">
-                    <div class="w-20 h-20 rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-orange-500 dark:text-[#facc15] flex items-center justify-center text-4xl shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-orange-500 dark:text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors">
                         <i class="fas fa-sim-card"></i>
                     </div>
-                    <span class="text-[12px] font-bold text-slate-700 dark:text-gray-300 text-center">PERDANA</span>
+                    <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300 text-center">PERDANA</span>
                 </div>
                 
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=ewallet'">
-                    <div class="w-20 h-20 rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-orange-500 dark:text-[#facc15] flex items-center justify-center text-4xl shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-orange-500 dark:text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors">
                         <i class="fas fa-wallet"></i>
                     </div>
-                    <span class="text-[12px] font-bold text-slate-700 dark:text-gray-300">E-WALLET</span>
+                    <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300">E-WALLET</span>
                 </div>
 
             </div>
         </div>
 
+        <div class="mx-4 mt-8 mb-4">
+            <h3 class="font-extrabold text-slate-800 dark:text-white mb-4 text-[15px] ml-1 transition-colors tracking-wide">Layanan VPN Premium</h3>
+            <div class="grid grid-cols-3 gap-y-6 gap-x-3">
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="comingSoon()">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-indigo-500 dark:text-indigo-400 flex flex-col items-center justify-center shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors relative">
+                        <i class="fas fa-shield-alt text-3xl"></i>
+                        <span class="absolute -bottom-2.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-[8px] font-extrabold px-2 py-0.5 rounded-md border border-red-200 dark:border-red-800 shadow-sm">Kosong</span>
+                    </div>
+                    <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300 mt-1">SSH</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="comingSoon()">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-indigo-500 dark:text-indigo-400 flex flex-col items-center justify-center shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors relative">
+                        <i class="fas fa-shield-alt text-3xl"></i>
+                        <span class="absolute -bottom-2.5 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-[8px] font-extrabold px-2 py-0.5 rounded-md border border-green-200 dark:border-green-800 shadow-sm">Tersedia</span>
+                    </div>
+                    <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300 mt-1">VMESS</span>
+                </div>
+                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="comingSoon()">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-indigo-500 dark:text-indigo-400 flex flex-col items-center justify-center shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors relative">
+                        <i class="fas fa-shield-alt text-3xl"></i>
+                        <span class="absolute -bottom-2.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-[8px] font-extrabold px-2 py-0.5 rounded-md border border-red-200 dark:border-red-800 shadow-sm">Kosong</span>
+                    </div>
+                    <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300 mt-1">VLESS</span>
+                </div>
+                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="comingSoon()">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-indigo-500 dark:text-indigo-400 flex flex-col items-center justify-center shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors relative">
+                        <i class="fas fa-shield-alt text-3xl"></i>
+                        <span class="absolute -bottom-2.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-[8px] font-extrabold px-2 py-0.5 rounded-md border border-red-200 dark:border-red-800 shadow-sm">Kosong</span>
+                    </div>
+                    <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300 mt-1">TROJAN</span>
+                </div>
+                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="comingSoon()">
+                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-white dark:bg-[#111c2e] text-indigo-500 dark:text-indigo-400 flex flex-col items-center justify-center shadow-sm mb-2 border border-slate-200 dark:border-[#1e293b] transition-colors relative">
+                        <i class="fas fa-shield-alt text-3xl"></i>
+                        <span class="absolute -bottom-2.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-[8px] font-extrabold px-2 py-0.5 rounded-md border border-red-200 dark:border-red-800 shadow-sm">Kosong</span>
+                    </div>
+                    <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300 mt-1">ZIVPN</span>
+                </div>
+            </div>
+        </div>
+
         <div class="mx-4 mt-8 mb-8">
-            <h3 class="font-extrabold text-slate-800 dark:text-white mb-2 text-[16px] ml-1 transition-colors">Komunitas & Update</h3>
+            <h3 class="font-extrabold text-slate-800 dark:text-white mb-2 text-[15px] ml-1 transition-colors tracking-wide">Komunitas & Update</h3>
             <p class="text-[11px] text-slate-500 dark:text-gray-400 mb-4 ml-1 transition-colors">Gabung ke saluran resmi kami untuk mendapatkan info promo, event, dan update terbaru langsung dari Digital Fiky Store!</p>
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-gradient-to-br from-white to-slate-50 dark:from-[#111c2e] dark:to-[#0b1320] border border-slate-200 dark:border-[#1e293b] rounded-2xl p-4 flex items-center cursor-pointer hover:shadow-md transition-all" onclick="bukaLinkKomunitas('tele')">
-                    <i class="fab fa-telegram text-4xl text-blue-500 mr-3 drop-shadow-sm"></i>
+                    <i class="fab fa-telegram text-[32px] text-blue-500 mr-3 drop-shadow-sm"></i>
                     <div class="flex flex-col">
-                        <h4 class="font-extrabold text-[13px] text-slate-800 dark:text-white transition-colors">Telegram</h4>
-                        <p class="text-[10px] font-bold text-slate-500 dark:text-gray-400 mt-0.5 uppercase tracking-wide transition-colors">Join Channel</p>
+                        <h4 class="font-extrabold text-[12px] text-slate-800 dark:text-white transition-colors">Telegram</h4>
+                        <p class="text-[9px] font-bold text-slate-500 dark:text-gray-400 mt-0.5 uppercase tracking-wide transition-colors">Join Channel</p>
                     </div>
                 </div>
                 <div class="bg-gradient-to-br from-white to-slate-50 dark:from-[#111c2e] dark:to-[#0b1320] border border-slate-200 dark:border-[#1e293b] rounded-2xl p-4 flex items-center cursor-pointer hover:shadow-md transition-all" onclick="bukaLinkKomunitas('wa')">
-                    <i class="fab fa-whatsapp text-4xl text-green-500 mr-3 drop-shadow-sm"></i>
+                    <i class="fab fa-whatsapp text-[32px] text-green-500 mr-3 drop-shadow-sm"></i>
                     <div class="flex flex-col">
-                        <h4 class="font-extrabold text-[13px] text-slate-800 dark:text-white transition-colors">WhatsApp</h4>
-                        <p class="text-[10px] font-bold text-slate-500 dark:text-gray-400 mt-0.5 uppercase tracking-wide transition-colors">Join Saluran</p>
+                        <h4 class="font-extrabold text-[12px] text-slate-800 dark:text-white transition-colors">WhatsApp</h4>
+                        <p class="text-[9px] font-bold text-slate-500 dark:text-gray-400 mt-0.5 uppercase tracking-wide transition-colors">Join Saluran</p>
                     </div>
                 </div>
             </div>
@@ -893,8 +934,8 @@ cat << 'EOF' > public/dashboard.html
 
         <div class="mx-4 mt-8 mb-8 bg-white dark:bg-[#111c2e] rounded-2xl border border-slate-200 dark:border-[#1e293b] shadow-sm p-4 transition-colors duration-300">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="font-extrabold text-slate-800 dark:text-white text-[14px]">Statistik Penjualan Toko</h3>
-                <span class="text-[9px] bg-slate-100 dark:bg-[#1e293b] text-yellow-600 dark:text-[#facc15] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide animate-pulse border border-yellow-200 dark:border-[#facc15]/30">Realtime</span>
+                <h3 class="font-extrabold text-slate-800 dark:text-white text-[13px] tracking-wide">Statistik Penjualan Toko</h3>
+                <span class="text-[8px] bg-slate-100 dark:bg-[#1e293b] text-yellow-600 dark:text-[#facc15] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider animate-pulse border border-yellow-200 dark:border-[#facc15]/30">Realtime</span>
             </div>
             <div class="grid grid-cols-4 gap-2">
                 <div class="bg-slate-50 dark:bg-[#0b1320] p-2.5 rounded-xl border border-slate-200 dark:border-[#1e293b] text-center transition-colors">
@@ -1018,21 +1059,32 @@ cat << 'EOF' > public/dashboard.html
             }
         });
 
+        function comingSoon() {
+            const bgSwal = document.documentElement.classList.contains('dark') ? '#111c2e' : '#ffffff';
+            const textSwal = document.documentElement.classList.contains('dark') ? '#ffffff' : '#0f172a';
+            
+            Swal.fire({
+                icon: 'info',
+                title: 'Segera Hadir!',
+                text: 'Fitur VPN Premium sedang dalam tahap pengembangan. Nantikan segera!',
+                background: bgSwal,
+                color: textSwal,
+                confirmButtonColor: document.documentElement.classList.contains('dark') ? '#facc15' : '#facc15'
+            });
+        }
+
         function isMaintenance() {
             const tzStr = new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"}); 
             const nowWIB = new Date(tzStr); 
             const h = nowWIB.getHours(); 
             const m = nowWIB.getMinutes();
-            if (h >= 23 || (h === 0 && m <= 30)) {
-                return true; 
-            }
+            if (h >= 23 || (h === 0 && m <= 30)) return true; 
             return false;
         }
 
         if(isMaintenance()) {
             const mb = document.getElementById('maintenanceBanner'); 
             if(mb) mb.classList.remove('hidden');
-            
             const hm = document.getElementById('headerMain'); 
             if(hm) hm.classList.remove('top-0');
         }
@@ -1061,16 +1113,10 @@ cat << 'EOF' > public/dashboard.html
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0'); 
             const seconds = String(now.getSeconds()).padStart(2, '0');
-            
-            if(document.getElementById('realtimeDate')) {
-                document.getElementById('realtimeDate').innerText = `${year}/${month}/${date}`;
-            }
-            if(document.getElementById('realtimeClock')) {
-                document.getElementById('realtimeClock').innerText = `${hours}:${minutes}:${seconds}`;
-            }
+            if(document.getElementById('realtimeDate')) document.getElementById('realtimeDate').innerText = `${year}/${month}/${date}`;
+            if(document.getElementById('realtimeClock')) document.getElementById('realtimeClock').innerText = `${hours}:${minutes}:${seconds}`;
         }
-        setInterval(updateDateTime, 1000); 
-        updateDateTime();
+        setInterval(updateDateTime, 1000); updateDateTime();
 
         function updSal() {
             const el = document.getElementById('displaySaldo'); 
@@ -1084,128 +1130,60 @@ cat << 'EOF' > public/dashboard.html
             }
         }
         
-        function toggleSaldo() { 
-            hideS = !hideS; 
-            localStorage.setItem('hideSaldo', hideS); 
-            updSal(); 
-        }
+        function toggleSaldo() { hideS = !hideS; localStorage.setItem('hideSaldo', hideS); updSal(); }
 
         function logout() {
             const bgSwal = document.documentElement.classList.contains('dark') ? '#0b1320' : '#ffffff';
             const textSwal = document.documentElement.classList.contains('dark') ? '#ffffff' : '#0f172a';
-            
             Swal.fire({
-                title: 'Keluar Akun?', 
-                text: 'Apakah kamu yakin ingin keluar?', 
-                icon: 'warning', 
-                showCancelButton: true, 
-                background: bgSwal, 
-                color: textSwal, 
-                confirmButtonColor: '#d33', 
-                cancelButtonColor: '#64748b'
-            }).then(r => { 
-                if(r.isConfirmed) { 
-                    localStorage.removeItem('user'); 
-                    window.location.href = '/'; 
-                } 
-            });
+                title: 'Keluar Akun?', text: 'Apakah kamu yakin ingin keluar?', icon: 'warning', showCancelButton: true, 
+                background: bgSwal, color: textSwal, confirmButtonColor: '#d33', cancelButtonColor: '#64748b'
+            }).then(r => { if(r.isConfirmed) { localStorage.removeItem('user'); window.location.href = '/'; } });
         }
         
-        function bantuanAdmin() { 
-            window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(`Halo Admin DIGITAL FIKY STORE, saya butuh bantuan.`), '_blank'); 
-        }
+        function bantuanAdmin() { window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(`Halo Admin DIGITAL FIKY STORE, saya butuh bantuan.`), '_blank'); }
+        function bukaLinkKomunitas(tipe) { if(tipe === 'tele') window.open(linkTele, '_blank'); if(tipe === 'wa') window.open(linkWa, '_blank'); }
+
+        fetch('/api/user/balance', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone: user.phone}) })
+        .then(r => r.json()).then(d => { curSal = d.saldo; updSal(); });
+
+        fetch('/api/user/transactions', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone: user.phone}) })
+        .then(r => r.json()).then(d => { document.getElementById('headTrx').innerText = (d.transactions || []).length + ' Trx'; });
         
-        function bukaLinkKomunitas(tipe) { 
-            if(tipe === 'tele') window.open(linkTele, '_blank'); 
-            if(tipe === 'wa') window.open(linkWa, '_blank'); 
-        }
+        fetch('/api/global-stats').then(r => r.json()).then(d => {
+            document.getElementById('statToday').innerText = d.today || 0; document.getElementById('statWeek').innerText = d.week || 0;
+            document.getElementById('statMonth').innerText = d.month || 0; document.getElementById('statAll').innerText = d.all || 0;
+        }).catch(e => {});
 
-        fetch('/api/user/balance', { 
-            method: 'POST', 
-            headers: {'Content-Type': 'application/json'}, 
-            body: JSON.stringify({phone: user.phone}) 
-        })
-        .then(r => r.json())
-        .then(d => { 
-            curSal = d.saldo; 
-            updSal(); 
-        });
-
-        fetch('/api/user/transactions', { 
-            method: 'POST', 
-            headers: {'Content-Type': 'application/json'}, 
-            body: JSON.stringify({phone: user.phone}) 
-        })
-        .then(r => r.json())
-        .then(d => { 
-            document.getElementById('headTrx').innerText = (d.transactions || []).length + ' Trx'; 
-        });
-        
-        fetch('/api/global-stats')
-        .then(r => r.json())
-        .then(d => {
-            document.getElementById('statToday').innerText = d.today || 0; 
-            document.getElementById('statWeek').innerText = d.week || 0;
-            document.getElementById('statMonth').innerText = d.month || 0; 
-            document.getElementById('statAll').innerText = d.all || 0;
-        })
-        .catch(e => {});
-
-        fetch('/api/config')
-        .then(r => r.json())
-        .then(d => {
-            if(d.linkTele) linkTele = d.linkTele; 
-            if(d.linkWa) linkWa = d.linkWa;
-            
+        fetch('/api/config').then(r => r.json()).then(d => {
+            if(d.linkTele) linkTele = d.linkTele; if(d.linkWa) linkWa = d.linkWa;
             if(d.banners && d.banners.length > 0) {
                 const bc = document.getElementById('bannerContainer');
                 if(bc) {
                     bc.classList.remove('hidden');
-                    const s = document.getElementById('promoSlider'); 
-                    const dc = document.getElementById('promoDots');
-                    
+                    const s = document.getElementById('promoSlider'); const dc = document.getElementById('promoDots');
                     s.innerHTML = d.banners.map(fileName => `<div class="w-full h-full shrink-0 snap-center relative"><img src="/banners/${decodeURIComponent(fileName)}" class="absolute inset-0 w-full h-full object-cover"></div>`).join('');
-                    
-                    let dH = ''; 
-                    for(let i = 0; i < d.banners.length; i++) { 
-                        dH += `<div class="w-2 h-2 rounded-full bg-white opacity-${i === 0 ? '100' : '40'} dot-indicator shadow-sm"></div>`; 
-                    }
+                    let dH = ''; for(let i = 0; i < d.banners.length; i++) { dH += `<div class="w-2 h-2 rounded-full bg-white opacity-${i === 0 ? '100' : '40'} dot-indicator shadow-sm"></div>`; }
                     dc.innerHTML = dH;
-                    
-                    let dots = document.querySelectorAll('.dot-indicator'); 
-                    let cS = 0;
-                    
+                    let dots = document.querySelectorAll('.dot-indicator'); let cS = 0;
                     s.addEventListener('scroll', () => {
                         let sI = Math.round(s.scrollLeft / s.clientWidth);
-                        dots.forEach((dt, i) => { 
-                            dt.classList.toggle('opacity-100', i === sI); 
-                            dt.classList.toggle('opacity-40', i !== sI); 
-                        });
+                        dots.forEach((dt, i) => { dt.classList.toggle('opacity-100', i === sI); dt.classList.toggle('opacity-40', i !== sI); });
                         cS = sI;
                     });
-                    
-                    setInterval(() => { 
-                        cS = (cS + 1) % (dots.length || 1); 
-                        s.scrollTo({ left: cS * s.clientWidth, behavior: 'smooth' }); 
-                    }, 3500);
+                    setInterval(() => { cS = (cS + 1) % (dots.length || 1); s.scrollTo({ left: cS * s.clientWidth, behavior: 'smooth' }); }, 3500);
                 }
             }
         });
 
         function openTopUp() { 
             document.getElementById('topupOverlay').classList.remove('hidden'); 
-            setTimeout(() => { 
-                document.getElementById('topupOverlay').classList.remove('opacity-0'); 
-                document.getElementById('topupSheet').classList.remove('translate-y-full'); 
-            }, 10); 
+            setTimeout(() => { document.getElementById('topupOverlay').classList.remove('opacity-0'); document.getElementById('topupSheet').classList.remove('translate-y-full'); }, 10); 
         }
         
         function closeTopUp() { 
-            document.getElementById('topupSheet').classList.add('translate-y-full'); 
-            document.getElementById('topupOverlay').classList.add('opacity-0'); 
-            setTimeout(() => {
-                document.getElementById('topupOverlay').classList.add('hidden');
-            }, 300); 
+            document.getElementById('topupSheet').classList.add('translate-y-full'); document.getElementById('topupOverlay').classList.add('opacity-0'); 
+            setTimeout(() => document.getElementById('topupOverlay').classList.add('hidden'), 300); 
         }
         
         function selM(m) {
@@ -1221,11 +1199,8 @@ cat << 'EOF' > public/dashboard.html
             });
             document.getElementById('r-' + m).className = `w-5 h-5 rounded-full border-[6px] ${borderColorSel} ${bgSel} shrink-0 transition-colors`;
             
-            if(isDark) { 
-                document.getElementById('m-' + m).classList.add('border-[#facc15]'); 
-            } else { 
-                document.getElementById('m-' + m).classList.add('border-yellow-400'); 
-            }
+            if(isDark) { document.getElementById('m-' + m).classList.add('border-[#facc15]'); } 
+            else { document.getElementById('m-' + m).classList.add('border-yellow-400'); }
         }
 
         async function prosesTopup() {
@@ -1233,35 +1208,18 @@ cat << 'EOF' > public/dashboard.html
             const bg = document.documentElement.classList.contains('dark') ? '#0b1320' : '#ffffff'; 
             const c = document.documentElement.classList.contains('dark') ? '#fff' : '#0f172a';
             
-            if(isMaintenance()) {
-                return Swal.fire({ icon: 'error', title: 'MAINTENANCE', text: 'Sistem Maintenance.', background: bg, color: c });
-            }
-            
-            if(!n || n <= 0) {
-                return Swal.fire({ icon: 'warning', title: 'Gagal', text: 'Isi nominal valid!', background: bg, color: c });
-            }
-            
-            if(!sel) {
-                return Swal.fire({ icon: 'warning', title: 'Gagal', text: 'Pilih metode pembayaran!', background: bg, color: c });
-            }
+            if(isMaintenance()) return Swal.fire({ icon: 'error', title: 'MAINTENANCE', text: 'Sistem Maintenance.', background: bg, color: c });
+            if(!n || n <= 0) return Swal.fire({ icon: 'warning', title: 'Gagal', text: 'Isi nominal valid!', background: bg, color: c });
+            if(!sel) return Swal.fire({ icon: 'warning', title: 'Gagal', text: 'Pilih metode pembayaran!', background: bg, color: c });
             
             const fn = n + Math.floor(Math.random() * 90) + 10;
             
             if(sel === 'qris') {
-                if(n < 1000) {
-                    return Swal.fire({ icon: 'warning', title: 'Gagal', text: 'Minimal Rp 1.000', background: bg, color: c });
-                }
-                
+                if(n < 1000) return Swal.fire({ icon: 'warning', title: 'Gagal', text: 'Minimal Rp 1.000', background: bg, color: c });
                 closeTopUp();
                 Swal.fire({ title: 'Membuat QRIS...', allowOutsideClick: false, background: bg, color: c, didOpen: () => Swal.showLoading() });
-                
                 try {
-                    let res = await fetch('/api/topup/request', { 
-                        method: 'POST', 
-                        headers: {'Content-Type': 'application/json'}, 
-                        body: JSON.stringify({phone: user.phone, method: 'QRIS Otomatis', nominal: fn}) 
-                    });
-                    
+                    let res = await fetch('/api/topup/request', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone: user.phone, method: 'QRIS Otomatis', nominal: fn}) });
                     let data = await res.json();
                     
                     if(res.ok) {
@@ -1299,43 +1257,24 @@ cat << 'EOF' > public/dashboard.html
                         setTimeout(() => {
                             Swal.fire({
                                 title: `<span class="text-slate-800 dark:text-white font-extrabold text-lg uppercase tracking-wide">Scan QRIS Dinamis</span>`,
-                                html: htmlContent, 
-                                showConfirmButton: false, 
-                                showCloseButton: true, 
-                                background: bg, 
-                                color: c,
+                                html: htmlContent, showConfirmButton: false, showCloseButton: true, background: bg, color: c,
                                 didOpen: () => {
-                                    let t = 600; 
-                                    let tmr = document.getElementById('qrisTimerModal');
+                                    let t = 600; let tmr = document.getElementById('qrisTimerModal');
                                     timerInterval = setInterval(() => { 
-                                        t--; 
-                                        let m = Math.floor(t / 60).toString().padStart(2, '0'); 
-                                        let s = (t % 60).toString().padStart(2, '0'); 
+                                        t--; let m = Math.floor(t / 60).toString().padStart(2, '0'); let s = (t % 60).toString().padStart(2, '0'); 
                                         if(tmr) tmr.innerText = `${m} : ${s}`; 
-                                        if(t <= 0) { 
-                                            clearInterval(timerInterval); 
-                                            Swal.close(); 
-                                            location.href = '/riwayat_topup.html'; 
-                                        } 
+                                        if(t <= 0) { clearInterval(timerInterval); Swal.close(); location.href = '/riwayat_topup.html'; } 
                                     }, 1000);
                                 }, 
                                 willClose: () => clearInterval(timerInterval)
                             });
                         }, 300);
                         
-                    } else { 
-                        Swal.fire({ icon: 'error', title: 'Gagal', text: data.error || 'Terjadi kesalahan sistem.', background: bg, color: c }); 
-                    }
-                } catch(e) { 
-                    Swal.fire({ icon: 'error', title: 'Gagal', text: 'Jaringan bermasalah.', background: bg, color: c }); 
-                }
+                    } else { Swal.fire({ icon: 'error', title: 'Gagal', text: data.error || 'Terjadi kesalahan sistem.', background: bg, color: c }); }
+                } catch(e) { Swal.fire({ icon: 'error', title: 'Gagal', text: 'Jaringan bermasalah.', background: bg, color: c }); }
             } else {
                 closeTopUp();
-                fetch('/api/topup/request', { 
-                    method: 'POST', 
-                    headers: {'Content-Type': 'application/json'}, 
-                    body: JSON.stringify({phone: user.phone, method: 'Manual WA', nominal: fn}) 
-                }).then(() => {
+                fetch('/api/topup/request', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone: user.phone, method: 'Manual WA', nominal: fn}) }).then(() => {
                     window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(`Halo Admin DIGITAL FIKY STORE, saya mau Top Up Saldo Manual.\nNomor Akun: ${user.phone}\nNominal: *Rp ${fn.toLocaleString('id-ID')}*\n\nMohon instruksi selanjutnya.`), '_blank');
                     setTimeout(() => location.href = '/riwayat_topup.html', 1000);
                 });
@@ -1345,30 +1284,18 @@ cat << 'EOF' > public/dashboard.html
         window.shareQRISImg = async function() {
             let imgUrl = document.getElementById('qris-image-target').src;
             try {
-                let res = await fetch(imgUrl); 
-                let blob = await res.blob();
+                let res = await fetch(imgUrl); let blob = await res.blob();
                 let file = new File([blob], 'QRIS_Topup.jpg', { type: 'image/jpeg' });
-                if (navigator.canShare && navigator.canShare({ files: [file] })) { 
-                    await navigator.share({ title: 'QRIS Topup', files: [file] }); 
-                } else { 
-                    Swal.fire('Gagal', 'Browser tidak mendukung. Gunakan Unduh.', 'error'); 
-                }
+                if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ title: 'QRIS Topup', files: [file] }); } 
+                else { Swal.fire('Gagal', 'Browser tidak mendukung. Gunakan Unduh.', 'error'); }
             } catch(e) {}
         }
-        
         window.downloadQRISImg = async function() {
             let imgUrl = document.getElementById('qris-image-target').src;
             try {
-                let res = await fetch(imgUrl); 
-                let blob = await res.blob(); 
-                let url = window.URL.createObjectURL(blob);
-                let a = document.createElement('a'); 
-                a.href = url; 
-                a.download = 'QRIS_Topup_' + Date.now() + '.jpg';
-                document.body.appendChild(a); 
-                a.click(); 
-                window.URL.revokeObjectURL(url); 
-                document.body.removeChild(a);
+                let res = await fetch(imgUrl); let blob = await res.blob(); let url = window.URL.createObjectURL(blob);
+                let a = document.createElement('a'); a.href = url; a.download = 'QRIS_Topup_' + Date.now() + '.jpg';
+                document.body.appendChild(a); a.click(); window.URL.revokeObjectURL(url); document.body.removeChild(a);
             } catch(e) {}
         }
     </script>
@@ -1378,611 +1305,6 @@ EOF
 
 echo "[PART 1 SELESAI DITULIS!]"
 // selesai
-echo "[5/10] Membangun Halaman Operator & List Produk (FULL UNCOMPRESSED)..."
-
-cat << 'EOF' > public/operator.html
-<!DOCTYPE html>
-<html lang="id" id="html-root">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pilih Layanan</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        tailwind.config = { 
-            darkMode: 'class' 
-        };
-        if (localStorage.getItem('theme') === 'light') { 
-            document.documentElement.classList.remove('dark'); 
-        } else { 
-            document.documentElement.classList.add('dark'); 
-        }
-    </script>
-</head>
-<body class="bg-slate-50 dark:bg-[#0b1320] font-sans transition-colors duration-300 text-slate-800 dark:text-white">
-    <div class="max-w-md mx-auto bg-slate-50 dark:bg-[#0b1320] min-h-screen relative shadow-2xl overflow-x-hidden flex flex-col transition-colors duration-300">
-        
-        <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-slate-200 dark:border-[#1e293b] shrink-0 transition-colors">
-            <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-slate-800 dark:text-white transition-colors" onclick="goBack()"></i>
-            <h1 class="text-[18px] font-bold text-slate-800 dark:text-white uppercase transition-colors" id="pageTitle">Layanan</h1>
-        </div>
-
-        <div class="flex-1 overflow-y-auto hide-scrollbar pb-10">
-            
-            <div id="operatorContainer" class="block">
-                <div class="px-4 mt-6">
-                    <div class="bg-white dark:bg-[#111c2e] rounded-2xl overflow-hidden border border-slate-200 dark:border-[#1e293b] shadow-sm transition-colors" id="opListRender"></div>
-                </div>
-            </div>
-
-            <div id="categoryContainer" class="hidden">
-                <div class="flex justify-between items-center px-5 py-4 bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white border-b border-slate-200 dark:border-[#1e293b] transition-colors">
-                    <span class="font-bold text-[15px]" id="catSubtitle">Pilih Kategori</span>
-                    <i class="fas fa-home text-lg cursor-pointer text-slate-500 dark:text-gray-400 hover:text-orange-500 dark:hover:text-[#facc15] transition-colors" onclick="location.href='/dashboard.html'"></i>
-                </div>
-                <div class="bg-white dark:bg-[#111c2e] shadow-sm pb-4 transition-colors" id="categoryList"></div>
-            </div>
-
-            <div id="productContainer" class="hidden">
-                <div class="flex justify-between items-center px-5 py-4 bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white border-b border-slate-200 dark:border-[#1e293b] transition-colors">
-                    <span class="font-bold text-[15px]" id="prodSubtitle">Pilih Produk</span>
-                    <i class="fas fa-home text-lg cursor-pointer text-slate-500 dark:text-gray-400 hover:text-orange-500 dark:hover:text-[#facc15] transition-colors" onclick="location.href='/dashboard.html'"></i>
-                </div>
-                
-                <div class="px-4 py-5 bg-white dark:bg-[#0b1320] border-b border-slate-200 dark:border-[#1e293b] shadow-sm transition-colors">
-                    <label class="text-[11px] text-slate-500 dark:text-gray-400 font-bold mb-2 block uppercase tracking-wide" id="targetLabel">Target / Tujuan</label>
-                    <div class="relative flex items-center">
-                        <input type="text" id="inputTarget" class="w-full bg-slate-50 dark:bg-[#1a2639] border border-slate-300 dark:border-gray-700 text-slate-800 dark:text-white rounded-xl py-3.5 pl-4 pr-24 text-[15px] font-bold focus:outline-none focus:border-yellow-400 dark:focus:border-[#facc15] transition-colors shadow-sm" placeholder="Ketik target disini...">
-                        <div id="prefixIcon" class="absolute right-3 font-bold text-[11px] uppercase px-2.5 py-1 rounded bg-slate-200 dark:bg-[#1e293b] text-orange-600 dark:text-[#facc15] hidden shadow-sm transition-colors"></div>
-                    </div>
-                </div>
-                
-                <div class="bg-white dark:bg-[#111c2e] shadow-sm pb-4 transition-colors" id="productList"></div>
-            </div>
-
-        </div>
-    </div>
-
-    <div id="detailOverlay" class="fixed inset-0 bg-black/60 z-[130] hidden opacity-0 transition-opacity" onclick="closeDetail()"></div>
-    <div id="detailSheet" class="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#0b1320] z-[140] rounded-t-[2rem] transform translate-y-full transition-transform max-w-md mx-auto flex flex-col max-h-[85vh] shadow-2xl border-t border-slate-200 dark:border-[#1e293b]">
-        <div class="w-12 h-1.5 bg-slate-300 dark:bg-gray-700 rounded-full mx-auto my-3 shrink-0 transition-colors"></div>
-        <div class="px-5 pb-4 border-b border-slate-200 dark:border-[#1e293b] shrink-0 flex justify-between items-center transition-colors">
-            <h3 class="font-extrabold text-slate-800 dark:text-white text-lg">Detail Produk</h3>
-            <i class="fas fa-times text-slate-400 dark:text-gray-400 hover:text-red-500 text-2xl cursor-pointer transition-colors" onclick="closeDetail()"></i>
-        </div>
-        
-        <div class="p-5 overflow-y-auto hide-scrollbar flex-1">
-            <div class="flex items-start gap-4 mb-6">
-                <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-[#111c2e] border border-slate-200 dark:border-[#1e293b] flex items-center justify-center text-orange-500 dark:text-[#facc15] text-2xl shrink-0 mt-1 shadow-sm transition-colors">
-                    <i class="fas fa-box"></i>
-                </div>
-                <div>
-                    <h4 class="font-extrabold text-[16px] text-slate-800 dark:text-white mb-1 transition-colors" id="dtName">-</h4>
-                    <p class="font-black text-xl text-orange-500 dark:text-[#facc15] transition-colors" id="dtPrice">Rp 0</p>
-                </div>
-            </div>
-            
-            <div class="bg-slate-50 dark:bg-[#111c2e] rounded-xl p-4 mb-4 border border-slate-200 dark:border-[#1e293b] flex justify-between shadow-sm transition-colors">
-                <span class="text-sm font-bold text-slate-500 dark:text-gray-400">No Tujuan:</span>
-                <span class="text-[15px] font-bold text-red-500" id="dtTarget">Kosong</span>
-            </div>
-            
-            <div class="bg-slate-50 dark:bg-[#111c2e] rounded-xl p-4 mb-4 border border-slate-200 dark:border-[#1e293b] flex justify-between items-center shadow-sm transition-colors">
-                <span class="text-sm font-bold text-slate-500 dark:text-gray-400">Status Server:</span>
-                <div id="dtStatusServer"></div>
-            </div>
-            
-            <div>
-                <span class="text-sm font-bold text-slate-500 dark:text-gray-400 mb-2 block">Deskripsi Produk:</span>
-                <div class="bg-slate-50 dark:bg-[#111c2e] rounded-xl p-4 text-[13px] text-slate-700 dark:text-gray-300 border border-slate-200 dark:border-[#1e293b] leading-relaxed shadow-sm transition-colors" id="dtDesc">Desc...</div>
-            </div>
-        </div>
-        
-        <div class="p-5 border-t border-slate-200 dark:border-[#1e293b] bg-white dark:bg-[#0b1320] transition-colors">
-            <div class="flex gap-3 mb-4">
-                <button class="flex-1 py-3 rounded-xl border border-slate-300 dark:border-gray-700 font-bold text-[14px] text-slate-600 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-[#1a2639] transition-colors" onclick="closeDetail()">Kembali</button>
-                <button class="flex-1 py-3 rounded-xl bg-red-500 text-white font-bold text-[14px] shadow-md hover:bg-red-600 transition-colors" onclick="bantuanAdmin()">
-                    <i class="fab fa-whatsapp mr-2"></i> Komplain
-                </button>
-            </div>
-            <button id="btnLanjutkan" class="w-full py-4 bg-yellow-400 dark:bg-[#facc15] text-slate-900 dark:text-[#001229] font-black rounded-xl text-[15px] shadow-lg hover:opacity-90 transition-all" onclick="executeBuy()">
-                Lanjutkan Pembayaran
-            </button>
-        </div>
-    </div>
-
-    <script>
-        if(!localStorage.getItem('user')) {
-            window.location.href = '/';
-        }
-        
-        const user = JSON.parse(localStorage.getItem('user'));
-        
-        const p = new URLSearchParams(window.location.search);
-        const t = p.get('type');
-        const pp = p.get('provider');
-        
-        let cS = 'operator'; 
-        let oT = ''; 
-        let cP = null;
-        let sS = ''; 
-        let sN = ''; 
-        let sP = 0; 
-        let sL = false;
-        let isProductOpen = true;
-
-        function isMaintenance() {
-            const tzStr = new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"}); 
-            const nowWIB = new Date(tzStr); 
-            const h = nowWIB.getHours(); 
-            const m = nowWIB.getMinutes();
-            if (h >= 23 || (h === 0 && m <= 30)) {
-                return true;
-            }
-            return false;
-        }
-
-        const o = {
-            xl: { name: 'XL', logo: 'XL', digiBrand: 'XL' },
-            axis: { name: 'AXIS', logo: 'AXIS', digiBrand: 'AXIS' },
-            telkomsel: { name: 'TELKOMSEL', logo: 'TS', digiBrand: 'TELKOMSEL' },
-            indosat: { name: 'INDOSAT', logo: 'IS', digiBrand: 'INDOSAT' },
-            tri: { name: 'TRI', logo: '3', digiBrand: 'TRI' },
-            smartfren: { name: 'SMARTFREN', logo: 'SF', digiBrand: 'SMARTFREN' },
-            byu: { name: 'BY.U', logo: 'BY.U', digiBrand: 'BYU' }
-        };
-
-        const dC = JSON.parse(JSON.stringify(o));
-        
-        dC['telkomsel'].items = [
-            'Umum', 'Bulk', 'Flash', 'Mini', 'Apps Kuota', 'Maxstream', 'Umroh', 'Malam',
-            'Combo Sakti', 'GamesMAX Unlimited Play', 'Whatsapp', 'Youtube', 'Instagram', 'Facebook',
-            'Ketengan TikTok', 'GamesMAX', 'MusicMAX', 'Disney+ Hotstar', 'OMG', 'GigaMAX', 'Orbit',
-            'UKM', 'UKM COMBO', 'Bronze', 'Harian', 'Mingguan', 'Bulanan', 'Ketengan Utama',
-            'Harian Sepuasnya', 'Roamax', 'GamesMAX Booster', 'Games', 'RoaMAX Haji', 'Combo',
-            'Eksklusif', 'Super Seru', 'Flash Revamp', 'DPI', 'Enterprise+', 'Serba Lima Ribu',
-            'UKM Plus', 'Non Puma', 'Videomax'
-        ];
-        
-        dC['indosat'].items = [
-            'Umum', 'Gift Data', 'Yellow', 'Freedom Combo', 'Freedom Harian', 'Freedom Internet', 
-            'Ekstra', 'Freedom U', 'Freedom Apps', 'Freedom U Gift', 'Freedom Combo Gift', 
-            'Freedom Internet Gift', 'Umroh Haji Combo', 'Freedom Max', 'UMKM', 'gaspol', 
-            'Sachet', 'Pure Merdeka', 'Kita', 'SMB', 'Ramadan', 'Freedom Apps Gift', 'HiFi Air', 
-            'Freedom Internet 5G', 'Freedom Spesial', 'Freedom Play', 'Freedom Sensasi'
-        ];
-        
-        dC['axis'].items = [
-            'Umum', 'Mini', 'Bronet', 'Owsem', 'Conference', 'Edukasi', 'Ekstra', 'Youtube', 
-            'Sosmed', 'Harian', 'BOY', 'Paket Warnet', 'Sulutra', 'Aigo SS', 'Mabrur', 'Video', 
-            'Games', 'Sunset', 'Pure', 'DRP Games', 'Obor', 'Edu Confrence', 'Apps Games', 
-            'AIGO Unlimited', 'Bagi Kuota'
-        ];
-        
-        dC['tri'].items = [
-            'Umum', 'Mini', 'AlwaysOn', 'GetMore', 'Mix', 'Home', 'Roaming', 'Data Transfer', 
-            'Happy', 'Lokal', 'H3RO', 'EJBN', 'Ibadah', 'Addon', 'KeepOn', 'Happy Play', 
-            'Pure 7 Hari', 'Pure 14 Hari', 'Pure 30 Hari', 'Ramadan', 'HiFi Air', 'Happy 5G'
-        ];
-        
-        dC['xl'].items = [
-            'Umum', 'Mini', 'Umroh', 'Hotrod', 'Xtra Combo', 'Xtra Kuota', 'Conference', 'Edukasi', 
-            'Xtra Combo Plus', 'Xtra Combo Gift', 'Hotrod Special', 'Xtra Combo Flex', 
-            'Paket Akrab', 'Harian', 'Blue', 'Xtra Combo Mini', 'Xtra Combo VIP Gift', 'Games', 
-            'Bebas Puas 2rb', 'Grab Gacor', 'Flex', 'FlexMax', 'Ultra 5G+', 'Flex Mini'
-        ];
-        
-        dC['smartfren'].items = [
-            'Umum', 'Unlimited', 'Volume', 'Roaming', 'Youtube', 'Connex Evo', 'Gokil Max', 
-            'Nonstop', 'Unlimited Nonstop', 'Musik', 'Games', 'Kuota', 'Tiktok', 'Mandiri', 'Nonton', 
-            'Unlimited Harian 5G', 'Unlimited Nonstop 5G', 'Kuota 5G'
-        ];
-        
-        dC['byu'].items = [
-            'Umum', 'Kaget', 'Mbps', 'Topping GGWP', 'Vidio', 'Jajan', 'Super Kaget'
-        ];
-
-        const g = {
-            free_fire: { name: 'Free Fire', logo: 'fas fa-gamepad', isIcon: true, digiBrand: 'FREE FIRE' },
-            mobile_legends: { name: 'Mobile Legends', logo: 'fas fa-gamepad', isIcon: true, digiBrand: 'MOBILE LEGENDS' },
-            pubg_mobile: { name: 'PUBG Mobile', logo: 'fas fa-gamepad', isIcon: true, digiBrand: 'PUBG MOBILE' },
-            valorant: { name: 'Valorant', logo: 'fas fa-gamepad', isIcon: true, digiBrand: 'VALORANT' }
-        };
-
-        const gC = JSON.parse(JSON.stringify(g));
-        gC['mobile_legends'].items = ['Weekly Diamond Pass', 'Diamond'];
-        gC['free_fire'].items = ['Membership', 'Diamond'];
-
-        const e = {
-            dana: { name: 'DANA', logo: 'DN', digiBrand: 'DANA' },
-            gopay: { name: 'GOPAY', logo: 'GP', digiBrand: 'GO PAY' },
-            shopeepay: { name: 'SHOPEEPAY', logo: 'SP', digiBrand: 'SHOPEE PAY' },
-            ovo: { name: 'OVO', logo: 'OV', digiBrand: 'OVO' },
-            linkaja: { name: 'LINKAJA', logo: 'LA', digiBrand: 'LINKAJA' }
-        };
-
-        const v = {
-            telkomsel: { name: 'TELKOMSEL', logo: 'TS', digiBrand: 'TELKOMSEL' },
-            indosat: { name: 'INDOSAT', logo: 'IS', digiBrand: 'INDOSAT' },
-            tri: { name: 'TRI', logo: '3', digiBrand: 'TRI' },
-            axis: { name: 'AXIS', logo: 'AXIS', digiBrand: 'AXIS' },
-            smartfren: { name: 'SMARTFREN', logo: 'SF', digiBrand: 'SMARTFREN' },
-            google_play: { name: 'GOOGLE PLAY INDONESIA', logo: 'GP', digiBrand: 'GOOGLE PLAY INDONESIA' },
-            spotify: { name: 'SPOTIFY', logo: 'SP', digiBrand: 'SPOTIFY' }
-        };
-
-        const prd = {
-            telkomsel: { name: 'TELKOMSEL', logo: 'TS', digiBrand: 'TELKOMSEL' },
-            indosat: { name: 'INDOSAT', logo: 'IS', digiBrand: 'INDOSAT' },
-            tri: { name: 'TRI', logo: '3', digiBrand: 'TRI' },
-            axis: { name: 'AXIS', logo: 'AXIS', digiBrand: 'AXIS' },
-            smartfren: { name: 'SMARTFREN', logo: 'SF', digiBrand: 'SMARTFREN' },
-            byu: { name: 'BY.U', logo: 'BY.U', digiBrand: 'BYU' }
-        };
-
-        const smstelponData = {
-            telkomsel: { name: 'TELKOMSEL', logo: 'TS', digiBrand: 'TELKOMSEL' },
-            indosat: { name: 'INDOSAT', logo: 'IS', digiBrand: 'INDOSAT' },
-            tri: { name: 'TRI', logo: '3', digiBrand: 'TRI' },
-            xl: { name: 'XL', logo: 'XL', digiBrand: 'XL' },
-            axis: { name: 'AXIS', logo: 'AXIS', digiBrand: 'AXIS' },
-            smartfren: { name: 'SMARTFREN', logo: 'SF', digiBrand: 'SMARTFREN' }
-        };
-
-        const pln = { 
-            pln_token: { name: 'Token PLN', logo: 'fas fa-bolt', isIcon: true, digiBrand: 'PLN' } 
-        };
-
-        const a = { ...o, ...dC, ...gC, ...e, ...pln, ...v, ...prd, ...smstelponData };
-        
-        let cL = {};
-
-        if (t === 'game') { oT = 'Top Up Game'; cL = gC; }
-        else if (t === 'data') { oT = 'Paket Data'; cL = dC; }
-        else if (t === 'ewallet') { oT = 'E-Wallet'; cL = e; }
-        else if (t === 'pln') { oT = 'PLN'; cL = pln; }
-        else if (t === 'masaaktif') { oT = 'Masa Aktif'; cL = o; }
-        else if (t === 'voucher') { oT = 'Voucher'; cL = v; }
-        else if (t === 'perdana') { oT = 'Perdana'; cL = prd; }
-        else if (t === 'smstelpon') { oT = 'SMS & Telpon'; cL = smstelponData; }
-        else { oT = 'Isi Pulsa'; cL = o; }
-        
-        document.getElementById('pageTitle').innerText = oT;
-
-        let h = '';
-        for (let k in cL) {
-            let v = cL[k];
-            h += `
-            <div class="flex items-center p-5 border-b border-slate-100 dark:border-[#1e293b] cursor-pointer hover:bg-slate-50 dark:hover:bg-[#1a2639] transition-colors" onclick="selectProvider('${k}')">
-                <div class="w-12 h-12 rounded-full border border-slate-300 dark:border-gray-600 flex items-center justify-center text-[12px] bg-slate-50 dark:bg-[#0b1320] text-slate-600 dark:text-gray-300 font-extrabold shadow-sm transition-colors">
-                    ${v.isIcon ? `<i class="${v.logo} text-xl"></i>` : v.logo}
-                </div>
-                <div class="flex-1 ml-5 font-bold text-[15px] text-slate-800 dark:text-gray-200 transition-colors">${v.name}</div>
-                <i class="fas fa-chevron-right text-slate-300 dark:text-gray-500 text-sm"></i>
-            </div>`;
-        }
-        document.getElementById('opListRender').innerHTML = h;
-
-        if (pp && a[pp]) { 
-            setTimeout(() => {
-                selectProvider(pp);
-            }, 50); 
-        }
-
-        const px = {
-            'Telkomsel': ['0811', '0812', '0813', '0821', '0822', '0823', '0851', '0852', '0853'],
-            'Indosat': ['0814', '0815', '0816', '0855', '0856', '0857', '0858'],
-            'XL/Axis': ['0817', '0818', '0819', '0859', '0877', '0878', '0831', '0832', '0833', '0838'],
-            'Tri': ['0895', '0896', '0897', '0898', '0899'],
-            'Smartfren': ['0881', '0882', '0883', '0884', '0885', '0886', '0887', '0888', '0889']
-        };
-
-        document.getElementById('inputTarget').addEventListener('input', function() {
-            let v = this.value.replace(/[^0-9]/g, '');
-            let pi = document.getElementById('prefixIcon');
-            let dt = document.getElementById('dtTarget');
-            let btn = document.getElementById('btnLanjutkan');
-            
-            if(v) {
-                dt.innerText = v; 
-                dt.classList.remove('text-red-500'); 
-                dt.classList.add('text-slate-800', 'dark:text-white');
-                
-                if(isProductOpen) {
-                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                }
-            } else {
-                dt.innerText = 'Kosong'; 
-                dt.classList.add('text-red-500'); 
-                dt.classList.remove('text-slate-800', 'dark:text-white');
-                btn.classList.add('opacity-50', 'cursor-not-allowed');
-            }
-
-            if(v.length >= 4) {
-                let f = null;
-                for (let b in px) { 
-                    if(px[b].includes(v.substring(0, 4))) { 
-                        f = b; 
-                        break; 
-                    } 
-                }
-                if(f) { 
-                    pi.innerText = f; 
-                    pi.classList.remove('hidden'); 
-                } else { 
-                    pi.classList.add('hidden'); 
-                }
-            } else { 
-                pi.classList.add('hidden'); 
-            }
-        });
-
-        async function fetchProducts(b, c) {
-            const l = document.getElementById('productList');
-            l.innerHTML = '<div class="py-16 flex justify-center text-orange-500 dark:text-[#facc15]"><i class="fas fa-spinner fa-spin text-4xl"></i></div>';
-            
-            try {
-                let r = await fetch('/api/products', { 
-                    method: 'POST', 
-                    headers: {'Content-Type': 'application/json'}, 
-                    body: JSON.stringify({ type: t, brand: b, category: c }) 
-                });
-                
-                let d = await r.json();
-                
-                if (d.data && d.data.length > 0) {
-                    l.innerHTML = d.data.map(p => {
-                        let sN = p.name.replace(/'/g, "\\'").replace(/"/g, "&quot;");
-                        let sS = p.sku.replace(/'/g, "\\'").replace(/"/g, "&quot;");
-                        let sD = p.desc ? p.desc.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "<br>") : 'Tidak ada deskripsi.';
-                        
-                        let bdg = p.is_open ? 
-                            `<span class="text-[9px] bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2.5 py-1 rounded-full font-extrabold uppercase tracking-wider border border-green-300 dark:border-green-800 shadow-sm transition-colors">✅ AKTIF</span>` : 
-                            `<span class="text-[9px] bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-2.5 py-1 rounded-full font-extrabold uppercase tracking-wider border border-red-300 dark:border-red-800 animate-pulse shadow-sm transition-colors">❌ GANGGUAN</span>`;
-                        
-                        let clk = `showProductDetail('${sS}','${sN}',${p.price},${p.isLocal},'${sD}', ${p.is_open})`;
-                        let opc = p.is_open ? '' : 'opacity-60 bg-slate-50 dark:bg-[#1a2639]';
-
-                        return `
-                        <div class="flex justify-between px-5 py-5 border-b border-slate-100 dark:border-[#1e293b] cursor-pointer hover:bg-slate-50 dark:hover:bg-[#1a2639] transition-colors ${opc}" onclick="${clk}">
-                            <div class="w-2/3 text-[14px] font-extrabold text-slate-700 dark:text-gray-100 leading-snug transition-colors pr-3">
-                                ${p.name} ${p.isLocal ? '<i class="fas fa-check-circle text-green-500 ml-1"></i>' : ''}
-                            </div>
-                            <div class="text-right flex flex-col items-end justify-center">
-                                <div class="mb-2">${bdg}</div>
-                                <span class="text-[15px] font-black text-orange-600 dark:text-[#facc15] transition-colors">Rp ${p.price.toLocaleString('id-ID')}</span>
-                            </div>
-                        </div>`;
-                    }).join('');
-                } else {
-                    l.innerHTML = '<div class="py-16 text-center text-slate-500 dark:text-gray-400 font-bold text-lg">Katalog Produk Kosong</div>';
-                }
-            } catch(e) { 
-                l.innerHTML = '<div class="py-16 text-center text-red-500 font-bold text-lg">Gagal memuat API</div>'; 
-            }
-        }
-
-        function showProductDetail(sku, n, pr, il, ds, isOpen) {
-            sS = sku; 
-            sN = n; 
-            sP = pr; 
-            sL = il; 
-            isProductOpen = isOpen;
-            
-            document.getElementById('dtName').innerText = n;
-            document.getElementById('dtPrice').innerText = 'Rp ' + pr.toLocaleString('id-ID');
-            document.getElementById('dtDesc').innerHTML = ds;
-            
-            const isDark = document.documentElement.classList.contains('dark');
-            
-            let statBadge = isOpen 
-                ? `<span class="${isDark ? 'bg-green-900/30 text-green-400 border-green-800' : 'bg-green-100 text-green-700 border-green-300'} px-4 py-1.5 rounded-full text-[12px] font-extrabold border transition-colors shadow-sm"><i class="fas fa-check-circle mr-1.5"></i> NORMAL / AMAN</span>`
-                : `<span class="${isDark ? 'bg-red-900/30 text-red-400 border-red-800' : 'bg-red-100 text-red-600 border-red-300'} px-4 py-1.5 rounded-full text-[12px] font-extrabold border animate-pulse transition-colors shadow-sm"><i class="fas fa-times-circle mr-1.5"></i> SEDANG GANGGUAN</span>`;
-            
-            document.getElementById('dtStatusServer').innerHTML = statBadge;
-
-            const btn = document.getElementById('btnLanjutkan');
-            if(!isOpen) {
-                btn.innerText = "Produk Sedang Gangguan";
-                btn.classList.add('opacity-50', 'cursor-not-allowed');
-                btn.classList.replace('bg-yellow-400', 'bg-slate-300');
-                btn.classList.replace('dark:bg-[#facc15]', 'dark:bg-gray-600');
-                btn.classList.replace('text-slate-900', 'text-slate-500');
-                btn.classList.replace('dark:text-[#001229]', 'dark:text-gray-300');
-            } else {
-                btn.innerText = "Lanjutkan Pembayaran";
-                btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                btn.classList.replace('bg-slate-300', 'bg-yellow-400');
-                btn.classList.replace('dark:bg-gray-600', 'dark:bg-[#facc15]');
-                btn.classList.replace('text-slate-500', 'text-slate-900');
-                btn.classList.replace('dark:text-gray-300', 'dark:text-[#001229]');
-                
-                document.getElementById('inputTarget').dispatchEvent(new Event('input')); 
-            }
-            
-            document.getElementById('detailOverlay').classList.remove('hidden');
-            setTimeout(() => {
-                document.getElementById('detailOverlay').classList.remove('opacity-0');
-                document.getElementById('detailSheet').classList.remove('translate-y-full');
-            }, 10);
-        }
-
-        function closeDetail() {
-            document.getElementById('detailSheet').classList.add('translate-y-full');
-            document.getElementById('detailOverlay').classList.add('opacity-0');
-            setTimeout(() => {
-                document.getElementById('detailOverlay').classList.add('hidden');
-            }, 300);
-        }
-
-        function bantuanAdmin() {
-            window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(`Halo Admin, saya ingin komplain mengenai produk *${sN}*.`), '_blank');
-        }
-
-        function executeBuy() {
-            if(!isProductOpen) {
-                return Swal.fire({
-                    icon: 'error', 
-                    title: 'Gangguan', 
-                    text: 'Mohon maaf, produk ini sedang mengalami gangguan dari server pusat.',
-                    background: document.documentElement.classList.contains('dark') ? '#111c2e' : '#ffffff', 
-                    color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#0f172a'
-                });
-            }
-
-            const tr = document.getElementById('inputTarget').value;
-            if (!tr) {
-                return;
-            }
-            
-            closeDetail();
-            
-            const bg = document.documentElement.classList.contains('dark') ? '#111c2e' : '#ffffff';
-            const c = document.documentElement.classList.contains('dark') ? '#fff' : '#0f172a';
-            
-            if(isMaintenance()) {
-                return Swal.fire({
-                    icon: 'error', 
-                    title: 'MAINTENANCE', 
-                    text: 'Sistem sedang Maintenance Otomatis (23:00 - 00:30 WIB). Transaksi ditutup sementara.', 
-                    background: bg, 
-                    color: c
-                });
-            }
-            
-            setTimeout(() => {
-                Swal.fire({ 
-                    title: 'Memproses...', 
-                    allowOutsideClick: false, 
-                    background: bg, 
-                    color: c, 
-                    didOpen: () => {
-                        Swal.showLoading();
-                    } 
-                });
-                
-                fetch('/api/transaction/create', {
-                    method: 'POST', 
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ 
-                        phone: user.phone, 
-                        target: tr, 
-                        sku: sS, 
-                        name: sN, 
-                        price: sP, 
-                        isLocal: sL 
-                    })
-                })
-                .then(async r => {
-                    let d = await r.json();
-                    if (r.ok) {
-                        Swal.fire({ 
-                            icon: 'success', 
-                            title: 'Berhasil!', 
-                            text: d.message, 
-                            background: bg, 
-                            color: c 
-                        }).then(() => {
-                            window.location.href = '/riwayat.html';
-                        });
-                    } else {
-                        Swal.fire({ 
-                            icon: 'error', 
-                            title: 'Gagal', 
-                            text: d.error, 
-                            background: bg, 
-                            color: c 
-                        });
-                    }
-                })
-                .catch(e => { 
-                    Swal.fire({ 
-                        icon: 'error', 
-                        title: 'Oops!', 
-                        text: 'Gangguan jaringan.', 
-                        background: bg, 
-                        color: c 
-                    }); 
-                });
-            }, 300);
-        }
-
-        function selectProvider(o) {
-            let pr = cL[o] || a[o];
-            
-            if (pr) {
-                cP = pr;
-                document.getElementById('operatorContainer').classList.replace('block', 'hidden');
-                
-                if (pr.items && pr.items.length > 0 && (t === 'data' || t === 'game')) {
-                    cS = 'category';
-                    document.getElementById('categoryContainer').classList.remove('hidden');
-                    document.getElementById('pageTitle').innerText = pr.name;
-                    
-                    let h = '';
-                    pr.items.forEach(i => {
-                        h += `
-                        <div class="flex items-center px-5 py-5 border-b border-slate-100 dark:border-[#1e293b] cursor-pointer hover:bg-slate-50 dark:hover:bg-[#1a2639] transition-colors" onclick="selectCategory('${i}')">
-                            <div class="flex-1 text-[14px] font-extrabold text-slate-800 dark:text-gray-200 uppercase transition-colors">${i}</div>
-                            <i class="fas fa-chevron-right text-slate-400 dark:text-gray-500 text-sm transition-colors"></i>
-                        </div>`;
-                    });
-                    
-                    document.getElementById('categoryList').innerHTML = h;
-                } else {
-                    cS = 'product';
-                    document.getElementById('productContainer').classList.remove('hidden');
-                    document.getElementById('pageTitle').innerText = pr.name;
-                    document.getElementById('inputTarget').placeholder = pr.placeholder || "Ketik target disini...";
-                    document.getElementById('inputTarget').value = '';
-                    document.getElementById('inputTarget').dispatchEvent(new Event('input'));
-                    
-                    fetchProducts(pr.digiBrand, null);
-                }
-            }
-        }
-
-        function selectCategory(c) {
-            cS = 'product';
-            document.getElementById('categoryContainer').classList.add('hidden');
-            document.getElementById('productContainer').classList.remove('hidden');
-            document.getElementById('pageTitle').innerText = c;
-            document.getElementById('inputTarget').value = '';
-            document.getElementById('inputTarget').dispatchEvent(new Event('input'));
-            
-            fetchProducts(cP.digiBrand, c);
-        }
-
-        function goBack() {
-            if (cS === 'product') {
-                if (cP && cP.items && cP.items.length > 0 && (t === 'data' || t === 'game')) {
-                    cS = 'category';
-                    document.getElementById('productContainer').classList.add('hidden');
-                    document.getElementById('categoryContainer').classList.remove('hidden');
-                    document.getElementById('pageTitle').innerText = cP.name;
-                } else {
-                    cS = 'operator';
-                    document.getElementById('productContainer').classList.add('hidden');
-                    document.getElementById('operatorContainer').classList.replace('hidden', 'block');
-                    document.getElementById('pageTitle').innerText = oT;
-                }
-            } else if (cS === 'category') {
-                cS = 'operator';
-                document.getElementById('categoryContainer').classList.add('hidden');
-                document.getElementById('operatorContainer').classList.replace('hidden', 'block');
-                document.getElementById('pageTitle').innerText = oT;
-            } else {
-                history.back();
-            }
-        }
-    </script>
-</body>
-</html>
-EOF
-
 echo "[6/10] Membangun Halaman Lanjutan: Game, Topup, Info, Mutasi, Profil, Riwayat (FULL UNCOMPRESSED)..."
 
 cat << 'EOF' > public/game.html
@@ -2009,35 +1331,35 @@ cat << 'EOF' > public/game.html
         
         <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-slate-200 dark:border-[#1e293b] transition-colors">
             <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-slate-800 dark:text-white transition-colors" onclick="history.back()"></i>
-            <h1 class="text-[18px] font-bold text-slate-800 dark:text-white transition-colors">Top Up Game</h1>
+            <h1 class="text-[16px] font-bold text-slate-800 dark:text-white transition-colors">Top Up Game</h1>
         </div>
 
         <div class="px-4 mt-6">
-            <div class="bg-white dark:bg-[#111c2e] rounded-b-2xl rounded-t-xl overflow-hidden border border-slate-200 dark:border-[#1e293b] shadow-sm mt-4 transition-colors">
+            <div class="bg-white dark:bg-[#111c2e] rounded-2xl overflow-hidden border border-slate-200 dark:border-[#1e293b] shadow-sm mt-4 transition-colors">
                 <div class="bg-slate-800 dark:bg-black p-4 flex items-center gap-2 transition-colors">
                     <i class="fas fa-gamepad text-orange-500 dark:text-[#facc15] text-lg transition-colors"></i>
-                    <span class="font-bold text-white text-sm">Pilih Game Populer</span>
+                    <span class="font-bold text-white text-[13px]">Pilih Game Populer</span>
                 </div>
-                <div class="p-4 grid grid-cols-2 gap-4">
+                <div class="p-4 grid grid-cols-3 gap-3">
                     
-                    <div class="bg-slate-50 dark:bg-[#1a2639] border border-slate-200 dark:border-gray-700 rounded-[1rem] p-4 flex flex-col items-center justify-center cursor-pointer hover:border-orange-500 dark:hover:border-[#facc15] transition-colors shadow-sm h-32" onclick="location.href='/operator.html?type=game&provider=free_fire'">
-                        <div class="w-14 h-14 rounded-full border border-slate-300 dark:border-gray-600 flex items-center justify-center text-orange-600 dark:text-[#facc15] font-black text-lg mb-2 shadow-sm bg-white dark:bg-[#0b1320] transition-colors">FF</div>
-                        <div class="text-[12px] font-extrabold text-slate-700 dark:text-gray-300 text-center transition-colors">Free Fire</div>
+                    <div class="bg-slate-50 dark:bg-[#1a2639] border border-slate-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-orange-500 dark:hover:border-[#facc15] transition-colors shadow-sm h-28" onclick="location.href='/operator.html?type=game&provider=free_fire'">
+                        <div class="w-12 h-12 rounded-full border border-slate-300 dark:border-gray-600 flex items-center justify-center text-orange-600 dark:text-[#facc15] font-black text-[13px] mb-2 shadow-sm bg-white dark:bg-[#0b1320] transition-colors">FF</div>
+                        <div class="text-[10px] font-extrabold text-slate-700 dark:text-gray-300 text-center transition-colors">Free Fire</div>
                     </div>
                     
-                    <div class="bg-slate-50 dark:bg-[#1a2639] border border-slate-200 dark:border-gray-700 rounded-[1rem] p-4 flex flex-col items-center justify-center cursor-pointer hover:border-orange-500 dark:hover:border-[#facc15] transition-colors shadow-sm h-32" onclick="location.href='/operator.html?type=game&provider=mobile_legends'">
-                        <div class="w-14 h-14 rounded-full border border-slate-300 dark:border-gray-600 flex items-center justify-center text-orange-600 dark:text-[#facc15] font-black text-lg mb-2 shadow-sm bg-white dark:bg-[#0b1320] transition-colors">ML</div>
-                        <div class="text-[12px] font-extrabold text-slate-700 dark:text-gray-300 text-center leading-tight transition-colors">Mobile<br>Legends</div>
+                    <div class="bg-slate-50 dark:bg-[#1a2639] border border-slate-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-orange-500 dark:hover:border-[#facc15] transition-colors shadow-sm h-28" onclick="location.href='/operator.html?type=game&provider=mobile_legends'">
+                        <div class="w-12 h-12 rounded-full border border-slate-300 dark:border-gray-600 flex items-center justify-center text-orange-600 dark:text-[#facc15] font-black text-[13px] mb-2 shadow-sm bg-white dark:bg-[#0b1320] transition-colors">ML</div>
+                        <div class="text-[10px] font-extrabold text-slate-700 dark:text-gray-300 text-center leading-tight transition-colors">Mobile<br>Legends</div>
                     </div>
                     
-                    <div class="bg-slate-50 dark:bg-[#1a2639] border border-slate-200 dark:border-gray-700 rounded-[1rem] p-4 flex flex-col items-center justify-center cursor-pointer hover:border-orange-500 dark:hover:border-[#facc15] transition-colors shadow-sm h-32" onclick="location.href='/operator.html?type=game&provider=pubg_mobile'">
-                        <div class="w-14 h-14 rounded-full border border-slate-300 dark:border-gray-600 flex items-center justify-center text-orange-600 dark:text-[#facc15] font-black text-[15px] mb-2 shadow-sm bg-white dark:bg-[#0b1320] transition-colors">PUBG</div>
-                        <div class="text-[12px] font-extrabold text-slate-700 dark:text-gray-300 text-center leading-tight transition-colors">PUBG<br>Mobile</div>
+                    <div class="bg-slate-50 dark:bg-[#1a2639] border border-slate-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-orange-500 dark:hover:border-[#facc15] transition-colors shadow-sm h-28" onclick="location.href='/operator.html?type=game&provider=pubg_mobile'">
+                        <div class="w-12 h-12 rounded-full border border-slate-300 dark:border-gray-600 flex items-center justify-center text-orange-600 dark:text-[#facc15] font-black text-[11px] mb-2 shadow-sm bg-white dark:bg-[#0b1320] transition-colors">PUBG</div>
+                        <div class="text-[10px] font-extrabold text-slate-700 dark:text-gray-300 text-center leading-tight transition-colors">PUBG<br>Mobile</div>
                     </div>
                     
-                    <div class="bg-slate-50 dark:bg-[#1a2639] border border-slate-200 dark:border-gray-700 rounded-[1rem] p-4 flex flex-col items-center justify-center cursor-pointer hover:border-orange-500 dark:hover:border-[#facc15] transition-colors shadow-sm h-32" onclick="location.href='/operator.html?type=game&provider=valorant'">
-                        <div class="w-14 h-14 rounded-full border border-slate-300 dark:border-gray-600 flex items-center justify-center text-orange-600 dark:text-[#facc15] font-black text-[14px] mb-2 shadow-sm bg-white dark:bg-[#0b1320] transition-colors">VALO</div>
-                        <div class="text-[12px] font-extrabold text-slate-700 dark:text-gray-300 text-center transition-colors">Valorant</div>
+                    <div class="bg-slate-50 dark:bg-[#1a2639] border border-slate-200 dark:border-gray-700 rounded-[1rem] p-3 flex flex-col items-center justify-center cursor-pointer hover:border-orange-500 dark:hover:border-[#facc15] transition-colors shadow-sm h-28" onclick="location.href='/operator.html?type=game&provider=valorant'">
+                        <div class="w-12 h-12 rounded-full border border-slate-300 dark:border-gray-600 flex items-center justify-center text-orange-600 dark:text-[#facc15] font-black text-[11px] mb-2 shadow-sm bg-white dark:bg-[#0b1320] transition-colors">VALO</div>
+                        <div class="text-[10px] font-extrabold text-slate-700 dark:text-gray-300 text-center transition-colors">Valorant</div>
                     </div>
                     
                 </div>
@@ -2088,34 +1410,34 @@ cat << 'EOF' > public/riwayat_topup.html
         
         <div class="flex items-center pt-5 px-5 pb-0 bg-white dark:bg-[#0b1320] sticky top-0 z-50 transition-colors">
             <i class="fas fa-chevron-left text-xl cursor-pointer mr-4 text-slate-800 dark:text-white transition-colors" onclick="location.href='/dashboard.html'"></i>
-            <h1 class="text-[18px] font-extrabold text-slate-800 dark:text-white tracking-wide transition-colors">Riwayat Transaksi</h1>
+            <h1 class="text-[17px] font-extrabold text-slate-800 dark:text-white tracking-wide transition-colors">Riwayat Transaksi</h1>
         </div>
 
         <div class="flex bg-white dark:bg-[#0b1320] sticky top-[60px] z-40 border-b border-slate-200 dark:border-[#1e293b] mt-4 shadow-sm transition-colors">
-            <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-slate-500 dark:text-gray-500 cursor-pointer uppercase tracking-wide transition-colors hover:bg-slate-50 dark:hover:bg-[#111c2e]" onclick="location.href='/riwayat.html'">
+            <div class="flex-1 text-center py-3.5 text-[12px] font-bold text-slate-500 dark:text-gray-500 cursor-pointer uppercase tracking-wide transition-colors hover:bg-slate-50 dark:hover:bg-[#111c2e]" onclick="location.href='/riwayat.html'">
                 Produk
             </div>
-            <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-orange-500 dark:text-[#facc15] border-b-[3px] border-orange-400 dark:border-[#facc15] cursor-pointer uppercase tracking-wide transition-colors">
+            <div class="flex-1 text-center py-3.5 text-[12px] font-bold text-orange-500 dark:text-[#facc15] border-b-[3px] border-orange-400 dark:border-[#facc15] cursor-pointer uppercase tracking-wide transition-colors">
                 Topup Saldo
             </div>
         </div>
 
         <div class="mx-4 mt-4 bg-white dark:bg-[#111c2e] p-4 rounded-2xl border border-slate-200 dark:border-[#1e293b] shadow-sm transition-colors">
             <div class="relative mb-4">
-                <i class="fas fa-search absolute left-3.5 top-3.5 text-slate-400 dark:text-gray-400 text-sm transition-colors"></i>
-                <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-slate-50 dark:bg-[#0b1320] border border-slate-300 dark:border-gray-700 text-slate-800 dark:text-gray-200 rounded-xl py-3 pl-10 pr-4 text-[14px] font-bold focus:outline-none focus:border-yellow-400 dark:focus:border-[#facc15] transition-colors shadow-inner" placeholder="Cari transaksi topup...">
+                <i class="fas fa-search absolute left-4 top-3.5 text-slate-400 dark:text-gray-400 text-[13px] transition-colors"></i>
+                <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-slate-50 dark:bg-[#0b1320] border border-slate-300 dark:border-gray-700 text-slate-800 dark:text-gray-200 rounded-xl py-3 pl-10 pr-4 text-[13px] font-bold focus:outline-none focus:border-yellow-400 dark:focus:border-[#facc15] transition-colors shadow-inner" placeholder="Cari transaksi topup...">
             </div>
             <div class="flex justify-between gap-2">
-                <div id="btn-Semua" onclick="setStatusFilter('Semua')" class="flex-1 text-center py-2.5 rounded-xl text-[12px] font-bold cursor-pointer shadow-sm transition-colors border">Semua</div>
-                <div id="btn-Sukses" onclick="setStatusFilter('Sukses')" class="flex-1 text-center py-2.5 rounded-xl text-[12px] font-bold cursor-pointer transition-colors border">Sukses</div>
-                <div id="btn-Proses" onclick="setStatusFilter('Proses')" class="flex-1 text-center py-2.5 rounded-xl text-[12px] font-bold cursor-pointer transition-colors border">Proses</div>
-                <div id="btn-Gagal" onclick="setStatusFilter('Gagal')" class="flex-1 text-center py-2.5 rounded-xl text-[12px] font-bold cursor-pointer transition-colors border">Gagal</div>
+                <div id="btn-Semua" onclick="setStatusFilter('Semua')" class="flex-1 text-center py-2.5 rounded-xl text-[11px] font-bold cursor-pointer shadow-sm transition-colors border">Semua</div>
+                <div id="btn-Sukses" onclick="setStatusFilter('Sukses')" class="flex-1 text-center py-2.5 rounded-xl text-[11px] font-bold cursor-pointer transition-colors border">Sukses</div>
+                <div id="btn-Proses" onclick="setStatusFilter('Proses')" class="flex-1 text-center py-2.5 rounded-xl text-[11px] font-bold cursor-pointer transition-colors border">Proses</div>
+                <div id="btn-Gagal" onclick="setStatusFilter('Gagal')" class="flex-1 text-center py-2.5 rounded-xl text-[11px] font-bold cursor-pointer transition-colors border">Gagal</div>
             </div>
         </div>
 
         <div class="px-4 mt-4" id="historyContainer">
             <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
-                <i class="fas fa-spinner fa-spin text-4xl mb-4 text-orange-500 dark:text-[#facc15]"></i>
+                <i class="fas fa-spinner fa-spin text-3xl mb-4 text-orange-500 dark:text-[#facc15]"></i>
             </div>
         </div>
 
@@ -2169,12 +1491,12 @@ cat << 'EOF' > public/riwayat_topup.html
             const isDark = document.documentElement.classList.contains('dark');
             
             let classUnselected = isDark 
-                ? 'flex-1 bg-transparent text-gray-400 text-center py-2.5 rounded-xl text-[12px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#1a2639]' 
-                : 'flex-1 bg-transparent text-slate-500 text-center py-2.5 rounded-xl text-[12px] font-bold cursor-pointer border border-slate-300 transition-colors hover:bg-slate-50';
+                ? 'flex-1 bg-transparent text-gray-400 text-center py-2.5 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#1a2639]' 
+                : 'flex-1 bg-transparent text-slate-500 text-center py-2.5 rounded-xl text-[11px] font-bold cursor-pointer border border-slate-300 transition-colors hover:bg-slate-50';
                 
             let classSelected = isDark 
-                ? 'flex-1 bg-[#facc15] text-[#0b1320] text-center py-2.5 rounded-xl text-[12px] font-bold cursor-pointer shadow-sm transition-colors border border-[#facc15]' 
-                : 'flex-1 bg-yellow-400 text-slate-900 text-center py-2.5 rounded-xl text-[12px] font-bold cursor-pointer shadow-md transition-colors border border-yellow-400';
+                ? 'flex-1 bg-[#facc15] text-[#0b1320] text-center py-2.5 rounded-xl text-[11px] font-bold cursor-pointer shadow-sm transition-colors border border-[#facc15]' 
+                : 'flex-1 bg-yellow-400 text-slate-900 text-center py-2.5 rounded-xl text-[11px] font-bold cursor-pointer shadow-md transition-colors border border-yellow-400';
 
             ['Semua', 'Sukses', 'Proses', 'Gagal'].forEach(btn => { 
                 document.getElementById('btn-' + btn).className = classUnselected; 
@@ -2208,11 +1530,11 @@ cat << 'EOF' > public/riwayat_topup.html
             if(!filtered || filtered.length === 0) {
                 c.innerHTML = `
                 <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
-                    <div class="w-[6rem] h-[6rem] ${isDark ? 'bg-[#111c2e] border-[#1e293b]' : 'bg-white border-slate-200'} rounded-full flex items-center justify-center mb-6 shadow-md border transition-colors">
-                        <i class="fas fa-wallet text-slate-400 dark:text-gray-400 text-5xl"></i>
+                    <div class="w-[5.5rem] h-[5.5rem] ${isDark ? 'bg-[#111c2e] border-[#1e293b]' : 'bg-white border-slate-200'} rounded-full flex items-center justify-center mb-6 shadow-md border transition-colors">
+                        <i class="fas fa-wallet text-slate-400 dark:text-gray-400 text-4xl"></i>
                     </div>
-                    <h2 class="text-slate-800 dark:text-white font-black text-xl tracking-wide mb-3 transition-colors">Belum Ada Top Up</h2>
-                    <button class="${isDark ? 'bg-[#facc15] text-[#0b1320]' : 'bg-yellow-400 text-slate-900'} font-extrabold py-3.5 px-8 rounded-full shadow-lg hover:opacity-90 transition-all mt-4" onclick="location.href='/dashboard.html'">Top Up Sekarang</button>
+                    <h2 class="text-slate-800 dark:text-white font-black text-[17px] tracking-wide mb-3 transition-colors">Belum Ada Top Up</h2>
+                    <button class="${isDark ? 'bg-[#facc15] text-[#0b1320]' : 'bg-yellow-400 text-slate-900'} font-extrabold py-3 px-8 rounded-full shadow-lg hover:opacity-90 transition-all mt-3 text-[13px]" onclick="location.href='/dashboard.html'">Top Up Sekarang</button>
                 </div>`;
             } else {
                 c.innerHTML = filtered.map((i) => {
@@ -2222,9 +1544,9 @@ cat << 'EOF' > public/riwayat_topup.html
                     if(isExp || i.status === 'Gagal') {
                         sc = isDark ? 'text-red-400 border border-red-500/50 bg-red-500/10' : 'text-red-600 border border-red-300 bg-red-100';
                     } else if(i.status === 'Sukses') {
-                        sc = isDark ? 'text-green-400 border border-green-500/50 bg-green-500/10' : 'text-green-700 border border-green-300 bg-green-100';
+                        sc = isDark ? 'text-green-400 border border-green-500/50 bg-green-500/10' : 'text-green-700 border border-green-400 bg-green-50';
                     } else {
-                        sc = isDark ? 'text-[#facc15] border border-[#facc15]/50 bg-[#facc15]/10' : 'text-orange-600 border border-orange-300 bg-orange-100';
+                        sc = isDark ? 'text-[#facc15] border border-[#facc15]/50 bg-[#facc15]/10' : 'text-orange-600 border border-orange-300 bg-orange-50';
                     }
                     
                     let statusText = isExp ? 'KEDALUWARSA' : i.status.toUpperCase();
@@ -2238,19 +1560,19 @@ cat << 'EOF' > public/riwayat_topup.html
                     let priceClass = isDark ? 'text-[#facc15]' : 'text-orange-500';
 
                     return `
-                    <div onclick="showDetailTopup(${rawIdx})" class="${boxClass} p-5 rounded-[1.2rem] mb-4 border shadow-sm cursor-pointer transition-colors flex items-center justify-between">
+                    <div onclick="showDetailTopup(${rawIdx})" class="${boxClass} p-4 rounded-[1.2rem] mb-3.5 border shadow-sm cursor-pointer transition-colors flex items-center justify-between">
                         <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 rounded-xl ${iconBoxClass} flex items-center justify-center shrink-0 border transition-colors shadow-sm">
-                                <i class="fas fa-wallet text-slate-400 dark:text-gray-400 text-2xl"></i>
+                            <div class="w-12 h-12 rounded-xl ${iconBoxClass} flex items-center justify-center shrink-0 border transition-colors shadow-sm">
+                                <i class="fas fa-wallet text-slate-400 dark:text-gray-400 text-xl"></i>
                             </div>
                             <div class="flex flex-col">
-                                <h4 class="font-extrabold text-[15px] ${titleClass} mb-1 transition-colors">Topup Saldo ${methodClean}</h4>
-                                <span class="text-[12px] ${dateClass} font-medium transition-colors">${i.date}</span>
+                                <h4 class="font-extrabold text-[13px] ${titleClass} mb-1 transition-colors">Topup Saldo ${methodClean}</h4>
+                                <span class="text-[11px] ${dateClass} font-medium transition-colors">${i.date}</span>
                             </div>
                         </div>
                         <div class="flex flex-col items-end">
-                            <p class="text-[16px] font-black ${priceClass} mb-2 transition-colors">Rp ${(i.nominal || 0).toLocaleString('id-ID')}</p>
-                            <span class="text-[10px] font-extrabold px-2.5 py-1 rounded uppercase tracking-wider ${sc} transition-colors">${statusText}</span>
+                            <p class="text-[14px] font-black ${priceClass} mb-2 transition-colors">Rp ${(i.nominal || 0).toLocaleString('id-ID')}</p>
+                            <span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${sc} transition-colors">${statusText}</span>
                         </div>
                     </div>`;
                 }).join('');
@@ -2310,30 +1632,30 @@ cat << 'EOF' > public/riwayat_topup.html
             const statusColor = item.status === 'Sukses' ? (isDark ? 'text-green-400' : 'text-green-600') : highlightColor;
 
             let htmlContent = `
-            <h3 class="${valColor} font-black text-[20px] mb-6 text-center transition-colors">Detail Transaksi Topup</h3>
-            <div class="${innerBg} border ${borderColor} rounded-xl p-5 mb-6 text-left overflow-y-auto max-h-[60vh] hide-scrollbar shadow-inner transition-colors">
+            <h3 class="${valColor} font-black text-[18px] mb-5 text-center transition-colors">Detail Transaksi Topup</h3>
+            <div class="${innerBg} border ${borderColor} rounded-xl p-4 mb-5 text-left overflow-y-auto max-h-[60vh] hide-scrollbar shadow-inner transition-colors">
                 
-                <p class="text-[11px] ${labelColor} font-extrabold mb-3 uppercase tracking-widest border-b ${borderColor} pb-2 transition-colors">Data Pelanggan</p>
-                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[13px] transition-colors">Nama Lengkap</span><span class="${valColor} font-black text-[13px] text-right transition-colors">${displayName}</span></div>
-                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[13px] transition-colors">Alamat Email</span><span class="${valColor} font-black text-[13px] text-right transition-colors">${displayEmail}</span></div>
-                <div class="flex justify-between mb-5"><span class="${labelColor} font-bold text-[13px] transition-colors">Nomor WA</span><span class="${valColor} font-black text-[13px] text-right transition-colors">${displayWa}</span></div>
+                <p class="text-[10px] ${labelColor} font-extrabold mb-3 uppercase tracking-widest border-b ${borderColor} pb-2 transition-colors">Data Pelanggan</p>
+                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[12px] transition-colors">Nama Lengkap</span><span class="${valColor} font-black text-[12px] text-right transition-colors">${displayName}</span></div>
+                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[12px] transition-colors">Alamat Email</span><span class="${valColor} font-black text-[12px] text-right transition-colors">${displayEmail}</span></div>
+                <div class="flex justify-between mb-4"><span class="${labelColor} font-bold text-[12px] transition-colors">Nomor WA</span><span class="${valColor} font-black text-[12px] text-right transition-colors">${displayWa}</span></div>
                 
-                <p class="text-[11px] ${labelColor} font-extrabold mb-3 uppercase tracking-widest border-b ${borderColor} pb-2 transition-colors">Rincian Topup</p>
-                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[13px] transition-colors">Waktu Dibuat</span><span class="${valColor} font-black text-[12px] text-right transition-colors">${item.date}</span></div>
-                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[13px] transition-colors">Status Saat Ini</span><span class="${statusColor} font-black text-[13px] text-right transition-colors uppercase">${statusText}</span></div>
-                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[13px] transition-colors">Metode Bayar</span><span class="${valColor} font-black text-[13px] text-right transition-colors">${methodClean}</span></div>
-                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[13px] transition-colors">SN / Referensi</span><span class="${valColor} font-black text-[11px] text-right break-all ml-4 transition-colors">${item.id}</span></div>
-                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[13px] transition-colors">Jumlah Deposit</span><span class="${valColor} font-black text-[13px] text-right transition-colors">Rp ${jmlDeposit.toLocaleString('id-ID')}</span></div>
-                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[13px] transition-colors">Kode Unik Transfer</span><span class="${valColor} font-black text-[13px] text-right transition-colors">+ ${kodeUnik}</span></div>
-                <div class="flex justify-between mb-5"><span class="${labelColor} font-black text-[14px] transition-colors">Total Diterima</span><span class="${highlightColor} font-black text-[16px] text-right transition-colors">Rp ${nominalLengkap.toLocaleString('id-ID')}</span></div>
+                <p class="text-[10px] ${labelColor} font-extrabold mb-3 uppercase tracking-widest border-b ${borderColor} pb-2 transition-colors">Rincian Topup</p>
+                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[12px] transition-colors">Waktu Dibuat</span><span class="${valColor} font-black text-[11px] text-right transition-colors">${item.date}</span></div>
+                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[12px] transition-colors">Status Saat Ini</span><span class="${statusColor} font-black text-[12px] text-right transition-colors uppercase">${statusText}</span></div>
+                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[12px] transition-colors">Metode Bayar</span><span class="${valColor} font-black text-[12px] text-right transition-colors">${methodClean}</span></div>
+                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[12px] transition-colors">SN / Referensi</span><span class="${valColor} font-black text-[10px] text-right break-all ml-4 transition-colors">${item.id}</span></div>
+                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[12px] transition-colors">Jumlah Deposit</span><span class="${valColor} font-black text-[12px] text-right transition-colors">Rp ${jmlDeposit.toLocaleString('id-ID')}</span></div>
+                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[12px] transition-colors">Kode Unik Transfer</span><span class="${valColor} font-black text-[12px] text-right transition-colors">+ ${kodeUnik}</span></div>
+                <div class="flex justify-between mb-4"><span class="${labelColor} font-black text-[13px] transition-colors">Total Diterima</span><span class="${highlightColor} font-black text-[15px] text-right transition-colors">Rp ${nominalLengkap.toLocaleString('id-ID')}</span></div>
                 
-                <p class="text-[11px] ${labelColor} font-extrabold mb-3 uppercase tracking-widest border-b ${borderColor} pb-2 transition-colors">Riwayat Saldo Akun</p>
-                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[13px] transition-colors">Saldo Sebelum</span><span class="${valColor} font-black text-[13px] text-right transition-colors">${salSebelum}</span></div>
-                <div class="flex justify-between"><span class="${labelColor} font-bold text-[13px] transition-colors">Saldo Sesudah</span><span class="${valColor} font-black text-[13px] text-right transition-colors">${salSesudah}</span></div>
+                <p class="text-[10px] ${labelColor} font-extrabold mb-3 uppercase tracking-widest border-b ${borderColor} pb-2 transition-colors">Riwayat Saldo Akun</p>
+                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[12px] transition-colors">Saldo Sebelum</span><span class="${valColor} font-black text-[12px] text-right transition-colors">${salSebelum}</span></div>
+                <div class="flex justify-between"><span class="${labelColor} font-bold text-[12px] transition-colors">Saldo Sesudah</span><span class="${valColor} font-black text-[12px] text-right transition-colors">${salSesudah}</span></div>
 
             </div>
-            <button onclick="komplainTopup('${item.nominal}', '${item.date}', '${rawStatus}')" class="w-full py-4 bg-red-500 hover:bg-red-600 text-white font-black rounded-xl mb-3 shadow-md transition-all text-[15px]">Hubungi Admin (Komplain)</button>
-            <button onclick="Swal.close()" class="w-full py-4 bg-transparent border border-slate-300 dark:border-gray-600 ${valColor} hover:bg-slate-100 dark:hover:bg-gray-800 font-black rounded-xl transition-all text-[15px]">Tutup Detail</button>
+            <button onclick="komplainTopup('${item.nominal}', '${item.date}', '${rawStatus}')" class="w-full py-3.5 bg-red-500 hover:bg-red-600 text-white font-black rounded-xl mb-3 shadow-md transition-all text-[14px]">Hubungi Admin (Komplain)</button>
+            <button onclick="Swal.close()" class="w-full py-3.5 bg-transparent border border-slate-300 dark:border-gray-600 ${valColor} hover:bg-slate-100 dark:hover:bg-gray-800 font-black rounded-xl transition-all text-[14px]">Tutup Detail</button>
             `;
             
             Swal.fire({ 
@@ -2374,13 +1696,13 @@ cat << 'EOF' > public/info.html
         
         <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-slate-200 dark:border-[#1e293b] transition-colors">
             <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-slate-800 dark:text-white transition-colors" onclick="location.href='/dashboard.html'"></i>
-            <h1 class="text-[18px] font-bold text-slate-800 dark:text-white transition-colors">Pusat Informasi</h1>
+            <h1 class="text-[17px] font-bold text-slate-800 dark:text-white transition-colors">Pusat Informasi</h1>
         </div>
 
-        <div class="p-5" id="infoList">
+        <div class="p-4" id="infoList">
             <div class="mt-20 flex flex-col items-center justify-center text-slate-400 dark:text-gray-400 transition-colors">
-                <i class="fas fa-spinner fa-spin text-5xl mb-4 text-orange-500 dark:text-[#facc15] transition-colors"></i>
-                <p class="text-[15px] font-bold">Memuat informasi server...</p>
+                <i class="fas fa-spinner fa-spin text-4xl mb-4 text-orange-500 dark:text-[#facc15] transition-colors"></i>
+                <p class="text-[14px] font-bold">Memuat informasi server...</p>
             </div>
         </div>
 
@@ -2418,9 +1740,9 @@ cat << 'EOF' > public/info.html
             
             if(!d.info || d.info.length === 0) {
                 l.innerHTML = `
-                <div class="mt-24 flex flex-col items-center justify-center text-slate-400 dark:text-gray-500 transition-colors">
+                <div class="mt-20 flex flex-col items-center justify-center text-slate-400 dark:text-gray-500 transition-colors">
                     <i class="fas fa-bell-slash text-6xl mb-5 opacity-40"></i>
-                    <p class="text-[16px] font-bold">Belum ada info & update terbaru.</p>
+                    <p class="text-[14px] font-bold">Belum ada info & update terbaru.</p>
                 </div>`;
             } else {
                 l.innerHTML = d.info.reverse().map(i => {
@@ -2430,13 +1752,13 @@ cat << 'EOF' > public/info.html
                     let contentClass = isDark ? 'text-gray-300' : 'text-slate-700';
                     
                     return `
-                    <div class="relative ${boxClass} border rounded-2xl p-6 mb-5 shadow-md overflow-hidden transition-colors">
-                        <div class="absolute -right-3 top-4 text-[80px] opacity-[0.08] select-none">📢</div>
-                        <div class="flex justify-between items-start mb-4 relative z-10">
-                            <h3 class="font-extrabold ${titleClass} text-[16px] pr-3 transition-colors leading-tight">${i.judul}</h3>
-                            <span class="text-[10px] ${dateBgClass} font-black px-2.5 py-1.5 rounded-lg border transition-colors shadow-sm shrink-0 whitespace-nowrap">${i.date}</span>
+                    <div class="relative ${boxClass} border rounded-2xl p-5 mb-4 shadow-sm overflow-hidden transition-colors">
+                        <div class="absolute -right-3 top-4 text-[70px] opacity-[0.08] select-none">📢</div>
+                        <div class="flex justify-between items-start mb-3 relative z-10">
+                            <h3 class="font-extrabold ${titleClass} text-[15px] pr-2 transition-colors leading-tight">${i.judul}</h3>
+                            <span class="text-[9px] ${dateBgClass} font-black px-2 py-1 rounded-md border transition-colors shadow-sm shrink-0 whitespace-nowrap">${i.date}</span>
                         </div>
-                        <p class="text-[14px] ${contentClass} leading-relaxed relative z-10 font-semibold transition-colors">${i.isi}</p>
+                        <p class="text-[13px] ${contentClass} leading-relaxed relative z-10 font-semibold transition-colors">${i.isi}</p>
                     </div>`;
                 }).join('');
             }
@@ -2470,13 +1792,13 @@ cat << 'EOF' > public/mutasi.html
         
         <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-slate-200 dark:border-[#1e293b] transition-colors">
             <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-slate-800 dark:text-white transition-colors" onclick="history.back()"></i>
-            <h1 class="text-[18px] font-bold text-slate-800 dark:text-white transition-colors">Mutasi Saldo</h1>
+            <h1 class="text-[17px] font-bold text-slate-800 dark:text-white transition-colors">Mutasi Saldo</h1>
         </div>
 
-        <div class="p-5" id="mutasiList">
+        <div class="p-4" id="mutasiList">
             <div class="mt-20 flex flex-col items-center justify-center text-orange-500 dark:text-[#facc15] transition-colors">
-                <i class="fas fa-spinner fa-spin text-5xl mb-4"></i>
-                <p class="text-[15px] font-bold text-slate-500 dark:text-gray-500 transition-colors">Memuat riwayat saldo...</p>
+                <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
+                <p class="text-[14px] font-bold text-slate-500 dark:text-gray-500 transition-colors">Memuat riwayat saldo...</p>
             </div>
         </div>
 
@@ -2521,11 +1843,11 @@ cat << 'EOF' > public/mutasi.html
             if(!d.mutasi || d.mutasi.length === 0) {
                 l.innerHTML = `
                 <div class="mt-20 flex flex-col items-center justify-center text-center px-6">
-                    <div class="w-[6rem] h-[6rem] ${isDark ? 'bg-[#111c2e] border-[#1e293b]' : 'bg-white border-slate-200'} rounded-full flex items-center justify-center mb-6 shadow-md border transition-colors">
-                        <i class="fas fa-exchange-alt text-slate-400 dark:text-gray-400 text-5xl transition-colors"></i>
+                    <div class="w-[5.5rem] h-[5.5rem] ${isDark ? 'bg-[#111c2e] border-[#1e293b]' : 'bg-white border-slate-200'} rounded-full flex items-center justify-center mb-6 shadow-sm border transition-colors">
+                        <i class="fas fa-exchange-alt text-slate-400 dark:text-gray-400 text-4xl transition-colors"></i>
                     </div>
-                    <h2 class="text-slate-800 dark:text-white font-black text-xl mb-2 transition-colors">Belum Ada Mutasi</h2>
-                    <p class="text-slate-500 dark:text-gray-400 text-sm font-bold transition-colors">Anda belum melakukan transaksi.</p>
+                    <h2 class="text-slate-800 dark:text-white font-bold text-[17px] mb-2 transition-colors">Belum Ada Mutasi</h2>
+                    <p class="text-slate-500 dark:text-gray-400 text-[12px] font-bold transition-colors">Anda belum melakukan transaksi.</p>
                 </div>`;
             } else {
                 l.innerHTML = d.mutasi.reverse().map(m => {
@@ -2538,17 +1860,17 @@ cat << 'EOF' > public/mutasi.html
                     let dateClass = isDark ? 'text-gray-500' : 'text-slate-400';
                     
                     return `
-                    <div class="${boxClass} border rounded-2xl p-5 mb-4 flex justify-between shadow-sm transition-colors items-center">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-full ${m.type === 'in' ? iconBgIn + ' ' + textIn : iconBgOut + ' ' + textOut} flex items-center justify-center text-xl shrink-0 shadow-sm transition-colors border ${m.type === 'in' ? (isDark ? 'border-green-800' : 'border-green-300') : (isDark ? 'border-red-800' : 'border-red-300')}">
+                    <div class="${boxClass} border rounded-[1.2rem] p-4 mb-3.5 flex justify-between shadow-sm transition-colors items-center">
+                        <div class="flex items-center gap-3.5">
+                            <div class="w-11 h-11 rounded-full ${m.type === 'in' ? iconBgIn + ' ' + textIn : iconBgOut + ' ' + textOut} flex items-center justify-center text-lg shrink-0 shadow-sm transition-colors border ${m.type === 'in' ? (isDark ? 'border-green-800' : 'border-green-300') : (isDark ? 'border-red-800' : 'border-red-300')}">
                                 <i class="fas ${m.type === 'in' ? 'fa-arrow-down' : 'fa-arrow-up'}"></i>
                             </div>
                             <div class="flex flex-col">
-                                <h4 class="font-extrabold text-[14px] ${titleClass} mb-1 transition-colors">${m.desc}</h4>
-                                <p class="text-[11px] font-bold ${dateClass} transition-colors tracking-wide">${m.date}</p>
+                                <h4 class="font-extrabold text-[13px] ${titleClass} mb-1 transition-colors">${m.desc}</h4>
+                                <p class="text-[10px] font-bold ${dateClass} transition-colors tracking-wide">${m.date}</p>
                             </div>
                         </div>
-                        <div class="font-black text-[15px] flex items-center ${m.type === 'in' ? textIn : textOut} transition-colors shrink-0">
+                        <div class="font-black text-[14px] flex items-center ${m.type === 'in' ? textIn : textOut} transition-colors shrink-0">
                             ${m.type === 'in' ? '+' : '-'} Rp ${m.amount.toLocaleString('id-ID')}
                         </div>
                     </div>`;
@@ -2583,112 +1905,112 @@ cat << 'EOF' > public/profile.html
 <body class="bg-slate-50 dark:bg-[#0b1320] font-sans transition-colors duration-300 text-slate-800 dark:text-white">
     <div class="max-w-md mx-auto bg-slate-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden transition-colors">
         
-        <div class="bg-white dark:bg-[#111c2e] p-8 pb-10 flex flex-col items-center relative rounded-b-[2.5rem] shadow-md border-b border-slate-200 dark:border-[#1e293b] transition-colors">
-            <div class="w-28 h-28 bg-slate-50 dark:bg-[#0b1320] rounded-full flex justify-center items-center text-orange-500 dark:text-[#facc15] font-black text-5xl mt-3 mb-4 shadow-lg overflow-hidden border-[3px] border-slate-200 dark:border-[#1e293b] transition-colors" id="profileCircle">U</div>
+        <div class="bg-white dark:bg-[#111c2e] p-8 pb-10 flex flex-col items-center relative rounded-b-[2rem] shadow-sm border-b border-slate-200 dark:border-[#1e293b] transition-colors">
+            <div class="w-[5.5rem] h-[5.5rem] bg-slate-100 dark:bg-[#0b1320] rounded-full flex justify-center items-center text-orange-500 dark:text-[#facc15] font-black text-4xl mt-3 mb-4 overflow-hidden border-2 border-slate-200 dark:border-[#1e293b] transition-colors" id="profileCircle">U</div>
             <div class="flex items-center gap-3">
-                <h2 class="text-[26px] font-black tracking-wide text-slate-800 dark:text-gray-100 transition-colors" id="profileName">User Name</h2>
-                <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#1a2639] flex items-center justify-center border border-slate-200 dark:border-gray-700 cursor-pointer shadow-sm hover:scale-110 transition-transform">
-                    <i class="fas fa-pencil-alt text-orange-500 dark:text-[#facc15] text-[13px]" onclick="openEditModal()"></i>
+                <h2 class="text-[20px] font-black tracking-wide text-slate-800 dark:text-gray-100 transition-colors" id="profileName">User Name</h2>
+                <div class="w-7 h-7 rounded-full bg-slate-50 dark:bg-[#1a2639] flex items-center justify-center border border-slate-200 dark:border-gray-700 cursor-pointer shadow-sm hover:scale-110 transition-transform">
+                    <i class="fas fa-pencil-alt text-orange-500 dark:text-[#facc15] text-[11px]" onclick="openEditModal()"></i>
                 </div>
             </div>
         </div>
 
-        <div class="mt-6 px-4">
+        <div class="mt-5 px-4">
             <div class="bg-white dark:bg-[#111c2e] rounded-2xl border border-slate-200 dark:border-[#1e293b] shadow-sm overflow-hidden transition-colors">
-                <div class="flex items-center px-5 py-5 border-b border-slate-100 dark:border-[#1e293b] transition-colors">
-                    <div class="w-10 h-10 rounded-full bg-slate-50 dark:bg-[#0b1320] flex items-center justify-center border border-slate-200 dark:border-gray-700 shrink-0 transition-colors">
-                        <i class="fas fa-envelope text-slate-400 dark:text-gray-400 text-[15px]"></i>
+                <div class="flex items-center px-4 py-4 border-b border-slate-100 dark:border-[#1e293b] transition-colors">
+                    <div class="w-9 h-9 rounded-full bg-slate-50 dark:bg-[#0b1320] flex items-center justify-center border border-slate-200 dark:border-gray-700 shrink-0 transition-colors">
+                        <i class="fas fa-envelope text-slate-400 dark:text-gray-400 text-[13px]"></i>
                     </div>
-                    <div class="flex-1 text-[15px] font-black text-slate-700 dark:text-gray-200 ml-4 transition-colors">Email Akun</div>
-                    <div class="text-[13px] font-bold text-slate-500 dark:text-gray-400 transition-colors" id="profileEmail">-</div>
+                    <div class="flex-1 text-[13px] font-black text-slate-700 dark:text-gray-200 ml-3 transition-colors">Email Akun</div>
+                    <div class="text-[11px] font-bold text-slate-500 dark:text-gray-400 transition-colors" id="profileEmail">-</div>
                 </div>
                 
-                <div class="flex items-center px-5 py-5 border-b border-slate-100 dark:border-[#1e293b] transition-colors">
-                    <div class="w-10 h-10 rounded-full bg-slate-50 dark:bg-[#0b1320] flex items-center justify-center border border-slate-200 dark:border-gray-700 shrink-0 transition-colors">
-                        <i class="fas fa-phone-alt text-slate-400 dark:text-gray-400 text-[15px]"></i>
+                <div class="flex items-center px-4 py-4 border-b border-slate-100 dark:border-[#1e293b] transition-colors">
+                    <div class="w-9 h-9 rounded-full bg-slate-50 dark:bg-[#0b1320] flex items-center justify-center border border-slate-200 dark:border-gray-700 shrink-0 transition-colors">
+                        <i class="fas fa-phone-alt text-slate-400 dark:text-gray-400 text-[13px]"></i>
                     </div>
-                    <div class="flex-1 text-[15px] font-black text-slate-700 dark:text-gray-200 ml-4 transition-colors">Nomor Telepon</div>
-                    <div class="text-[13px] font-bold text-slate-500 dark:text-gray-400 transition-colors" id="profilePhoneData">08...</div>
+                    <div class="flex-1 text-[13px] font-black text-slate-700 dark:text-gray-200 ml-3 transition-colors">Nomor Telepon</div>
+                    <div class="text-[11px] font-bold text-slate-500 dark:text-gray-400 transition-colors" id="profilePhoneData">08...</div>
                 </div>
                 
-                <div class="flex items-center px-5 py-5 border-b border-slate-100 dark:border-[#1e293b] transition-colors">
-                    <div class="w-10 h-10 rounded-full bg-slate-50 dark:bg-[#0b1320] flex items-center justify-center border border-slate-200 dark:border-gray-700 shrink-0 transition-colors">
-                        <i class="fas fa-wallet text-slate-400 dark:text-gray-400 text-[15px]"></i>
+                <div class="flex items-center px-4 py-4 border-b border-slate-100 dark:border-[#1e293b] transition-colors">
+                    <div class="w-9 h-9 rounded-full bg-slate-50 dark:bg-[#0b1320] flex items-center justify-center border border-slate-200 dark:border-gray-700 shrink-0 transition-colors">
+                        <i class="fas fa-wallet text-slate-400 dark:text-gray-400 text-[13px]"></i>
                     </div>
-                    <div class="flex-1 text-[15px] font-black text-slate-700 dark:text-gray-200 ml-4 transition-colors">Sisa Saldo</div>
-                    <div class="text-[15px] font-black text-orange-600 dark:text-[#facc15] transition-colors" id="profileSaldo">Rp 0</div>
+                    <div class="flex-1 text-[13px] font-black text-slate-700 dark:text-gray-200 ml-3 transition-colors">Sisa Saldo</div>
+                    <div class="text-[13px] font-black text-orange-600 dark:text-[#facc15] transition-colors" id="profileSaldo">Rp 0</div>
                 </div>
                 
-                <div class="flex items-center px-5 py-5 border-b border-slate-100 dark:border-[#1e293b] transition-colors">
-                    <div class="w-10 h-10 rounded-full bg-slate-50 dark:bg-[#0b1320] flex items-center justify-center border border-slate-200 dark:border-gray-700 shrink-0 transition-colors">
-                        <i class="fas fa-shopping-cart text-slate-400 dark:text-gray-400 text-[15px]"></i>
+                <div class="flex items-center px-4 py-4 border-b border-slate-100 dark:border-[#1e293b] transition-colors">
+                    <div class="w-9 h-9 rounded-full bg-slate-50 dark:bg-[#0b1320] flex items-center justify-center border border-slate-200 dark:border-gray-700 shrink-0 transition-colors">
+                        <i class="fas fa-shopping-cart text-slate-400 dark:text-gray-400 text-[13px]"></i>
                     </div>
-                    <div class="flex-1 text-[15px] font-black text-slate-700 dark:text-gray-200 ml-4 transition-colors">Total Transaksi</div>
-                    <div class="text-[15px] font-black text-orange-600 dark:text-[#facc15] transition-colors" id="profileTrx">0 Trx</div>
+                    <div class="flex-1 text-[13px] font-black text-slate-700 dark:text-gray-200 ml-3 transition-colors">Total Transaksi</div>
+                    <div class="text-[13px] font-black text-orange-600 dark:text-[#facc15] transition-colors" id="profileTrx">0 Trx</div>
                 </div>
                 
-                <div class="flex items-center px-5 py-5 border-b border-slate-100 dark:border-[#1e293b] cursor-pointer hover:bg-slate-50 dark:hover:bg-[#1a2639] transition-colors" onclick="location.href='/mutasi.html'">
-                    <div class="w-10 h-10 rounded-full bg-slate-50 dark:bg-[#0b1320] flex items-center justify-center border border-slate-200 dark:border-gray-700 shrink-0 transition-colors">
-                        <i class="fas fa-exchange-alt text-slate-400 dark:text-gray-400 text-[15px]"></i>
+                <div class="flex items-center px-4 py-4 border-b border-slate-100 dark:border-[#1e293b] cursor-pointer hover:bg-slate-50 dark:hover:bg-[#1a2639] transition-colors" onclick="location.href='/mutasi.html'">
+                    <div class="w-9 h-9 rounded-full bg-slate-50 dark:bg-[#0b1320] flex items-center justify-center border border-slate-200 dark:border-gray-700 shrink-0 transition-colors">
+                        <i class="fas fa-exchange-alt text-slate-400 dark:text-gray-400 text-[13px]"></i>
                     </div>
-                    <div class="flex-1 text-[15px] font-black text-slate-700 dark:text-gray-200 ml-4 transition-colors">Mutasi Saldo</div>
-                    <i class="fas fa-chevron-right text-slate-300 dark:text-gray-500 text-sm transition-colors"></i>
+                    <div class="flex-1 text-[13px] font-black text-slate-700 dark:text-gray-200 ml-3 transition-colors">Mutasi Saldo</div>
+                    <i class="fas fa-chevron-right text-slate-300 dark:text-gray-500 text-xs transition-colors"></i>
                 </div>
                 
-                <div class="flex items-center px-5 py-5 cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors" onclick="logout()">
-                    <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center border border-red-200 dark:border-red-800 shrink-0 transition-colors">
-                        <i class="fas fa-sign-out-alt text-red-600 dark:text-red-500 text-[15px]"></i>
+                <div class="flex items-center px-4 py-4 cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors" onclick="logout()">
+                    <div class="w-9 h-9 rounded-full bg-red-50 dark:bg-red-900/30 flex items-center justify-center border border-red-200 dark:border-red-800 shrink-0 transition-colors">
+                        <i class="fas fa-sign-out-alt text-red-600 dark:text-red-500 text-[13px]"></i>
                     </div>
-                    <div class="flex-1 text-[15px] font-black text-red-600 dark:text-red-500 ml-4 transition-colors">Keluar Akun</div>
+                    <div class="flex-1 text-[13px] font-black text-red-600 dark:text-red-500 ml-3 transition-colors">Keluar Akun</div>
                 </div>
             </div>
         </div>
 
         <div id="editProfileModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/70 backdrop-blur-sm">
-            <div class="bg-white dark:bg-[#111c2e] w-[90%] max-w-[360px] rounded-[1.5rem] border border-slate-200 dark:border-[#1e293b] shadow-2xl relative p-7 animate-slide-up transition-colors">
-                <button onclick="closeEditModal()" class="absolute top-5 right-5 text-slate-400 dark:text-gray-400 hover:text-red-500 transition-colors">
-                    <i class="fas fa-times text-2xl"></i>
+            <div class="bg-white dark:bg-[#111c2e] w-[90%] max-w-[340px] rounded-[1.5rem] border border-slate-200 dark:border-[#1e293b] shadow-2xl relative p-6 animate-slide-up transition-colors">
+                <button onclick="closeEditModal()" class="absolute top-4 right-4 text-slate-400 dark:text-gray-400 hover:text-red-500 transition-colors">
+                    <i class="fas fa-times text-xl"></i>
                 </button>
-                <h3 class="text-center text-slate-800 dark:text-white font-black text-[20px] mb-6 transition-colors">Pengaturan Profil</h3>
+                <h3 class="text-center text-slate-800 dark:text-white font-black text-[17px] mb-5 transition-colors">Pengaturan Profil</h3>
                 
-                <div class="relative w-24 h-24 mx-auto mb-8">
-                    <div class="w-full h-full rounded-full border-[3px] border-orange-400 dark:border-[#facc15] flex items-center justify-center text-4xl font-black bg-slate-50 dark:bg-[#0b1320] overflow-hidden text-slate-800 dark:text-white transition-colors" id="editModalInitial">U</div>
+                <div class="relative w-20 h-20 mx-auto mb-6">
+                    <div class="w-full h-full rounded-full border-[3px] border-orange-400 dark:border-[#facc15] flex items-center justify-center text-3xl font-black bg-slate-50 dark:bg-[#0b1320] overflow-hidden text-slate-800 dark:text-white transition-colors" id="editModalInitial">U</div>
                     <input type="file" id="avatarInput" accept="image/*" class="hidden" onchange="previewAvatar(event)">
-                    <div class="absolute bottom-0 right-0 bg-yellow-400 dark:bg-[#facc15] rounded-full w-8 h-8 flex items-center justify-center text-slate-900 dark:text-[#0b1320] border-[3px] border-white dark:border-[#111c2e] cursor-pointer z-10 shadow-md transition-colors hover:scale-110" onclick="document.getElementById('avatarInput').click()">
-                        <i class="fas fa-camera text-[11px]"></i>
+                    <div class="absolute bottom-0 right-0 bg-yellow-400 dark:bg-[#facc15] rounded-full w-7 h-7 flex items-center justify-center text-slate-900 dark:text-[#0b1320] border-2 border-white dark:border-[#111c2e] cursor-pointer z-10 shadow-sm transition-colors hover:scale-110" onclick="document.getElementById('avatarInput').click()">
+                        <i class="fas fa-camera text-[10px]"></i>
                     </div>
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-[11px] font-extrabold text-slate-500 dark:text-gray-400 mb-2 uppercase tracking-wide transition-colors">Email Akun (Hanya Baca)</label>
-                    <input type="email" id="editEmail" readonly class="w-full bg-slate-100 dark:bg-[#0b1320]/50 border border-slate-200 dark:border-[#1e293b] rounded-xl px-4 py-3.5 text-slate-500 dark:text-gray-400 font-bold text-[14px] focus:outline-none cursor-not-allowed transition-colors shadow-inner">
+                    <label class="block text-[10px] font-extrabold text-slate-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide transition-colors">Email Akun (Hanya Baca)</label>
+                    <input type="email" id="editEmail" readonly class="w-full bg-slate-100 dark:bg-[#0b1320]/50 border border-slate-200 dark:border-[#1e293b] rounded-xl px-3.5 py-3 text-slate-500 dark:text-gray-400 font-bold text-[13px] focus:outline-none cursor-not-allowed transition-colors shadow-inner">
                 </div>
                 
                 <div class="mb-4">
-                    <label class="block text-[11px] font-extrabold text-slate-500 dark:text-gray-400 mb-2 uppercase tracking-wide transition-colors">Nama Lengkap</label>
-                    <input type="text" id="editName" class="w-full bg-slate-50 dark:bg-[#0b1320] border border-slate-300 dark:border-[#1e293b] rounded-xl px-4 py-3.5 text-slate-800 dark:text-white font-black text-[14px] focus:outline-none focus:border-yellow-400 dark:focus:border-[#facc15] transition-colors shadow-sm">
+                    <label class="block text-[10px] font-extrabold text-slate-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide transition-colors">Nama Lengkap</label>
+                    <input type="text" id="editName" class="w-full bg-slate-50 dark:bg-[#0b1320] border border-slate-300 dark:border-[#1e293b] rounded-xl px-3.5 py-3 text-slate-800 dark:text-white font-black text-[13px] focus:outline-none focus:border-yellow-400 dark:focus:border-[#facc15] transition-colors shadow-sm">
                 </div>
                 
                 <div class="mb-4">
-                    <label class="block text-[11px] font-extrabold text-slate-500 dark:text-gray-400 mb-2 uppercase tracking-wide transition-colors">Nomor Telepon WA</label>
-                    <input type="number" id="editPhone" class="w-full bg-slate-50 dark:bg-[#0b1320] border border-slate-300 dark:border-[#1e293b] rounded-xl px-4 py-3.5 text-slate-800 dark:text-white font-black text-[14px] focus:outline-none focus:border-yellow-400 dark:focus:border-[#facc15] transition-colors shadow-sm">
+                    <label class="block text-[10px] font-extrabold text-slate-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide transition-colors">Nomor Telepon WA</label>
+                    <input type="number" id="editPhone" class="w-full bg-slate-50 dark:bg-[#0b1320] border border-slate-300 dark:border-[#1e293b] rounded-xl px-3.5 py-3 text-slate-800 dark:text-white font-black text-[13px] focus:outline-none focus:border-yellow-400 dark:focus:border-[#facc15] transition-colors shadow-sm">
                 </div>
                 
-                <div class="mb-6">
-                    <label class="block text-[11px] font-extrabold text-slate-500 dark:text-gray-400 mb-2 uppercase tracking-wide transition-colors">Password Baru (Opsional)</label>
+                <div class="mb-5">
+                    <label class="block text-[10px] font-extrabold text-slate-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide transition-colors">Password Baru (Opsional)</label>
                     <div class="relative w-full">
-                        <input type="password" id="editPassword" class="w-full bg-slate-50 dark:bg-[#0b1320] border border-slate-300 dark:border-[#1e293b] rounded-xl px-4 py-3.5 text-slate-800 dark:text-white font-bold text-[14px] focus:outline-none focus:border-yellow-400 dark:focus:border-[#facc15] transition-colors shadow-sm" placeholder="Kosongkan jika tidak diganti">
-                        <i class="fas fa-eye absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-slate-400 dark:text-gray-400 transition-colors" onclick="togglePasswordProfile('editPassword', this)"></i>
+                        <input type="password" id="editPassword" class="w-full bg-slate-50 dark:bg-[#0b1320] border border-slate-300 dark:border-[#1e293b] rounded-xl px-3.5 py-3 text-slate-800 dark:text-white font-bold text-[13px] focus:outline-none focus:border-yellow-400 dark:focus:border-[#facc15] transition-colors shadow-sm" placeholder="Kosongkan jika tidak diganti">
+                        <i class="fas fa-eye absolute right-3.5 top-1/2 transform -translate-y-1/2 cursor-pointer text-slate-400 dark:text-gray-400 transition-colors" onclick="togglePasswordProfile('editPassword', this)"></i>
                     </div>
                 </div>
 
-                <div class="mb-6 hidden slide-down" id="editOtpContainer">
-                    <label class="block text-[11px] font-black text-green-600 dark:text-green-400 mb-2 text-center uppercase tracking-wide transition-colors">OTP telah dikirim ke WA</label>
-                    <input type="number" id="editOtpInput" class="w-full bg-green-50 dark:bg-[#0b1320] border-2 border-green-400 dark:border-green-500 rounded-xl px-4 py-3 text-slate-800 dark:text-white text-xl tracking-[0.5em] text-center font-black focus:outline-none transition-colors shadow-inner" placeholder="XXXX">
+                <div class="mb-5 hidden slide-down" id="editOtpContainer">
+                    <label class="block text-[10px] font-black text-green-600 dark:text-green-400 mb-1.5 text-center uppercase tracking-wide transition-colors">OTP telah dikirim ke WA</label>
+                    <input type="number" id="editOtpInput" class="w-full bg-green-50 dark:bg-[#0b1320] border-2 border-green-400 dark:border-green-500 rounded-xl px-3.5 py-2.5 text-slate-800 dark:text-white text-lg tracking-[0.5em] text-center font-black focus:outline-none transition-colors shadow-inner" placeholder="XXXX">
                 </div>
 
-                <button id="btnSimpanProfil" onclick="saveProfile()" class="w-full py-4 bg-yellow-400 dark:bg-[#facc15] text-slate-900 dark:text-[#0b1320] font-black rounded-xl mb-3 shadow-lg hover:opacity-90 transition-all text-[15px]">Simpan Profil</button>
-                <button onclick="deleteAccount()" class="w-full py-4 bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-500 font-extrabold rounded-xl border border-red-200 dark:border-red-500/20 hover:bg-red-200 dark:hover:bg-red-500/20 transition-colors text-[14px]">Hapus Akun Permanen</button>
+                <button id="btnSimpanProfil" onclick="saveProfile()" class="w-full py-3.5 bg-yellow-400 dark:bg-[#facc15] text-slate-900 dark:text-[#0b1320] font-black rounded-xl mb-3 shadow-md hover:opacity-90 transition-all text-[13px]">Simpan Profil</button>
+                <button onclick="deleteAccount()" class="w-full py-3.5 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-500 font-extrabold rounded-xl border border-red-200 dark:border-red-500/20 hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors text-[12px]">Hapus Akun Permanen</button>
             </div>
         </div>
 
@@ -3057,34 +2379,34 @@ cat << 'EOF' > public/riwayat.html
         
         <div class="flex items-center pt-5 px-5 pb-0 bg-white dark:bg-[#0b1320] sticky top-0 z-50 transition-colors">
             <i class="fas fa-chevron-left text-xl cursor-pointer mr-4 text-slate-800 dark:text-white transition-colors" onclick="location.href='/dashboard.html'"></i>
-            <h1 class="text-[18px] font-extrabold text-slate-800 dark:text-white uppercase tracking-wide transition-colors">Riwayat Transaksi</h1>
+            <h1 class="text-[17px] font-extrabold text-slate-800 dark:text-white uppercase tracking-wide transition-colors">Riwayat Transaksi</h1>
         </div>
 
         <div class="flex bg-white dark:bg-[#0b1320] sticky top-[60px] z-40 border-b border-slate-200 dark:border-[#1e293b] mt-4 shadow-sm transition-colors">
-            <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-orange-500 dark:text-[#facc15] border-b-[3px] border-orange-400 dark:border-[#facc15] cursor-pointer uppercase tracking-wide transition-colors">
+            <div class="flex-1 text-center py-3.5 text-[12px] font-bold text-orange-500 dark:text-[#facc15] border-b-[3px] border-orange-400 dark:border-[#facc15] cursor-pointer uppercase tracking-wide transition-colors">
                 Produk
             </div>
-            <div class="flex-1 text-center py-3.5 text-[13px] font-bold text-slate-500 dark:text-gray-500 cursor-pointer uppercase tracking-wide transition-colors hover:bg-slate-50 dark:hover:bg-[#111c2e]" onclick="location.href='/riwayat_topup.html'">
+            <div class="flex-1 text-center py-3.5 text-[12px] font-bold text-slate-500 dark:text-gray-500 cursor-pointer uppercase tracking-wide transition-colors hover:bg-slate-50 dark:hover:bg-[#111c2e]" onclick="location.href='/riwayat_topup.html'">
                 Topup Saldo
             </div>
         </div>
 
         <div class="mx-4 mt-4 bg-white dark:bg-[#111c2e] p-4 rounded-2xl border border-slate-200 dark:border-[#1e293b] shadow-sm transition-colors">
             <div class="relative mb-4">
-                <i class="fas fa-search absolute left-3.5 top-3.5 text-slate-400 dark:text-gray-400 text-sm transition-colors"></i>
-                <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-slate-50 dark:bg-[#0b1320] border border-slate-300 dark:border-gray-700 text-slate-800 dark:text-gray-200 rounded-xl py-3 pl-10 pr-4 text-[14px] font-bold focus:outline-none focus:border-yellow-400 dark:focus:border-[#facc15] transition-colors shadow-inner" placeholder="Cari transaksi (Nomor/SN)...">
+                <i class="fas fa-search absolute left-4 top-3.5 text-slate-400 dark:text-gray-400 text-[13px] transition-colors"></i>
+                <input type="text" id="searchInput" onkeyup="filterHistory()" class="w-full bg-slate-50 dark:bg-[#0b1320] border border-slate-300 dark:border-gray-700 text-slate-800 dark:text-gray-200 rounded-xl py-3 pl-10 pr-4 text-[13px] font-bold focus:outline-none focus:border-yellow-400 dark:focus:border-[#facc15] transition-colors shadow-inner" placeholder="Cari transaksi (Nomor/SN)...">
             </div>
             <div class="flex justify-between gap-2">
-                <div id="btn-Semua" onclick="setStatusFilter('Semua')" class="flex-1 text-center py-2.5 rounded-xl text-[12px] font-bold cursor-pointer shadow-sm transition-colors border">Semua</div>
-                <div id="btn-Sukses" onclick="setStatusFilter('Sukses')" class="flex-1 text-center py-2.5 rounded-xl text-[12px] font-bold cursor-pointer transition-colors border">Sukses</div>
-                <div id="btn-Proses" onclick="setStatusFilter('Proses')" class="flex-1 text-center py-2.5 rounded-xl text-[12px] font-bold cursor-pointer transition-colors border">Proses</div>
-                <div id="btn-Gagal" onclick="setStatusFilter('Gagal')" class="flex-1 text-center py-2.5 rounded-xl text-[12px] font-bold cursor-pointer transition-colors border">Gagal</div>
+                <div id="btn-Semua" onclick="setStatusFilter('Semua')" class="flex-1 text-center py-2.5 rounded-xl text-[11px] font-bold cursor-pointer shadow-sm transition-colors border">Semua</div>
+                <div id="btn-Sukses" onclick="setStatusFilter('Sukses')" class="flex-1 text-center py-2.5 rounded-xl text-[11px] font-bold cursor-pointer transition-colors border">Sukses</div>
+                <div id="btn-Proses" onclick="setStatusFilter('Proses')" class="flex-1 text-center py-2.5 rounded-xl text-[11px] font-bold cursor-pointer transition-colors border">Proses</div>
+                <div id="btn-Gagal" onclick="setStatusFilter('Gagal')" class="flex-1 text-center py-2.5 rounded-xl text-[11px] font-bold cursor-pointer transition-colors border">Gagal</div>
             </div>
         </div>
 
         <div class="px-4 mt-4" id="historyContainer">
             <div class="mt-14 flex flex-col items-center justify-center text-center px-6">
-                <i class="fas fa-spinner fa-spin text-4xl mb-4 text-orange-500 dark:text-[#facc15]"></i>
+                <i class="fas fa-spinner fa-spin text-3xl mb-4 text-orange-500 dark:text-[#facc15]"></i>
             </div>
         </div>
 
@@ -3138,12 +2460,12 @@ cat << 'EOF' > public/riwayat.html
             const isDark = document.documentElement.classList.contains('dark');
             
             let classUnselected = isDark 
-                ? 'flex-1 bg-transparent text-gray-400 text-center py-2.5 rounded-xl text-[12px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#1a2639]' 
-                : 'flex-1 bg-transparent text-slate-500 text-center py-2.5 rounded-xl text-[12px] font-bold cursor-pointer border border-slate-300 transition-colors hover:bg-slate-50';
+                ? 'flex-1 bg-transparent text-gray-400 text-center py-2.5 rounded-xl text-[11px] font-bold cursor-pointer border border-gray-600 transition-colors hover:bg-[#1a2639]' 
+                : 'flex-1 bg-transparent text-slate-500 text-center py-2.5 rounded-xl text-[11px] font-bold cursor-pointer border border-slate-300 transition-colors hover:bg-slate-50';
                 
             let classSelected = isDark 
-                ? 'flex-1 bg-[#facc15] text-[#0b1320] text-center py-2.5 rounded-xl text-[12px] font-bold cursor-pointer shadow-sm transition-colors border border-[#facc15]' 
-                : 'flex-1 bg-yellow-400 text-slate-900 text-center py-2.5 rounded-xl text-[12px] font-bold cursor-pointer shadow-md transition-colors border border-yellow-400';
+                ? 'flex-1 bg-[#facc15] text-[#0b1320] text-center py-2.5 rounded-xl text-[11px] font-bold cursor-pointer shadow-sm transition-colors border border-[#facc15]' 
+                : 'flex-1 bg-yellow-400 text-slate-900 text-center py-2.5 rounded-xl text-[11px] font-bold cursor-pointer shadow-md transition-colors border border-yellow-400';
 
             ['Semua', 'Sukses', 'Proses', 'Gagal'].forEach(btn => {
                 document.getElementById('btn-' + btn).className = classUnselected;
@@ -3179,7 +2501,7 @@ cat << 'EOF' > public/riwayat.html
                     <div class="w-[6rem] h-[6rem] ${isDark ? 'bg-[#111c2e] border-[#1e293b]' : 'bg-white border-slate-200'} rounded-full flex items-center justify-center mb-6 shadow-md border transition-colors">
                         <i class="fas fa-receipt text-slate-400 dark:text-gray-400 text-5xl"></i>
                     </div>
-                    <h2 class="text-slate-800 dark:text-white font-black text-xl tracking-wide mb-3 transition-colors">Transaksi Tidak Ditemukan</h2>
+                    <h2 class="text-slate-800 dark:text-white font-black text-[17px] tracking-wide mb-3 transition-colors">Transaksi Tidak Ditemukan</h2>
                 </div>`;
             } else {
                 c.innerHTML = filtered.map((i) => {
@@ -3188,9 +2510,9 @@ cat << 'EOF' > public/riwayat.html
                     if(i.status === 'Gagal') {
                         sc = isDark ? 'text-red-400 border border-red-500/50 bg-red-500/10' : 'text-red-600 border border-red-300 bg-red-100';
                     } else if(i.status === 'Sukses') {
-                        sc = isDark ? 'text-green-400 border border-green-500/50 bg-green-500/10' : 'text-green-700 border border-green-300 bg-green-100'; 
+                        sc = isDark ? 'text-green-400 border border-green-500/50 bg-green-500/10' : 'text-green-700 border border-green-400 bg-green-50'; 
                     } else {
-                        sc = isDark ? 'text-[#facc15] border border-[#facc15]/50 bg-[#facc15]/10' : 'text-orange-600 border border-orange-300 bg-orange-100'; 
+                        sc = isDark ? 'text-[#facc15] border border-[#facc15]/50 bg-[#facc15]/10' : 'text-orange-600 border border-orange-300 bg-orange-50'; 
                     }
                             
                     let rawIdx = allTrx.indexOf(i);
@@ -3202,19 +2524,19 @@ cat << 'EOF' > public/riwayat.html
                     let priceClass = isDark ? 'text-[#facc15]' : 'text-orange-500';
                     
                     return `
-                    <div onclick="showDetailTrx(${rawIdx})" class="${boxClass} p-5 rounded-[1.2rem] mb-4 border shadow-sm cursor-pointer transition-colors flex items-center justify-between">
+                    <div onclick="showDetailTrx(${rawIdx})" class="${boxClass} p-4 rounded-[1.2rem] mb-3.5 border shadow-sm cursor-pointer transition-colors flex items-center justify-between">
                         <div class="flex items-center gap-4 overflow-hidden">
-                            <div class="w-14 h-14 rounded-xl ${iconBoxClass} flex items-center justify-center shrink-0 border transition-colors shadow-sm">
-                                <i class="fas fa-box text-slate-400 dark:text-gray-400 text-2xl"></i>
+                            <div class="w-12 h-12 rounded-xl ${iconBoxClass} flex items-center justify-center shrink-0 border transition-colors shadow-sm">
+                                <i class="fas fa-box text-slate-400 dark:text-gray-400 text-xl"></i>
                             </div>
                             <div class="flex flex-col truncate">
-                                <h4 class="font-extrabold text-[14px] ${titleClass} truncate mb-1 transition-colors">${i.produk}</h4>
+                                <h4 class="font-extrabold text-[13px] ${titleClass} truncate mb-1 transition-colors">${i.produk}</h4>
                                 <span class="text-[11px] font-medium ${dateClass} transition-colors">${i.date}</span>
                             </div>
                         </div>
                         <div class="flex flex-col items-end shrink-0 pl-3">
-                            <p class="text-[15px] font-black ${priceClass} mb-2 transition-colors">Rp ${(i.harga||0).toLocaleString('id-ID')}</p>
-                            <span class="text-[10px] font-extrabold px-2.5 py-1 rounded uppercase tracking-wider ${sc} transition-colors">${i.status}</span>
+                            <p class="text-[14px] font-black ${priceClass} mb-2 transition-colors">Rp ${(i.harga||0).toLocaleString('id-ID')}</p>
+                            <span class="text-[9px] font-extrabold px-2.5 py-1 rounded uppercase tracking-wider ${sc} transition-colors">${i.status}</span>
                         </div>
                     </div>`;
                 }).join('');
@@ -3251,35 +2573,39 @@ cat << 'EOF' > public/riwayat.html
             const highlightColor = isDark ? 'text-[#facc15]' : 'text-orange-600';
             
             let statusColor = '';
-            if(i.status === 'Sukses') statusColor = isDark ? 'text-green-400' : 'text-green-600';
-            else if(i.status === 'Proses') statusColor = highlightColor;
-            else statusColor = isDark ? 'text-red-400' : 'text-red-600';
+            if(i.status === 'Sukses') {
+                statusColor = isDark ? 'text-green-400' : 'text-green-600';
+            } else if(i.status === 'Proses') {
+                statusColor = highlightColor;
+            } else {
+                statusColor = isDark ? 'text-red-400' : 'text-red-600';
+            }
             
             let htmlContent = `
-            <h3 class="${valColor} font-black text-[20px] mb-6 text-center transition-colors">Detail Transaksi Produk</h3>
-            <div class="${innerBg} border ${borderColor} rounded-xl p-5 mb-6 text-left overflow-y-auto max-h-[60vh] hide-scrollbar shadow-inner transition-colors">
+            <h3 class="${valColor} font-black text-[18px] mb-5 text-center transition-colors">Detail Transaksi Produk</h3>
+            <div class="${innerBg} border ${borderColor} rounded-xl p-4 mb-5 text-left overflow-y-auto max-h-[60vh] hide-scrollbar shadow-inner transition-colors">
                 
-                <p class="text-[11px] ${labelColor} font-extrabold mb-3 uppercase tracking-widest border-b ${borderColor} pb-2 transition-colors">Data Pelanggan</p>
-                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[13px] transition-colors">Nama Lengkap</span><span class="${valColor} font-black text-[13px] text-right transition-colors">${displayName}</span></div>
-                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[13px] transition-colors">Alamat Email</span><span class="${valColor} font-black text-[13px] text-right transition-colors">${displayEmail}</span></div>
-                <div class="flex justify-between mb-5"><span class="${labelColor} font-bold text-[13px] transition-colors">Nomor WA</span><span class="${valColor} font-black text-[13px] text-right transition-colors">${displayWa}</span></div>
+                <p class="text-[10px] ${labelColor} font-extrabold mb-3 uppercase tracking-widest border-b ${borderColor} pb-2 transition-colors">Data Pelanggan</p>
+                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[12px] transition-colors">Nama Lengkap</span><span class="${valColor} font-black text-[12px] text-right transition-colors">${displayName}</span></div>
+                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[12px] transition-colors">Alamat Email</span><span class="${valColor} font-black text-[12px] text-right transition-colors">${displayEmail}</span></div>
+                <div class="flex justify-between mb-5"><span class="${labelColor} font-bold text-[12px] transition-colors">Nomor WA</span><span class="${valColor} font-black text-[12px] text-right transition-colors">${displayWa}</span></div>
                 
-                <p class="text-[11px] ${labelColor} font-extrabold mb-3 uppercase tracking-widest border-b ${borderColor} pb-2 transition-colors">Rincian Pembelian</p>
-                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[13px] transition-colors">Waktu Dibuat</span><span class="${valColor} font-black text-[12px] text-right transition-colors">${i.date}</span></div>
-                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[13px] transition-colors">Status Saat Ini</span><span class="${statusColor} font-black text-[13px] text-right uppercase transition-colors">${i.status}</span></div>
-                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[13px] transition-colors">Nama Produk</span><span class="${valColor} font-black text-[13px] text-right ml-4 transition-colors">${i.produk}</span></div>
-                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[13px] transition-colors">Tujuan / Target</span><span class="${valColor} font-black text-[13px] text-right transition-colors">${i.no_tujuan}</span></div>
-                <div class="flex justify-between mb-5"><span class="${labelColor} font-bold text-[13px] transition-colors">SN / Referensi</span><span class="${valColor} font-black text-[11px] text-right break-all ml-4 transition-colors">${i.sn_ref || i.id}</span></div>
+                <p class="text-[10px] ${labelColor} font-extrabold mb-3 uppercase tracking-widest border-b ${borderColor} pb-2 transition-colors">Rincian Pembelian</p>
+                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[12px] transition-colors">Waktu Dibuat</span><span class="${valColor} font-black text-[11px] text-right transition-colors">${i.date}</span></div>
+                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[12px] transition-colors">Status Saat Ini</span><span class="${statusColor} font-black text-[12px] text-right uppercase transition-colors">${i.status}</span></div>
+                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[12px] transition-colors">Nama Produk</span><span class="${valColor} font-black text-[12px] text-right ml-4 transition-colors">${i.produk}</span></div>
+                <div class="flex justify-between mb-3"><span class="${labelColor} font-bold text-[12px] transition-colors">Tujuan / Target</span><span class="${valColor} font-black text-[12px] text-right transition-colors">${i.no_tujuan}</span></div>
+                <div class="flex justify-between mb-5"><span class="${labelColor} font-bold text-[12px] transition-colors">SN / Referensi</span><span class="${valColor} font-black text-[10px] text-right break-all ml-4 transition-colors">${i.sn_ref || i.id}</span></div>
 
-                <p class="text-[11px] ${labelColor} font-extrabold mb-3 uppercase tracking-widest border-b ${borderColor} pb-2 transition-colors">Pembayaran</p>
-                <div class="flex justify-between"><span class="${labelColor} font-black text-[14px] transition-colors">Total Harga</span><span class="${highlightColor} font-black text-[16px] text-right transition-colors">Rp ${(i.harga||0).toLocaleString('id-ID')}</span></div>
+                <p class="text-[10px] ${labelColor} font-extrabold mb-3 uppercase tracking-widest border-b ${borderColor} pb-2 transition-colors">Pembayaran</p>
+                <div class="flex justify-between"><span class="${labelColor} font-black text-[13px] transition-colors">Total Harga</span><span class="${highlightColor} font-black text-[15px] text-right transition-colors">Rp ${(i.harga||0).toLocaleString('id-ID')}</span></div>
 
             </div>
             
-            <button onclick="komplainTrx('${(i.harga||0).toLocaleString('id-ID')}', '${i.date}', '${rawStatus}')" class="w-full py-4 bg-red-500 hover:bg-red-600 text-white font-black rounded-xl mb-3 shadow-md transition-all text-[15px]">
+            <button onclick="komplainTrx('${(i.harga||0).toLocaleString('id-ID')}', '${i.date}', '${rawStatus}')" class="w-full py-3.5 bg-red-500 hover:bg-red-600 text-white font-black rounded-xl mb-3 shadow-md transition-all text-[14px]">
                 Hubungi Admin (Komplain)
             </button>
-            <button onclick="Swal.close()" class="w-full py-4 bg-transparent border border-slate-300 dark:border-gray-600 ${valColor} hover:bg-slate-100 dark:hover:bg-gray-800 font-black rounded-xl transition-all text-[15px]">
+            <button onclick="Swal.close()" class="w-full py-3.5 bg-transparent border border-slate-300 dark:border-gray-600 ${valColor} hover:bg-slate-100 dark:hover:bg-gray-800 font-black rounded-xl transition-all text-[14px]">
                 Tutup Detail
             </button>
             `;
@@ -4723,7 +4049,20 @@ while true; do
             echo "0. Kembali"
             read -p "Pilih [0-3]: " s_menu
             if [ "$s_menu" == "1" ]; then
-                cd "$HOME/$DIR_NAME"; node -e "const fs = require('fs'); const db = fs.existsSync('./database.json') ? JSON.parse(fs.readFileSync('./database.json')) : {}; const users = fs.existsSync('./web_users.json') ? JSON.parse(fs.readFileSync('./web_users.json')) : {}; console.log('\n--- DAFTAR SALDO MEMBER ---'); for (let p in users) { if (users[p].isVerified) console.log('- ' + users[p].name + ' (' + p + ') : Rp ' + (db[p] ? db[p].saldo : 0)); } console.log('---------------------------\n');"
+                cd "$HOME/$DIR_NAME"
+                node -e "
+                const fs = require('fs'); 
+                const db = fs.existsSync('./database.json') ? JSON.parse(fs.readFileSync('./database.json')) : {}; 
+                const users = fs.existsSync('./web_users.json') ? JSON.parse(fs.readFileSync('./web_users.json')) : {}; 
+                console.log('\n--- DAFTAR SALDO MEMBER ---'); 
+                for (let p in users) { 
+                    if (users[p].isVerified) {
+                        let em = users[p].email || 'Tidak ada email';
+                        console.log('- ' + users[p].name + ' (' + p + ') | ' + em + ' | Rp ' + (db[p] ? db[p].saldo : 0)); 
+                    }
+                } 
+                console.log('---------------------------\n');
+                "
                 read -p "Tekan Enter..."
             elif [ "$s_menu" == "2" ]; then
                 read -p "No WA Member (Awalan 62...): " no_mem
@@ -4970,10 +4309,10 @@ echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V166 SELESAI! 🚀  
 echo -e "\033[0;32m======================================================================\033[0m"
 echo -e "\033[0;36mFITUR BARU DI V166 (THE PERFECT MASTERPIECE):\033[0m"
 echo -e "  ✅ \033[1;33mMODE TEMA GELAP/TERANG\033[0m Otomatis simpan preferensi mata pengguna!"
-echo -e "  ✅ \033[1;33mGRID PRODUK LENGKAP 3X3\033[0m Layout dashboard yang presisi & ikon besar!"
+echo -e "  ✅ \033[1;33mGRID PRODUK LENGKAP 3X3\033[0m Layout dashboard yang presisi & ikon kecil/rapi!"
+echo -e "  ✅ \033[1;33mMENU VPN PREMIUM\033[0m Khusus SSH/VMESS/VLESS/TROJAN/ZIVPN (Coming Soon)!"
+echo -e "  ✅ \033[1;33mDESAIN PROFIL BARU\033[0m Layout elegan dengan logo lingkar inisial!"
 echo -e "  ✅ \033[1;33mNOTIFIKASI 2 JALUR\033[0m Notif Admin Full Data, Notif Publik Disensor Email/WA!"
-echo -e "  ✅ \033[1;33mAUTO QRIS DINAMIS FIX\033[0m Mesin BHM terbaru Anti Nyangkut!"
-echo -e "  ✅ \033[1;33mPANEL VPS RINGKAS\033[0m Backup & Restore gabung jadi lebih praktis!"
 echo -e "  ✅ \033[1;33mFULL UNCOMPRESSED\033[0m Kode rapi jali, gampang dibaca!"
 echo -e "\033[0;32m======================================================================\033[0m"
 echo -e "\033[1;37mMEMBUKA PANEL MENU OTOMATIS DALAM 2 DETIK...\033[0m"
