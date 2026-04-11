@@ -752,8 +752,8 @@ cat << 'EOF' > public/dashboard.html
         </div>
 
         <div class="mx-4 mt-8 mb-4">
-            <h3 class="font-extrabold text-white mb-4 text-[16px] ml-1">Layanan Produk</h3>
-            <div class="grid grid-cols-4 gap-y-6 gap-x-3">
+            <h3 class="font-extrabold text-white mb-4 text-[16px] ml-1">Layanan Produk PPOB</h3>
+            <div class="grid grid-cols-3 gap-y-6 gap-x-3">
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=pulsa'">
                     <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#111c2e] text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#1e293b]">
                         <i class="fas fa-mobile-alt"></i>
@@ -802,23 +802,11 @@ cat << 'EOF' > public/dashboard.html
                     </div>
                     <span class="text-[11px] font-bold text-gray-300 text-center">PERDANA</span>
                 </div>
-            </div>
-        </div>
-
-        <div class="mx-4 mt-8 mb-8">
-            <h3 class="font-extrabold text-white mb-4 text-[16px] ml-1">Produk Digital</h3>
-            <div class="grid grid-cols-4 gap-y-6 gap-x-3">
                 <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=ewallet'">
                     <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#111c2e] text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#1e293b]">
                         <i class="fas fa-wallet"></i>
                     </div>
                     <span class="text-[11px] font-bold text-gray-300">E-WALLET</span>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer hover:-translate-y-1 transition-transform" onclick="location.href='/operator.html?type=etoll'">
-                    <div class="w-[4.5rem] h-[4.5rem] rounded-[1.2rem] bg-[#111c2e] text-[#facc15] flex items-center justify-center text-3xl shadow-sm mb-2 border border-[#1e293b]">
-                        <i class="fas fa-id-card"></i>
-                    </div>
-                    <span class="text-[10px] font-bold text-gray-300 text-center">SALDO<br>E-TOLL</span>
                 </div>
             </div>
         </div>
@@ -2978,8 +2966,7 @@ if (!fs.existsSync(infoFile)) saveJSON(infoFile, []);
 // ==========================================
 function censorName(name) {
     if (!name) return 'Hamba Allah';
-    if (name.length <= 3) return name + '***';
-    return name.substring(0, 3) + '***';
+    return name; // NAMA SEKARANG TIDAK DISENSOR SESUAI REQUEST BOSS
 }
 
 function censorEmail(email) {
@@ -2994,7 +2981,7 @@ function censorEmail(email) {
 function censorWa(wa) {
     if (!wa) return '080000000000';
     if (wa.length <= 8) return wa;
-    return wa.substring(0, 4) + '****' + wa.substring(wa.length - 4);
+    return wa.substring(0, 4) + '****' + wa.substring(wa.length - 2);
 }
 
 function censorTarget(target) {
@@ -3232,8 +3219,8 @@ setInterval(async () => {
                         // NOTIF ADMIN FULL
                         sendTeleAdmin(`✅ *UPDATE: TRANSAKSI SUKSES* ✅\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n🔖 SN: ${trx.sn_ref}`); 
                         
-                        // NOTIF TESTIMONI SENSOR (PUBLIK)
-                        let testiMsgProduk = `✅ *TRANSAKSI PRODUK BERHASIL* ✅\n\n👤 Nama: ${censorName(uData.name)}\n✉️ Email: ${censorEmail(uData.email)}\n📱 WA: ${censorWa(phone)}\n⌚ Waktu: ${new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'})}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${censorTarget(trx.no_tujuan)}\n💰 Harga: Rp ${(trx.harga || 0).toLocaleString('id-ID')}\n🔖 SN: ${trx.sn_ref}\n\n💳 Riwayat Saldo\n📉 Saldo Sebelum: Rp ${(user.saldo + trx.harga).toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${(user.saldo).toLocaleString('id-ID')}`;
+                        // NOTIF TESTIMONI SENSOR (PUBLIK) DENGAN BRAND & DOMAIN (NAMA TIDAK DISENSOR)
+                        let testiMsgProduk = `👑 *DIGITAL FIKY STORE* 👑\n✅ *TRANSAKSI PRODUK BERHASIL* ✅\n\n👤 Nama: ${censorName(uData.name)}\n✉️ Email: ${censorEmail(uData.email)}\n📱 WA: ${censorWa(phone)}\n⌚ Waktu: ${new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'})}\n\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${censorTarget(trx.no_tujuan)}\n💰 Harga: Rp ${(trx.harga || 0).toLocaleString('id-ID')}\n🔖 SN: ${trx.sn_ref}\n\n💳 Riwayat Saldo\n📉 Saldo Sebelum: Rp ${(user.saldo + trx.harga).toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${(user.saldo).toLocaleString('id-ID')}\n\n🌐 *Web:* digital.myfiky.store`;
                         broadcastTestimoni(testiMsgProduk);
                     } 
                     else if (digiData.status === 'Gagal') { 
@@ -3375,8 +3362,8 @@ setInterval(async () => {
                         let adminMsg = `✅ *TOP UP QRIS OTOMATIS BERHASIL* ✅\n\n👤 Nama: ${uData.name || 'Hamba Allah'}\n✉️ Email: ${uData.email || 'Belum diatur'}\n📱 WA: ${p.phone}\n⌚ Waktu: ${dateStr}\n🏦 Metode: QRIS Dinamis\n\n💰 Jumlah Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n🎫 Kode Unik: ${p.topup.kode_unik || 0}\n💵 Total Saldo Diterima: Rp ${targetNominal.toLocaleString('id-ID')}\n\n💳 Riwayat Saldo\n📉 Saldo Sebelum: Rp ${salSebelum.toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${salSesudah.toLocaleString('id-ID')}\n🔖 Ref GoPay: ${refId}`;
                         sendTeleAdmin(adminMsg);
                         
-                        // NOTIF TESTIMONI SENSOR (PUBLIK)
-                        let testiMsg = `✅ *TOP UP QRIS OTOMATIS BERHASIL* ✅\n\n👤 Nama: ${censorName(uData.name)}\n✉️ Email: ${censorEmail(uData.email)}\n📱 WA: ${censorWa(p.phone)}\n⌚ Waktu: ${dateStr}\n🏦 Metode: QRIS Dinamis\n\n💰 Jumlah Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n🎫 Kode Unik: ${p.topup.kode_unik || 0}\n💵 Total Saldo Diterima: Rp ${targetNominal.toLocaleString('id-ID')}\n\n💳 Riwayat Saldo\n📉 Saldo Sebelum: Rp ${salSebelum.toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${salSesudah.toLocaleString('id-ID')}`;
+                        // NOTIF TESTIMONI SENSOR (PUBLIK) DENGAN BRAND & DOMAIN (NAMA TIDAK DISENSOR)
+                        let testiMsg = `👑 *DIGITAL FIKY STORE* 👑\n✅ *TOP UP QRIS OTOMATIS BERHASIL* ✅\n\n👤 Nama: ${censorName(uData.name)}\n✉️ Email: ${censorEmail(uData.email)}\n📱 WA: ${censorWa(p.phone)}\n⌚ Waktu: ${dateStr}\n🏦 Metode: QRIS Dinamis\n\n💰 Jumlah Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n🎫 Kode Unik: ${p.topup.kode_unik || 0}\n💵 Total Saldo Diterima: Rp ${targetNominal.toLocaleString('id-ID')}\n\n💳 Riwayat Saldo\n📉 Saldo Sebelum: Rp ${salSebelum.toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${salSesudah.toLocaleString('id-ID')}\n\n🌐 *Web:* digital.myfiky.store`;
                         broadcastTestimoni(testiMsg);
                     }
                 }
