@@ -1881,6 +1881,7 @@ cat << 'EOF' > public/operator.html
 EOF
 
 echo "[PART 2 SELESAI DITULIS!]"
+// selesai
 echo "[6/10] Membangun Halaman Lanjutan: Game, Topup, Info, Mutasi, Profil, Riwayat (FULL UNCOMPRESSED)..."
 
 cat << 'EOF' > public/game.html
@@ -2981,10 +2982,19 @@ function censorName(name) {
     return name.substring(0, 3) + '***';
 }
 
+function censorEmail(email) {
+    if (!email || !email.includes('@')) return 'Belum diatur';
+    let parts = email.split('@');
+    let namePart = parts[0];
+    let domainPart = parts[1];
+    if (namePart.length <= 3) return namePart + '***@' + domainPart;
+    return namePart.substring(0, 4) + '***@' + domainPart;
+}
+
 function censorWa(wa) {
     if (!wa) return '080000000000';
     if (wa.length <= 8) return wa;
-    return wa.substring(0, 4) + '****' + wa.substring(wa.length - 2);
+    return wa.substring(0, 4) + '****' + wa.substring(wa.length - 4);
 }
 
 function censorTarget(target) {
@@ -3222,8 +3232,9 @@ setInterval(async () => {
                         // NOTIF ADMIN FULL
                         sendTeleAdmin(`✅ *UPDATE: TRANSAKSI SUKSES* ✅\n\n👤 Nama: ${uData.name}\n📱 WA: ${phone}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${trx.no_tujuan}\n🔖 SN: ${trx.sn_ref}`); 
                         
-                        // NOTIF TESTIMONI SENSOR
-                        broadcastTestimoni(`🎉 *TRANSAKSI BERHASIL!* 🎉\n\n👤 Member: ${censorName(uData.name)}\n📱 WA: ${censorWa(phone)}\n📦 Pembelian: ${trx.produk}\n🎯 Tujuan: ${censorTarget(trx.no_tujuan)}\n🔖 SN: ${trx.sn_ref}\n\n_Terima kasih telah berbelanja di Digital Fiky Store!_ 🚀`);
+                        // NOTIF TESTIMONI SENSOR (PUBLIK)
+                        let testiMsgProduk = `✅ *TRANSAKSI PRODUK BERHASIL* ✅\n\n👤 Nama: ${censorName(uData.name)}\n✉️ Email: ${censorEmail(uData.email)}\n📱 WA: ${censorWa(phone)}\n⌚ Waktu: ${new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'})}\n📦 Produk: ${trx.produk}\n📱 Tujuan: ${censorTarget(trx.no_tujuan)}\n💰 Harga: Rp ${(trx.harga || 0).toLocaleString('id-ID')}\n🔖 SN: ${trx.sn_ref}\n\n💳 Riwayat Saldo\n📉 Saldo Sebelum: Rp ${(user.saldo + trx.harga).toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${(user.saldo).toLocaleString('id-ID')}`;
+                        broadcastTestimoni(testiMsgProduk);
                     } 
                     else if (digiData.status === 'Gagal') { 
                         trx.status = 'Gagal'; trx.sn_ref = digiData.sn || digiData.message || 'Gagal Pusat'; 
@@ -3364,8 +3375,8 @@ setInterval(async () => {
                         let adminMsg = `✅ *TOP UP QRIS OTOMATIS BERHASIL* ✅\n\n👤 Nama: ${uData.name || 'Hamba Allah'}\n✉️ Email: ${uData.email || 'Belum diatur'}\n📱 WA: ${p.phone}\n⌚ Waktu: ${dateStr}\n🏦 Metode: QRIS Dinamis\n\n💰 Jumlah Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n🎫 Kode Unik: ${p.topup.kode_unik || 0}\n💵 Total Saldo Diterima: Rp ${targetNominal.toLocaleString('id-ID')}\n\n💳 Riwayat Saldo\n📉 Saldo Sebelum: Rp ${salSebelum.toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${salSesudah.toLocaleString('id-ID')}\n🔖 Ref GoPay: ${refId}`;
                         sendTeleAdmin(adminMsg);
                         
-                        // NOTIF TESTIMONI SENSOR
-                        let testiMsg = `💵 *TOP UP SALDO MASUK!* 💵\n\n👤 Member: ${censorName(uData.name)}\n📱 WA: ${censorWa(p.phone)}\n💰 Nominal: Rp ${targetNominal.toLocaleString('id-ID')}\n🏦 Metode: QRIS Dinamis\n\n_Auto-Check Sistem berjalan lancar! Gas Topup!_ 🚀`;
+                        // NOTIF TESTIMONI SENSOR (PUBLIK)
+                        let testiMsg = `✅ *TOP UP QRIS OTOMATIS BERHASIL* ✅\n\n👤 Nama: ${censorName(uData.name)}\n✉️ Email: ${censorEmail(uData.email)}\n📱 WA: ${censorWa(p.phone)}\n⌚ Waktu: ${dateStr}\n🏦 Metode: QRIS Dinamis\n\n💰 Jumlah Deposit: Rp ${depositAsli.toLocaleString('id-ID')}\n🎫 Kode Unik: ${p.topup.kode_unik || 0}\n💵 Total Saldo Diterima: Rp ${targetNominal.toLocaleString('id-ID')}\n\n💳 Riwayat Saldo\n📉 Saldo Sebelum: Rp ${salSebelum.toLocaleString('id-ID')}\n📈 Saldo Sesudah: Rp ${salSesudah.toLocaleString('id-ID')}`;
                         broadcastTestimoni(testiMsg);
                     }
                 }
