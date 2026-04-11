@@ -1,7 +1,7 @@
 #!/bin/bash
 # ==========================================================
 # DIGITAL FIKY STORE - V166 (PERFECT MASTERPIECE)
-# PART 1 DARI 4: SETUP, CSS, & HALAMAN LOGIN/REGISTER
+# PART 1: SETUP, CSS, AUTH, DASHBOARD, OPERATOR, TOPUP
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
@@ -17,10 +17,10 @@ DIR_NAME="digital-fiky-store"
 BOT_NAME="digital-fiky-bot"
 
 echo "=========================================================="
-echo "    MENGINSTAL DIGITAL FIKY STORE V166 (PART 1 DARI 4)    "
+echo "    MENGINSTAL DIGITAL FIKY STORE V166 (PART 1 DARI 2)    "
 echo "=========================================================="
 
-echo "[1/10] Memperbarui sistem dan menginstal Node.js..."
+echo "[1/8] Memperbarui sistem dan menginstal Node.js..."
 apt update -y && apt install curl wget gnupg git dos2unix psmisc zip unzip nginx ufw -y > /dev/null 2>&1
 
 if ! command -v node > /dev/null 2>&1; then
@@ -29,7 +29,7 @@ if ! command -v node > /dev/null 2>&1; then
 fi
 npm install -g pm2 > /dev/null 2>&1
 
-echo "[2/10] Membuat direktori aplikasi dan web..."
+echo "[2/8] Membuat direktori aplikasi dan web..."
 mkdir -p "$HOME/$DIR_NAME/public/banners"
 mkdir -p "$HOME/$DIR_NAME/public/info_images"
 cd "$HOME/$DIR_NAME"
@@ -56,7 +56,7 @@ cat << 'EOF' > package.json
 }
 EOF
 
-echo "[3/10] Membangun Antarmuka CSS (DUAL THEME SUPPORT)..."
+echo "[3/8] Membangun Antarmuka CSS (DUAL THEME SUPPORT)..."
 
 cat << 'EOF' > public/style.css
 body { 
@@ -159,7 +159,7 @@ body {
 }
 EOF
 
-echo "[4/10] Membangun Halaman Autentikasi Login (FULL UNCOMPRESSED)..."
+echo "[4/8] Membangun Halaman Autentikasi Login & Register (FULL UNCOMPRESSED)..."
 
 cat << 'EOF' > public/index.html
 <!DOCTYPE html>
@@ -217,7 +217,6 @@ cat << 'EOF' > public/index.html
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             const registeredPhone = urlParams.get('phone');
-            
             if (registeredPhone) { 
                 document.getElementById('identifier').value = registeredPhone; 
             } else { 
@@ -241,24 +240,14 @@ cat << 'EOF' > public/index.html
         
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const identifier = document.getElementById('identifier').value; 
             const password = document.getElementById('password').value;
-            
             localStorage.setItem('savedPhone', identifier);
             
             const bgSwal = document.documentElement.classList.contains('dark') ? '#111c2e' : '#ffffff';
             const textSwal = document.documentElement.classList.contains('dark') ? '#ffffff' : '#0f172a';
 
-            Swal.fire({ 
-                title: 'Memeriksa Data...', 
-                allowOutsideClick: false, 
-                background: bgSwal, 
-                color: textSwal, 
-                didOpen: () => { 
-                    Swal.showLoading(); 
-                } 
-            });
+            Swal.fire({ title: 'Memeriksa Data...', allowOutsideClick: false, background: bgSwal, color: textSwal, didOpen: () => { Swal.showLoading(); } });
             
             try {
                 const res = await fetch('/api/auth/login', { 
@@ -266,37 +255,22 @@ cat << 'EOF' > public/index.html
                     headers: { 'Content-Type': 'application/json' }, 
                     body: JSON.stringify({ identifier, password }) 
                 });
-                
                 const data = await res.json();
                 
                 if (res.ok) { 
                     localStorage.setItem('user', JSON.stringify(data.user)); 
                     window.location.href = '/dashboard.html';
                 } else { 
-                    Swal.fire({ 
-                        icon: 'error', 
-                        title: 'Gagal', 
-                        text: data.error, 
-                        background: bgSwal, 
-                        color: textSwal 
-                    }); 
+                    Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: bgSwal, color: textSwal }); 
                 }
             } catch (err) { 
-                Swal.fire({ 
-                    icon: 'error', 
-                    title: 'Oops...', 
-                    text: 'Kesalahan sistem.', 
-                    background: bgSwal, 
-                    color: textSwal 
-                }); 
+                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.', background: bgSwal, color: textSwal }); 
             }
         });
     </script>
 </body>
 </html>
 EOF
-
-echo "[5/10] Membangun Halaman Register (FULL UNCOMPRESSED)..."
 
 cat << 'EOF' > public/register.html
 <!DOCTYPE html>
@@ -377,21 +351,12 @@ cat << 'EOF' > public/register.html
 
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const name = document.getElementById('name').value; 
             const phone = document.getElementById('phone').value; 
             const email = document.getElementById('email').value; 
             const password = document.getElementById('password').value;
             
-            Swal.fire({ 
-                title: 'Memproses...', 
-                allowOutsideClick: false, 
-                background: bgSwal, 
-                color: textSwal, 
-                didOpen: () => { 
-                    Swal.showLoading(); 
-                } 
-            });
+            Swal.fire({ title: 'Memproses...', allowOutsideClick: false, background: bgSwal, color: textSwal, didOpen: () => { Swal.showLoading(); } });
             
             try {
                 const res = await fetch('/api/auth/register', { 
@@ -399,7 +364,6 @@ cat << 'EOF' > public/register.html
                     headers: { 'Content-Type': 'application/json' }, 
                     body: JSON.stringify({ name, phone, email, password }) 
                 });
-                
                 const data = await res.json();
                 
                 if (res.ok) {
@@ -408,39 +372,18 @@ cat << 'EOF' > public/register.html
                     document.getElementById('box-otp').classList.remove('hidden'); 
                     Swal.close();
                 } else { 
-                    Swal.fire({ 
-                        icon: 'error', 
-                        title: 'Gagal Daftar', 
-                        text: data.error, 
-                        background: bgSwal, 
-                        color: textSwal 
-                    }); 
+                    Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error, background: bgSwal, color: textSwal }); 
                 }
             } catch (err) { 
-                Swal.fire({ 
-                    icon: 'error', 
-                    title: 'Oops...', 
-                    text: 'Gagal memproses.', 
-                    background: bgSwal, 
-                    color: textSwal 
-                }); 
+                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses.', background: bgSwal, color: textSwal }); 
             }
         });
 
         document.getElementById('otpForm').addEventListener('submit', async (e) => {
             e.preventDefault(); 
-            
             const otp = document.getElementById('otpCode').value;
             
-            Swal.fire({ 
-                title: 'Verifikasi...', 
-                allowOutsideClick: false, 
-                background: bgSwal, 
-                color: textSwal, 
-                didOpen: () => { 
-                    Swal.showLoading(); 
-                } 
-            });
+            Swal.fire({ title: 'Verifikasi...', allowOutsideClick: false, background: bgSwal, color: textSwal, didOpen: () => { Swal.showLoading(); } });
             
             try {
                 const res = await fetch('/api/auth/verify', { 
@@ -448,36 +391,17 @@ cat << 'EOF' > public/register.html
                     headers: { 'Content-Type': 'application/json' }, 
                     body: JSON.stringify({ phone: registeredPhone, otp }) 
                 });
-                
                 const data = await res.json();
                 
                 if (res.ok) { 
-                    Swal.fire({ 
-                        icon: 'success', 
-                        title: 'Berhasil!', 
-                        text: 'Akun aktif.', 
-                        background: bgSwal, 
-                        color: textSwal 
-                    }).then(() => { 
+                    Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun aktif.', background: bgSwal, color: textSwal }).then(() => { 
                         window.location.href = '/?phone=' + registeredPhone; 
                     }); 
                 } else { 
-                    Swal.fire({ 
-                        icon: 'error', 
-                        title: 'OTP Salah', 
-                        text: data.error, 
-                        background: bgSwal, 
-                        color: textSwal 
-                    }); 
+                    Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: bgSwal, color: textSwal }); 
                 }
             } catch (err) { 
-                Swal.fire({ 
-                    icon: 'error', 
-                    title: 'Oops...', 
-                    text: 'Gagal verifikasi.', 
-                    background: bgSwal, 
-                    color: textSwal 
-                }); 
+                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.', background: bgSwal, color: textSwal }); 
             }
         });
     </script>
@@ -556,101 +480,37 @@ cat << 'EOF' > public/forgot.html
         document.getElementById('requestOtpForm').addEventListener('submit', async (e) => {
             e.preventDefault(); 
             const phone = document.getElementById('phone').value;
-            
-            Swal.fire({ 
-                title: 'Memproses...', 
-                allowOutsideClick: false, 
-                background: bgSwal, 
-                color: textSwal, 
-                didOpen: () => { 
-                    Swal.showLoading(); 
-                } 
-            });
-            
+            Swal.fire({ title: 'Memproses...', allowOutsideClick: false, background: bgSwal, color: textSwal, didOpen: () => { Swal.showLoading(); } });
             try {
-                const res = await fetch('/api/auth/forgot', { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ phone }) 
-                });
-                
+                const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
                 const data = await res.json();
-                
                 if (res.ok) { 
                     resetPhone = data.phone; 
                     document.getElementById('requestOtpForm').classList.add('hidden'); 
                     document.getElementById('resetForm').classList.remove('hidden'); 
                     Swal.close(); 
                 } else { 
-                    Swal.fire({ 
-                        icon: 'error', 
-                        title: 'Gagal', 
-                        text: data.error, 
-                        background: bgSwal, 
-                        color: textSwal 
-                    }); 
+                    Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: bgSwal, color: textSwal }); 
                 }
             } catch (err) { 
-                Swal.fire({ 
-                    icon: 'error', 
-                    title: 'Oops...', 
-                    text: 'Gangguan server', 
-                    background: bgSwal, 
-                    color: textSwal 
-                }); 
+                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gangguan server', background: bgSwal, color: textSwal }); 
             }
         });
 
         document.getElementById('resetForm').addEventListener('submit', async (e) => {
             e.preventDefault(); 
-            
             const otp = document.getElementById('otp').value; 
             const newPassword = document.getElementById('newPassword').value;
-            
-            Swal.fire({ 
-                title: 'Memproses...', 
-                allowOutsideClick: false, 
-                background: bgSwal, 
-                color: textSwal, 
-                didOpen: () => { 
-                    Swal.showLoading(); 
-                } 
-            });
-            
+            Swal.fire({ title: 'Memproses...', allowOutsideClick: false, background: bgSwal, color: textSwal, didOpen: () => { Swal.showLoading(); } });
             try {
-                const res = await fetch('/api/auth/reset', { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ phone: resetPhone, otp, newPassword }) 
-                });
-                
+                const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) });
                 if (res.ok) { 
-                    Swal.fire({ 
-                        icon: 'success', 
-                        title: 'Berhasil!', 
-                        text: 'Password diubah.', 
-                        background: bgSwal, 
-                        color: textSwal 
-                    }).then(() => { 
-                        window.location.href = '/'; 
-                    }); 
+                    Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.', background: bgSwal, color: textSwal }).then(() => { window.location.href = '/'; }); 
                 } else { 
-                    Swal.fire({ 
-                        icon: 'error', 
-                        title: 'Gagal', 
-                        text: 'OTP Salah.', 
-                        background: bgSwal, 
-                        color: textSwal 
-                    }); 
+                    Swal.fire({ icon: 'error', title: 'Gagal', text: 'OTP Salah.', background: bgSwal, color: textSwal }); 
                 }
             } catch (err) { 
-                Swal.fire({ 
-                    icon: 'error', 
-                    title: 'Oops...', 
-                    text: 'Gangguan server', 
-                    background: bgSwal, 
-                    color: textSwal 
-                }); 
+                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gangguan server', background: bgSwal, color: textSwal }); 
             }
         });
     </script>
@@ -658,9 +518,7 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
-echo "[PART 1 SELESAI DITULIS!]"
-// selesai
-echo "[5/10] Membangun Halaman Dashboard & Operator (PART 2 - FULL UNCOMPRESSED)..."
+echo "[5/8] Membangun Halaman Dashboard & Operator (FULL UNCOMPRESSED)..."
 
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
@@ -708,7 +566,9 @@ cat << 'EOF' > public/dashboard.html
                     <button class="absolute top-5 right-5 text-slate-400 dark:text-gray-400 hover:text-red-500" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')">
                         <i class="fas fa-times text-xl"></i>
                     </button>
-                    <div class="w-[4.5rem] h-[4.5rem] bg-slate-100 dark:bg-[#111c2e] rounded-full flex justify-center items-center text-orange-500 dark:text-[#facc15] font-extrabold text-3xl mb-3 shadow-md overflow-hidden border border-slate-200 dark:border-[#1e293b] transition-colors" id="sidebarInitial">U</div>
+                    <div class="w-[4.5rem] h-[4.5rem] bg-slate-100 dark:bg-[#111c2e] rounded-full flex justify-center items-center text-orange-500 dark:text-[#facc15] text-4xl mb-3 shadow-md border border-slate-200 dark:border-[#1e293b] transition-colors" id="sidebarInitial">
+                        <i class="fas fa-user"></i>
+                    </div>
                     <h3 class="font-bold text-lg text-slate-800 dark:text-white" id="sidebarName">User</h3>
                     <p class="text-sm text-slate-500 dark:text-gray-400" id="sidebarPhone">08...</p>
                 </div>
@@ -1099,7 +959,8 @@ cat << 'EOF' > public/dashboard.html
         if(user.avatar) { 
             document.getElementById('sidebarInitial').innerHTML = `<img src="${user.avatar}" class="w-full h-full rounded-full object-cover border-2 border-transparent">`; 
         } else { 
-            document.getElementById('sidebarInitial').innerText = user.name.charAt(0).toUpperCase(); 
+            // LOGO ORANG BOTAK (SIDEBAR)
+            document.getElementById('sidebarInitial').innerHTML = '<i class="fas fa-user"></i>'; 
         }
 
         let linkTele = 'https://t.me/digitalfikystore_channel'; 
@@ -1418,9 +1279,612 @@ cat << 'EOF' > public/dashboard.html
 </html>
 EOF
 
+cat << 'EOF' > public/operator.html
+<!DOCTYPE html>
+<html lang="id" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilih Layanan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        tailwind.config = { 
+            darkMode: 'class' 
+        };
+        if (localStorage.getItem('theme') === 'light') { 
+            document.documentElement.classList.remove('dark'); 
+        } else { 
+            document.documentElement.classList.add('dark'); 
+        }
+    </script>
+</head>
+<body class="bg-slate-50 dark:bg-[#0b1320] font-sans transition-colors duration-300 text-slate-800 dark:text-white">
+    <div class="max-w-md mx-auto bg-slate-50 dark:bg-[#0b1320] min-h-screen relative shadow-2xl overflow-x-hidden flex flex-col transition-colors duration-300">
+        
+        <div class="flex items-center p-5 bg-white dark:bg-[#0b1320] sticky top-0 z-40 border-b border-slate-200 dark:border-[#1e293b] shrink-0 transition-colors">
+            <i class="fas fa-arrow-left text-xl cursor-pointer mr-4 text-slate-800 dark:text-white transition-colors" onclick="goBack()"></i>
+            <h1 class="text-[18px] font-bold text-slate-800 dark:text-white uppercase transition-colors" id="pageTitle">Layanan</h1>
+        </div>
+
+        <div class="flex-1 overflow-y-auto hide-scrollbar pb-10">
+            
+            <div id="operatorContainer" class="block">
+                <div class="px-4 mt-6">
+                    <div class="bg-white dark:bg-[#111c2e] rounded-2xl overflow-hidden border border-slate-200 dark:border-[#1e293b] shadow-sm transition-colors" id="opListRender"></div>
+                </div>
+            </div>
+
+            <div id="categoryContainer" class="hidden">
+                <div class="flex justify-between items-center px-5 py-4 bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white border-b border-slate-200 dark:border-[#1e293b] transition-colors">
+                    <span class="font-bold text-[15px]" id="catSubtitle">Pilih Kategori</span>
+                    <i class="fas fa-home text-lg cursor-pointer text-slate-500 dark:text-gray-400 hover:text-orange-500 dark:hover:text-[#facc15] transition-colors" onclick="location.href='/dashboard.html'"></i>
+                </div>
+                <div class="bg-white dark:bg-[#111c2e] shadow-sm pb-4 transition-colors" id="categoryList"></div>
+            </div>
+
+            <div id="productContainer" class="hidden">
+                <div class="flex justify-between items-center px-5 py-4 bg-slate-50 dark:bg-[#0b1320] text-slate-800 dark:text-white border-b border-slate-200 dark:border-[#1e293b] transition-colors">
+                    <span class="font-bold text-[15px]" id="prodSubtitle">Pilih Produk</span>
+                    <i class="fas fa-home text-lg cursor-pointer text-slate-500 dark:text-gray-400 hover:text-orange-500 dark:hover:text-[#facc15] transition-colors" onclick="location.href='/dashboard.html'"></i>
+                </div>
+                
+                <div class="px-4 py-5 bg-white dark:bg-[#0b1320] border-b border-slate-200 dark:border-[#1e293b] shadow-sm transition-colors">
+                    <label class="text-[11px] text-slate-500 dark:text-gray-400 font-bold mb-2 block uppercase tracking-wide" id="targetLabel">Target / Tujuan</label>
+                    <div class="relative flex items-center">
+                        <input type="text" id="inputTarget" class="w-full bg-slate-50 dark:bg-[#1a2639] border border-slate-300 dark:border-gray-700 text-slate-800 dark:text-white rounded-xl py-3.5 pl-4 pr-24 text-[15px] font-bold focus:outline-none focus:border-yellow-400 dark:focus:border-[#facc15] transition-colors shadow-sm" placeholder="Ketik target disini...">
+                        <div id="prefixIcon" class="absolute right-3 font-bold text-[11px] uppercase px-2.5 py-1 rounded bg-slate-200 dark:bg-[#1e293b] text-orange-600 dark:text-[#facc15] hidden shadow-sm transition-colors"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-white dark:bg-[#111c2e] shadow-sm pb-4 transition-colors" id="productList"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="detailOverlay" class="fixed inset-0 bg-black/60 z-[130] hidden opacity-0 transition-opacity" onclick="closeDetail()"></div>
+    <div id="detailSheet" class="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#0b1320] z-[140] rounded-t-[2rem] transform translate-y-full transition-transform max-w-md mx-auto flex flex-col max-h-[85vh] shadow-2xl border-t border-slate-200 dark:border-[#1e293b]">
+        <div class="w-12 h-1.5 bg-slate-300 dark:bg-gray-700 rounded-full mx-auto my-3 shrink-0 transition-colors"></div>
+        <div class="px-5 pb-4 border-b border-slate-200 dark:border-[#1e293b] shrink-0 flex justify-between items-center transition-colors">
+            <h3 class="font-extrabold text-slate-800 dark:text-white text-lg">Detail Produk</h3>
+            <i class="fas fa-times text-slate-400 dark:text-gray-400 hover:text-red-500 text-2xl cursor-pointer transition-colors" onclick="closeDetail()"></i>
+        </div>
+        
+        <div class="p-5 overflow-y-auto hide-scrollbar flex-1">
+            <div class="flex items-start gap-4 mb-6">
+                <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-[#111c2e] border border-slate-200 dark:border-[#1e293b] flex items-center justify-center text-orange-500 dark:text-[#facc15] text-2xl shrink-0 mt-1 shadow-sm transition-colors">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div>
+                    <h4 class="font-extrabold text-[16px] text-slate-800 dark:text-white mb-1 transition-colors" id="dtName">-</h4>
+                    <p class="font-black text-xl text-orange-500 dark:text-[#facc15] transition-colors" id="dtPrice">Rp 0</p>
+                </div>
+            </div>
+            
+            <div class="bg-slate-50 dark:bg-[#111c2e] rounded-xl p-4 mb-4 border border-slate-200 dark:border-[#1e293b] flex justify-between shadow-sm transition-colors">
+                <span class="text-sm font-bold text-slate-500 dark:text-gray-400">No Tujuan:</span>
+                <span class="text-[15px] font-bold text-red-500" id="dtTarget">Kosong</span>
+            </div>
+            
+            <div class="bg-slate-50 dark:bg-[#111c2e] rounded-xl p-4 mb-4 border border-slate-200 dark:border-[#1e293b] flex justify-between items-center shadow-sm transition-colors">
+                <span class="text-sm font-bold text-slate-500 dark:text-gray-400">Status Server:</span>
+                <div id="dtStatusServer"></div>
+            </div>
+            
+            <div>
+                <span class="text-sm font-bold text-slate-500 dark:text-gray-400 mb-2 block">Deskripsi Produk:</span>
+                <div class="bg-slate-50 dark:bg-[#111c2e] rounded-xl p-4 text-[13px] text-slate-700 dark:text-gray-300 border border-slate-200 dark:border-[#1e293b] leading-relaxed shadow-sm transition-colors" id="dtDesc">Desc...</div>
+            </div>
+        </div>
+        
+        <div class="p-5 border-t border-slate-200 dark:border-[#1e293b] bg-white dark:bg-[#0b1320] transition-colors">
+            <div class="flex gap-3 mb-4">
+                <button class="flex-1 py-3 rounded-xl border border-slate-300 dark:border-gray-700 font-bold text-[14px] text-slate-600 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-[#1a2639] transition-colors" onclick="closeDetail()">Kembali</button>
+                <button class="flex-1 py-3 rounded-xl bg-red-500 text-white font-bold text-[14px] shadow-md hover:bg-red-600 transition-colors" onclick="bantuanAdmin()">
+                    <i class="fab fa-whatsapp mr-2"></i> Komplain
+                </button>
+            </div>
+            <button id="btnLanjutkan" class="w-full py-4 bg-yellow-400 dark:bg-[#facc15] text-slate-900 dark:text-[#001229] font-black rounded-xl text-[15px] shadow-lg hover:opacity-90 transition-all" onclick="executeBuy()">
+                Lanjutkan Pembayaran
+            </button>
+        </div>
+    </div>
+
+    <script>
+        if(!localStorage.getItem('user')) {
+            window.location.href = '/';
+        }
+        
+        const user = JSON.parse(localStorage.getItem('user'));
+        
+        const p = new URLSearchParams(window.location.search);
+        const t = p.get('type');
+        const pp = p.get('provider');
+        
+        let cS = 'operator'; 
+        let oT = ''; 
+        let cP = null;
+        let sS = ''; 
+        let sN = ''; 
+        let sP = 0; 
+        let sL = false;
+        let isProductOpen = true;
+
+        function isMaintenance() {
+            const tzStr = new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"}); 
+            const nowWIB = new Date(tzStr); 
+            const h = nowWIB.getHours(); 
+            const m = nowWIB.getMinutes();
+            if (h >= 23 || (h === 0 && m <= 30)) {
+                return true;
+            }
+            return false;
+        }
+
+        const o = {
+            xl: { name: 'XL', logo: 'XL', digiBrand: 'XL' },
+            axis: { name: 'AXIS', logo: 'AXIS', digiBrand: 'AXIS' },
+            telkomsel: { name: 'TELKOMSEL', logo: 'TS', digiBrand: 'TELKOMSEL' },
+            indosat: { name: 'INDOSAT', logo: 'IS', digiBrand: 'INDOSAT' },
+            tri: { name: 'TRI', logo: '3', digiBrand: 'TRI' },
+            smartfren: { name: 'SMARTFREN', logo: 'SF', digiBrand: 'SMARTFREN' },
+            byu: { name: 'BY.U', logo: 'BY.U', digiBrand: 'BYU' }
+        };
+
+        const dC = JSON.parse(JSON.stringify(o));
+        
+        dC['telkomsel'].items = [
+            'Umum', 'Bulk', 'Flash', 'Mini', 'Apps Kuota', 'Maxstream', 'Umroh', 'Malam',
+            'Combo Sakti', 'GamesMAX Unlimited Play', 'Whatsapp', 'Youtube', 'Instagram', 'Facebook',
+            'Ketengan TikTok', 'GamesMAX', 'MusicMAX', 'Disney+ Hotstar', 'OMG', 'GigaMAX', 'Orbit',
+            'UKM', 'UKM COMBO', 'Bronze', 'Harian', 'Mingguan', 'Bulanan', 'Ketengan Utama',
+            'Harian Sepuasnya', 'Roamax', 'GamesMAX Booster', 'Games', 'RoaMAX Haji', 'Combo',
+            'Eksklusif', 'Super Seru', 'Flash Revamp', 'DPI', 'Enterprise+', 'Serba Lima Ribu',
+            'UKM Plus', 'Non Puma', 'Videomax'
+        ];
+        
+        dC['indosat'].items = [
+            'Umum', 'Gift Data', 'Yellow', 'Freedom Combo', 'Freedom Harian', 'Freedom Internet', 
+            'Ekstra', 'Freedom U', 'Freedom Apps', 'Freedom U Gift', 'Freedom Combo Gift', 
+            'Freedom Internet Gift', 'Umroh Haji Combo', 'Freedom Max', 'UMKM', 'gaspol', 
+            'Sachet', 'Pure Merdeka', 'Kita', 'SMB', 'Ramadan', 'Freedom Apps Gift', 'HiFi Air', 
+            'Freedom Internet 5G', 'Freedom Spesial', 'Freedom Play', 'Freedom Sensasi'
+        ];
+        
+        dC['axis'].items = [
+            'Umum', 'Mini', 'Bronet', 'Owsem', 'Conference', 'Edukasi', 'Ekstra', 'Youtube', 
+            'Sosmed', 'Harian', 'BOY', 'Paket Warnet', 'Sulutra', 'Aigo SS', 'Mabrur', 'Video', 
+            'Games', 'Sunset', 'Pure', 'DRP Games', 'Obor', 'Edu Confrence', 'Apps Games', 
+            'AIGO Unlimited', 'Bagi Kuota'
+        ];
+        
+        dC['tri'].items = [
+            'Umum', 'Mini', 'AlwaysOn', 'GetMore', 'Mix', 'Home', 'Roaming', 'Data Transfer', 
+            'Happy', 'Lokal', 'H3RO', 'EJBN', 'Ibadah', 'Addon', 'KeepOn', 'Happy Play', 
+            'Pure 7 Hari', 'Pure 14 Hari', 'Pure 30 Hari', 'Ramadan', 'HiFi Air', 'Happy 5G'
+        ];
+        
+        dC['xl'].items = [
+            'Umum', 'Mini', 'Umroh', 'Hotrod', 'Xtra Combo', 'Xtra Kuota', 'Conference', 'Edukasi', 
+            'Xtra Combo Plus', 'Xtra Combo Gift', 'Hotrod Special', 'Xtra Combo Flex', 
+            'Paket Akrab', 'Harian', 'Blue', 'Xtra Combo Mini', 'Xtra Combo VIP Gift', 'Games', 
+            'Bebas Puas 2rb', 'Grab Gacor', 'Flex', 'FlexMax', 'Ultra 5G+', 'Flex Mini'
+        ];
+        
+        dC['smartfren'].items = [
+            'Umum', 'Unlimited', 'Volume', 'Roaming', 'Youtube', 'Connex Evo', 'Gokil Max', 
+            'Nonstop', 'Unlimited Nonstop', 'Musik', 'Games', 'Kuota', 'Tiktok', 'Mandiri', 'Nonton', 
+            'Unlimited Harian 5G', 'Unlimited Nonstop 5G', 'Kuota 5G'
+        ];
+        
+        dC['byu'].items = [
+            'Umum', 'Kaget', 'Mbps', 'Topping GGWP', 'Vidio', 'Jajan', 'Super Kaget'
+        ];
+
+        const g = {
+            free_fire: { name: 'Free Fire', logo: 'fas fa-gamepad', isIcon: true, digiBrand: 'FREE FIRE' },
+            mobile_legends: { name: 'Mobile Legends', logo: 'fas fa-gamepad', isIcon: true, digiBrand: 'MOBILE LEGENDS' },
+            pubg_mobile: { name: 'PUBG Mobile', logo: 'fas fa-gamepad', isIcon: true, digiBrand: 'PUBG MOBILE' },
+            valorant: { name: 'Valorant', logo: 'fas fa-gamepad', isIcon: true, digiBrand: 'VALORANT' }
+        };
+
+        const gC = JSON.parse(JSON.stringify(g));
+        gC['mobile_legends'].items = ['Weekly Diamond Pass', 'Diamond'];
+        gC['free_fire'].items = ['Membership', 'Diamond'];
+
+        const e = {
+            dana: { name: 'DANA', logo: 'DN', digiBrand: 'DANA' },
+            gopay: { name: 'GOPAY', logo: 'GP', digiBrand: 'GO PAY' },
+            shopeepay: { name: 'SHOPEEPAY', logo: 'SP', digiBrand: 'SHOPEE PAY' },
+            ovo: { name: 'OVO', logo: 'OV', digiBrand: 'OVO' },
+            linkaja: { name: 'LINKAJA', logo: 'LA', digiBrand: 'LINKAJA' }
+        };
+
+        const v = {
+            telkomsel: { name: 'TELKOMSEL', logo: 'TS', digiBrand: 'TELKOMSEL' },
+            indosat: { name: 'INDOSAT', logo: 'IS', digiBrand: 'INDOSAT' },
+            tri: { name: 'TRI', logo: '3', digiBrand: 'TRI' },
+            axis: { name: 'AXIS', logo: 'AXIS', digiBrand: 'AXIS' },
+            smartfren: { name: 'SMARTFREN', logo: 'SF', digiBrand: 'SMARTFREN' },
+            google_play: { name: 'GOOGLE PLAY INDONESIA', logo: 'GP', digiBrand: 'GOOGLE PLAY INDONESIA' },
+            spotify: { name: 'SPOTIFY', logo: 'SP', digiBrand: 'SPOTIFY' }
+        };
+
+        const prd = {
+            telkomsel: { name: 'TELKOMSEL', logo: 'TS', digiBrand: 'TELKOMSEL' },
+            indosat: { name: 'INDOSAT', logo: 'IS', digiBrand: 'INDOSAT' },
+            tri: { name: 'TRI', logo: '3', digiBrand: 'TRI' },
+            axis: { name: 'AXIS', logo: 'AXIS', digiBrand: 'AXIS' },
+            smartfren: { name: 'SMARTFREN', logo: 'SF', digiBrand: 'SMARTFREN' },
+            byu: { name: 'BY.U', logo: 'BY.U', digiBrand: 'BYU' }
+        };
+
+        const smstelponData = {
+            telkomsel: { name: 'TELKOMSEL', logo: 'TS', digiBrand: 'TELKOMSEL' },
+            indosat: { name: 'INDOSAT', logo: 'IS', digiBrand: 'INDOSAT' },
+            tri: { name: 'TRI', logo: '3', digiBrand: 'TRI' },
+            xl: { name: 'XL', logo: 'XL', digiBrand: 'XL' },
+            axis: { name: 'AXIS', logo: 'AXIS', digiBrand: 'AXIS' },
+            smartfren: { name: 'SMARTFREN', logo: 'SF', digiBrand: 'SMARTFREN' }
+        };
+
+        const pln = { 
+            pln_token: { name: 'Token PLN', logo: 'fas fa-bolt', isIcon: true, digiBrand: 'PLN' } 
+        };
+
+        const a = { ...o, ...dC, ...gC, ...e, ...pln, ...v, ...prd, ...smstelponData };
+        
+        let cL = {};
+
+        if (t === 'game') { oT = 'Top Up Game'; cL = gC; }
+        else if (t === 'data') { oT = 'Paket Data'; cL = dC; }
+        else if (t === 'ewallet') { oT = 'E-Wallet'; cL = e; }
+        else if (t === 'pln') { oT = 'PLN'; cL = pln; }
+        else if (t === 'masaaktif') { oT = 'Masa Aktif'; cL = o; }
+        else if (t === 'voucher') { oT = 'Voucher'; cL = v; }
+        else if (t === 'perdana') { oT = 'Perdana'; cL = prd; }
+        else if (t === 'smstelpon') { oT = 'SMS & Telpon'; cL = smstelponData; }
+        else { oT = 'Isi Pulsa'; cL = o; }
+        
+        document.getElementById('pageTitle').innerText = oT;
+
+        let h = '';
+        for (let k in cL) {
+            let v = cL[k];
+            h += `
+            <div class="flex items-center p-5 border-b border-slate-100 dark:border-[#1e293b] cursor-pointer hover:bg-slate-50 dark:hover:bg-[#1a2639] transition-colors" onclick="selectProvider('${k}')">
+                <div class="w-12 h-12 rounded-full border border-slate-300 dark:border-gray-600 flex items-center justify-center text-[12px] bg-slate-50 dark:bg-[#0b1320] text-slate-600 dark:text-gray-300 font-extrabold shadow-sm transition-colors">
+                    ${v.isIcon ? `<i class="${v.logo} text-xl"></i>` : v.logo}
+                </div>
+                <div class="flex-1 ml-5 font-bold text-[15px] text-slate-800 dark:text-gray-200 transition-colors">${v.name}</div>
+                <i class="fas fa-chevron-right text-slate-300 dark:text-gray-500 text-sm"></i>
+            </div>`;
+        }
+        document.getElementById('opListRender').innerHTML = h;
+
+        if (pp && a[pp]) { 
+            setTimeout(() => {
+                selectProvider(pp);
+            }, 50); 
+        }
+
+        const px = {
+            'Telkomsel': ['0811', '0812', '0813', '0821', '0822', '0823', '0851', '0852', '0853'],
+            'Indosat': ['0814', '0815', '0816', '0855', '0856', '0857', '0858'],
+            'XL/Axis': ['0817', '0818', '0819', '0859', '0877', '0878', '0831', '0832', '0833', '0838'],
+            'Tri': ['0895', '0896', '0897', '0898', '0899'],
+            'Smartfren': ['0881', '0882', '0883', '0884', '0885', '0886', '0887', '0888', '0889']
+        };
+
+        document.getElementById('inputTarget').addEventListener('input', function() {
+            let v = this.value.replace(/[^0-9]/g, '');
+            let pi = document.getElementById('prefixIcon');
+            let dt = document.getElementById('dtTarget');
+            let btn = document.getElementById('btnLanjutkan');
+            
+            if(v) {
+                dt.innerText = v; 
+                dt.classList.remove('text-red-500'); 
+                dt.classList.add('text-slate-800', 'dark:text-white');
+                
+                if(isProductOpen) {
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            } else {
+                dt.innerText = 'Kosong'; 
+                dt.classList.add('text-red-500'); 
+                dt.classList.remove('text-slate-800', 'dark:text-white');
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+
+            if(v.length >= 4) {
+                let f = null;
+                for (let b in px) { 
+                    if(px[b].includes(v.substring(0, 4))) { 
+                        f = b; 
+                        break; 
+                    } 
+                }
+                if(f) { 
+                    pi.innerText = f; 
+                    pi.classList.remove('hidden'); 
+                } else { 
+                    pi.classList.add('hidden'); 
+                }
+            } else { 
+                pi.classList.add('hidden'); 
+            }
+        });
+
+        async function fetchProducts(b, c) {
+            const l = document.getElementById('productList');
+            l.innerHTML = '<div class="py-16 flex justify-center text-orange-500 dark:text-[#facc15]"><i class="fas fa-spinner fa-spin text-4xl"></i></div>';
+            
+            try {
+                let r = await fetch('/api/products', { 
+                    method: 'POST', 
+                    headers: {'Content-Type': 'application/json'}, 
+                    body: JSON.stringify({ type: t, brand: b, category: c }) 
+                });
+                
+                let d = await r.json();
+                
+                if (d.data && d.data.length > 0) {
+                    l.innerHTML = d.data.map(p => {
+                        let sN = p.name.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        let sS = p.sku.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        let sD = p.desc ? p.desc.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "<br>") : 'Tidak ada deskripsi.';
+                        
+                        let bdg = p.is_open ? 
+                            `<span class="text-[9px] bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2.5 py-1 rounded-full font-extrabold uppercase tracking-wider border border-green-300 dark:border-green-800 shadow-sm transition-colors">✅ AKTIF</span>` : 
+                            `<span class="text-[9px] bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-2.5 py-1 rounded-full font-extrabold uppercase tracking-wider border border-red-300 dark:border-red-800 animate-pulse shadow-sm transition-colors">❌ GANGGUAN</span>`;
+                        
+                        let clk = `showProductDetail('${sS}','${sN}',${p.price},${p.isLocal},'${sD}', ${p.is_open})`;
+                        let opc = p.is_open ? '' : 'opacity-60 bg-slate-50 dark:bg-[#1a2639]';
+
+                        return `
+                        <div class="flex justify-between px-5 py-5 border-b border-slate-100 dark:border-[#1e293b] cursor-pointer hover:bg-slate-50 dark:hover:bg-[#1a2639] transition-colors ${opc}" onclick="${clk}">
+                            <div class="w-2/3 text-[14px] font-extrabold text-slate-700 dark:text-gray-100 leading-snug transition-colors pr-3">
+                                ${p.name} ${p.isLocal ? '<i class="fas fa-check-circle text-green-500 ml-1"></i>' : ''}
+                            </div>
+                            <div class="text-right flex flex-col items-end justify-center">
+                                <div class="mb-2">${bdg}</div>
+                                <span class="text-[15px] font-black text-orange-600 dark:text-[#facc15] transition-colors">Rp ${p.price.toLocaleString('id-ID')}</span>
+                            </div>
+                        </div>`;
+                    }).join('');
+                } else {
+                    l.innerHTML = '<div class="py-16 text-center text-slate-500 dark:text-gray-400 font-bold text-lg">Katalog Produk Kosong</div>';
+                }
+            } catch(e) { 
+                l.innerHTML = '<div class="py-16 text-center text-red-500 font-bold text-lg">Gagal memuat API</div>'; 
+            }
+        }
+
+        function showProductDetail(sku, n, pr, il, ds, isOpen) {
+            sS = sku; 
+            sN = n; 
+            sP = pr; 
+            sL = il; 
+            isProductOpen = isOpen;
+            
+            document.getElementById('dtName').innerText = n;
+            document.getElementById('dtPrice').innerText = 'Rp ' + pr.toLocaleString('id-ID');
+            document.getElementById('dtDesc').innerHTML = ds;
+            
+            const isDark = document.documentElement.classList.contains('dark');
+            
+            let statBadge = isOpen 
+                ? `<span class="${isDark ? 'bg-green-900/30 text-green-400 border-green-800' : 'bg-green-100 text-green-700 border-green-300'} px-4 py-1.5 rounded-full text-[12px] font-extrabold border transition-colors shadow-sm"><i class="fas fa-check-circle mr-1.5"></i> NORMAL / AMAN</span>`
+                : `<span class="${isDark ? 'bg-red-900/30 text-red-400 border-red-800' : 'bg-red-100 text-red-600 border-red-300'} px-4 py-1.5 rounded-full text-[12px] font-extrabold border animate-pulse transition-colors shadow-sm"><i class="fas fa-times-circle mr-1.5"></i> SEDANG GANGGUAN</span>`;
+            
+            document.getElementById('dtStatusServer').innerHTML = statBadge;
+
+            const btn = document.getElementById('btnLanjutkan');
+            if(!isOpen) {
+                btn.innerText = "Produk Sedang Gangguan";
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                btn.classList.replace('bg-yellow-400', 'bg-slate-300');
+                btn.classList.replace('dark:bg-[#facc15]', 'dark:bg-gray-600');
+                btn.classList.replace('text-slate-900', 'text-slate-500');
+                btn.classList.replace('dark:text-[#001229]', 'dark:text-gray-300');
+            } else {
+                btn.innerText = "Lanjutkan Pembayaran";
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btn.classList.replace('bg-slate-300', 'bg-yellow-400');
+                btn.classList.replace('dark:bg-gray-600', 'dark:bg-[#facc15]');
+                btn.classList.replace('text-slate-500', 'text-slate-900');
+                btn.classList.replace('dark:text-gray-300', 'dark:text-[#001229]');
+                
+                document.getElementById('inputTarget').dispatchEvent(new Event('input')); 
+            }
+            
+            document.getElementById('detailOverlay').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('detailOverlay').classList.remove('opacity-0');
+                document.getElementById('detailSheet').classList.remove('translate-y-full');
+            }, 10);
+        }
+
+        function closeDetail() {
+            document.getElementById('detailSheet').classList.add('translate-y-full');
+            document.getElementById('detailOverlay').classList.add('opacity-0');
+            setTimeout(() => {
+                document.getElementById('detailOverlay').classList.add('hidden');
+            }, 300);
+        }
+
+        function bantuanAdmin() {
+            window.open(`https://wa.me/6282231154407?text=` + encodeURIComponent(`Halo Admin, saya ingin komplain mengenai produk *${sN}*.`), '_blank');
+        }
+
+        function executeBuy() {
+            if(!isProductOpen) {
+                return Swal.fire({
+                    icon: 'error', 
+                    title: 'Gangguan', 
+                    text: 'Mohon maaf, produk ini sedang mengalami gangguan dari server pusat.',
+                    background: document.documentElement.classList.contains('dark') ? '#111c2e' : '#ffffff', 
+                    color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#0f172a'
+                });
+            }
+
+            const tr = document.getElementById('inputTarget').value;
+            if (!tr) {
+                return;
+            }
+            
+            closeDetail();
+            
+            const bg = document.documentElement.classList.contains('dark') ? '#111c2e' : '#ffffff';
+            const c = document.documentElement.classList.contains('dark') ? '#fff' : '#0f172a';
+            
+            if(isMaintenance()) {
+                return Swal.fire({
+                    icon: 'error', 
+                    title: 'MAINTENANCE', 
+                    text: 'Sistem sedang Maintenance Otomatis (23:00 - 00:30 WIB). Transaksi ditutup sementara.', 
+                    background: bg, 
+                    color: c
+                });
+            }
+            
+            setTimeout(() => {
+                Swal.fire({ 
+                    title: 'Memproses...', 
+                    allowOutsideClick: false, 
+                    background: bg, 
+                    color: c, 
+                    didOpen: () => {
+                        Swal.showLoading();
+                    } 
+                });
+                
+                fetch('/api/transaction/create', {
+                    method: 'POST', 
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ 
+                        phone: user.phone, 
+                        target: tr, 
+                        sku: sS, 
+                        name: sN, 
+                        price: sP, 
+                        isLocal: sL 
+                    })
+                })
+                .then(async r => {
+                    let d = await r.json();
+                    if (r.ok) {
+                        Swal.fire({ 
+                            icon: 'success', 
+                            title: 'Berhasil!', 
+                            text: d.message, 
+                            background: bg, 
+                            color: c 
+                        }).then(() => {
+                            window.location.href = '/riwayat.html';
+                        });
+                    } else {
+                        Swal.fire({ 
+                            icon: 'error', 
+                            title: 'Gagal', 
+                            text: d.error, 
+                            background: bg, 
+                            color: c 
+                        });
+                    }
+                })
+                .catch(e => { 
+                    Swal.fire({ 
+                        icon: 'error', 
+                        title: 'Oops!', 
+                        text: 'Gangguan jaringan.', 
+                        background: bg, 
+                        color: c 
+                    }); 
+                });
+            }, 300);
+        }
+
+        function selectProvider(o) {
+            let pr = cL[o] || a[o];
+            
+            if (pr) {
+                cP = pr;
+                document.getElementById('operatorContainer').classList.replace('block', 'hidden');
+                
+                if (pr.items && pr.items.length > 0 && (t === 'data' || t === 'game')) {
+                    cS = 'category';
+                    document.getElementById('categoryContainer').classList.remove('hidden');
+                    document.getElementById('pageTitle').innerText = pr.name;
+                    
+                    let h = '';
+                    pr.items.forEach(i => {
+                        h += `
+                        <div class="flex items-center px-5 py-5 border-b border-slate-100 dark:border-[#1e293b] cursor-pointer hover:bg-slate-50 dark:hover:bg-[#1a2639] transition-colors" onclick="selectCategory('${i}')">
+                            <div class="flex-1 text-[14px] font-extrabold text-slate-800 dark:text-gray-200 uppercase transition-colors">${i}</div>
+                            <i class="fas fa-chevron-right text-slate-400 dark:text-gray-500 text-sm transition-colors"></i>
+                        </div>`;
+                    });
+                    
+                    document.getElementById('categoryList').innerHTML = h;
+                } else {
+                    cS = 'product';
+                    document.getElementById('productContainer').classList.remove('hidden');
+                    document.getElementById('pageTitle').innerText = pr.name;
+                    document.getElementById('inputTarget').placeholder = pr.placeholder || "Ketik target disini...";
+                    document.getElementById('inputTarget').value = '';
+                    document.getElementById('inputTarget').dispatchEvent(new Event('input'));
+                    
+                    fetchProducts(pr.digiBrand, null);
+                }
+            }
+        }
+
+        function selectCategory(c) {
+            cS = 'product';
+            document.getElementById('categoryContainer').classList.add('hidden');
+            document.getElementById('productContainer').classList.remove('hidden');
+            document.getElementById('pageTitle').innerText = c;
+            document.getElementById('inputTarget').value = '';
+            document.getElementById('inputTarget').dispatchEvent(new Event('input'));
+            
+            fetchProducts(cP.digiBrand, c);
+        }
+
+        function goBack() {
+            if (cS === 'product') {
+                if (cP && cP.items && cP.items.length > 0 && (t === 'data' || t === 'game')) {
+                    cS = 'category';
+                    document.getElementById('productContainer').classList.add('hidden');
+                    document.getElementById('categoryContainer').classList.remove('hidden');
+                    document.getElementById('pageTitle').innerText = cP.name;
+                } else {
+                    cS = 'operator';
+                    document.getElementById('productContainer').classList.add('hidden');
+                    document.getElementById('operatorContainer').classList.replace('hidden', 'block');
+                    document.getElementById('pageTitle').innerText = oT;
+                }
+            } else if (cS === 'category') {
+                cS = 'operator';
+                document.getElementById('categoryContainer').classList.add('hidden');
+                document.getElementById('operatorContainer').classList.replace('hidden', 'block');
+                document.getElementById('pageTitle').innerText = oT;
+            } else {
+                history.back();
+            }
+        }
+    </script>
+</body>
+</html>
+EOF
+
 echo "[PART 2 SELESAI DITULIS!]"
 // selesai
-echo "[6/10] Membangun Halaman Pusat Informasi (FULL UNCOMPRESSED)..."
+echo "[7/10] Membangun Halaman Info, Mutasi, Profil & Riwayat (PART 3 - FULL UNCOMPRESSED)..."
 
 cat << 'EOF' > public/info.html
 <!DOCTYPE html>
@@ -1517,8 +1981,6 @@ cat << 'EOF' > public/info.html
 </body>
 </html>
 EOF
-
-echo "[6/10] Membangun Halaman Mutasi Saldo (FULL UNCOMPRESSED)..."
 
 cat << 'EOF' > public/mutasi.html
 <!DOCTYPE html>
@@ -1634,8 +2096,6 @@ cat << 'EOF' > public/mutasi.html
 </html>
 EOF
 
-echo "[6/10] Membangun Halaman Profil Akun (FULL UNCOMPRESSED)..."
-
 cat << 'EOF' > public/profile.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -1660,7 +2120,9 @@ cat << 'EOF' > public/profile.html
     <div class="max-w-md mx-auto bg-slate-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden transition-colors">
         
         <div class="bg-white dark:bg-[#111c2e] p-8 pb-10 flex flex-col items-center relative rounded-b-[2rem] shadow-sm border-b border-slate-200 dark:border-[#1e293b] transition-colors">
-            <div class="w-[7rem] h-[7rem] bg-slate-100 dark:bg-[#0b1320] rounded-full flex justify-center items-center text-orange-500 dark:text-[#facc15] font-extrabold text-6xl mt-2 mb-4 shadow-sm overflow-hidden border border-slate-300 dark:border-[#1e293b] transition-colors" id="profileCircle">U</div>
+            <div class="w-[6rem] h-[6rem] bg-slate-100 dark:bg-[#0b1320] rounded-full flex justify-center items-center text-orange-500 dark:text-[#facc15] font-extrabold text-5xl mt-2 mb-4 shadow-sm overflow-hidden border border-slate-300 dark:border-[#1e293b] transition-colors" id="profileCircle">
+                <i class="fas fa-user"></i>
+            </div>
             <div class="flex items-center gap-3">
                 <h2 class="text-xl font-bold tracking-wide text-slate-800 dark:text-gray-100 transition-colors" id="profileName">User Name</h2>
                 <i class="fas fa-pencil-alt text-slate-400 dark:text-gray-400 hover:text-orange-500 dark:hover:text-[#facc15] cursor-pointer text-sm transition-colors" onclick="openEditModal()"></i>
@@ -1712,7 +2174,9 @@ cat << 'EOF' > public/profile.html
                 <h3 class="text-center text-slate-800 dark:text-white font-extrabold text-lg mb-5 transition-colors">Ubah Profil</h3>
                 
                 <div class="relative w-24 h-24 mx-auto mb-6">
-                    <div class="w-full h-full rounded-full border-[3px] border-orange-400 dark:border-[#facc15] flex items-center justify-center text-4xl font-black bg-slate-50 dark:bg-[#0b1320] overflow-hidden text-slate-800 dark:text-white transition-colors" id="editModalInitial">U</div>
+                    <div class="w-full h-full rounded-full border-[3px] border-orange-400 dark:border-[#facc15] flex items-center justify-center text-4xl font-black bg-slate-50 dark:bg-[#0b1320] overflow-hidden text-slate-800 dark:text-white transition-colors" id="editModalInitial">
+                        <i class="fas fa-user"></i>
+                    </div>
                     <input type="file" id="avatarInput" accept="image/*" class="hidden" onchange="previewAvatar(event)">
                     <div class="absolute bottom-0 right-0 bg-yellow-400 dark:bg-[#facc15] rounded-full w-7 h-7 flex items-center justify-center text-slate-900 dark:text-[#0b1320] border-2 border-white dark:border-[#111c2e] cursor-pointer z-10 shadow-sm transition-colors hover:scale-110" onclick="document.getElementById('avatarInput').click()">
                         <i class="fas fa-camera text-[10px]"></i>
@@ -1788,7 +2252,7 @@ cat << 'EOF' > public/profile.html
             if(user.avatar) {
                 pCircle.innerHTML = `<img src="${user.avatar}" class="w-full h-full rounded-full object-cover">`;
             } else {
-                pCircle.innerText = user.name.charAt(0).toUpperCase();
+                pCircle.innerHTML = '<i class="fas fa-user"></i>';
             }
         }
         
@@ -1869,7 +2333,7 @@ cat << 'EOF' > public/profile.html
             if(tempAvatarBase64) {
                 eCircle.innerHTML = `<img src="${tempAvatarBase64}" class="w-full h-full object-cover">`;
             } else {
-                eCircle.innerText = user.name.charAt(0).toUpperCase();
+                eCircle.innerHTML = '<i class="fas fa-user"></i>';
             }
             
             document.getElementById('editEmail').value = user.email || 'Tidak ada email';
@@ -2082,8 +2546,6 @@ cat << 'EOF' > public/profile.html
 </body>
 </html>
 EOF
-
-echo "[6/10] Membangun Halaman Riwayat Transaksi (FULL UNCOMPRESSED)..."
 
 cat << 'EOF' > public/riwayat.html
 <!DOCTYPE html>
@@ -4112,7 +4574,7 @@ echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V166 SELESAI! 🚀  
 echo -e "\033[0;32m======================================================================\033[0m"
 echo -e "\033[0;36mFITUR BARU DI V166 (THE PERFECT MASTERPIECE):\033[0m"
 echo -e "  ✅ \033[1;33mPISAH NOTIF & TOPIK TELEGRAM\033[0m Notif Top Up & Trx dipisah di grup Tele!"
-echo -e "  ✅ \033[1;33mFORMAT NOTIF SAMA PERSIS\033[0m Admin & Publik sama (Publik disensor Email/WA)."
+echo -e "  ✅ \033[1;33mFORMAT NOTIF SAMA PERSIS\033[0m Admin & Publik sama persis (Admin tanpa sensor)."
 echo -e "  ✅ \033[1;33mNOTIF WA HANYA SUKSES\033[0m Bot saluran WA tidak akan mengirim notif 'Proses'!"
 echo -e "  ✅ \033[1;33mDESAIN PROFIL ELEGAN\033[0m Logo Inisial besar proporsional."
 echo -e "  ✅ \033[1;33mAUTO MENU VPS LOGIN\033[0m Langsung muncul panel saat masuk VPS!"
