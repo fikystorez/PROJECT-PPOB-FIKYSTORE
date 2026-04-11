@@ -1,7 +1,7 @@
 #!/bin/bash
 # ==========================================================
 # DIGITAL FIKY STORE - V166 (PERFECT MASTERPIECE)
-# PART 1: SETUP, CSS, AUTH, DASHBOARD, OPERATOR, TOPUP
+# PART 1 DARI 2: SETUP SERVER, CSS, AUTH, DASHBOARD, OPERATOR
 # ==========================================================
 
 if [ "$EUID" -ne 0 ]; then
@@ -20,7 +20,7 @@ echo "=========================================================="
 echo "    MENGINSTAL DIGITAL FIKY STORE V166 (PART 1 DARI 2)    "
 echo "=========================================================="
 
-echo "[1/8] Memperbarui sistem dan menginstal Node.js..."
+echo "[1/10] Memperbarui sistem dan menginstal Node.js..."
 apt update -y && apt install curl wget gnupg git dos2unix psmisc zip unzip nginx ufw -y > /dev/null 2>&1
 
 if ! command -v node > /dev/null 2>&1; then
@@ -29,7 +29,7 @@ if ! command -v node > /dev/null 2>&1; then
 fi
 npm install -g pm2 > /dev/null 2>&1
 
-echo "[2/8] Membuat direktori aplikasi dan web..."
+echo "[2/10] Membuat direktori aplikasi dan web (MENCEGAH ERROR 404)..."
 mkdir -p "$HOME/$DIR_NAME/public/banners"
 mkdir -p "$HOME/$DIR_NAME/public/info_images"
 cd "$HOME/$DIR_NAME"
@@ -56,7 +56,8 @@ cat << 'EOF' > package.json
 }
 EOF
 
-echo "[3/8] Membangun Antarmuka CSS (DUAL THEME SUPPORT)..."
+echo "[3/10] Membangun Antarmuka CSS (DUAL THEME SUPPORT)..."
+cd "$HOME/$DIR_NAME"
 
 cat << 'EOF' > public/style.css
 body { 
@@ -159,7 +160,8 @@ body {
 }
 EOF
 
-echo "[4/8] Membangun Halaman Autentikasi Login & Register (FULL UNCOMPRESSED)..."
+echo "[4/10] Membangun Halaman Autentikasi Login & Register (FULL UNCOMPRESSED)..."
+cd "$HOME/$DIR_NAME"
 
 cat << 'EOF' > public/index.html
 <!DOCTYPE html>
@@ -217,6 +219,7 @@ cat << 'EOF' > public/index.html
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             const registeredPhone = urlParams.get('phone');
+            
             if (registeredPhone) { 
                 document.getElementById('identifier').value = registeredPhone; 
             } else { 
@@ -240,14 +243,24 @@ cat << 'EOF' > public/index.html
         
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
             const identifier = document.getElementById('identifier').value; 
             const password = document.getElementById('password').value;
+            
             localStorage.setItem('savedPhone', identifier);
             
             const bgSwal = document.documentElement.classList.contains('dark') ? '#111c2e' : '#ffffff';
             const textSwal = document.documentElement.classList.contains('dark') ? '#ffffff' : '#0f172a';
 
-            Swal.fire({ title: 'Memeriksa Data...', allowOutsideClick: false, background: bgSwal, color: textSwal, didOpen: () => { Swal.showLoading(); } });
+            Swal.fire({ 
+                title: 'Memeriksa Data...', 
+                allowOutsideClick: false, 
+                background: bgSwal, 
+                color: textSwal, 
+                didOpen: () => { 
+                    Swal.showLoading(); 
+                } 
+            });
             
             try {
                 const res = await fetch('/api/auth/login', { 
@@ -255,16 +268,29 @@ cat << 'EOF' > public/index.html
                     headers: { 'Content-Type': 'application/json' }, 
                     body: JSON.stringify({ identifier, password }) 
                 });
+                
                 const data = await res.json();
                 
                 if (res.ok) { 
                     localStorage.setItem('user', JSON.stringify(data.user)); 
                     window.location.href = '/dashboard.html';
                 } else { 
-                    Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: bgSwal, color: textSwal }); 
+                    Swal.fire({ 
+                        icon: 'error', 
+                        title: 'Gagal', 
+                        text: data.error, 
+                        background: bgSwal, 
+                        color: textSwal 
+                    }); 
                 }
             } catch (err) { 
-                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Kesalahan sistem.', background: bgSwal, color: textSwal }); 
+                Swal.fire({ 
+                    icon: 'error', 
+                    title: 'Oops...', 
+                    text: 'Kesalahan sistem. Pastikan backend server sudah berjalan.', 
+                    background: bgSwal, 
+                    color: textSwal 
+                }); 
             }
         });
     </script>
@@ -351,12 +377,21 @@ cat << 'EOF' > public/register.html
 
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
             const name = document.getElementById('name').value; 
             const phone = document.getElementById('phone').value; 
             const email = document.getElementById('email').value; 
             const password = document.getElementById('password').value;
             
-            Swal.fire({ title: 'Memproses...', allowOutsideClick: false, background: bgSwal, color: textSwal, didOpen: () => { Swal.showLoading(); } });
+            Swal.fire({ 
+                title: 'Memproses...', 
+                allowOutsideClick: false, 
+                background: bgSwal, 
+                color: textSwal, 
+                didOpen: () => { 
+                    Swal.showLoading(); 
+                } 
+            });
             
             try {
                 const res = await fetch('/api/auth/register', { 
@@ -364,6 +399,7 @@ cat << 'EOF' > public/register.html
                     headers: { 'Content-Type': 'application/json' }, 
                     body: JSON.stringify({ name, phone, email, password }) 
                 });
+                
                 const data = await res.json();
                 
                 if (res.ok) {
@@ -372,18 +408,39 @@ cat << 'EOF' > public/register.html
                     document.getElementById('box-otp').classList.remove('hidden'); 
                     Swal.close();
                 } else { 
-                    Swal.fire({ icon: 'error', title: 'Gagal Daftar', text: data.error, background: bgSwal, color: textSwal }); 
+                    Swal.fire({ 
+                        icon: 'error', 
+                        title: 'Gagal Daftar', 
+                        text: data.error, 
+                        background: bgSwal, 
+                        color: textSwal 
+                    }); 
                 }
             } catch (err) { 
-                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal memproses.', background: bgSwal, color: textSwal }); 
+                Swal.fire({ 
+                    icon: 'error', 
+                    title: 'Oops...', 
+                    text: 'Gagal memproses.', 
+                    background: bgSwal, 
+                    color: textSwal 
+                }); 
             }
         });
 
         document.getElementById('otpForm').addEventListener('submit', async (e) => {
             e.preventDefault(); 
+            
             const otp = document.getElementById('otpCode').value;
             
-            Swal.fire({ title: 'Verifikasi...', allowOutsideClick: false, background: bgSwal, color: textSwal, didOpen: () => { Swal.showLoading(); } });
+            Swal.fire({ 
+                title: 'Verifikasi...', 
+                allowOutsideClick: false, 
+                background: bgSwal, 
+                color: textSwal, 
+                didOpen: () => { 
+                    Swal.showLoading(); 
+                } 
+            });
             
             try {
                 const res = await fetch('/api/auth/verify', { 
@@ -391,17 +448,36 @@ cat << 'EOF' > public/register.html
                     headers: { 'Content-Type': 'application/json' }, 
                     body: JSON.stringify({ phone: registeredPhone, otp }) 
                 });
+                
                 const data = await res.json();
                 
                 if (res.ok) { 
-                    Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Akun aktif.', background: bgSwal, color: textSwal }).then(() => { 
+                    Swal.fire({ 
+                        icon: 'success', 
+                        title: 'Berhasil!', 
+                        text: 'Akun aktif.', 
+                        background: bgSwal, 
+                        color: textSwal 
+                    }).then(() => { 
                         window.location.href = '/?phone=' + registeredPhone; 
                     }); 
                 } else { 
-                    Swal.fire({ icon: 'error', title: 'OTP Salah', text: data.error, background: bgSwal, color: textSwal }); 
+                    Swal.fire({ 
+                        icon: 'error', 
+                        title: 'OTP Salah', 
+                        text: data.error, 
+                        background: bgSwal, 
+                        color: textSwal 
+                    }); 
                 }
             } catch (err) { 
-                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal verifikasi.', background: bgSwal, color: textSwal }); 
+                Swal.fire({ 
+                    icon: 'error', 
+                    title: 'Oops...', 
+                    text: 'Gagal verifikasi.', 
+                    background: bgSwal, 
+                    color: textSwal 
+                }); 
             }
         });
     </script>
@@ -480,37 +556,101 @@ cat << 'EOF' > public/forgot.html
         document.getElementById('requestOtpForm').addEventListener('submit', async (e) => {
             e.preventDefault(); 
             const phone = document.getElementById('phone').value;
-            Swal.fire({ title: 'Memproses...', allowOutsideClick: false, background: bgSwal, color: textSwal, didOpen: () => { Swal.showLoading(); } });
+            
+            Swal.fire({ 
+                title: 'Memproses...', 
+                allowOutsideClick: false, 
+                background: bgSwal, 
+                color: textSwal, 
+                didOpen: () => { 
+                    Swal.showLoading(); 
+                } 
+            });
+            
             try {
-                const res = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
+                const res = await fetch('/api/auth/forgot', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ phone }) 
+                });
+                
                 const data = await res.json();
+                
                 if (res.ok) { 
                     resetPhone = data.phone; 
                     document.getElementById('requestOtpForm').classList.add('hidden'); 
                     document.getElementById('resetForm').classList.remove('hidden'); 
                     Swal.close(); 
                 } else { 
-                    Swal.fire({ icon: 'error', title: 'Gagal', text: data.error, background: bgSwal, color: textSwal }); 
+                    Swal.fire({ 
+                        icon: 'error', 
+                        title: 'Gagal', 
+                        text: data.error, 
+                        background: bgSwal, 
+                        color: textSwal 
+                    }); 
                 }
             } catch (err) { 
-                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gangguan server', background: bgSwal, color: textSwal }); 
+                Swal.fire({ 
+                    icon: 'error', 
+                    title: 'Oops...', 
+                    text: 'Gangguan server', 
+                    background: bgSwal, 
+                    color: textSwal 
+                }); 
             }
         });
 
         document.getElementById('resetForm').addEventListener('submit', async (e) => {
             e.preventDefault(); 
+            
             const otp = document.getElementById('otp').value; 
             const newPassword = document.getElementById('newPassword').value;
-            Swal.fire({ title: 'Memproses...', allowOutsideClick: false, background: bgSwal, color: textSwal, didOpen: () => { Swal.showLoading(); } });
+            
+            Swal.fire({ 
+                title: 'Memproses...', 
+                allowOutsideClick: false, 
+                background: bgSwal, 
+                color: textSwal, 
+                didOpen: () => { 
+                    Swal.showLoading(); 
+                } 
+            });
+            
             try {
-                const res = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: resetPhone, otp, newPassword }) });
+                const res = await fetch('/api/auth/reset', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ phone: resetPhone, otp, newPassword }) 
+                });
+                
                 if (res.ok) { 
-                    Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Password diubah.', background: bgSwal, color: textSwal }).then(() => { window.location.href = '/'; }); 
+                    Swal.fire({ 
+                        icon: 'success', 
+                        title: 'Berhasil!', 
+                        text: 'Password diubah.', 
+                        background: bgSwal, 
+                        color: textSwal 
+                    }).then(() => { 
+                        window.location.href = '/'; 
+                    }); 
                 } else { 
-                    Swal.fire({ icon: 'error', title: 'Gagal', text: 'OTP Salah.', background: bgSwal, color: textSwal }); 
+                    Swal.fire({ 
+                        icon: 'error', 
+                        title: 'Gagal', 
+                        text: 'OTP Salah.', 
+                        background: bgSwal, 
+                        color: textSwal 
+                    }); 
                 }
             } catch (err) { 
-                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gangguan server', background: bgSwal, color: textSwal }); 
+                Swal.fire({ 
+                    icon: 'error', 
+                    title: 'Oops...', 
+                    text: 'Gangguan server', 
+                    background: bgSwal, 
+                    color: textSwal 
+                }); 
             }
         });
     </script>
@@ -518,7 +658,8 @@ cat << 'EOF' > public/forgot.html
 </html>
 EOF
 
-echo "[5/8] Membangun Halaman Dashboard & Operator (FULL UNCOMPRESSED)..."
+echo "[5/10] Membangun Halaman Dashboard (FULL UNCOMPRESSED)..."
+cd "$HOME/$DIR_NAME"
 
 cat << 'EOF' > public/dashboard.html
 <!DOCTYPE html>
@@ -566,7 +707,7 @@ cat << 'EOF' > public/dashboard.html
                     <button class="absolute top-5 right-5 text-slate-400 dark:text-gray-400 hover:text-red-500" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')">
                         <i class="fas fa-times text-xl"></i>
                     </button>
-                    <div class="w-[4.5rem] h-[4.5rem] bg-slate-100 dark:bg-[#111c2e] rounded-full flex justify-center items-center text-orange-500 dark:text-[#facc15] text-4xl mb-3 shadow-md border border-slate-200 dark:border-[#1e293b] transition-colors" id="sidebarInitial">
+                    <div class="w-[4.5rem] h-[4.5rem] bg-slate-100 dark:bg-[#111c2e] rounded-full flex justify-center items-center text-orange-500 dark:text-[#facc15] font-extrabold text-3xl mb-3 shadow-md overflow-hidden border border-slate-200 dark:border-[#1e293b] transition-colors" id="sidebarInitial">
                         <i class="fas fa-user"></i>
                     </div>
                     <h3 class="font-bold text-lg text-slate-800 dark:text-white" id="sidebarName">User</h3>
@@ -959,7 +1100,6 @@ cat << 'EOF' > public/dashboard.html
         if(user.avatar) { 
             document.getElementById('sidebarInitial').innerHTML = `<img src="${user.avatar}" class="w-full h-full rounded-full object-cover border-2 border-transparent">`; 
         } else { 
-            // LOGO ORANG BOTAK (SIDEBAR)
             document.getElementById('sidebarInitial').innerHTML = '<i class="fas fa-user"></i>'; 
         }
 
@@ -1886,6 +2026,8 @@ echo "[PART 2 SELESAI DITULIS!]"
 // selesai
 echo "[7/10] Membangun Halaman Info, Mutasi, Profil & Riwayat (PART 3 - FULL UNCOMPRESSED)..."
 
+cd "$HOME/$DIR_NAME"
+
 cat << 'EOF' > public/info.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -1981,6 +2123,8 @@ cat << 'EOF' > public/info.html
 </body>
 </html>
 EOF
+
+cd "$HOME/$DIR_NAME"
 
 cat << 'EOF' > public/mutasi.html
 <!DOCTYPE html>
@@ -2096,6 +2240,8 @@ cat << 'EOF' > public/mutasi.html
 </html>
 EOF
 
+cd "$HOME/$DIR_NAME"
+
 cat << 'EOF' > public/profile.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -2120,7 +2266,7 @@ cat << 'EOF' > public/profile.html
     <div class="max-w-md mx-auto bg-slate-50 dark:bg-[#0b1320] min-h-screen relative pb-24 shadow-2xl overflow-x-hidden transition-colors">
         
         <div class="bg-white dark:bg-[#111c2e] p-8 pb-10 flex flex-col items-center relative rounded-b-[2rem] shadow-sm border-b border-slate-200 dark:border-[#1e293b] transition-colors">
-            <div class="w-[6rem] h-[6rem] bg-slate-100 dark:bg-[#0b1320] rounded-full flex justify-center items-center text-orange-500 dark:text-[#facc15] font-extrabold text-5xl mt-2 mb-4 shadow-sm overflow-hidden border border-slate-300 dark:border-[#1e293b] transition-colors" id="profileCircle">
+            <div class="w-[5.5rem] h-[5.5rem] bg-slate-100 dark:bg-[#0b1320] rounded-full flex justify-center items-center text-orange-500 dark:text-[#facc15] font-extrabold text-4xl mt-2 mb-4 shadow-sm overflow-hidden border border-slate-300 dark:border-[#1e293b] transition-colors" id="profileCircle">
                 <i class="fas fa-user"></i>
             </div>
             <div class="flex items-center gap-3">
@@ -2173,7 +2319,7 @@ cat << 'EOF' > public/profile.html
                 </button>
                 <h3 class="text-center text-slate-800 dark:text-white font-extrabold text-lg mb-5 transition-colors">Ubah Profil</h3>
                 
-                <div class="relative w-24 h-24 mx-auto mb-6">
+                <div class="relative w-20 h-20 mx-auto mb-6">
                     <div class="w-full h-full rounded-full border-[3px] border-orange-400 dark:border-[#facc15] flex items-center justify-center text-4xl font-black bg-slate-50 dark:bg-[#0b1320] overflow-hidden text-slate-800 dark:text-white transition-colors" id="editModalInitial">
                         <i class="fas fa-user"></i>
                     </div>
@@ -2547,6 +2693,8 @@ cat << 'EOF' > public/profile.html
 </html>
 EOF
 
+cd "$HOME/$DIR_NAME"
+
 cat << 'EOF' > public/riwayat.html
 <!DOCTYPE html>
 <html lang="id" id="html-root">
@@ -2830,6 +2978,8 @@ echo "[PART 3 SELESAI DITULIS!]"
 // selesai
 echo "[8/10] Menulis logika Backend Node.js (PART 4: index.js FULL UNCOMPRESSED)..."
 
+cd "$HOME/$DIR_NAME"
+
 cat << 'EOF' > index.js
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
 const fs = require('fs');
@@ -3004,7 +3154,7 @@ const broadcastPublik = async (message, type, status) => {
             try { 
                 await axios.post(`https://api.telegram.org/bot${cfg.teleTokenPublik}/sendMessage`, payload); 
             } catch(err) {
-                // Abaikan error
+                // Abaikan error fallback
             }
         }
     }
@@ -4200,7 +4350,7 @@ while true; do
     echo -e "  ${GREEN}5.${NC} Reset Sesi & Ganti Nomor Bot"
     echo -e "  ${GREEN}6.${NC} 📢 Broadcast Pengumuman (App, WA Channel, Telegram)"
     echo -e "${PURPLE}[ 📱 MANAJEMEN APLIKASI & WEB ]${NC}"
-    echo -e "  ${GREEN}7.${NC} 💰 Manajemen Saldo Member"
+    echo -e "  ${GREEN}7.${NC} 💰 Cek & Set Saldo Member"
     echo -e "  ${GREEN}8.${NC} 🖼️ Sinkronisasi Gambar Banner Lokal"
     echo -e "  ${GREEN}9.${NC} 📈 Seting Keuntungan 14 Tier"
     echo -e "  ${GREEN}10.${NC} 📦 Manajemen Produk (Lokal)"
@@ -4574,9 +4724,9 @@ echo -e "\033[1;33m       🚀 INSTALASI DIGITAL FIKY STORE V166 SELESAI! 🚀  
 echo -e "\033[0;32m======================================================================\033[0m"
 echo -e "\033[0;36mFITUR BARU DI V166 (THE PERFECT MASTERPIECE):\033[0m"
 echo -e "  ✅ \033[1;33mPISAH NOTIF & TOPIK TELEGRAM\033[0m Notif Top Up & Trx dipisah di grup Tele!"
-echo -e "  ✅ \033[1;33mFORMAT NOTIF SAMA PERSIS\033[0m Admin & Publik sama persis (Admin tanpa sensor)."
+echo -e "  ✅ \033[1;33mFORMAT NOTIF SAMA PERSIS\033[0m Admin & Publik sama (Publik disensor Email/WA)."
 echo -e "  ✅ \033[1;33mNOTIF WA HANYA SUKSES\033[0m Bot saluran WA tidak akan mengirim notif 'Proses'!"
-echo -e "  ✅ \033[1;33mDESAIN PROFIL ELEGAN\033[0m Logo Inisial besar proporsional."
+echo -e "  ✅ \033[1;33mDESAIN PROFIL ELEGAN\033[0m Logo gambar orang tidak terkompres!"
 echo -e "  ✅ \033[1;33mAUTO MENU VPS LOGIN\033[0m Langsung muncul panel saat masuk VPS!"
 echo -e "  ✅ \033[1;33mFULL UNCOMPRESSED\033[0m Kode super rapi jali, no minified!"
 echo -e "\033[0;32m======================================================================\033[0m"
